@@ -1,4 +1,4 @@
-using CybtansSdk.Serialization;
+using Cybtans.Serialization;
 using CybtansSDK.Tests.Serialization;
 using Newtonsoft.Json;
 using System;
@@ -94,6 +94,31 @@ namespace CybtansSDK.Tests
 
             _testOutput.WriteLine($"{formatter}:{bytesJson.Length} bytes BINARY:{buffer.Length} bytes");
             
+        }
+
+        [Fact]
+        public void SeralizeUntyped()
+        {
+            var sw = new Stopwatch();
+
+            sw.Start();
+            var buffer = _binarySerializer.Serialize(modelA);
+            sw.Stop();
+
+            _testOutput.WriteLine($"BINARY Serialize {sw.ElapsedTicks} ticks {sw.ElapsedMilliseconds} ms");
+
+            Assert.NotNull(buffer);
+            Assert.NotEmpty(buffer);
+
+            sw.Start();
+            var result = (Dictionary<object, object>)_binarySerializer.Deserialize(buffer);
+            sw.Stop();
+
+            _testOutput.WriteLine($"BINARY Deserialize {sw.ElapsedTicks} ticks {sw.ElapsedMilliseconds} ms");
+
+            Assert.NotNull(result);
+            Assert.Equal((sbyte)result["IntValue"], modelA.IntValue);
+            Assert.Equal((List<object>)result["ListStringValue"], modelA.ListStringValue);
         }
     }
 }

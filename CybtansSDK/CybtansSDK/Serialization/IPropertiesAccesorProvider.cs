@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CybtansSdk.Serialization
+namespace Cybtans.Serialization
 {
     public interface IPropertiesAccesorProvider
     {
