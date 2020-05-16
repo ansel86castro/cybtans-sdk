@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Cybtans.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CybtansSdk.Serialization
+namespace Cybtans.Serialization
 {
     public class BinarySerializer
     {
@@ -66,7 +67,7 @@ namespace CybtansSdk.Serialization
 
             TYPE_LIST_8 = 0x71,
             TYPE_LIST_16 = 0x72,
-            TYPE_LIST_32 = 0x73            
+            TYPE_LIST_32 = 0x73
         };
 
         public BinarySerializer() : this(new UTF8Encoding(false, true))
@@ -86,7 +87,7 @@ namespace CybtansSdk.Serialization
 
         public byte[] Serialize(object obj)
         {
-            using(var memStream = new MemoryStream())
+            using (var memStream = new MemoryStream())
             {
                 Serialize(memStream, obj);
 
@@ -135,23 +136,23 @@ namespace CybtansSdk.Serialization
                 case decimal decV:
                     WriteDecimal(stream, decV);
                     break;
-                case float floatV:                   
+                case float floatV:
                     WriteFloat(stream, floatV);
-                    break;                   
-                case double doubleV:                    
+                    break;
+                case double doubleV:
                     WriteDouble(stream, doubleV);
-                    break;                    
+                    break;
                 case char ch:
                     WriteChar(stream, ch);
                     break;
                 case string str:
                     WriteString(stream, str);
                     break;
-                case byte[] bytes:                 
+                case byte[] bytes:
                     WriteLenght(stream, bytes.Length, Types.TYPE_BINARY_8, Types.TYPE_BINARY_16, Types.TYPE_BINARY_32);
                     stream.Write(bytes, 0, bytes.Length);
                     break;
-                case DateTime dateTime:                    
+                case DateTime dateTime:
                     stream.WriteByte((byte)Types.TYPE_DATETIME);
                     TimeSpan span = dateTime - EPOCH;
                     WriteNumber(span.Ticks, stream);
@@ -177,7 +178,7 @@ namespace CybtansSdk.Serialization
             }
         }
 
-      
+
         private void WriteObject(Stream stream, object obj, Type type)
         {
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -299,12 +300,12 @@ namespace CybtansSdk.Serialization
         }
 
         private static void WriteInteger(Stream stream, ulong value)
-        {            
+        {
             if (value <= byte.MaxValue)
             {
                 stream.WriteByte((byte)Types.TYPE_UINT_8);
                 stream.WriteByte((byte)value);
-            }          
+            }
             else if (value <= ushort.MaxValue)
             {
                 stream.WriteByte((byte)Types.TYPE_UINT_16);
@@ -345,7 +346,7 @@ namespace CybtansSdk.Serialization
         private static void WriteFloat(Stream stream, float floatV)
         {
             int i = (int)floatV;
-            if (((float)i) == floatV)
+            if (i == floatV)
             {
                 WriteInteger(stream, i);
             }
@@ -359,7 +360,7 @@ namespace CybtansSdk.Serialization
         private static void WriteDouble(Stream stream, double doubleV)
         {
             float floatV = (float)doubleV;
-            if (((double)floatV) == doubleV)
+            if (floatV == doubleV)
             {
                 WriteFloat(stream, floatV);
             }
@@ -436,7 +437,7 @@ namespace CybtansSdk.Serialization
                 stream.WriteByte((byte)type3);
                 WriteNumber(length, stream);
             }
-        }     
+        }
 
         #endregion
 
@@ -467,9 +468,9 @@ namespace CybtansSdk.Serialization
             switch (typeCode)
             {
                 case Types.TYPE_NONE: return null;
-                case Types.TYPE_TRUE: value = true;break;
-                case Types.TYPE_FALSE: value = false;break;
-                case Types.TYPE_INT_8: value = (sbyte)stream.ReadByte();break;
+                case Types.TYPE_TRUE: value = true; break;
+                case Types.TYPE_FALSE: value = false; break;
+                case Types.TYPE_INT_8: value = (sbyte)stream.ReadByte(); break;
                 case Types.TYPE_UINT_8: value = (byte)stream.ReadByte(); break;
                 case Types.TYPE_INT_16: value = ReadNumber<short>(stream); break;
                 case Types.TYPE_UINT_16: value = ReadNumber<ushort>(stream); break;
@@ -516,7 +517,7 @@ namespace CybtansSdk.Serialization
                 case Types.TYPE_CODED_MAP_8:
                 case Types.TYPE_CODED_MAP_16:
                 case Types.TYPE_CODED_MAP_32:
-                    value = ReadCodedMap(stream, typeCode, type);                                        
+                    value = ReadCodedMap(stream, typeCode, type);
                     break;
                 case Types.TYPE_DECIMAL:
                     return ReadNumber<decimal>(stream);
@@ -524,14 +525,14 @@ namespace CybtansSdk.Serialization
                     throw new NotSupportedException($"TYPE CODE {typeByte} not supported");
             }
 
-            if(value != null && type !=null)
+            if (value != null && type != null)
             {
                 var valueType = value.GetType();
-                if(valueType != type)
+                if (valueType != type)
                 {
                     if (!type.IsAssignableFrom(valueType) && value is IConvertible convertible)
-                    {                        
-                       value = convertible.ToType(type, null);                       
+                    {
+                        value = convertible.ToType(type, null);
                     }
                 }
             }
@@ -554,7 +555,7 @@ namespace CybtansSdk.Serialization
             Convert(size, span);
 
             return *(T*)ptr;
-        }        
+        }
 
         private unsafe string ReadString8(Stream stream) => ReadString(stream, ReadNumber<byte>(stream));
         private unsafe string ReadString16(Stream stream) => ReadString(stream, ReadNumber<ushort>(stream));
@@ -596,7 +597,7 @@ namespace CybtansSdk.Serialization
         private Array ReadArray32(Stream stream, Type? arrayType) => ReadArray(stream, ReadNumber<int>(stream), arrayType);
         private Array ReadArray(Stream stream, int length, Type? arrayType)
         {
-            Type type = null;
+            Type? type = null;
             if (arrayType != null)
             {
                 if (!arrayType.IsArray)
@@ -608,7 +609,7 @@ namespace CybtansSdk.Serialization
             var array = Array.CreateInstance(type ?? typeof(object), length);
             for (int i = 0; i < length; i++)
             {
-                var value = Deserialize(stream, type);
+                var value = Deserialize(stream, type == typeof(object) ? null : type);
                 array.SetValue(value, i);
             }
 
@@ -621,7 +622,7 @@ namespace CybtansSdk.Serialization
 
         private IList ReadList(Stream stream, int length, Type? listType)
         {
-            Type type = null;
+            Type? type = null;
             if (listType != null)
             {
                 type = listType.GetGenericArguments()[0];
@@ -630,7 +631,7 @@ namespace CybtansSdk.Serialization
             IList list = (IList)Activator.CreateInstance(listType ?? typeof(List<object>), length);
             for (int i = 0; i < length; i++)
             {
-                var value = Deserialize(stream, type);
+                var value = Deserialize(stream, type == typeof(object) ? null : type);
                 list.Add(value);
             }
 
@@ -646,7 +647,7 @@ namespace CybtansSdk.Serialization
             object obj;
 
             if (type == null || typeof(IDictionary).IsAssignableFrom(type))
-            {               
+            {
                 if (type?.IsGenericType ?? false)
                 {
                     if (type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
@@ -655,8 +656,8 @@ namespace CybtansSdk.Serialization
                         var genArgs = type.GetGenericArguments();
                         for (int i = 0; i < count; i++)
                         {
-                            var key = Deserialize(stream, genArgs[0]);
-                            var item = Deserialize(stream, genArgs[1]);
+                            var key = Deserialize(stream, genArgs[0] == typeof(object) ? null : genArgs[0]);
+                            var item = Deserialize(stream, genArgs[1] == typeof(object) ? null : genArgs[1]);
                             dictionary.Add(key, item);
                         }
 
@@ -684,18 +685,18 @@ namespace CybtansSdk.Serialization
                 {
                     throw new InvalidOperationException($"Can not deserialize {type}");
                 }
-               
+
             }
 
-             obj = Activator.CreateInstance(type);
-             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-               .Where(p => p.CanWrite)
-               .ToDictionary(x=>x.Name);
+            obj = Activator.CreateInstance(type);
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+              .Where(p => p.CanWrite)
+              .ToDictionary(x => x.Name);
 
             for (int i = 0; i < count; i++)
             {
                 var name = (string?)Deserialize(stream, null);
-                if(name != null && props.TryGetValue(name, out var p))
+                if (name != null && props.TryGetValue(name, out var p))
                 {
                     var value = Deserialize(stream, p.PropertyType);
                     p.SetValue(obj, value);
@@ -706,17 +707,14 @@ namespace CybtansSdk.Serialization
 #if TRACE
                     Trace.TraceWarning($"BinarySerializer:missing property {name}");
 #endif
-                }                
+                }
             }
 
             return obj;
         }
 
-        private object ReadCodedMap(Stream stream, Types typeCode, Type type)
-        {             
-            var item = (IPropertiesAccesorProvider)Activator.CreateInstance(type);
-            var accesor = item.GetAccesor();
-
+        private object ReadCodedMap(Stream stream, Types typeCode, Type? type)
+        {                    
             int count = 0;
             switch (typeCode)
             {
@@ -725,17 +723,25 @@ namespace CybtansSdk.Serialization
                 case Types.TYPE_CODED_MAP_32: count = ReadNumber<int>(stream); break;
             }
 
+            if (type == null)
+            {
+                return ReadMap(stream, count, null);
+            }
+
+            var item = (IPropertiesAccesorProvider)Activator.CreateInstance(type);
+            var accesor = item.GetAccesor();
+
             for (int i = 0; i < count; i++)
             {
                 int code = 0;
                 var keyCode = (Types)stream.ReadByte();
                 switch (keyCode)
                 {
-                    case Types.TYPE_INT_8: code = (int)stream.ReadByte(); break;
-                    case Types.TYPE_UINT_8: code = (int)stream.ReadByte(); break;
-                    case Types.TYPE_INT_16: code = (int)ReadNumber<short>(stream); break;
-                    case Types.TYPE_UINT_16: code = (int)ReadNumber<ushort>(stream); break;
-                    case Types.TYPE_INT_32: code = (int)ReadNumber<int>(stream); break;                    
+                    case Types.TYPE_INT_8: code = stream.ReadByte(); break;
+                    case Types.TYPE_UINT_8: code = stream.ReadByte(); break;
+                    case Types.TYPE_INT_16: code = ReadNumber<short>(stream); break;
+                    case Types.TYPE_UINT_16: code = ReadNumber<ushort>(stream); break;
+                    case Types.TYPE_INT_32: code = ReadNumber<int>(stream); break;
                 }
 
                 var propertyType = accesor.GetPropertyType(code);
@@ -746,7 +752,7 @@ namespace CybtansSdk.Serialization
             return item;
         }
 
-        
+
 
         #endregion
     }
