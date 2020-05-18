@@ -5,9 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace CybtansSDK.Tests.Serialization
+namespace Benchmark
 {
-    public class ModelA: IEquatable<ModelA>
+    public class ModelA
     {
         public int IntValue { get; set; } = 1;
 
@@ -37,48 +37,18 @@ namespace CybtansSDK.Tests.Serialization
 
         public ModelB ModelBValue { get; set; }
 
-        public List<ModelB> ModelBListValue { get; set; } 
+        public List<ModelB> ModelBListValue { get; set; }
 
         public Dictionary<string, ModelB> MapValue { get; set; }
-
-        public bool Equals([AllowNull] ModelA other)
-        {
-            if (other == null)
-                return false;
-
-            return IntValue == other.IntValue &&
-                StringValue == other.StringValue &&
-                DoubleValue == other.DoubleValue &&
-                FloatValue == other.FloatValue &&
-                ByteValue == other.ByteValue &&            
-                SmallDouble == other.SmallDouble &&
-                SmallDecimal == other.SmallDecimal &&
-                SmallFloat == other.SmallFloat &&
-                SmallDouble2 == other.SmallDouble2 &&
-                BufferValue.SequenceEqual(other.BufferValue) &&
-                ArrayIntValue.SequenceEqual(other.ArrayIntValue) &&
-                ArrayStringValue.SequenceEqual(other.ArrayStringValue) &&
-                ModelBValue.Equals(other.ModelBValue) &&
-                ModelBListValue.SequenceEqual(other.ModelBListValue) &&
-                MapValue.SequenceEqual(other.MapValue) &&
-                ListStringValue.SequenceEqual(other.ListStringValue);
-
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(obj is ModelA)
-                return Equals((ModelA)obj);
-            return base.Equals(obj);
-        }
-    }    
+      
+    }
 
 
-    public class ModelB:IEquatable<ModelB> , IReflectorMetadataProvider
+    public class ModelB : IReflectorMetadataProvider
     {
         private static readonly ModelBAccesor __accesor = new ModelBAccesor();
 
-        public int  Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -86,24 +56,7 @@ namespace CybtansSDK.Tests.Serialization
 
         public DateTime CreateDate { get; set; }
 
-        public DateTime? UpdateDate { get; set; }
-
-        public bool Equals([AllowNull] ModelB other)
-        {
-            if (other == null)
-                return false;         
-
-            return Id == other.Id
-                && Name == other.Name
-                && Checked == other.Checked
-                && CreateDate == other.CreateDate
-                && UpdateDate == other.UpdateDate;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ModelB ? Equals((ModelB)obj) : base.Equals(obj);
-        }
+        public DateTime? UpdateDate { get; set; }     
 
         public IReflectorMetadata GetAccesor()
         {
@@ -115,7 +68,7 @@ namespace CybtansSDK.Tests.Serialization
     {
         public const int Id = 1;
         public const int Name = 2;
-        public const int Checked =3;
+        public const int Checked = 3;
         public const int CreateDated = 4;
         public const int UpdateDate = 5;
 
@@ -176,11 +129,11 @@ namespace CybtansSDK.Tests.Serialization
             ModelB obj = (ModelB)target;
             switch (propertyCode)
             {
-                case Id:  obj.Id = (int)value;break;
-                case Name:  obj.Name = (string)value; break;
-                case Checked:  obj.Checked = (bool)value; break;
-                case CreateDated:  obj.CreateDate = (DateTime)value; break;
-                case UpdateDate:  obj.UpdateDate = (DateTime?)value; break;
+                case Id: obj.Id = (int)value; break;
+                case Name: obj.Name = (string)value; break;
+                case Checked: obj.Checked = (bool)value; break;
+                case CreateDated: obj.CreateDate = (DateTime)value; break;
+                case UpdateDate: obj.UpdateDate = (DateTime?)value; break;
                 default: throw new InvalidOperationException("property code not supported");
             }
         }

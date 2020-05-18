@@ -22,21 +22,21 @@ namespace CybtansSDK.Tests
             _binarySerializer = new BinarySerializer();
             _testOutput = testOutput;
 
-           var modelB = new ModelB
+            var modelB = new ModelB
             {
                 Id = 1,
                 Name = "Foo Bar ModelB",
                 CreateDate = DateTime.Now
             };
 
-             modelA = new ModelA
+            modelA = new ModelA
             {
                 ModelBValue = modelB,
                 MapValue = new Dictionary<string, ModelB>
                 {
                     ["1"] = modelB
                 },
-                ModelBListValue = Enumerable.Range(1, 100).Select(x=> new ModelB
+                ModelBListValue = Enumerable.Range(1, 100).Select(x => new ModelB
                 {
                     Id = x,
                     Name = $"Foo Bar {x}",

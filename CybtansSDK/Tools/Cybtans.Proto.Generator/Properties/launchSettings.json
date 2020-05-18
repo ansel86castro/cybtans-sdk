@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Cybtans.ServiceGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "-n Service1 -o Services/Service1"
+    }
+  }
+}

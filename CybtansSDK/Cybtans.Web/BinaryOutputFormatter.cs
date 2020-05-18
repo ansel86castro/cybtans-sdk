@@ -2,15 +2,22 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Cybtans.Web
 {
     public class BinaryOutputFormatter : OutputFormatter
     {
-        public BinaryOutputFormatter()
+        Encoding _encoding;
+        string _mediaType;
+        public BinaryOutputFormatter() : this(Encoding.UTF8) { }
+
+        public BinaryOutputFormatter(Encoding encoding)
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(CybtansFormatter.MEDIA_TYPE));            
+            _encoding = encoding;
+            _mediaType = $"{BinarySerializer.MEDIA_TYPE} charset={_encoding.WebName}";
+            SupportedMediaTypes.Add(_mediaType);            
         }
 
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
@@ -31,7 +38,7 @@ namespace Cybtans.Web
 
             var data = serializer.Serialize(context.Object);            
             
-            response.ContentType = CybtansFormatter.MEDIA_TYPE;
+            response.ContentType =_mediaType;
             response.ContentLength = data.Length;
 
             await response.Body.WriteAsync(data, 0, data.Length);

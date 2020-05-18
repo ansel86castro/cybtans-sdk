@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cybtans.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 
 namespace Cybtans.Web
 {
     public static class CybtansFormatter
-    {
-        public const string MEDIA_TYPE = "application/x-cybtans";
+    {       
 
         public static void AddCybtansFormatter(this IMvcBuilder builder)
         {
@@ -17,7 +17,7 @@ namespace Cybtans.Web
         {
             options.InputFormatters.Add(new BinaryInputFormatter());
             options.OutputFormatters.Add(new BinaryOutputFormatter());
-            options.FormatterMappings.SetMediaTypeMappingForFormat("cybtans", MediaTypeHeaderValue.Parse(MEDIA_TYPE));
+            options.FormatterMappings.SetMediaTypeMappingForFormat("cybtans", MediaTypeHeaderValue.Parse(BinarySerializer.MEDIA_TYPE));
         }
     }
 }

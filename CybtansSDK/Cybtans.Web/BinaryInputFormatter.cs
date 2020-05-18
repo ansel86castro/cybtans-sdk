@@ -2,15 +2,16 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Cybtans.Web
 {
     public class BinaryInputFormatter : InputFormatter
-    {
+    {        
         public BinaryInputFormatter()
         {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(CybtansFormatter.MEDIA_TYPE));
+            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(BinarySerializer.MEDIA_TYPE));          
         }
 
         public override bool CanRead(InputFormatterContext context)
@@ -22,7 +23,7 @@ namespace Cybtans.Web
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
             var type = context.ModelType;
-            var request = context.HttpContext.Request;
+            var request = context.HttpContext.Request;            
 
             using MemoryStream stream = new MemoryStream();
             await request.Body.CopyToAsync(stream);
