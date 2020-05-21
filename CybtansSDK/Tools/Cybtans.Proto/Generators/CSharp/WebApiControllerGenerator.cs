@@ -73,8 +73,8 @@ namespace Cybtans.Proto.Generators.CSharp
             foreach (var rpc in srv.Rpcs)
             {
                 var options = rpc.Option;
-                var request = _typeGenerator.Messages[rpc.RequestType];
-                var response = _typeGenerator.Messages[rpc.ResponseType];
+                var request = rpc.RequestType;
+                var response = rpc.ResponseType;
                 var rpcName = _serviceGenerator.GetRpcName(rpc);
                 string template = options.Template != null ? $"(\"{options.Template}\")" : "";
 
@@ -97,9 +97,9 @@ namespace Cybtans.Proto.Generators.CSharp
                 }
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public async Task<{response.Name}> {rpcName}").Append("(");
+                bodyWriter.Append($"public async {response.GetReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
-                bodyWriter.Append($"{GetRequestBinding(options.Method)}{response.Name} __request)").AppendLine()
+                bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
                     .Append('\t', 1);
 
@@ -109,27 +109,43 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 if (options.Template != null)
                 {
-                    var path = request.GetPathBinding(options.Template);
+                    var path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(options.Template) : null;
                     if (path != null)
                     {
                         foreach (var field in path)
                         {
                             parametersWriter.Append($"{field.Type} {field.Field.Name}, ");
-
                             methodWriter.Append($"__request.{field.Name} = {field.Field.Name};").AppendLine();
                         }
                     }
                 }
 
-                methodWriter.Append($"return await _service.{rpcName}(__request);");
+                if(response != PrimitiveType.Void)
+                {
+                    methodWriter.Append("return ");
+                }
+
+                methodWriter.Append($"await _service.{rpcName}");
+
+                if (request != PrimitiveType.Void)
+                {
+                    methodWriter.Append("(__request);");
+                }
+                else
+                {
+                    methodWriter.Append("();");
+                }
             }
 
             clsWriter.Append("}").AppendLine();
             writer.Save($"{srvInfo.Name}Controller");
         }
 
-        private object GetRequestBinding(string method)
+        private object GetRequestBinding(string method, ITypeDeclaration request)
         {
+            if (request == PrimitiveType.Void)
+                return "";
+
             return method switch
             {
                 "GET" => "[FromQuery]",

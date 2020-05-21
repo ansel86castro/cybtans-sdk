@@ -23,7 +23,12 @@ namespace Cybtans.Proto.AST
 
         public override void CheckSemantic(Scope scope, IErrorReporter logger)
         {
-            foreach (var item in Declarations)
+            if(Package != null)
+            {
+                Option.Namespace = Package.ToString();
+            }
+
+            foreach (var item in Declarations) 
             {
                 if(item is ITypeDeclaration type)
                 {

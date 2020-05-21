@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  catalog.restapi:
+    image: ${DOCKER_REGISTRY-}catalogrestapi
+    build:
+      context: .
+      dockerfile: Catalog/Catalog.RestApi/Dockerfile
+
+  ordering.restapi:
+    image: ${DOCKER_REGISTRY-}orderingrestapi
+    build:
+      context: .
+      dockerfile: Ordering/Ordering.RestApi/Dockerfile
+

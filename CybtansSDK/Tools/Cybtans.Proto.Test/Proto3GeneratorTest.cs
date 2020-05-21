@@ -1,7 +1,9 @@
 using Cybtans.Proto.AST;
 using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Options;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace Cybtans.Proto.Test
@@ -19,38 +21,41 @@ namespace Cybtans.Proto.Test
             AssertAST(ast);
         }
 
-        [Fact]
-        public void GenerateCode()
+        [Theory]
+        [InlineData("Protos/Service1.proto", "Service1")]
+        [InlineData("Protos/Catalog.proto", "Catalog")]
+        public void GenerateCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
 
             Proto3Generator generator = new Proto3Generator(fileResolverFactory);
-            var (ast, scope) = generator.LoadFromFile("Protos/Service1.proto");
-
-            AssertAST(ast);
+            var (ast, scope) = generator.LoadFromFile(filename);
+            Assert.NotNull(ast);
 
             MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
             {
                 ModelOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = "Generated",
+                    OutputDirectory = output,
                 },
                 ServiceOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = "Generated"
+                    OutputDirectory = output
                 },
                 ControllerOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = "Generated"
+                    OutputDirectory = output
                 },
                 ClientOptions = new TypeGeneratorOption
                 {
-                     OutputDirectory = "Generated"
+                     OutputDirectory = output
                 }
             });
 
             microserviceGenerator.GenerateCode(ast);
         }
+
+
 
         private static void AssertAST(ProtoFile ast)
         {

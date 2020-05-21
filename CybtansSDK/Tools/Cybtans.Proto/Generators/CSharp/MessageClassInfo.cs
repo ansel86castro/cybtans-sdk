@@ -66,7 +66,7 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             _field = field;
             Name = field.Name.Pascal();
-            Type = GetTypeName(field.Type);
+            Type = field.Type.GetTypeName();
         }
 
         public FieldDeclaration Field => _field;
@@ -75,46 +75,6 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public string Type { get; }
 
-        public static string GetTypeName(TypeIdentifier type)
-        {
-            string name = type.TypeDeclaration.Name.Pascal();
-
-            if (type.TypeDeclaration is PrimitiveType p)
-            {
-                name = GetPrimitiveTypeName(p);
-            }
-
-            if (type.IsArray)
-            {
-                name = $"List<{name}>";
-            }
-            else if (type.IsMap)
-            {
-                name = $"{name}<{GetTypeName(type.GenericArgs[0])},{GetTypeName(type.GenericArgs[1])}>";
-            }
-            return name;
-        }
-
-        private static string GetPrimitiveTypeName(PrimitiveType type)
-        {
-            switch (type.Name)
-            {
-                case "int8": return "byte";
-                case "int16": return "short";
-                case "int32": return "int";
-                case "int64": return "long";
-                case "uint16": return "ushort";
-                case "uint32": return "uint";
-                case "uint64": return "ulong";
-                case "bool": return "bool";
-                case "string": return "string";
-                case "bytes": return "byte[]";
-                case "datetime": return "Datetime";
-                case "float": return "float";
-                case "double": return "double";
-                case "map": return "Dictionary";
-            }
-            throw new InvalidOperationException($"Type {type.Name} not supported");
-        }
+       
     }
 }
