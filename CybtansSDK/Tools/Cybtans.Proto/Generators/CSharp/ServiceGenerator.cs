@@ -44,7 +44,9 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             var writer = CreateWriter(info.Namespace);
            
-            writer.Usings.Append($"using System.Threading.Tasks;").AppendLine();
+            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();
+            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
+            writer.Usings.Append("using System.Collections.Generic;").AppendLine();
 
             var clsWriter = writer.Class;
 
@@ -62,27 +64,13 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var bodyWriter = clsWriter.Block("BODY");
 
-            for (int i = 0; i < info.Service.Rpcs.Count; i++)
+            foreach (var rpc in info.Service.Rpcs)
             {
-                var rpc = info.Service.Rpcs[i];
-
-                var returnInfo = _typeGenerator.Messages[rpc.ResponseType];
-                var requestInfo = _typeGenerator.Messages[rpc.RequestType];
-
-                if (i == 0)
-                {
-                    writer.Usings.Append("using ").Append(requestInfo.Namespace).Append(";").AppendLine();
-                }
+                var returnInfo = rpc.ResponseType;
+                var requestInfo = rpc.RequestType;               
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public abstract Task<{returnInfo.Name}> {GetRpcName(rpc)}({requestInfo.Name} request");
-                if(info.Service.Option.ContextClass != null)
-                {
-                    bodyWriter.Append($", global::{info.Service.Option.ContextClass} context");
-                }
-                
-                bodyWriter.Append(");");
-
+                bodyWriter.Append($"public abstract {returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")});");
                 bodyWriter.AppendLine();
                 bodyWriter.AppendLine();
             }
@@ -95,6 +83,8 @@ namespace Cybtans.Proto.Generators.CSharp
         public string GetRpcName(RpcDeclaration rpc)
         {
             return rpc.Name.Pascal();
-        }        
+        }  
+        
+      
     }
 }

@@ -56,15 +56,15 @@ namespace Cybtans.Proto.Generators.CSharp
             foreach (var rpc in srv.Rpcs)
             {
                 var options = rpc.Option;
-                var request = _typeGenerator.Messages[rpc.RequestType];
-                var response = _typeGenerator.Messages[rpc.ResponseType];
+                var request = rpc.RequestType;
+                var response = rpc.ResponseType;
                 var rpcName = _serviceGenerator.GetRpcName(rpc);
                 string url = srv.Option.Prefix;
 
                 if(options.Template != null)
                 {
-                    var path = request.GetPathBinding(options.Template);
                     var template = options.Template;
+                    var path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(template) : null;
                     if(path != null)
                     {
                         foreach (var field in path)
@@ -95,7 +95,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 bodyWriter.AppendLine();
 
-                bodyWriter.Append($"Task<{response.Name}> {rpcName}({GetRequestBinding(options.Method)}{request.Name} request);").AppendLine();
+                bodyWriter.Append($"{response.GetReturnTypeName()} {rpcName}({GetRequestBinding(options.Method)}{request.GetRequestTypeName("request")});").AppendLine();
             }
 
             clsWriter.AppendLine().Append("}").AppendLine();

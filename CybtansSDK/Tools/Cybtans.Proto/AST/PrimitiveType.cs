@@ -19,6 +19,8 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Bytes = new PrimitiveType("bytes", typeof(byte[]));
         public static readonly PrimitiveType Datetime = new PrimitiveType("datetime", typeof(DateTime));
         public static readonly PrimitiveType Map = new PrimitiveType("map", typeof(Dictionary<,>));
+        public static readonly PrimitiveType Object = new PrimitiveType("object", typeof(object));
+        public static readonly PrimitiveType Void = new PrimitiveType("void", typeof(void));
 
         public PrimitiveType(string name, Type clrType)
         {
@@ -39,7 +41,7 @@ namespace Cybtans.Proto.AST
 
         public bool IsChecked => true;
 
-        public bool Nullable => ClrType.IsValueType;
+        public bool Nullable => ClrType?.IsValueType ?? false;
 
     }
 }

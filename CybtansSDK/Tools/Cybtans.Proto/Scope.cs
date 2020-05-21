@@ -149,6 +149,8 @@ namespace Cybtans.Proto
                 PrimitiveType.Bytes,
                 PrimitiveType.Datetime,
                 PrimitiveType.Map,
+                PrimitiveType.Object,
+                PrimitiveType.Void
             });
         }
     }

@@ -36,6 +36,12 @@ namespace Cybtans.Proto.AST
             base.CheckSemantic(scope, logger);
 
             Type.CheckSemantic(scope, logger);
+
+            if (Type.TypeDeclaration != null && Type.TypeDeclaration == PrimitiveType.Void)
+            {
+                logger.AddError($"Type void is not supported as a field type in {Line},{Column}");
+            }
+
         }
 
         public override string ToString()
@@ -71,16 +77,20 @@ namespace Cybtans.Proto.AST
         public override void CheckSemantic(Scope scope, IErrorReporter logger)
         {
             TypeDeclaration = scope.GetDeclaration(Name);
-            if(Type == null)
+            if(TypeDeclaration == null)
             {
                 logger.AddError($"Type {Name} is not defined at {Name.Line},{Name.Column}");
-            }
+            }            
 
             if(GenericArgs != null)
             {
                 foreach (var genParameter in GenericArgs)
                 {
                     genParameter.CheckSemantic(scope, logger);
+                    if(genParameter.TypeDeclaration  == PrimitiveType.Void)
+                    {
+                        logger.AddError($"Type void is not supported as a generic argument in {genParameter.Line},{genParameter.Column}");
+                    }
                 }
             }
 
