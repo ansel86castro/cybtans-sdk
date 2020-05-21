@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.Clients;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,10 @@ namespace Ordering.RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOpenApiDocument();
+
+            services.AddCatalogService(Configuration);
+
             services.AddControllers();
         }
 
@@ -36,7 +41,14 @@ namespace Ordering.RestApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseOpenApi(); // serve OpenAPI/Swagger documents
+            app.UseSwaggerUi3(); // serve Swagger UI
+            app.UseReDoc(options=>
+            {
+                options.Path = "/redoc";
+            }); // serve ReDoc UI
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

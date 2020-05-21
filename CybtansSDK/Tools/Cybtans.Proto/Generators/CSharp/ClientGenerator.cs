@@ -59,7 +59,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 var request = rpc.RequestType;
                 var response = rpc.ResponseType;
                 var rpcName = _serviceGenerator.GetRpcName(rpc);
-                string url = srv.Option.Prefix;
+                string url = $"/{srv.Option.Prefix}";
 
                 if(options.Template != null)
                 {
@@ -72,7 +72,7 @@ namespace Cybtans.Proto.Generators.CSharp
                             template = template.Replace($"{{{field.Field.Name}}}", $"{{request.{field.Name}}}");
                         }
                     }
-                    url =$"{srv.Option.Prefix}/{ template}";
+                    url =$"/{srv.Option.Prefix}/{ template}";
                 }                                
 
                 bodyWriter.AppendLine();
@@ -108,10 +108,12 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             var writer = CreateWriter(Namespace);
            
-            writer.Usings.Append($"using Refit;").AppendLine();
-            writer.Usings.Append($"using Cybtans.Refit;").AppendLine(); 
-            writer.Usings.Append($"using Microsoft.Extensions.Configuration;").AppendLine();
-            writer.Usings.Append($"using Microsoft.Extensions.DependencyInjection;")
+            writer.Usings.Append("using Refit;").AppendLine();
+            writer.Usings.Append("using Cybtans.Refit;").AppendLine();
+            writer.Usings.Append("using Cybtans.Serialization;").AppendLine(); 
+            writer.Usings.Append("using Microsoft.Extensions.Configuration;").AppendLine();
+            writer.Usings.Append("using Microsoft.Extensions.DependencyInjection;").AppendLine();
+            writer.Usings.Append("using System.Text;")    
                 .AppendLine(2);
 
             writer.Class.AppendTemplate(setupExtension, new Dictionary<string, object>
@@ -151,13 +153,14 @@ public static class @{NAME}Extensions
             settings = new RefitSettings();
         }
 
-        settings.ContentSerializer = new CybtansContentSerializer();
+        settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
 
         var builder = services.AddRefitClient<I@{NAME}>(settings);
 
         builder.ConfigureHttpClient(c =>
         {                
             c.BaseAddress = new Uri(option.BaseUrl);
+            c.DefaultRequestHeaders.Add(""Accept"", $""{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}"");
         });
     }       
 }

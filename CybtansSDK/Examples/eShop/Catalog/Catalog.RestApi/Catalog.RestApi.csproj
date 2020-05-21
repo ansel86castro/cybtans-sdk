@@ -10,11 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
   </ItemGroup>
 
   <ItemGroup>
   	<ProjectReference Include="../Catalog.Services/Catalog.Services.csproj" />
   	<ProjectReference Include="../Catalog.Models/Catalog.Models.csproj" />
+  	<ProjectReference Include="..\..\..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
+  	<ProjectReference Include="..\..\..\..\Cybtans\Cybtans.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -89,12 +90,10 @@ namespace Cybtans.Serialization
 
         public byte[] Serialize(object obj)
         {
-            using (var memStream = new MemoryStream())
-            {
-                Serialize(memStream, obj);
+            using var memStream = new MemoryStream();
+            Serialize(memStream, obj);
 
-                return memStream.ToArray();
-            }
+            return memStream.ToArray();
         }
 
         public unsafe void Serialize(Stream stream, object obj)
@@ -532,7 +531,14 @@ namespace Cybtans.Serialization
                 var valueType = value.GetType();
                 if (valueType != type)
                 {
-                    if (!type.IsAssignableFrom(valueType) && value is IConvertible convertible)
+                    if (valueType.IsPrimitive && IsPrimitiveNullable(type, out var nullableType))
+                    {
+                        if (nullableType != valueType)
+                        {
+                            value = System.Convert.ChangeType(value, nullableType);
+                        }
+                    }
+                    else if (!type.IsAssignableFrom(valueType) && value is IConvertible convertible)
                     {
                         value = convertible.ToType(type, null);
                     }
@@ -540,7 +546,6 @@ namespace Cybtans.Serialization
             }
 
             return value;
-
         }
 
         private unsafe T ReadNumber<T>(Stream stream)
@@ -680,8 +685,23 @@ namespace Cybtans.Serialization
                     return obj;
                 }
                 else if (type == null)
+                {                    
+                    return ReadMap(stream, count, typeof(ExpandoObject));
+                }
+                else if (type == typeof(ExpandoObject))
                 {
-                    return ReadMap(stream, count, typeof(Dictionary<object, object>));
+                    IDictionary<string, object> expando = new ExpandoObject();
+                    for (int i = 0; i < count; i++)
+                    {
+                        var key = (string?)Deserialize(stream, typeof(string));
+                        if (key != null)
+                        {
+                            var item = Deserialize(stream, null);
+                            expando.Add(key, item);
+                        }
+                    }
+
+                   return expando;
                 }
                 else
                 {
@@ -754,8 +774,64 @@ namespace Cybtans.Serialization
             return item;
         }
 
+        private bool IsPrimitiveNullable(Type targetType, out Type? converType)
+        {
+            converType = null;
+            if (targetType == typeof(bool?))
+            {
+                converType = typeof(bool);                
+            }
+            else if (targetType == typeof(byte?))
+            {
+                converType = typeof(byte);                
+            }
+            else if (targetType == typeof(sbyte?))
+            {
+                converType = typeof(sbyte);
+            }
+            else if (targetType == typeof(short?))
+            {
+                converType = typeof(short);
+            }
+            else if (targetType == typeof(ushort?))
+            {
+                converType = typeof(ushort);
+            }
+            else if (targetType == typeof(int?))
+            {
+                converType = typeof(int);
+            }
+            else if (targetType == typeof(uint?))
+            {
+                converType = typeof(uint);
+            }
+            else if (targetType == typeof(long?))
+            {
+                converType = typeof(long);
+            }
+            else if (targetType == typeof(ulong?))
+            {
+                converType = typeof(ulong);
+            }
+            else if (targetType == typeof(float?))
+            {
+                converType = typeof(float);
+            }
+            else if (targetType == typeof(double?))
+            {
+                converType = typeof(double);
+            }
+            else if (targetType == typeof(decimal?))
+            {
+                converType = typeof(decimal);
+            }
+            else if (targetType == typeof(char?))
+            {
+                converType = typeof(char);
+            }
 
-
+            return converType != null;
+        }
         #endregion
     }
 }

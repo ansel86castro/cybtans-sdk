@@ -105,7 +105,7 @@ namespace Cybtans.Proto.Generator
             });
 
             // //Add Client references
-            ReferenceProject(options, "NetStandardLib.tlp", $"Clients/{ options.Name }.Clients", new string[] { $"Models/{options.Name}.Models" });
+            ReferenceProject(options, "ClientLibrary.tlp", $"Clients/{ options.Name }.Clients", new string[] { $"Models/{options.Name}.Models" });
 
             //Add WebAPi references
             ReferenceProject(options, "WebAPI.tlp", $"RestApi/{ options.Name }.RestApi", new string[]
@@ -113,6 +113,8 @@ namespace Cybtans.Proto.Generator
                  $"Services/{options.Name}.Services",
                  $"Models/{options.Name}.Models"
            });
+
+            //Add Models Packages           
 
             if (options.Solution != null)
             {
@@ -158,6 +160,25 @@ namespace Cybtans.Proto.Generator
               {
                   FERERENCES = "<ItemGroup>\r\n"+ References(reference.Select(x=>$"../{options.Name}.{x}").ToArray()) + "\r\n</ItemGroup >"
               }));
+        }
+
+        private static void CopyProjectTemplate(string template, string output ,string project, string[] references)
+        {
+            var diectory = Path.GetDirectoryName(output);
+            Directory.CreateDirectory(diectory);
+
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cybtans.Proto.Generator.{template}");
+            using var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd();
+            if(references != null)
+            {
+                content = TemplateProcessor.Process(content, new
+                {
+                    FERERENCES = "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}").ToArray()) + "\r\n</ItemGroup >"
+                });
+            }
+
+            File.WriteAllText($"{output}/{project}.csproj", content);
         }
 
         private static void GenerateProto(string[] args)

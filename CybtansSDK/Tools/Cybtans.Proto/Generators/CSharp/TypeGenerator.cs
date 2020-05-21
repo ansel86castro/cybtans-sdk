@@ -224,7 +224,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 getTypeSwtich.Append($"{field.Name} => typeof({field.Type}{nullable}),\r\n");
                 getValueSwtich.Append($"{field.Name} => obj.{field.Name},\r\n");
-                setValueSwtich.Append($"case {field.Name}:  obj.{field.Name} = ({field.Type})value;break;\r\n");
+                setValueSwtich.Append($"case {field.Name}:  obj.{field.Name} = ({field.Type}{nullable})value;break;\r\n");
                 getPropertyName.Append($"{field.Name} => \"{field.Name}\",\r\n");
                 getPropertyCode.Append($"\"{field.Name}\" => {field.Name},\r\n");
             }

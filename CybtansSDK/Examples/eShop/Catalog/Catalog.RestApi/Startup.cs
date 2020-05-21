@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Catalog.Services;
+using Catalog.Services.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Catalog.RestApi
 {
@@ -25,18 +21,38 @@ namespace Catalog.RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddScoped<CatalogService, CatalogServiceImpl>();
+
+            services.AddDbContext<CatalogContext>(options =>
+            {
+                options.UseInMemoryDatabase("InMemoryDb");
+
+            }, ServiceLifetime.Scoped, ServiceLifetime.Singleton);
+
+            // Register the Swagger services
+            services.AddOpenApiDocument();
+
+            services.AddControllers(options=>
+            {
+                options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
+                options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
+            });            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, CatalogContext context)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+
+            app.UseOpenApi(); // serve OpenAPI/Swagger documents
+            app.UseSwaggerUi3(); // serve Swagger UI          
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -46,6 +62,8 @@ namespace Catalog.RestApi
             {
                 endpoints.MapControllers();
             });
+
+            CatalogContext.Initialize(context);
         }
     }
 }
