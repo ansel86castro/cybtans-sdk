@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CybtansSDK.Tests", "CybtansSDK.Tests\CybtansSDK.Tests.csproj", "{8DF5C1F3-5F56-49A5-88E2-560F17CF1379}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Web", "Cybtans.Web\Cybtans.Web.csproj", "{4F127B21-7B4D-4F7A-A6E1-189E7D831252}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Refit", "Cybtans.Refit\Cybtans.Refit.csproj", "{419F80C1-7A33-4FB7-A007-A028BCA61377}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans", "Cybtans\Cybtans.csproj", "{9454C647-F156-4F5F-AECF-A17DD7D78396}"
@@ -21,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto.Test", "Tools
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto.Generator", "Tools\Cybtans.Proto.Generator\Cybtans.Proto.Generator.csproj", "{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benchmark.csproj", "{5D49E34E-696D-4254-81B5-92112E734125}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "Benchmark\Benchmark.csproj", "{5D49E34E-696D-4254-81B5-92112E734125}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AspNetCore", "Cybtans.AspNetCore\Cybtans.AspNetCore.csproj", "{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,6 @@ Global
 		{8DF5C1F3-5F56-49A5-88E2-560F17CF1379}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DF5C1F3-5F56-49A5-88E2-560F17CF1379}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DF5C1F3-5F56-49A5-88E2-560F17CF1379}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4F127B21-7B4D-4F7A-A6E1-189E7D831252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F127B21-7B4D-4F7A-A6E1-189E7D831252}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F127B21-7B4D-4F7A-A6E1-189E7D831252}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F127B21-7B4D-4F7A-A6E1-189E7D831252}.Release|Any CPU.Build.0 = Release|Any CPU
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,6 +57,10 @@ Global
 		{5D49E34E-696D-4254-81B5-92112E734125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D49E34E-696D-4254-81B5-92112E734125}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D49E34E-696D-4254-81B5-92112E734125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

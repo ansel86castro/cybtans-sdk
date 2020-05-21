@@ -14,8 +14,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientLibrary.tlp" />
+    <None Remove="ModelLibrary.tlp" />
     <None Remove="NetCoreLib.tlp" />
     <None Remove="NetStandardLib.tlp" />
+    <None Remove="Properties\NetStandardLib.tlp" />
     <None Remove="TestProject.tlp" />
     <None Remove="WebAPI.tlp" />
   </ItemGroup>
@@ -24,7 +27,16 @@
     <EmbeddedResource Include="NetCoreLib.tlp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="ClientLibrary.tlp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelLibrary.tlp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="NetStandardLib.tlp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\NetStandardLib.tlp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="TestProject.tlp">
