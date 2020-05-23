@@ -4,7 +4,7 @@ using Cybtans.Proto.AST;
 
 namespace Cybtans.Proto.Options
 {
-    public class RpcOptions : ProtobufOption
+    public class RpcOptions : SecurityOptions
     {
         public RpcOptions() : base(OptionsType.Rpc)
         {
@@ -15,10 +15,7 @@ namespace Cybtans.Proto.Options
         public string? Template { get; set; }
         
         [Field("method")]
-        public string? Method { get; set; }
-
-        [Field("claims")]
-        public string? Claims { get; set; }
+        public string? Method { get; set; }        
 
     }
 }

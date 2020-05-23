@@ -150,7 +150,8 @@ namespace Cybtans.Proto
                 PrimitiveType.Datetime,
                 PrimitiveType.Map,
                 PrimitiveType.Object,
-                PrimitiveType.Void
+                PrimitiveType.Void,
+                PrimitiveType.Guid
             });
         }
     }

@@ -21,6 +21,7 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Map = new PrimitiveType("map", typeof(Dictionary<,>));
         public static readonly PrimitiveType Object = new PrimitiveType("object", typeof(object));
         public static readonly PrimitiveType Void = new PrimitiveType("void", typeof(void));
+        public static readonly PrimitiveType Guid = new PrimitiveType("guid", typeof(Guid));
 
         public PrimitiveType(string name, Type clrType)
         {

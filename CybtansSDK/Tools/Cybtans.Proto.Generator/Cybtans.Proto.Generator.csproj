@@ -14,37 +14,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ClientLibrary.tlp" />
-    <None Remove="ModelLibrary.tlp" />
-    <None Remove="NetCoreLib.tlp" />
+    <None Remove="ClientsProject.tlp" />
+    <None Remove="ModelsProject.tlp" />
     <None Remove="NetStandardLib.tlp" />
     <None Remove="Properties\NetStandardLib.tlp" />
+    <None Remove="ServicesProject.tlp" />
+    <None Remove="Templates\Proto.tpl" />
+    <None Remove="Templates\WebAPI\appsettings.Development.tpl" />
+    <None Remove="Templates\WebAPI\appsettings.tpl" />
+    <None Remove="Templates\WebAPI\launchSettings.tpl" />
+    <None Remove="Templates\WebAPI\Program.tpl" />
+    <None Remove="Templates\WebAPI\Startup.tpl" />
     <None Remove="TestProject.tlp" />
     <None Remove="WebAPI.tlp" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="NetCoreLib.tlp">
+    <EmbeddedResource Include="Templates\Proto.tpl" />
+    <EmbeddedResource Include="Templates\ServicesProject.tpl">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClientLibrary.tlp">
+    <EmbeddedResource Include="Templates\ClientsProject.tlp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="ModelLibrary.tlp">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NetStandardLib.tlp">
+    <EmbeddedResource Include="Templates\ModelsProject.tpl">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\NetStandardLib.tlp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="TestProject.tlp">
+    <EmbeddedResource Include="Templates\TestProject.tpl">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="WebAPI.tlp">
+    <EmbeddedResource Include="Templates\WebAPI.tpl">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Templates\WebAPI\appsettings.Development.tpl" />
+    <EmbeddedResource Include="Templates\WebAPI\appsettings.tpl" />
+    <EmbeddedResource Include="Templates\WebAPI\launchSettings.tpl" />
+    <EmbeddedResource Include="Templates\WebAPI\Program.tpl" />
+    <EmbeddedResource Include="Templates\WebAPI\Startup.tpl" />
   </ItemGroup>
 
   <ItemGroup>

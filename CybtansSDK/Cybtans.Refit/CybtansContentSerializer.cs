@@ -40,7 +40,7 @@ namespace Cybtans.Refit
             return serializer.Deserialize<T>(await content.ReadAsStreamAsync());            
         }
 
-        public async Task<HttpContent> SerializeAsync<T>(T item)
+        public Task<HttpContent> SerializeAsync<T>(T item)
         {            
             var serializer = new BinarySerializer(_encoding);
             var bytes = serializer.Serialize(item);
@@ -48,7 +48,8 @@ namespace Cybtans.Refit
             var httpContent = new ByteArrayContent(bytes);
             httpContent.Headers.ContentType = MediaTypeHeaderValue.Parse(_mediaType);
             httpContent.Headers.ContentLength = bytes.Length;
-            return httpContent;
+
+            return Task.FromResult<HttpContent>(httpContent);
         }
         
     }

@@ -57,6 +57,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 case "map": return "Dictionary";
                 case "object": return "object";
                 case "void": return "void";
+                case "guid": return "Guid";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");

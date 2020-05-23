@@ -1,4 +1,5 @@
 ﻿using Cybtans.Proto.AST;
+using Cybtans.Proto.Options;
 using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
@@ -37,35 +38,43 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             var srv = srvInfo.Service;
             var writer = CreateWriter($"{_proto.Option.Namespace}.{_option.Namespace ?? "Controllers"}");
-            
+
             writer.Usings.Append($"using System.Collections.Generic;").AppendLine();
             writer.Usings.Append($"using System.Threading.Tasks;").AppendLine();
 
             writer.Usings.Append($"using Microsoft.AspNetCore.Http;").AppendLine();
             writer.Usings.Append($"using Microsoft.AspNetCore.Mvc;").AppendLine();
-           
+
 
             writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();            
+            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
 
             var clsWriter = writer.Class;
-           
+
+            if(srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous || 
+               srv.Rpcs.Any(x=>x.Option.RequiredAuthorization || x.Option.AllowAnonymous))
+            {
+                writer.Usings.Append("using Microsoft.AspNetCore.Authorization;").AppendLine();
+            }
+
+            AddAutorizationAttribute(srv.Option, clsWriter);
+
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
-            clsWriter.Append("[ApiController]").AppendLine();         
+            clsWriter.Append("[ApiController]").AppendLine();
             clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
 
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);
 
             var bodyWriter = clsWriter.Block("BODY");
-         
+
             bodyWriter.Append($"private readonly {srvInfo.Name} _service;").AppendLine().AppendLine();
 
             #region Constructor
 
             bodyWriter.Append($"public {srvInfo.Name}Controller({srvInfo.Name} service)").AppendLine();
             bodyWriter.Append("{").AppendLine();
-            bodyWriter.Append('\t',1).Append("_service = service;").AppendLine();
+            bodyWriter.Append('\t', 1).Append("_service = service;").AppendLine();
             bodyWriter.Append("}").AppendLine();
 
             #endregion
@@ -79,6 +88,8 @@ namespace Cybtans.Proto.Generators.CSharp
                 string template = options.Template != null ? $"(\"{options.Template}\")" : "";
 
                 bodyWriter.AppendLine();
+
+                AddAutorizationAttribute(options, bodyWriter);
 
                 switch (options.Method)
                 {
@@ -120,7 +131,7 @@ namespace Cybtans.Proto.Generators.CSharp
                     }
                 }
 
-                if(response != PrimitiveType.Void)
+                if (response != PrimitiveType.Void)
                 {
                     methodWriter.Append("return ");
                 }
@@ -139,6 +150,27 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.Append("}").AppendLine();
             writer.Save($"{srvInfo.Name}Controller");
+        }
+
+        private static void AddAutorizationAttribute(SecurityOptions option, CodeWriter clsWriter)
+        {
+            if (option.Authorized)
+            {
+                clsWriter.Append("[Authorize]").AppendLine();
+                
+            }
+            else if (option.Roles != null)
+            {
+                clsWriter.Append($"[Authorize(Roles = \"{option.Roles}\")]").AppendLine();                
+            }
+            else if (option.Policy != null)
+            {
+                clsWriter.Append($"[Authorize(Policy = \"{option.Policy}\")]").AppendLine();                
+            }
+            else if(option.AllowAnonymous)
+            {
+                clsWriter.Append("[AllowAnonymous]").AppendLine();
+            }
         }
 
         private object GetRequestBinding(string method, ITypeDeclaration request)

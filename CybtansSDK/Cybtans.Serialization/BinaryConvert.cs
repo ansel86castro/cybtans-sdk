@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.IO;
 
 namespace Cybtans.Serialization
@@ -15,11 +13,11 @@ namespace Cybtans.Serialization
 
         public static T Deserialize<T>(byte[] bytes) => (T)Deserialize(bytes, typeof(T));
 
-        public static object? Deserialize(byte[] bytes) => Deserialize(bytes, null);
+        public static object Deserialize(byte[] bytes) => Deserialize(bytes, null);
 
-        public static object? Deserialize(Stream stream) => Deserialize(stream, null);
+        public static object Deserialize(Stream stream) => Deserialize(stream, null);
 
-        public static object? Deserialize(byte[] bytes, Type? type)
+        public static object Deserialize(byte[] bytes, Type? type)
         {
             using var stream = new MemoryStream(bytes);
             return Deserialize(stream, type);
