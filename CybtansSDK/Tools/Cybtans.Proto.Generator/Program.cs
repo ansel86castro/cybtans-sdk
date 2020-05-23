@@ -22,8 +22,8 @@ namespace Cybtans.Proto.Generator
         }
 
         static void Main(string[] args)
-        {
-            if (args[0] == "proto")
+        {            
+            if (args.Length > 0 && args[0] == "proto")
             {
                 GenerateProto(args);
             }
@@ -83,38 +83,23 @@ namespace Cybtans.Proto.Generator
             Directory.CreateDirectory(options.Output);
             //Generate Projects              
             Console.WriteLine("Generating projects...");
-                        
-            var t1 = Start("dotnet", $"new classlib -lang C# -f netcoreapp3.1 --no-restore --force -n { options.Name }.Services -o {options.Output}/{ options.Name }.Services");
-            var t2 = Start("dotnet", $"new xunit -lang C# -f netcoreapp3.1 --no-restore --force -n { options.Name }.Services.Tests -o {options.Output}/{ options.Name }.Services.Tests");
-            var t3 = Start("dotnet", $"new classlib -lang C# -f netstandard2.1 --no-restore --force -n { options.Name }.Models -o {options.Output}/{ options.Name }.Models");
-            var t4 = Start("dotnet", $"new classlib -lang C# -f netstandard2.1 --no-restore --force -n { options.Name }.Clients -o {options.Output}/{ options.Name }.Clients");
-            var t5 = Start("dotnet", $"new webapi -au None -lang C# -f netcoreapp3.1 --no-restore --force -n { options.Name }.RestApi -o {options.Output}/{ options.Name }.RestApi");
 
-            Task.WaitAll(t1, t2, t3, t4, t5);
+            GenerateProject("ModelsProject.tpl", options.Output, $"{ options.Name }.Models", null);
+            GenerateProject("ClientsProject.tlp", options.Output, $"{ options.Name }.Clients", new [] { $"{ options.Name }.Models" });
+            GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Services", new [] { $"{ options.Name }.Models" });
+            GenerateProject("TestProject.tpl", options.Output, $"{ options.Name }.Services.Tests", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
+            GenerateWebApi(options);                       
 
-            Console.WriteLine("Projects references...");
-
-            //Add Service references
-            ReferenceProject(options, "NetCoreLib.tlp", $"Services/{ options.Name }.Services", new string[] { $"Models/{options.Name}.Models" });
-
-            //Add Tests references
-            ReferenceProject(options, "TestProject.tlp", $"Services.Tests/{ options.Name }.Services.Tests", new string[]
+            //Generate Proto 
+            Directory.CreateDirectory($"{options.Output}/Proto");
+            File.WriteAllText($"{options.Output}/Proto/{options.Name}.proto", GetTemplate("Proto.tpl", new
             {
-                $"Services/{options.Name}.Services",
-                $"Models/{options.Name}.Models"
-            });
+                SERVICE = options.Name
+            }));
 
-            // //Add Client references
-            ReferenceProject(options, "ClientLibrary.tlp", $"Clients/{ options.Name }.Clients", new string[] { $"Models/{options.Name}.Models" });
-
-            //Add WebAPi references
-            ReferenceProject(options, "WebAPI.tlp", $"RestApi/{ options.Name }.RestApi", new string[]
-           {
-                 $"Services/{options.Name}.Services",
-                 $"Models/{options.Name}.Models"
-           });
-
-            //Add Models Packages           
+            File.WriteAllText($"{options.Output}/generate.bat", $"ServiceGenerator proto -n {options.Name} -o . -f ./Proto/{options.Name}.proto");
+          
+            GenerateProto(new string[] { "proto", "-n", options.Name, "-o", options.Output, "-f", $"{options.Output}/Proto/{options.Name}.proto" });
 
             if (options.Solution != null)
             {
@@ -125,60 +110,66 @@ namespace Cybtans.Proto.Generator
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Models/{ options.Name }.Models.csproj").WaitForExit();
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Clients/{ options.Name }.Clients.csproj").WaitForExit();
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.RestApi/{ options.Name }.RestApi.csproj").WaitForExit();
-            }
+            }           
 
             Console.WriteLine("Generation Completed");           
-        }
-
-        private static Task Start(string process, string arguments)
-        {
-            return Task.Run(() =>
-            {
-                using Process p = Process.Start(new ProcessStartInfo(process, arguments)
-                {
-                    WorkingDirectory = Environment.CurrentDirectory,                   
-                    CreateNoWindow = false
-                });
-                
-                p.WaitForExit();
-            });
-        }
+        }        
 
         private static string References(params string[] references)
         {
-            return string.Join(Environment.NewLine, references.Select(x => $"\t<ProjectReference Include=\"{x}.csproj\" />"));
-        }
+            return string.Join(Environment.NewLine, references.Select(x => $"\t<ProjectReference Include=\"{x}\" />"));
+        }      
 
-        private static void ReferenceProject(Options options, string template, string project, string[] reference)
-        {            
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cybtans.Proto.Generator.{template}");
-            using var reader = new StreamReader(stream);
-            var content = reader.ReadToEnd();          
-
-            File.WriteAllText($"{options.Output}/{ options.Name }.{project}.csproj",
-              TemplateProcessor.Process(content, new
-              {
-                  FERERENCES = "<ItemGroup>\r\n"+ References(reference.Select(x=>$"../{options.Name}.{x}").ToArray()) + "\r\n</ItemGroup >"
-              }));
-        }
-
-        private static void CopyProjectTemplate(string template, string output ,string project, string[] references)
+        private static void GenerateProject(string template, string output ,string project, string[] references)
         {
-            var diectory = Path.GetDirectoryName(output);
-            Directory.CreateDirectory(diectory);
-
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"Cybtans.Proto.Generator.{template}");
-            using var reader = new StreamReader(stream);
-            var content = reader.ReadToEnd();
-            if(references != null)
+            Directory.CreateDirectory($"{output}/{project}");
+            
+            var content = GetTemplate(template);
+            if (references != null)
             {
                 content = TemplateProcessor.Process(content, new
                 {
-                    FERERENCES = "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}").ToArray()) + "\r\n</ItemGroup >"
+                    FERERENCES = "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}/{x}.csproj").ToArray()) + "\r\n</ItemGroup >"
                 });
             }
 
-            File.WriteAllText($"{output}/{project}.csproj", content);
+            File.WriteAllText($"{output}/{project}/{project}.csproj", content);
+        }
+
+        private static string GetTemplate(string template, object args = null)
+        {
+            using var stream = typeof(Program).Assembly.GetManifestResourceStream($"Cybtans.Proto.Generator.Templates.{template}");
+            var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd();
+            if (args == null)
+                return content;
+
+            return TemplateProcessor.Process(content, args);
+        }
+
+        private static void GenerateWebApi(Options options)
+        {
+            GenerateProject("WebAPI.tpl", options.Output, $"{ options.Name }.RestApi", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
+
+            Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Properties");
+            Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Controllers");
+
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.Development.json", GetTemplate("WebAPI.appsettings.Development.tpl"));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.json", GetTemplate("WebAPI.appsettings.tpl"));
+            
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Properties/launchSettings.json", GetTemplate("WebAPI.launchSettings.tpl", new
+            {
+                PROJECT = $"{options.Name}.RestApi"
+            }));
+
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Program.cs", GetTemplate("WebAPI.Program.tpl", new
+            {
+                NAMESPACE = $"{options.Name}.RestApi"
+            }));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Startup.cs", GetTemplate("WebAPI.Startup.tpl", new
+            {
+                NAMESPACE = $"{options.Name}.RestApi"
+            }));
         }
 
         private static void GenerateProto(string[] args)
@@ -275,6 +266,8 @@ namespace Cybtans.Proto.Generator
 
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { searchPath });
 
+            Console.WriteLine($"Compiling {protoFile}");
+
             Proto3Generator generator = new Proto3Generator(fileResolverFactory);
             var (ast, scope) = generator.LoadFromFile(protoFile);
 
@@ -289,9 +282,11 @@ namespace Cybtans.Proto.Generator
 
             MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);
 
+            Console.WriteLine($"Generating code from {protoFile}");
+
             microserviceGenerator.GenerateCode(ast);
 
-            Console.WriteLine("Files generated succesfully");
+            Console.WriteLine("Code generated succesfully");
         }
 
     }

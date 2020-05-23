@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Services;
 using Catalog.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.RestApi.Controllers
-{
+{	
 	[Route("api/catalog")]
-	[ApiController]
+	[ApiController]	
 	public class CatalogServiceController : ControllerBase
 	{
 		private readonly CatalogService _service;

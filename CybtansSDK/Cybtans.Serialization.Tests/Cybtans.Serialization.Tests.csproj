@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cybtans\Cybtans.csproj" />
+    <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 
 </Project>

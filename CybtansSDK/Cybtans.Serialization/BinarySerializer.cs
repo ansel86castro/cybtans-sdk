@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Cybtans.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Cybtans.Serialization
@@ -70,7 +68,8 @@ namespace Cybtans.Serialization
 
             TYPE_LIST_8 = 0x71,
             TYPE_LIST_16 = 0x72,
-            TYPE_LIST_32 = 0x73
+            TYPE_LIST_32 = 0x73,
+            TYPE_GUID = 0x74
         };
 
         public BinarySerializer() : this(new UTF8Encoding(false, true))
@@ -157,6 +156,9 @@ namespace Cybtans.Serialization
                     stream.WriteByte((byte)Types.TYPE_DATETIME);
                     TimeSpan span = dateTime - EPOCH;
                     WriteNumber(span.Ticks, stream);
+                    break;
+                case Guid guid:
+                    WriteGuid(stream, guid);                    
                     break;
                 case Array array:
                     WriteLenght(stream, array.Length, Types.TYPE_ARRAY_8, Types.TYPE_ARRAY_16, Types.TYPE_ARRAY_32);
@@ -440,6 +442,16 @@ namespace Cybtans.Serialization
             }
         }
 
+        private unsafe void WriteGuid(Stream stream, Guid guid)
+        {
+            stream.WriteByte((byte)Types.TYPE_GUID);
+            Span<byte> span = stackalloc byte[16];
+
+            if (!guid.TryWriteBytes(span))
+                throw new InvalidOperationException("Unable to serialize Guid");
+
+            stream.Write(span);
+        }
         #endregion
 
         #region Deserialize
@@ -488,6 +500,7 @@ namespace Cybtans.Serialization
                 case Types.TYPE_BINARY_16: value = ReadBinary16(stream); break;
                 case Types.TYPE_BINARY_32: value = ReadBinary32(stream); break;
                 case Types.TYPE_DATETIME: value = ReadDateTime(stream); break;
+                case Types.TYPE_GUID:  value = ReadGuid(stream); break;
                 case Types.TYPE_ARRAY_8:
                     value = ReadArray8(stream, type);
                     break;
@@ -687,27 +700,27 @@ namespace Cybtans.Serialization
                 else if (type == null)
                 {                    
                     return ReadMap(stream, count, typeof(ExpandoObject));
-                }
-                else if (type == typeof(ExpandoObject))
-                {
-                    IDictionary<string, object> expando = new ExpandoObject();
-                    for (int i = 0; i < count; i++)
-                    {
-                        var key = (string?)Deserialize(stream, typeof(string));
-                        if (key != null)
-                        {
-                            var item = Deserialize(stream, null);
-                            expando.Add(key, item);
-                        }
-                    }
-
-                   return expando;
-                }
+                }               
                 else
                 {
                     throw new InvalidOperationException($"Can not deserialize {type}");
                 }
 
+            }
+            else if (type == typeof(ExpandoObject))
+            {
+                IDictionary<string, object?> expando = new ExpandoObject();
+                for (int i = 0; i < count; i++)
+                {
+                    var key = (string?)Deserialize(stream, typeof(string));
+                    if (key != null)
+                    {
+                        var item = Deserialize(stream, null);
+                        expando.Add(key, item);
+                    }
+                }
+
+                return expando;
             }
 
             obj = Activator.CreateInstance(type);
@@ -832,6 +845,14 @@ namespace Cybtans.Serialization
 
             return converType != null;
         }
+
+        private unsafe Guid ReadGuid(Stream stream)
+        {
+            Span<byte> span = stackalloc byte[16];          
+            stream.Read(span);
+            return new Guid(span);
+        }
+
         #endregion
     }
 }

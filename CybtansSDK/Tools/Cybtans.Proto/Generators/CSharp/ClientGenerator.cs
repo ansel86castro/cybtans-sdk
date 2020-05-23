@@ -77,6 +77,11 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 bodyWriter.AppendLine();
 
+                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                {
+                    bodyWriter.Append("[Headers(\"Authorization: Bearer\")]").AppendLine();
+                }
+
                 switch (options.Method)
                 {
                     case "GET":

@@ -1,13 +1,17 @@
-using Catalog.Services;
-using Catalog.Services.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace Catalog.RestApi
+namespace @{NAMESPACE}
 {
     public class Startup
     {
@@ -21,14 +25,6 @@ namespace Catalog.RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<CatalogService, CatalogServiceImpl>();
-
-            services.AddDbContext<CatalogContext>(options =>
-            {
-                options.UseInMemoryDatabase("InMemoryDb");
-
-            }, ServiceLifetime.Scoped, ServiceLifetime.Singleton);
-
             // Register the Swagger services
             services.AddOpenApiDocument();
 
@@ -36,18 +32,16 @@ namespace Catalog.RestApi
             {
                 options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
                 options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
-            });            
-            
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env ,CatalogContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.UseOpenApi(); 
             app.UseSwaggerUi3();     
@@ -62,8 +56,6 @@ namespace Catalog.RestApi
             {
                 endpoints.MapControllers();
             });
-
-            CatalogContext.Initialize(context);
         }
     }
 }

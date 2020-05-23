@@ -1,5 +1,4 @@
 using Cybtans.Serialization;
-using CybtansSDK.Tests.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CybtansSDK.Tests
+namespace Cybtans.Serialization.Tests.Serialization
 {
     public class BinarySerializerTest
     {
@@ -32,6 +31,7 @@ namespace CybtansSDK.Tests
             modelA = new ModelA
             {
                 ModelBValue = modelB,
+                GuidValue = Guid.NewGuid(),
                 MapValue = new Dictionary<string, ModelB>
                 {
                     ["1"] = modelB
@@ -51,7 +51,7 @@ namespace CybtansSDK.Tests
         [InlineData(true)]
         [InlineData(false)]
         public void SeralizeType(bool useNewtonsoft)
-        {           
+        {
             var sw = new Stopwatch();
 
             sw.Start();
@@ -72,8 +72,8 @@ namespace CybtansSDK.Tests
             Assert.True(modelA.Equals(result));
 
             sw.Start();
-            var json = useNewtonsoft ? 
-                JsonConvert.SerializeObject(modelA) : 
+            var json = useNewtonsoft ?
+                JsonConvert.SerializeObject(modelA) :
                 System.Text.Json.JsonSerializer.Serialize(modelA);
             var bytesJson = Encoding.UTF8.GetBytes(json);
             sw.Stop();
@@ -83,8 +83,8 @@ namespace CybtansSDK.Tests
 
             sw.Start();
             json = Encoding.UTF8.GetString(bytesJson);
-            result = useNewtonsoft ? 
-                JsonConvert.DeserializeObject<ModelA>(json) : 
+            result = useNewtonsoft ?
+                JsonConvert.DeserializeObject<ModelA>(json) :
                 System.Text.Json.JsonSerializer.Deserialize<ModelA>(json);
             sw.Stop();
 
@@ -93,7 +93,7 @@ namespace CybtansSDK.Tests
             Assert.True(modelA.Equals(result));
 
             _testOutput.WriteLine($"{formatter}:{bytesJson.Length} bytes BINARY:{buffer.Length} bytes");
-            
+
         }
 
         [Fact]
@@ -111,14 +111,14 @@ namespace CybtansSDK.Tests
             Assert.NotEmpty(buffer);
 
             sw.Start();
-            var result = (Dictionary<object, object>)_binarySerializer.Deserialize(buffer);
+            dynamic result = (dynamic) _binarySerializer.Deserialize(buffer);
             sw.Stop();
 
             _testOutput.WriteLine($"BINARY Deserialize {sw.ElapsedTicks} ticks {sw.ElapsedMilliseconds} ms");
 
             Assert.NotNull(result);
-            Assert.Equal((sbyte)result["IntValue"], modelA.IntValue);
-            Assert.Equal((List<object>)result["ListStringValue"], modelA.ListStringValue);
+            Assert.Equal(result.IntValue, modelA.IntValue);
+            Assert.Equal(result.ListStringValue, modelA.ListStringValue);
         }
     }
 }

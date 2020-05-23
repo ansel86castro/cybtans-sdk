@@ -8,7 +8,7 @@ namespace Catalog.Clients
 {
 	public interface ICatalogService
 	{
-		
+		[Headers("Authorization: Bearer")]
 		[Get("/api/catalog")]
 		Task<GetProductListResponse> GetProducts();
 		
