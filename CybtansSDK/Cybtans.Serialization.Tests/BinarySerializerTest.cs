@@ -50,7 +50,7 @@ namespace Cybtans.Serialization.Tests.Serialization
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void SeralizeType(bool useNewtonsoft)
+        public void SeralizeTyped(bool useNewtonsoft)
         {
             var sw = new Stopwatch();
 
@@ -120,5 +120,7 @@ namespace Cybtans.Serialization.Tests.Serialization
             Assert.Equal(result.IntValue, modelA.IntValue);
             Assert.Equal(result.ListStringValue, modelA.ListStringValue);
         }
+    
+            
     }
 }
