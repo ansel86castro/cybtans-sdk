@@ -56,7 +56,6 @@ namespace Cybtans.Proto.Test
         }
 
 
-
         private static void AssertAST(ProtoFile ast)
         {
             Assert.NotNull(ast);
