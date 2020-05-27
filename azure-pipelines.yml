@@ -24,9 +24,7 @@ steps:
   displayName: 'Restore Cybtans SDK'
   inputs:
     command: 'restore'
-    projects: '**/CybtansSDK.sln'
-    feedsToUse: 'select'
-    vstsFeed: 'f890b23d-d5ed-45bb-8308-1fe776f4fa8a/c8742fb6-b06b-42df-b89a-4dc8a8b66de6'
+    projects: '**/CybtansSDK.sln'   
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Cybtans SDK'
