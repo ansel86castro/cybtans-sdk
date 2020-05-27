@@ -6,7 +6,7 @@ message Product{
 	int32 id = 1;
 	string name = 2 [required = true];
 	string description = 3;
-	float Price = 4 [optional = true];
+	float price = 4 [optional = true];
 	string pictureFileName = 5;
 	string pictureUrl = 6;
 	int32 brandId = 7;
@@ -18,6 +18,8 @@ message Product{
 
 	Catalog catalog = 13;
 	Brand brand = 14;
+
+	repeated Comment comments = 15;
 }
 
 message Catalog {
@@ -30,7 +32,24 @@ message Brand {
 	string name = 2;
 }
 
+message Comment {
+	int32 id = 1;
+	string text = 2;
+	string username = 3;
+	int32 userId = 4;
+	datetime date = 5;
+	int8 rating = 6;
+}
+
 // Requests
+
+message GetProductListRequest {
+	string filter = 1;
+	string sort = 2;
+	int32 page = 3;
+	int32 pageSize = 4 [default = 50];
+}
+
 message GetProductRequest {
 	int32 id = 1;
 }
@@ -56,7 +75,7 @@ message GetProductListResponse {
 service CatalogService {
 	option (prefix) ="api/catalog";
 
-	rpc GetProducts(void) returns (GetProductListResponse){		
+	rpc GetProducts(GetProductListRequest) returns (GetProductListResponse){		
 		option method = "GET";
 	};
 
@@ -65,16 +84,19 @@ service CatalogService {
 		option method = "GET";
 	};
 
-	rpc CreateProduct(Product) returns (Product){			
+	rpc CreateProduct(Product) returns (Product){	
+		option roles = "admin, product.create";
 		option method = "POST";
 	};
 
-	rpc UpdateProduct(UpdateProductRequest) returns (Product){			
+	rpc UpdateProduct(UpdateProductRequest) returns (Product){	
+		option roles = "admin, product.update";
 		option template = "{id}"; 
 		option method = "PUT";
 	};
 
 	rpc DeleteProduct(DeleteRequest) returns (void){
+		option roles = "admin, product.delete";
 		option template = "{id}"; 
 		option method = "DELETE";
 	};

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalog.Clients;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ordering.Services;
 
 namespace Ordering.RestApi
 {
@@ -26,11 +26,16 @@ namespace Ordering.RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register the Swagger services
             services.AddOpenApiDocument();
 
-            services.AddCatalogService(Configuration);
+            services.AddScoped<OrdersService, OrdersServiceImpl>();
 
-            services.AddControllers();
+            services.AddControllers(options=>
+            {
+                options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
+                options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,14 +46,8 @@ namespace Ordering.RestApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseOpenApi(); // serve OpenAPI/Swagger documents
-            app.UseSwaggerUi3(); // serve Swagger UI
-            app.UseReDoc(options=>
-            {
-                options.Path = "/redoc";
-            }); // serve ReDoc UI
-
-            //app.UseHttpsRedirection();
+            app.UseOpenApi(); 
+            app.UseSwaggerUi3();             
 
             app.UseRouting();
 

@@ -1,0 +1,68 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>    
+</div>
+
+<h4> Products </h4>
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Available Stock</th>
+            <th>Brand</th>
+            <th>Catalog</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+        <tr>
+            <td><img src="@item.PictureUrl" /></td>
+            <td>@item.Name</td>
+            <td>@item.Description</td>
+            <td>@item.Price</td>
+            <td>@item.AvalaibleStock</td>
+            <td>@item.Brand.Name</td>
+            <td>@item.Catalog.Name</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+
+<h4>Orders</h4>
+<table>
+    <thead>
+        <tr>           
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Total</th>            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>              
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.CreateDate</td>
+                <td>@item.Total</td>              
+            </tr>
+        }
+    </tbody>
+</table>
+

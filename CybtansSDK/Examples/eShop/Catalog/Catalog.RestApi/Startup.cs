@@ -51,9 +51,7 @@ namespace Catalog.RestApi
 
             app.UseOpenApi(); 
             app.UseSwaggerUi3();     
-
-            app.UseHttpsRedirection();
-
+           
             app.UseRouting();
 
             app.UseAuthorization();

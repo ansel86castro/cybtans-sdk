@@ -29,7 +29,7 @@ message Brand {
 message GetProductsRequest {
 	string filter = 1;
 	string sort = 2;
-	string page = 3;
+	int32 page = 3;
 }
 
 message GetProductRequest {

@@ -2,6 +2,8 @@
 using Catalog.Services.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace Catalog.Services
@@ -37,15 +39,36 @@ namespace Catalog.Services
             return await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id);
         }
 
-        public override async Task<GetProductListResponse> GetProducts()
-        {
-            var items = await _context.Products.AsNoTracking().ToListAsync();            
+        public override async Task<GetProductListResponse> GetProducts(GetProductListRequest request)
+        {            
+            var query = _context.Products
+                .Include(x=>x.Brand)
+                .Include(x=>x.Catalog)
+                .AsNoTracking();
 
+            if(request.Filter != null)
+            {
+                query = query.Where(request.Filter);
+            }           
+
+            var count = query.Count();
+            var pages = count / request.PageSize + (count % request.PageSize == 0 ? 1 : 0);
+
+            if (request.Sort != null)
+            {
+                query = query.OrderBy(request.Sort);
+            }
+            
+            var items = await query
+                .Skip(request.Page * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync();            
+            
             return new GetProductListResponse
             {
                 Items = items,
-                Page = 1,
-                TotalPages = 1
+                Page = request.Page,
+                TotalPages = pages
             };
         }
 

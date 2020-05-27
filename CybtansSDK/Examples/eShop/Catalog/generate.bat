@@ -1,1 +1,1 @@
-..\ServiceGenerator.exe proto -n Catalog -o . -f .\Proto\Catalog.proto
+ServiceGenerator.exe proto -n Catalog -o . -f .\Proto\Catalog.proto

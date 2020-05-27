@@ -22,8 +22,14 @@ namespace Cybtans.Proto.Generator
         }
 
         static void Main(string[] args)
-        {            
-            if (args.Length > 0 && args[0] == "proto")
+        {     
+            if(args == null || args.Length == 0)
+            {
+                PrintHelp();
+                return;
+            }
+
+            if (args[0] == "proto")
             {
                 GenerateProto(args);
             }
@@ -71,7 +77,7 @@ namespace Cybtans.Proto.Generator
                 }
                 else
                 {
-                    Console.WriteLine("Available options are:");
+                    Console.WriteLine("Microsevice Generator options are:");
                     Console.WriteLine("-n : Service Name");
                     Console.WriteLine("-o : Output Directory");
                     Console.WriteLine("-sln : Solution File");
@@ -79,6 +85,7 @@ namespace Cybtans.Proto.Generator
                     return;
                 }
             }
+            
 
             Directory.CreateDirectory(options.Output);
             //Generate Projects              
@@ -99,7 +106,7 @@ namespace Cybtans.Proto.Generator
 
             File.WriteAllText($"{options.Output}/generate.bat", $"ServiceGenerator proto -n {options.Name} -o . -f ./Proto/{options.Name}.proto");
           
-            GenerateProto(new string[] { "proto", "-n", options.Name, "-o", options.Output, "-f", $"{options.Output}/Proto/{options.Name}.proto" });
+            //GenerateProto(new string[] { "proto", "-n", options.Name, "-o", options.Output, "-f", $"{options.Output}/Proto/{options.Name}.proto" });
 
             if (options.Solution != null)
             {
@@ -242,8 +249,7 @@ namespace Cybtans.Proto.Generator
                         searchPath = value;
                         break;
                     default:
-                        Console.WriteLine("Invalid Option");
-                        Console.WriteLine("Valid options are:");
+                        Console.WriteLine("Invalid Option");                       
                         break;
                 }
             }
@@ -284,10 +290,39 @@ namespace Cybtans.Proto.Generator
 
             Console.WriteLine($"Generating code from {protoFile}");
 
-            microserviceGenerator.GenerateCode(ast);
+            microserviceGenerator.GenerateCode(ast, scope);
 
             Console.WriteLine("Code generated succesfully");
         }
 
+        private static void PrintHelp()
+        {
+            Console.WriteLine("Microsevice Generator options:");
+            Console.WriteLine("Example: ServiceGenerator -n Service1 -o Services/Service1 -sln Services.sln");            
+            Console.WriteLine("-n : Service Name");
+            Console.WriteLine("-o : Output Directory");
+            Console.WriteLine("-sln : Solution File");
+
+            Console.WriteLine();
+            PrintProtoHelp();
+        }
+
+        private static void PrintProtoHelp()
+        {
+            Console.WriteLine("Proto Generator options:");
+            Console.WriteLine("Example: ServiceGenerator proto -n Service1 -o ./Services/Service1 -f ./Protos/Service1.proto");            
+            Console.WriteLine("-n : Service Name");
+            Console.WriteLine("-o : Output Directory");
+            Console.WriteLine("-f : Proto filename");
+            Console.WriteLine("-search-path : Search path for imports");
+            Console.WriteLine("-models-o : Models output directory");
+            Console.WriteLine("-models-ns : Models namespace");
+            Console.WriteLine("-services-o : Services output directory");            
+            Console.WriteLine("-services-ns : Services namespace");
+            Console.WriteLine("-controllers-o : Controllers output directory");
+            Console.WriteLine("-controllers-ns : Controllers namespace");
+            Console.WriteLine("-clients-o : Clients output directory");
+            Console.WriteLine("-clients-ns : Clients namespace");            
+        }
     }
 }

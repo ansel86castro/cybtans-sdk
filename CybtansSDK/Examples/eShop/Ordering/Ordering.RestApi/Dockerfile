@@ -10,6 +10,8 @@ WORKDIR /src
 COPY ["Ordering/Ordering.RestApi/Ordering.RestApi.csproj", "Ordering/Ordering.RestApi/"]
 COPY ["Ordering/Ordering.Services/Ordering.Services.csproj", "Ordering/Ordering.Services/"]
 COPY ["Ordering/Ordering.Models/Ordering.Models.csproj", "Ordering/Ordering.Models/"]
+COPY ["../../Cybtans.Serialization/Cybtans.Serialization.csproj", "../../Cybtans.Serialization/"]
+COPY ["../../Cybtans.AspNetCore/Cybtans.AspNetCore.csproj", "../../Cybtans.AspNetCore/"]
 RUN dotnet restore "Ordering/Ordering.RestApi/Ordering.RestApi.csproj"
 COPY . .
 WORKDIR "/src/Ordering/Ordering.RestApi"

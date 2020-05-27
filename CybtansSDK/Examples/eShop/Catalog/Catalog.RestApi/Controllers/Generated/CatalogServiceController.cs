@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Services;
 using Catalog.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.RestApi.Controllers
-{	
+{
 	[Route("api/catalog")]
-	[ApiController]	
+	[ApiController]
 	public class CatalogServiceController : ControllerBase
 	{
 		private readonly CatalogService _service;
@@ -18,9 +21,9 @@ namespace Catalog.RestApi.Controllers
 		}
 		
 		[HttpGet]
-		public async Task<GetProductListResponse> GetProducts()
+		public async Task<GetProductListResponse> GetProducts([FromQuery]GetProductListRequest __request)
 		{
-			return await _service.GetProducts();
+			return await _service.GetProducts(__request);
 		}
 		
 		[HttpGet("{id}")]
@@ -30,12 +33,14 @@ namespace Catalog.RestApi.Controllers
 			return await _service.GetProduct(__request);
 		}
 		
+		[Authorize(Roles = "admin, product.create")]
 		[HttpPost]
 		public async Task<Product> CreateProduct([FromBody]Product __request)
 		{
 			return await _service.CreateProduct(__request);
 		}
 		
+		[Authorize(Roles = "admin, product.update")]
 		[HttpPut("{id}")]
 		public async Task<Product> UpdateProduct(int id, [FromBody]UpdateProductRequest __request)
 		{
@@ -43,6 +48,7 @@ namespace Catalog.RestApi.Controllers
 			return await _service.UpdateProduct(__request);
 		}
 		
+		[Authorize(Roles = "admin, product.delete")]
 		[HttpDelete("{id}")]
 		public async Task DeleteProduct(int id, [FromQuery]DeleteRequest __request)
 		{
