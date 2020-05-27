@@ -8,7 +8,9 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Cybtans.Serialization
@@ -23,6 +25,7 @@ namespace Cybtans.Serialization
         readonly Encoder _encoder;
         readonly byte[] _buffer;
         Memory<byte> _memory;
+        Dictionary<Type, TypeCache>? _typeCache;
 
         public enum Types : byte
         {
@@ -81,7 +84,7 @@ namespace Cybtans.Serialization
         {
             _encoding = encoding;
             _encoder = encoding.GetEncoder();
-            _buffer = new byte[1024];
+            _buffer = new byte[256];
             _memory = _buffer.AsMemory();
         }
 
@@ -166,7 +169,7 @@ namespace Cybtans.Serialization
                     break;
                 case IList list:
                     WriteLenght(stream, list.Count, Types.TYPE_LIST_8, Types.TYPE_LIST_16, Types.TYPE_LIST_32);
-                    WriteArray(stream, list);
+                    WriteList(stream, list);
                     break;
                 case IDictionary dict:
                     WriteLenght(stream, dict.Count, Types.TYPE_MAP_8, Types.TYPE_MAP_16, Types.TYPE_MAP_32);
@@ -184,18 +187,17 @@ namespace Cybtans.Serialization
 
         private void WriteObject(Stream stream, object obj, Type type)
         {
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanRead)
-                .ToList();
+            var props = GetPropertiesList(type);
 
-            WriteLenght(stream, props.Count, Types.TYPE_MAP_8, Types.TYPE_MAP_16, Types.TYPE_MAP_32);
+            WriteLenght(stream, props.Length, Types.TYPE_MAP_8, Types.TYPE_MAP_16, Types.TYPE_MAP_32);
 
             foreach (var p in props)
             {
-                var value = p.GetValue(obj);
-
-                WriteString(stream, p.Name);
-                Serialize(stream, value);
+                if (!p.CanRead)
+                    continue;
+                
+                WriteString(stream, p.Name);                
+                Serialize(stream, p.GetValue(obj));
             }
         }
 
@@ -207,11 +209,9 @@ namespace Cybtans.Serialization
             WriteLenght(stream, props.Length, Types.TYPE_CODED_MAP_8, Types.TYPE_CODED_MAP_16, Types.TYPE_CODED_MAP_32);
 
             foreach (var code in props)
-            {
-                var value = accesor.GetValue(obj, code);
-
+            {                
                 WriteInteger(stream, code);
-                Serialize(stream, value);
+                Serialize(stream, accesor.GetValue(obj, code));
             }
         }
 
@@ -225,7 +225,7 @@ namespace Cybtans.Serialization
 
             WriteLenght(stream, bytesCount, Types.TYPE_STRING_8, Types.TYPE_STRING_16, Types.TYPE_STRING_32);
 
-            int loops = bytesCount / _buffer.Length + bytesCount % _buffer.Length > 0 ? 1 : 0;
+            int loops = (bytesCount / _buffer.Length) + (bytesCount % _buffer.Length > 0 ? 1 : 0);
             int bytesOffset = 0;
 
             for (int i = 0; i < loops; i++)
@@ -246,11 +246,21 @@ namespace Cybtans.Serialization
             stream.Write(bytes.Slice(0, numBytes));
         }
 
-        private void WriteArray(Stream stream, IEnumerable array)
+        private void WriteArray(Stream stream, Array array)
         {
-            foreach (object iter in array)
+            var len = array.Length;
+            for (int i = 0; i < len; i++)
             {
-                Serialize(stream, iter);
+                Serialize(stream, array.GetValue(i));
+            }            
+        }
+
+        private void WriteList(Stream stream, IList list)
+        {
+            var len = list.Count;
+            for (int i = 0; i < len; i++)
+            {
+                Serialize(stream, list[i]);
             }
         }
 
@@ -474,10 +484,9 @@ namespace Cybtans.Serialization
         {
             var typeByte = stream.ReadByte();
             if (typeByte == -1) return null;
-
-            object? value = null;
-
             var typeCode = (Types)typeByte;
+
+            object? value;
             switch (typeCode)
             {
                 case Types.TYPE_NONE: return null;
@@ -500,7 +509,7 @@ namespace Cybtans.Serialization
                 case Types.TYPE_BINARY_16: value = ReadBinary16(stream); break;
                 case Types.TYPE_BINARY_32: value = ReadBinary32(stream); break;
                 case Types.TYPE_DATETIME: value = ReadDateTime(stream); break;
-                case Types.TYPE_GUID:  value = ReadGuid(stream); break;
+                case Types.TYPE_GUID: value = ReadGuid(stream); break;
                 case Types.TYPE_ARRAY_8:
                     value = ReadArray8(stream, type);
                     break;
@@ -698,8 +707,19 @@ namespace Cybtans.Serialization
                     return obj;
                 }
                 else if (type == null)
-                {                    
-                    return ReadMap(stream, count, typeof(ExpandoObject));
+                {
+                    Dictionary<object, object?> dic = new Dictionary<object, object?>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        var key = (string?)Deserialize(stream, typeof(string));
+                        if (key != null)
+                        {
+                            var item = Deserialize(stream, null);
+                            dic.Add(key, item);
+                        }
+                    }
+
+                    return dic;
                 }               
                 else
                 {
@@ -707,26 +727,9 @@ namespace Cybtans.Serialization
                 }
 
             }
-            else if (type == typeof(ExpandoObject))
-            {
-                IDictionary<string, object?> expando = new ExpandoObject();
-                for (int i = 0; i < count; i++)
-                {
-                    var key = (string?)Deserialize(stream, typeof(string));
-                    if (key != null)
-                    {
-                        var item = Deserialize(stream, null);
-                        expando.Add(key, item);
-                    }
-                }
-
-                return expando;
-            }
-
+                       
+            var props = GetPropertiesMap(type);
             obj = Activator.CreateInstance(type);
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-              .Where(p => p.CanWrite)
-              .ToDictionary(x => x.Name);
 
             for (int i = 0; i < count; i++)
             {
@@ -734,14 +737,14 @@ namespace Cybtans.Serialization
                 if (name != null && props.TryGetValue(name, out var p))
                 {
                     var value = Deserialize(stream, p.PropertyType);
-                    p.SetValue(obj, value);
+                    if (p.CanWrite)
+                    {
+                        p.SetValue(obj, value);
+                    }
                 }
                 else
                 {
                     Deserialize(stream, null);
-#if TRACE
-                    Trace.TraceWarning($"BinarySerializer:missing property {name}");
-#endif
                 }
             }
 
@@ -853,6 +856,61 @@ namespace Cybtans.Serialization
             return new Guid(span);
         }
 
+        private Dictionary<string, PropertyInfo> GetPropertiesMap(Type type)
+        {
+            if(_typeCache == null)
+            {
+                _typeCache = new Dictionary<Type, TypeCache>();
+            }
+
+            if (!_typeCache.TryGetValue(type, out var cache))
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                cache = new TypeCache(type) { PropertyMap = props.ToDictionary(x => x.Name) };
+                _typeCache.Add(type, cache);
+            }
+            else if (cache.PropertyMap == null)
+            {
+                cache.PropertyMap = cache.Properties.ToDictionary(x => x.Name);
+            }
+
+            return cache.PropertyMap;
+        }
+
+        private PropertyInfo[] GetPropertiesList(Type type)
+        {
+            if (_typeCache == null)
+            {
+                _typeCache = new Dictionary<Type, TypeCache>();
+            }
+
+            if (!_typeCache.TryGetValue(type, out var cache))
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                cache = new TypeCache(type) { Properties = props };
+                _typeCache.Add(type, cache);
+            }
+            else if(cache.Properties == null)
+            {
+                cache.Properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
+
+            return cache.Properties;
+        }
+
         #endregion
-    }
+
+        class TypeCache
+        {
+            public Type Type;
+
+            public Dictionary<string, PropertyInfo>? PropertyMap;
+            public PropertyInfo[]? Properties;
+
+            public TypeCache(Type type)
+            {
+                Type = type;
+            }
+        }
+    }    
 }

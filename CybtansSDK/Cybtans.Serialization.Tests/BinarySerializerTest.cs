@@ -111,14 +111,14 @@ namespace Cybtans.Serialization.Tests.Serialization
             Assert.NotEmpty(buffer);
 
             sw.Start();
-            dynamic result = (dynamic) _binarySerializer.Deserialize(buffer);
+            var result = (Dictionary<object, object>) _binarySerializer.Deserialize(buffer);
             sw.Stop();
 
             _testOutput.WriteLine($"BINARY Deserialize {sw.ElapsedTicks} ticks {sw.ElapsedMilliseconds} ms");
 
             Assert.NotNull(result);
-            Assert.Equal(result.IntValue, modelA.IntValue);
-            Assert.Equal(result.ListStringValue, modelA.ListStringValue);
+            Assert.Equal(Convert.ToInt32(result["IntValue"]), modelA.IntValue);
+            Assert.Equal((List<object>)result["ListStringValue"], modelA.ListStringValue);
         }
     
             
