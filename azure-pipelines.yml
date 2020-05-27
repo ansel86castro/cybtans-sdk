@@ -1,0 +1,53 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(majorMinorVersion).$(patchVersion)
+
+# pipeline variables
+variables:
+  majorMinorVersion: 1.2
+  # semanticVersion counter is automatically incremented by one in each execution of pipeline
+  # second parameter is seed value to reset to every time the referenced majorMinorVersion is changed
+  patchVersion: $[counter(variables['majorMinorVersion'], 0)]
+
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Restore Cybtans SDK'
+  inputs:
+    command: 'restore'
+    projects: '**/CybtansSDK.sln'    
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Cybtans SDK'
+  inputs:
+    command: 'build'
+    projects: '**/CybtansSDK.sln'
+    arguments: '--configuration $(configuration)'
+    versioningScheme: 'byBuildNumber'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Package Nuget Packages'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    configuration: '$(configuration)'
+    nobuild: true
+    includesymbols: true
+    versioningScheme: 'byBuildNumber'
+
+- task: NuGetCommand@2
+  displayName: 'Publish Artifacts'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '19d6040e-90b3-4e7e-a5bd-58da336db3e2'
