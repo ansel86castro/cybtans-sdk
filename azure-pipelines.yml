@@ -35,10 +35,17 @@ steps:
     versioningScheme: 'byBuildNumber'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Test Cybtans SDK'
+  inputs:
+    command: 'test'
+    projects: '**/CybtansSDK.sln'
+    testRunTitle: 'Run Tests Cybtans SDK'
+
+- task: DotNetCoreCLI@2
   displayName: 'Package Nuget Packages'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: '**/CybtansSDK.sln'
     configuration: '$(configuration)'
     nobuild: true
     includesymbols: true
