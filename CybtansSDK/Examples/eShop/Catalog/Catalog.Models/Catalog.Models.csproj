@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Cybtans\Cybtans.csproj" />
+    <ProjectReference Include="..\..\..\..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>serialization, .net, binary, performance, speed</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>Integrates Cybtans binary serializer with Refit</Description>
   </PropertyGroup>
 
   <ItemGroup>

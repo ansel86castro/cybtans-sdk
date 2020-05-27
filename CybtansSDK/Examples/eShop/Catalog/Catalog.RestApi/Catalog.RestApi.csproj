@@ -17,7 +17,6 @@
   	<ProjectReference Include="../Catalog.Services/Catalog.Services.csproj" />
   	<ProjectReference Include="../Catalog.Models/Catalog.Models.csproj" />
   	<ProjectReference Include="..\..\..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
-  	<ProjectReference Include="..\..\..\..\Cybtans\Cybtans.csproj" />
   </ItemGroup>
 
 </Project>
