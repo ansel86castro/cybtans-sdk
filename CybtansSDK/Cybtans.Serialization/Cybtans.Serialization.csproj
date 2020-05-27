@@ -6,7 +6,7 @@
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>serialization, .net, binary, performance, speed</PackageTags>
     <Authors>Ansel Castro</Authors>
-    <Product>CybtansSDK</Product>
+    <Product>Cybtans SDK</Product>
     <Description>Serialization library for .netstandard. 
 The library provides binary serialization which is faster and results in smaller payloads than json.</Description>   
   </PropertyGroup>
