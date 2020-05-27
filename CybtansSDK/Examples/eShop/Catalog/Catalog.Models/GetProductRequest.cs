@@ -13,7 +13,6 @@ namespace Catalog.Models
 		{
 			return __accesor;
 		}
-	
 	}
 	
 	

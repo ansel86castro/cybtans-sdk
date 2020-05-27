@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-  	<ProjectReference Include="../Ordering.Services/Ordering.Services.csproj" />
   	<ProjectReference Include="../Ordering.Models/Ordering.Models.csproj" />
+  	<ProjectReference Include="../Ordering.Services/Ordering.Services.csproj" />
   </ItemGroup >
 
 </Project>

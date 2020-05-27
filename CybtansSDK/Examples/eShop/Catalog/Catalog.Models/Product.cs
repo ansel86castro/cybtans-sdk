@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Catalog.Models
@@ -37,6 +38,8 @@ namespace Catalog.Models
 		
 		public Brand Brand {get; set;}
 		
+		public List<Comment> Comments {get; set;}
+		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
@@ -60,9 +63,10 @@ namespace Catalog.Models
 		public const int UpdateDate = 12;
 		public const int Catalog = 13;
 		public const int Brand = 14;
+		public const int Comments = 15;
 		private readonly int[] _props = new []
 		{
-			Id,Name,Description,Price,PictureFileName,PictureUrl,BrandId,CatalogId,AvalaibleStock,RestockThreshold,CreateDate,UpdateDate,Catalog,Brand
+			Id,Name,Description,Price,PictureFileName,PictureUrl,BrandId,CatalogId,AvalaibleStock,RestockThreshold,CreateDate,UpdateDate,Catalog,Brand,Comments
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -85,6 +89,7 @@ namespace Catalog.Models
 		       UpdateDate => "UpdateDate",
 		       Catalog => "Catalog",
 		       Brand => "Brand",
+		       Comments => "Comments",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -108,6 +113,7 @@ namespace Catalog.Models
 		        "UpdateDate" => UpdateDate,
 		        "Catalog" => Catalog,
 		        "Brand" => Brand,
+		        "Comments" => Comments,
 		
 		        _ => -1,
 		    };
@@ -131,6 +137,7 @@ namespace Catalog.Models
 		        UpdateDate => typeof(DateTime?),
 		        Catalog => typeof(Catalog),
 		        Brand => typeof(Brand),
+		        Comments => typeof(List<Comment>),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -155,6 +162,7 @@ namespace Catalog.Models
 		        UpdateDate => obj.UpdateDate,
 		        Catalog => obj.Catalog,
 		        Brand => obj.Brand,
+		        Comments => obj.Comments,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -179,6 +187,7 @@ namespace Catalog.Models
 		        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
 		        case Catalog:  obj.Catalog = (Catalog)value;break;
 		        case Brand:  obj.Brand = (Brand)value;break;
+		        case Comments:  obj.Comments = (List<Comment>)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

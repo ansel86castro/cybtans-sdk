@@ -32,6 +32,8 @@ namespace Catalog.Services.Data
 
         public DbSet<Brand> Brands { get; set; }
 
+        public DbSet<Comment> Comments { get; set; }
+
         public static void Initialize(CatalogContext context)
         {            
             var brands = Enumerable.Range(1, 5).Select(i => new Brand {  Name = $"Brand {i}" }).ToList();
@@ -55,7 +57,8 @@ namespace Catalog.Services.Data
                         Name = $"Product {catalog.Id}-{i}",
                         Price = i % 2 == 0 ? i : float.Parse($"{rand.Next(100, 500)}.{rand.Next(0, 100)}"),
                         RestockThreshold = 5,
-                        Description = $"Description for Product {catalog.Id}{i}"
+                        Description = $"Description for Product {catalog.Id}{i}",
+                        Comments = new List<Comment>()
                     }));
                
             }

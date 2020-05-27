@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package Ordering;
+
+// **************************** MODELS ************************************************
+
+message Order {
+	guid id = 1;
+	string name = 2 [required = true];
+	string description = 3;	
+	datetime createDate = 4;	
+	float subTotal = 5;
+	float tax = 6;
+	float total = 7;
+	int32 userId = 8;
+	repeated OrderItem items = 9;
+}
+
+message OrderItem {
+	int32 id = 1;
+	string name = 2;
+	float price = 4 [optional = true];
+	float discount = 5;
+}
+
+// **************************** REQUESTS **********************************************
+
+message GetOrderRequest{
+	guid id = 1;
+}
+
+message GetOrderByUserRequest{
+	int32 userId = 1;
+}
+
+// **************************** RESPONSES **********************************************
+
+message GetOrdersResponse {
+	repeated Order orders = 1;	
+}
+
+
+// **************************** SERVICES **********************************************
+
+service OrdersService {
+	option (prefix) ="api/orders";
+
+	rpc GetOrdersByUser(GetOrderByUserRequest) returns (GetOrdersResponse){	
+		option template = "user/{userId}"; 
+		option method = "GET";
+	};
+
+	rpc GetOrder(GetOrderRequest) returns (Order){	
+		option template = "{id}"; 
+		option method = "GET";
+	};
+
+	rpc CreateOrder(Order) returns (Order){
+		option roles = "admin, order.create";
+		option method = "POST";
+	};
+}

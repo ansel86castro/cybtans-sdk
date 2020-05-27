@@ -17,11 +17,15 @@ namespace Cybtans.Proto.Generators.CSharp
             _options = options;            
         }
 
-        public void GenerateCode(ProtoFile proto)
+        public void GenerateCode(ProtoFile proto, Scope? scope =null)
         {            
             foreach (var item in proto.ImportedFiles)
             {
-                GenerateCode(item);
+                if(item.Package == null)
+                {
+                    item.Package = proto.Package;
+                }
+                GenerateCode(item, null);
             }
             
             var typeGenerator = new TypeGenerator(proto, _options.ModelOptions);

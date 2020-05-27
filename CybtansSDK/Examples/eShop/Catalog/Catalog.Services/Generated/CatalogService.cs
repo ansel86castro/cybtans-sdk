@@ -8,7 +8,7 @@ namespace Catalog.Services
 	public abstract partial class CatalogService 
 	{
 		
-		public abstract Task<GetProductListResponse> GetProducts();
+		public abstract Task<GetProductListResponse> GetProducts(GetProductListRequest request);
 		
 		
 		public abstract Task<Product> GetProduct(GetProductRequest request);

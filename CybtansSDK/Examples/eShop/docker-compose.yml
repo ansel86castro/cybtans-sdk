@@ -7,9 +7,16 @@ services:
       context: .
       dockerfile: Catalog/Catalog.RestApi/Dockerfile
 
+
   ordering.restapi:
     image: ${DOCKER_REGISTRY-}orderingrestapi
     build:
       context: .
       dockerfile: Ordering/Ordering.RestApi/Dockerfile
 
+
+  webapp:
+    image: ${DOCKER_REGISTRY-}webapp
+    build:
+      context: .
+      dockerfile: Apps/WebApp/Dockerfile     
