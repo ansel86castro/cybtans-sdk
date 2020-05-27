@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AspNetCore", "Cybta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Serialization", "Cybtans.Serialization\Cybtans.Serialization.csproj", "{D42C3EBF-5F86-48D6-822B-6881CBFEB3A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Serialization.Tests", "Cybtans.Serialization.Tests\Cybtans.Serialization.Tests.csproj", "{49C7D107-11AB-40E4-A54D-33518D047654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests", "Cybtans.Tests\Cybtans.Tests.csproj", "{A5DE6405-A2AC-4831-AA52-D1576C912D4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,10 @@ Global
 		{D42C3EBF-5F86-48D6-822B-6881CBFEB3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D42C3EBF-5F86-48D6-822B-6881CBFEB3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D42C3EBF-5F86-48D6-822B-6881CBFEB3A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49C7D107-11AB-40E4-A54D-33518D047654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49C7D107-11AB-40E4-A54D-33518D047654}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49C7D107-11AB-40E4-A54D-33518D047654}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49C7D107-11AB-40E4-A54D-33518D047654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DE6405-A2AC-4831-AA52-D1576C912D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DE6405-A2AC-4831-AA52-D1576C912D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DE6405-A2AC-4831-AA52-D1576C912D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DE6405-A2AC-4831-AA52-D1576C912D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

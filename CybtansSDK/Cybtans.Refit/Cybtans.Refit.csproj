@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -16,6 +16,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

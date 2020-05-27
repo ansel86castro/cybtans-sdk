@@ -21,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
+    <ProjectReference Include="..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 
