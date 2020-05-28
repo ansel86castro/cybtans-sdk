@@ -13,6 +13,11 @@ namespace Catalog.Models
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator GetProductRequest(int id)
+		{
+			return new GetProductRequest { Id = id };
+		}
 	}
 	
 	

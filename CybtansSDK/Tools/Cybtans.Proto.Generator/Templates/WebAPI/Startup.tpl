@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Cybtans.AspNetCore;
 
 namespace @{NAMESPACE}
 {
@@ -28,11 +29,8 @@ namespace @{NAMESPACE}
             // Register the Swagger services
             services.AddOpenApiDocument();
 
-            services.AddControllers(options=>
-            {
-                options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
-                options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
-            });
+            services.AddControllers()
+                .AddCybtansFormatter();   
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

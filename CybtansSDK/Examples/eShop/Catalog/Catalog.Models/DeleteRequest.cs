@@ -13,6 +13,11 @@ namespace Catalog.Models
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator DeleteRequest(int id)
+		{
+			return new DeleteRequest { Id = id };
+		}
 	}
 	
 	

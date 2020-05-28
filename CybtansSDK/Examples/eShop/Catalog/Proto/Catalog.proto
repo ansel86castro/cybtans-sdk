@@ -84,19 +84,16 @@ service CatalogService {
 		option method = "GET";
 	};
 
-	rpc CreateProduct(Product) returns (Product){	
-		option roles = "admin, product.create";
+	rpc CreateProduct(Product) returns (Product){			
 		option method = "POST";
 	};
 
-	rpc UpdateProduct(UpdateProductRequest) returns (Product){	
-		option roles = "admin, product.update";
+	rpc UpdateProduct(UpdateProductRequest) returns (Product){			
 		option template = "{id}"; 
 		option method = "PUT";
 	};
 
-	rpc DeleteProduct(DeleteRequest) returns (void){
-		option roles = "admin, product.delete";
+	rpc DeleteProduct(DeleteRequest) returns (void){		
 		option template = "{id}"; 
 		option method = "DELETE";
 	};

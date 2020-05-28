@@ -13,6 +13,11 @@ namespace Ordering.Models
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator GetOrderRequest(Guid id)
+		{
+			return new GetOrderRequest { Id = id };
+		}
 	}
 	
 	

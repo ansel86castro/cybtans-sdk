@@ -7,7 +7,10 @@
     <StartupObject></StartupObject>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <Nullable>disable</Nullable>    
-    <IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable>    
+    <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>    
+    <SignAssembly>false</SignAssembly>
+    <VersionPrefix>1.0.4</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

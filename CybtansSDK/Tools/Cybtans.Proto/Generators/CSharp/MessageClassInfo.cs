@@ -41,7 +41,7 @@ namespace Cybtans.Proto.Generators.CSharp
             if (matches.Any(x => x.Success))
             {
                 List<MessageFieldInfo> fields = new List<MessageFieldInfo>();
-                foreach (Match match in matches)
+                foreach (Match? match in matches)
                 {
                     if (match != null && match.Success)
                     {
@@ -67,6 +67,11 @@ namespace Cybtans.Proto.Generators.CSharp
             _field = field;
             Name = field.Name.Pascal();
             Type = field.Type.GetTypeName();
+            if (field.Option.Optional && field.Type.TypeDeclaration.Nullable)
+            {
+                //check ist the type is nullable
+                Type += "?";
+            }
         }
 
         public FieldDeclaration Field => _field;

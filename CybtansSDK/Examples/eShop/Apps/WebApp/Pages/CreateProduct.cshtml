@@ -1,0 +1,25 @@
+﻿@page
+@model WebApp.Pages.CreateProductModel
+@{
+    ViewData["Title"] = "CreateProduct";
+}
+
+<h1>CreateProduct</h1>
+
+<form method="post">
+    <div>
+        <label>Name:</label><br />
+        <input asp-for="Product.Name" />
+    </div>
+    <div>
+        <label>Description:</label><br />
+        <input asp-for="Product.Description" />
+    </div>
+
+    <div>
+        <label>Price:</label><br />
+        <input asp-for="Product.Price" />
+    </div>
+
+    <input type="submit" />
+</form>

@@ -60,11 +60,11 @@ namespace Cybtans.Proto.Generators.CSharp
                 var response = rpc.ResponseType;
                 var rpcName = _serviceGenerator.GetRpcName(rpc);
                 string url = $"/{srv.Option.Prefix}";
-
+                List<MessageFieldInfo>? path = null;
                 if(options.Template != null)
                 {
                     var template = options.Template;
-                    var path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(template) : null;
+                    path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(template) : null;
                     if(path != null)
                     {
                         foreach (var field in path)
@@ -82,10 +82,16 @@ namespace Cybtans.Proto.Generators.CSharp
                     bodyWriter.Append("[Headers(\"Authorization: Bearer\")]").AppendLine();
                 }
 
+                string optional = "";
+
                 switch (options.Method)
                 {
                     case "GET":
                         bodyWriter.Append($"[Get(\"{url}\")]");
+                        if(path == null || path.Count == 0 && request != PrimitiveType.Void)
+                        {
+                            optional = " = null";
+                        }
                         break;
                     case "POST":
                         bodyWriter.Append($"[Post(\"{url}\")]");
@@ -100,7 +106,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 bodyWriter.AppendLine();
 
-                bodyWriter.Append($"{response.GetReturnTypeName()} {rpcName}({GetRequestBinding(options.Method)}{request.GetRequestTypeName("request")});").AppendLine();
+                bodyWriter.Append($"{response.GetReturnTypeName()} {rpcName}({GetRequestBinding(options.Method)}{request.GetRequestTypeName("request")}{optional});").AppendLine();
             }
 
             clsWriter.AppendLine().Append("}").AppendLine();

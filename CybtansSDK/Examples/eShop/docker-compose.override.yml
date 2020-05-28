@@ -31,3 +31,6 @@ services:
       - "443"
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+       - catalog.restapi
+       - ordering.restapi

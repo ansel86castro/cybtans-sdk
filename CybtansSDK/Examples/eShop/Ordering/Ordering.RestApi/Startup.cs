@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cybtans.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,11 +32,8 @@ namespace Ordering.RestApi
 
             services.AddScoped<OrdersService, OrdersServiceImpl>();
 
-            services.AddControllers(options=>
-            {
-                options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
-                options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
-            });
+            services.AddControllers()
+                .AddCybtansFormatter();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
