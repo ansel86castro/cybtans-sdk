@@ -3,15 +3,15 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: $(majorMinorVersion).$(patchVersion).$(buildNumber)
+name: $(majorMinorVersion).$(patchVersion)
 
 # pipeline variables
 variables:
   majorMinorVersion: 1.0
   # semanticVersion counter is automatically incremented by one in each execution of pipeline
   # second parameter is seed value to reset to every time the referenced majorMinorVersion is changed
-  patchVersion: 0
-  buildNumber: $[counter(variables['patchVersion'], 0)]
+  # patchVersion: $[counter(variables['majorMinorVersion'], 0)]
+  patchVersion: 4
 
 
 trigger:
