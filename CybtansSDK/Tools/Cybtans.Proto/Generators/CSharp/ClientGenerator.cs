@@ -88,7 +88,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 {
                     case "GET":
                         bodyWriter.Append($"[Get(\"{url}\")]");
-                        if(path == null || path.Count == 0 && request != PrimitiveType.Void)
+                        if((path == null || path.Count == 0) && request != PrimitiveType.Void)
                         {
                             optional = " = null";
                         }

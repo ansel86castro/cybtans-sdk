@@ -13,6 +13,8 @@
     <PackageReference Include="Refit.HttpClientFactory" Version="5.1.67" />
   </ItemGroup>
   
-  @{FERERENCES}  
+  <ItemGroup>
+  	<ProjectReference Include="../Customer.Models/Customer.Models.csproj" />
+  </ItemGroup >  
 
 </Project>
