@@ -24,5 +24,88 @@ namespace Cybtans.Serialization
         }
 
         public static object? Deserialize(Stream stream, Type? type) => new BinarySerializer().Deserialize(stream, type);
+
+        public static object ConvertTo(Type type, object value)
+        {
+            if (value != null && type != null)
+            {
+                var valueType = value.GetType();
+                if (valueType != type)
+                {
+                    if (valueType.IsPrimitive && IsPrimitiveNullable(type, out var nullableType))
+                    {
+                        if (nullableType != valueType)
+                        {
+                            value = System.Convert.ChangeType(value, nullableType);
+                        }
+                    }
+                    else if (!type.IsAssignableFrom(valueType) && value is IConvertible convertible)
+                    {
+                        value = convertible.ToType(type, null);
+                    }
+                }
+            }
+
+            return value;
+        }
+
+        private static bool IsPrimitiveNullable(Type targetType, out Type converType)
+        {
+            converType = null;
+            if (targetType == typeof(bool?))
+            {
+                converType = typeof(bool);
+            }
+            else if (targetType == typeof(byte?))
+            {
+                converType = typeof(byte);
+            }
+            else if (targetType == typeof(sbyte?))
+            {
+                converType = typeof(sbyte);
+            }
+            else if (targetType == typeof(short?))
+            {
+                converType = typeof(short);
+            }
+            else if (targetType == typeof(ushort?))
+            {
+                converType = typeof(ushort);
+            }
+            else if (targetType == typeof(int?))
+            {
+                converType = typeof(int);
+            }
+            else if (targetType == typeof(uint?))
+            {
+                converType = typeof(uint);
+            }
+            else if (targetType == typeof(long?))
+            {
+                converType = typeof(long);
+            }
+            else if (targetType == typeof(ulong?))
+            {
+                converType = typeof(ulong);
+            }
+            else if (targetType == typeof(float?))
+            {
+                converType = typeof(float);
+            }
+            else if (targetType == typeof(double?))
+            {
+                converType = typeof(double);
+            }
+            else if (targetType == typeof(decimal?))
+            {
+                converType = typeof(decimal);
+            }
+            else if (targetType == typeof(char?))
+            {
+                converType = typeof(char);
+            }
+
+            return converType != null;
+        }
     }
 }

@@ -165,13 +165,7 @@ namespace Cybtans.Proto.Generators.CSharp
                
                 bodyWriter
                     .Append("public ")                    
-                    .Append(fieldInfo.Type);
-                
-                if (field.Option.Optional && field.Type.TypeDeclaration.Nullable)
-                { 
-                    //check is the type is nullable
-                    bodyWriter.Append("?");
-                }
+                    .Append(fieldInfo.Type);                              
                 
                 bodyWriter.Append($" {fieldInfo.Name} {{get; set;}}");
                 
@@ -187,6 +181,18 @@ namespace Cybtans.Proto.Generators.CSharp
             if (_option.GenerateAccesor)
             {
                 bodyWriter.Append("public IReflectorMetadata GetAccesor()\r\n{\r\n\treturn __accesor;\r\n}");           
+            }
+
+            if(info.Fields.Count == 1)
+            {
+                //Generate ImplicitConverter
+                var field = info.Fields.First().Value;
+                bodyWriter.AppendLine(2);
+                bodyWriter.Append($"public static implicit operator {info.Name}({field.Type} {field.Field.Name})\r\n{{");
+                bodyWriter.AppendLine();
+                bodyWriter.Append('\t', 1).Append($"return new {info.Name} {{ {field.Name} = {field.Field.Name} }};");
+                bodyWriter.AppendLine();
+                bodyWriter.Append("}");
             }
 
             clsWriter.AppendLine().Append("}").AppendLine();
@@ -218,13 +224,11 @@ namespace Cybtans.Proto.Generators.CSharp
 
             foreach (var field in fields)
             {
-                body.Append($"public const int {field.Name} = {field.Field.Number};").AppendLine();
+                body.Append($"public const int {field.Name} = {field.Field.Number};").AppendLine();                
 
-                var nullable = field.Field.Option.Optional && field.Field.Type.TypeDeclaration.Nullable ? "?" : "";
-
-                getTypeSwtich.Append($"{field.Name} => typeof({field.Type}{nullable}),\r\n");
+                getTypeSwtich.Append($"{field.Name} => typeof({field.Type}),\r\n");
                 getValueSwtich.Append($"{field.Name} => obj.{field.Name},\r\n");
-                setValueSwtich.Append($"case {field.Name}:  obj.{field.Name} = ({field.Type}{nullable})value;break;\r\n");
+                setValueSwtich.Append($"case {field.Name}:  obj.{field.Name} = ({field.Type})value;break;\r\n");
                 getPropertyName.Append($"{field.Name} => \"{field.Name}\",\r\n");
                 getPropertyCode.Append($"\"{field.Name}\" => {field.Name},\r\n");
             }

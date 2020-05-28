@@ -27,18 +27,27 @@ namespace WebApp.Pages
             _ordersService = ordersService;
         }
 
-        public async Task OnGetAsync()
-        {
-            var catalogResponse = await _catalogService.GetProducts(new GetProductListRequest { });
-            Products = catalogResponse.Items;
-
-            var ordersResponse = await _ordersService.GetOrdersByUser(new GetOrderByUserRequest { UserId = 1 });
-            Orders = ordersResponse.Orders;
-        }
-        
         public List<Product> Products { get; private set; }
 
         public List<Order> Orders { get; private set; }
 
+
+        public async Task OnGetAsync()
+        {
+            var catalogResponse = await _catalogService.GetProducts();
+            Products = catalogResponse.Items;
+
+            var ordersResponse = await _ordersService.GetOrdersByUser(1);
+            Orders = ordersResponse.Orders;
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+             await _catalogService.DeleteProduct(id);
+
+            return RedirectToPage("./Index");
+        }
+
+        
     }
 }

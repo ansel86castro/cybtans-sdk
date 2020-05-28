@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Cybtans.Serialization;
 
 namespace Catalog.Services
 {
@@ -19,6 +20,7 @@ namespace Catalog.Services
 
         public override async Task<Product> CreateProduct(Product request)
         {
+            request.CreateDate = new DateTime();
             _context.Products.Add(request);
             await _context.SaveChangesAsync();
             return request;
@@ -74,12 +76,33 @@ namespace Catalog.Services
 
         public override async Task<Product> UpdateProduct(UpdateProductRequest request)
         {
-            var product = request.Product;
-            product.Id = request.Id;
-            var entry = _context.Products.Attach(product);
-            entry.State = EntityState.Modified;
+            Product product = request.Product;
 
-            await _context.SaveChangesAsync();
+            if(request.Data != null)
+            {
+                product = await _context.Products.FirstOrDefaultAsync(x => x.Id == request.Id);
+                if (product == null)
+                    throw new Exception("Product Not Found");
+
+                product.Merge(request.Data);             
+            }
+            else
+            {                
+                product.Id = request.Id;
+                var entry = _context.Products.Attach(product);
+                entry.State = EntityState.Modified;
+            }
+
+            product.UpdateDate = DateTime.Now;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new Exception($"Product {request.Id} not found!");
+            }
 
             return product;
         }

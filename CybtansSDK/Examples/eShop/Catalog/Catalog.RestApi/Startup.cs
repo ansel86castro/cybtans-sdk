@@ -1,5 +1,6 @@
 using Catalog.Services;
 using Catalog.Services.Data;
+using Cybtans.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,11 +33,8 @@ namespace Catalog.RestApi
             // Register the Swagger services
             services.AddOpenApiDocument();
 
-            services.AddControllers(options=>
-            {
-                options.InputFormatters.Add(new Cybtans.AspNetCore.BinaryInputFormatter());
-                options.OutputFormatters.Add(new Cybtans.AspNetCore.BinaryOutputFormatter());                
-            });            
+            services.AddControllers()
+                .AddCybtansFormatter();            
             
         }
 

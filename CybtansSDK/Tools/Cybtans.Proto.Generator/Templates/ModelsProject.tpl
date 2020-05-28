@@ -5,6 +5,7 @@
   </PropertyGroup>  
 
   <ItemGroup>
+    <PackageReference Include="Cybtans.Serialization" Version="1.0.4" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup> 
 

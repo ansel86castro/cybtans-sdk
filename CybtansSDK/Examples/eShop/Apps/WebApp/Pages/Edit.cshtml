@@ -1,0 +1,26 @@
+﻿@page "{id:int}"
+@model WebApp.Pages.EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<form method="post">
+    <input asp-for="Product.Id" type="hidden" />
+    <div>
+        <label>Name:</label><br />
+        <input asp-for="Product.Name" />
+    </div>
+    <div>
+        <label>Description:</label><br />
+        <input asp-for="Product.Description" />
+    </div>
+
+    <div>
+        <label>Price:</label><br />
+        <input asp-for="Product.Price" />
+    </div>
+
+    <input type="submit" />
+</form>

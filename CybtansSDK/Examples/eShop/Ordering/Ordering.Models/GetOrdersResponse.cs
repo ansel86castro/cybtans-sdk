@@ -14,6 +14,11 @@ namespace Ordering.Models
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator GetOrdersResponse(List<Order> orders)
+		{
+			return new GetOrdersResponse { Orders = orders };
+		}
 	}
 	
 	
