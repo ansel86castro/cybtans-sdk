@@ -10,6 +10,9 @@
   </ItemGroup>
 
 
-  @{FERERENCES}
+  <ItemGroup>
+  	<ProjectReference Include="../Customer.Models/Customer.Models.csproj" />
+  	<ProjectReference Include="../Customer.Services/Customer.Services.csproj" />
+  </ItemGroup >
 
 </Project>

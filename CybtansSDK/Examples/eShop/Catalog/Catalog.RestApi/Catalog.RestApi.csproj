@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cybtans.AspNetCore" Version="1.0.3" />
+    <PackageReference Include="Cybtans.AspNetCore" Version="1.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
   </ItemGroup>
