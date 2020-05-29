@@ -8,10 +8,14 @@ Use the `BinarySerializer` to serialize/deserialize objects to and from bytes ar
 
 ### Usage. 
 Nuget Console.  
-    Install-Package Cybtans.Serialization -Version 1.0.6
+``` 
+Install-Package Cybtans.Serialization -Version 1.0.6
+```
 
 DotNet Core CLI.  
-    dotnet add package Cybtans.Serialization --version 1.0.6
+```
+dotnet add package Cybtans.Serialization --version 1.0.6
+```
 
 ### Example
 
@@ -34,17 +38,17 @@ Cybtan's Service Generator is a tool for simplifying the development of microser
 ### Example
 Generates the Customer microservice's project structure
 ```bash
-  ServiceGenerator -n Customer -o Customer -sln eShop.sln
+  ServiceGenerator -n Customers -o Customers -sln eShop.sln
 ```
 
 Generates the Customer microservice's code including **models**, **web api controllers**, **typed [refit](https://github.com/reactiveui/refit) clients** and **app's services** from the protobuff file.  
 ```bash
-ServiceGenerator proto -n Customer -o . -f ./Proto/Customer.proto
+ServiceGenerator proto -n Customers -o . -f ./Proto/Customers.proto
 ```
 
-Where -n Customer specify your microservice name and -o Customer specify the folder where your projects will be generated.
+Where -n Customers specify your microservice name and -o Customers specify the folder where your projects will be generated.
 
-Note: When generating the project's structure like for example `ServiceGenerator -n Customer -o Customer -sln eShop.sln`
+Note: When generating the project's structure like for example `ServiceGenerator -n Customers -o Customers -sln eShop.sln`
 it will also generate a `generate.bat` so you can run it form the command line to generate the code after changing the proto file
 
 The code template generated when creating the projects integrates the refit clients and the web api with **cybtans binary serialization library** which is faster and output less bytes than JSON. Also all the messages generated from the proto file implements `IReflectorMetadataProvider` therefore the serialization/deserialization of the models is very fast due to it does not use reflection.
@@ -59,7 +63,7 @@ Then generate the microservice structure.
 ```
 ServiceGenerator -n Customers -o Customers -sln eStore.sln
 ```
-It will generate the following projects inside the `Customer` folder.  
+It will generate the following projects inside the `Customers` folder.  
   - *Customers.Services* : Contains your service logic the only project you need to focus
   - *Customers.Clients* : The client library for calling your services. Use this library into client applications or gateways. You will need to import the Customer.Models library.
   - *Customers.Models* : The request and response message of your services
@@ -69,7 +73,7 @@ It will generate the following projects inside the `Customer` folder.
   Then modify the proto file located in `Proto/Customers.proto`
 
   ```proto
-  syntax = "proto3";
+ syntax = "proto3";
 
 package Customers;
 
@@ -148,7 +152,7 @@ service CustomerService {
 ```
 Generate the code with. 
 ```
-ServiceGenerator proto -n Customer -o . -f ./Proto/Customer.proto
+ServiceGenerator proto -n Customers -o . -f ./Proto/Customers.proto
 ```
 
 or executing the `generate.bat` file. 
@@ -185,7 +189,7 @@ public class CustomerServiceImpl : CustomerService
 }
 ```
 
-Register your implementation in the `Customer.RestApi/Startup.cs` 
+Register your implementation in the `Customers.RestApi/Startup.cs` 
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
