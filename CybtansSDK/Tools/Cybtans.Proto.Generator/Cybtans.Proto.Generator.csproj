@@ -8,8 +8,7 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <Nullable>disable</Nullable>    
     <IsPackable>false</IsPackable>    
-    <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>    
-    <SignAssembly>false</SignAssembly>
+    <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>       
     <VersionPrefix>1.0.6</VersionPrefix>
   </PropertyGroup>
 
