@@ -37,8 +37,17 @@ namespace Catalog.Services
         }
 
         public override async Task<Product> GetProduct(GetProductRequest request)
-        {
-            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id);
+        {         
+            var product = await _context.Products
+                .Include(x => x.Brand)
+                .Include(x=>x.Catalog)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+            if (product == null)
+                throw new InvalidOperationException("Object not found");
+
+            return product;
         }
 
         public override async Task<GetProductListResponse> GetProducts(GetProductListRequest request)

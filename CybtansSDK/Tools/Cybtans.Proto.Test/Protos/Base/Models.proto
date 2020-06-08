@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message User {
+	int32 id = 1;
+	string name = 2 [required = true];	
+	datetime createDate = 5;
+	datetime updateDate = 6 [optional = true];	
+}
+
+

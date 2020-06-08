@@ -25,6 +25,16 @@ namespace Cybtans.Proto.Generators
             return (CodeWriter)writer;
         }
 
+        public void AddWriter(CodeWriter writer, string blockName)
+        {
+            if (blocks == null)
+            {
+                blocks = new Dictionary<string, object>();
+            }
+
+            blocks.Add(blockName, writer);
+        }
+
         public CodeWriter Append(string value)
         {
             sb.Append(value);

@@ -1,8 +1,9 @@
 ﻿namespace Cybtans.Proto.Generators.CSharp
 {
-    public class OutputOption
+
+    public class OutputOption:CodeGenerationOption
     {
-        public string OutputDirectory { get; set; }
+        
 
         public string Namespace { get; set; }
     }
