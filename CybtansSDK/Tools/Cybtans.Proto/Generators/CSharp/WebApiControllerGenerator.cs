@@ -68,11 +68,11 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var bodyWriter = clsWriter.Block("BODY");
 
-            bodyWriter.Append($"private readonly {srvInfo.Name} _service;").AppendLine().AppendLine();
+            bodyWriter.Append($"private readonly I{srvInfo.Name} _service;").AppendLine().AppendLine();
 
             #region Constructor
 
-            bodyWriter.Append($"public {srvInfo.Name}Controller({srvInfo.Name} service)").AppendLine();
+            bodyWriter.Append($"public {srvInfo.Name}Controller(I{srvInfo.Name} service)").AppendLine();
             bodyWriter.Append("{").AppendLine();
             bodyWriter.Append('\t', 1).Append("_service = service;").AppendLine();
             bodyWriter.Append("}").AppendLine();

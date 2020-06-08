@@ -69,7 +69,7 @@ namespace Cybtans.Proto.Generators
                 else if (c == '\t')
                     tabs++;
 
-                while (template[i] == '@')
+                while (template[i] == '@' && i < template.Length)
                 {
                     var key = ReadSymbol(template, ref i);
                     if (key != null)
@@ -80,6 +80,10 @@ namespace Cybtans.Proto.Generators
                             sb.Append(valueStr);
                         }
                     }
+                    else
+                    {
+                        i++;
+                    }
                 }
 
                 if (c != '\t' && c != ' ')
@@ -88,7 +92,8 @@ namespace Cybtans.Proto.Generators
                     tabs = 0;
                 }
 
-                sb.Append(template[i]);
+                if (i < template.Length)
+                    sb.Append(template[i]);
             }
 
             return sb.ToString();

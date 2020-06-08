@@ -7,6 +7,10 @@ namespace Cybtans.Proto.AST
         public ImportDeclaration(IToken start, ImportType type, string path) : base(start)
         {
             ImportType = type;
+            if (path.StartsWith('"'))
+            {
+                path = path.Substring(1, path.Length - 2);
+            }
             Name = path;
         }
 

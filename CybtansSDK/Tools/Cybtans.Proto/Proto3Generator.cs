@@ -70,6 +70,12 @@ namespace Cybtans.Proto
                 }
                 else
                 {
+                    if (file.Package != null)
+                    {
+                        importFileNode.Package = file.Package;
+                        importFileNode.Option.Namespace = file.Package.ToString();
+                    }
+
                     scope.Merge(importScope);
                 }
             }
