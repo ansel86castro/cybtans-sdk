@@ -18,9 +18,40 @@ namespace Cybtans.Messaging
             _type = type;
         }
 
-        public SubscriptionInfo(IServiceProvider? serviceProvider, Type type, BindingInfo info) : this(serviceProvider, type, info.Exchange, info.Topic)
+        public SubscriptionInfo(IServiceProvider? serviceProvider, Type type, BindingInfo info) 
+            : this(serviceProvider, type, info.Exchange, info.Topic)
         {
 
+        }
+
+        public SubscriptionInfo(IServiceProvider? serviceProvider, IMessageHandler<T> handler, BindingInfo info)
+         : base(info.Exchange, info.Topic)
+        {
+            _serviceProvider = serviceProvider;
+            _handler = handler;
+            _type = _handler.GetType();
+        }
+
+        public SubscriptionInfo(IServiceProvider? serviceProvider, IMessageHandler<T> handler, string exchange, string topic)
+       : base(exchange, topic)
+        {
+            _serviceProvider = serviceProvider;
+            _handler = handler;
+            _type = _handler.GetType();
+        }
+
+
+        public IMessageHandler<T>? Handler
+        {
+            get => _handler;
+            set
+            {
+                _handler = value;
+                if (value != null)
+                {
+                    _type = value.GetType();
+                }
+            }
         }
 
         public Type Type

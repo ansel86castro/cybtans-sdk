@@ -8,7 +8,7 @@ namespace Cybtans.Messaging.RabbitMQ.Test
     [ExchangeRoute("Invoice")]
     public class InvoiceCreated: EntityEvent
     {
-        public Invoice Value { get; set; }
+        public Invoice Value { get; private set; }
 
         public InvoiceCreated()
         {
@@ -24,7 +24,7 @@ namespace Cybtans.Messaging.RabbitMQ.Test
     [ExchangeRoute("Invoice")]
     public class InvoiceDeleted : EntityEvent
     {
-        public Invoice Value { get; set; }
+        public Invoice Value { get; private set; }
 
         public InvoiceDeleted() { }
 

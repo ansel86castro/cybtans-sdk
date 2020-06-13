@@ -36,10 +36,10 @@ namespace Cybtans.Messaging.RabbitMQ
 
         public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null, IServiceProvider? serviceProvider = null)
         {
-            _connectionFactory = connectionFactory;
-            _subscriptionManager = new SubscriptionManager(serviceProvider);
+            _connectionFactory = connectionFactory;            
             _logger = logger;
             _options = options ?? new RabbitMessageQueueOptions();
+            _subscriptionManager = new SubscriptionManager(_options.Exchange, serviceProvider);
         }
 
         public bool IsConnected =>  _connection != null && _connection.IsOpen && !_disposed;
@@ -53,6 +53,8 @@ namespace Cybtans.Messaging.RabbitMQ
             try
             {
                 _publishChannel?.Dispose();
+                _consumerChannel?.Dispose();
+
                 _connection?.Dispose();
             }
             catch(IOException ex)
@@ -194,7 +196,7 @@ namespace Cybtans.Messaging.RabbitMQ
                         ["alternate-exchange"] = _options.BradcastAlternateExchange
                     };
                 }
-                _publishChannel.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable, arguments: args);
+                _publishChannel!.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable, autoDelete: _options.AutoDeleteExchange ,arguments: args);
                 _publishExchanges.Add(exchange);
             }
         }
@@ -209,7 +211,7 @@ namespace Cybtans.Messaging.RabbitMQ
 
             if (!_consumeExchanges.Contains(exchange))
             {
-                _consumerChannel.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable);
+                _consumerChannel.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable, autoDelete: _options.AutoDeleteExchange);
                 _consumeExchanges.Add(exchange);
             }
         }
@@ -218,48 +220,15 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (exchange == null || topic == null)
             {
-                if (!_subscriptionManager.GetExchangeValues(message.GetType(), out exchange, out topic))
+                if (!_subscriptionManager.GetExchangeValues(message, out exchange, out topic))
                 {
-                    if (message is IMessage msg)
-                    {
-                        exchange = msg.Exchange;
-                        topic = msg.Topic;
-                    }
-                    else
-                    {
-                        throw new QueuePublishException($"Exchange not found for {message.GetType()}", message);
-                    }
+                    throw new QueuePublishException($"Exchange not found for {message.GetType()}", message);
                 }
             }            
 
             var bytes = BinaryConvert.Serialize(message);
             return Task.Run(() => PublishInternal(exchange!, topic!, bytes));
-        }
-
-        //public Task PublishAll(IEnumerable<object> messages)
-        //{
-        //    return Task.Run(() =>
-        //    {
-        //        foreach (var message in messages)
-        //        {                    
-        //            if (!_subscriptionManager.GetExchangeValues(message.GetType(), out var exchange, out var topic))
-        //            {
-        //                if (message is IMessage msg)
-        //                {
-        //                    exchange = msg.Exchange;
-        //                    topic = msg.Topic;
-        //                }
-        //                else
-        //                {
-        //                    throw new QueuePublishException($"Exchange not found for {message.GetType()}", message);
-        //                }
-        //            }
-
-        //            var bytes = BinaryConvert.Serialize(message);
-        //            PublishInternal(exchange!, topic!, bytes);
-        //        }               
-        //    });
-        //}
+        }       
 
         private void PublishInternal(string exchange, string topic, byte[] data)
         {
@@ -350,9 +319,14 @@ namespace Cybtans.Messaging.RabbitMQ
             }
         }
 
-        public BindingInfo? GetBindingForType(Type type)
+        public BindingInfo? GetBinding(Type type)
         {
             return _subscriptionManager.GetBindingForType(type);
+        }
+
+        public void RegisterBinding<T>(string exchage, string? topic = null)
+        {
+            _subscriptionManager.RegisterBinding<T>(exchage, topic);
         }
 
         #endregion

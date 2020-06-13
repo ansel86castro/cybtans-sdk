@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cybtans.Messaging
-{
+{    
 
     public class SubscriptionManager
     {      
@@ -17,13 +17,16 @@ namespace Cybtans.Messaging
         SpinLock _spinLock = new SpinLock();
         readonly IServiceProvider? _serviceProvider;
         readonly Dictionary<string, BindingInfo> _exchageBidings = new Dictionary<string, BindingInfo>();
+        string? _globalExchange;
 
-        public SubscriptionManager(IServiceProvider? serviceProvider = null)
+        public SubscriptionManager(string? globalExchange= null, IServiceProvider? serviceProvider = null)
         {
             _serviceProvider = serviceProvider;
+            _globalExchange = globalExchange;
         }
 
-        public BindingInfo? GetBindingForType(Type type)
+        public BindingInfo? GetBindingForType(Type type) => GetBindingForType(type, (exchage, topic) => new BindingInfo(exchage, topic));
+        private BindingInfo? GetBindingForType(Type type, Func<string, string, BindingInfo> createBindingFunc)
         {
             BindingInfo info;
 
@@ -31,18 +34,23 @@ namespace Cybtans.Messaging
             try
             {
                 _spinLock.Enter(ref lockTaken);
+                string? exchange;
+                string topic;
 
                 if (!_exchages.TryGetValue(type, out info))
                 {
-                    var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();
-                    if (attr == null)
+                    var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();                    
+                    exchange = attr?.Exchange ?? _globalExchange;
+                    if(exchange == null)
+                    {
                         return null;
+                    }
 
-                    var exchange = attr.Exchange;                    
-                    info = new BindingInfo(attr.Exchange, attr.Topic ?? type.FullName);
+                    topic = attr?.Topic ?? type.FullName;
+                    info = createBindingFunc(exchange, topic);
                     _exchages.Add(type, info);
                 }
-                return info;                
+                return info;
             }
             finally
             {
@@ -50,34 +58,32 @@ namespace Cybtans.Messaging
                 {
                     _spinLock.Exit(true);
                 }
-            }            
+            }
         }
 
-        public bool GetExchangeValues(Type type, out string? exchange, out string? topic)
+        public bool GetExchangeValues(object message, out string? exchange, out string? topic)
         {
-            exchange = null;
-            topic = null;
+            Type type = message.GetType();
+            var binding = GetBindingForType(type);
+            exchange = binding?.Exchange;
+            topic = binding?.Topic;
+                                   
+            return binding != null;
+        }
+
+        public void RegisterBinding<T>(string exchange, string? topic = null)
+        {            
+            Type type = typeof(T);
 
             bool lockTaken = false;
             try
-            {                
+            {
                 _spinLock.Enter(ref lockTaken);
-                
-                if (_exchages.TryGetValue(type, out var info))
+                if (!_exchages.TryGetValue(type, out var info))
                 {
-                    exchange = info.Exchange;
-                    topic = info.Topic;
-                    return true;
+                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                    _exchages.Add(type, info);
                 }
-
-                var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();
-                if (attr == null)
-                    return false;
-
-                exchange = attr.Exchange;
-                topic = attr.Topic ?? type.FullName;
-
-                _exchages.Add(type, new BindingInfo(exchange, topic));
             }
             finally
             {
@@ -86,37 +92,33 @@ namespace Cybtans.Messaging
                     _spinLock.Exit(true);
                 }
             }
-
-            return true;
         }
 
         public SubscriptionInfo<TMessage> Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
           where THandler : IMessageHandler<TMessage>
         {
-            bool lockTaken = false;
+            var type = typeof(TMessage);
+            SubscriptionInfo<TMessage> handlerInfo;
+
+            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(_serviceProvider, typeof(THandler), exchange, topic));
+            if (info == null)
+            {
+                if (exchange != null)
+                {
+                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Binding for {type} not found");
+                }
+            }
+
+            bool lockTaken = false;            
             try
             {
-                _spinLock.Enter(ref lockTaken);
+                _spinLock.Enter(ref lockTaken);                
 
-                var type = typeof(TMessage);
-                SubscriptionInfo<TMessage> handlerInfo;
-
-                if (!_exchages.TryGetValue(type, out var info))
-                {
-                    if(exchange == null)
-                    {
-                        var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();
-                        if (attr == null)
-                            throw new QueueSubscribeException($"Exchange information not found for {type}");
-
-                        exchange = attr.Exchange;
-                        topic = attr.Topic ?? type.FullName;
-                    }
-
-                    handlerInfo = new SubscriptionInfo<TMessage>(_serviceProvider, typeof(THandler), exchange, topic ?? type.FullName);
-                    _exchages.Add(type, handlerInfo);
-                }
-                else if(info.GetType() == typeof(BindingInfo))
+                if(info.GetType() == typeof(BindingInfo))
                 {
                     handlerInfo = new SubscriptionInfo<TMessage>(_serviceProvider, typeof(THandler), info);
                     _exchages[type] = handlerInfo;
@@ -125,6 +127,53 @@ namespace Cybtans.Messaging
                 {
                     handlerInfo = (SubscriptionInfo<TMessage>)info;
                     handlerInfo.Type = typeof(THandler);
+                }
+
+                _exchageBidings[handlerInfo.Key] = handlerInfo;
+
+                return handlerInfo;
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    _spinLock.Exit();
+                }
+            }
+        }
+
+        public SubscriptionInfo<TMessage> Subscribe<TMessage>(IMessageHandler<TMessage> handler, string? exchange = null, string? topic = null)        
+        {
+            var type = typeof(TMessage);
+            SubscriptionInfo<TMessage> handlerInfo;
+
+            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(_serviceProvider, handler, exchange, topic));
+            if (info == null)
+            {
+                if (exchange != null)
+                {
+                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Binding for {type} not found");
+                }
+            }
+
+            bool lockTaken = false;
+            try
+            {
+                _spinLock.Enter(ref lockTaken);
+
+                if (info.GetType() == typeof(BindingInfo))
+                {
+                    handlerInfo = new SubscriptionInfo<TMessage>(_serviceProvider, handler, info);
+                    _exchages[type] = handlerInfo;
+                }
+                else
+                {
+                    handlerInfo = (SubscriptionInfo<TMessage>)info;                
+                    handlerInfo.Handler = handler;
                 }
 
                 _exchageBidings[handlerInfo.Key] = handlerInfo;
