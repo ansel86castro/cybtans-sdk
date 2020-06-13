@@ -13,6 +13,6 @@ namespace Cybtans.Entities
 
         Task ExecuteResilientTransacion(Func<Task> action);
 
-        Task SaveChangesAndPublishAsync();
+        Task<T> ExecuteResilientTransacion<T>(Func<Task<T>> action);
     }
 }

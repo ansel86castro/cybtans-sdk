@@ -1,25 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Cybtans.Entities.EntiyFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cybtans.Entities.EntiyFrameworkCore
-{
-    public class DbContextUnitOfWork : IUnitOfWork
-    {
-        private DbContext _context;
-        private IEntityEventPublisher _eventPublisher;
+#nullable enable
 
-        public DbContextUnitOfWork(DbContext context)
+namespace Cybtans.Entities.EntityFrameworkCore
+{
+    public class EfUnitOfWork : IUnitOfWork
+    {
+        private DbContext _context;        
+
+        public EfUnitOfWork(DbContext context, IEntityEventPublisher? eventPublisher = null)
         {
             _context = context;
-        }
+            EventPublisher = eventPublisher;
+        }        
 
-        public DbContextUnitOfWork(DbContext context , IEntityEventPublisher eventPublisher) : this(context)
+        public IEntityEventPublisher? EventPublisher { get; set; }
+
+        public IRepository<T, TKey> CreateRepository<T, TKey>()
+            where T : class
         {
-            _eventPublisher = eventPublisher;
+            return new EfRepository<T, TKey>(_context, this);
         }
 
         public async Task ExecuteResilientTransacion(Func<Task> action)
@@ -35,9 +41,23 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             });
         }
 
+        public async Task<T> ExecuteResilientTransacion<T>(Func<Task<T>> action)
+        {
+            //Use of an EF Core resiliency strategy when using multiple DbContexts within an explicit BeginTransaction():
+            //See: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency
+            var strategy = _context.Database.CreateExecutionStrategy();
+            return await strategy.ExecuteAsync(async () =>
+            {
+                using var transaction = _context.Database.BeginTransaction();
+                var result = await action();
+                transaction.Commit();
+                return result;
+            });
+        }
+
         public int SaveChanges()
         {
-            int retryCount = 2;            
+            int retryCount = 2;
             while (retryCount > 0)
             {
                 try
@@ -48,8 +68,8 @@ namespace Cybtans.Entities.EntiyFrameworkCore
                 {
                     retryCount--;
 
-                    if(retryCount == 0)
-                        throw new EntityNotFoundException("Can not save changes", ex.Entries.Select(x=>x.Entity));
+                    if (retryCount == 0)
+                        throw new EntityNotFoundException("Can not save changes", ex.Entries.Select(x => x.Entity));
 
                     // Update original values from the database 
                     foreach (var entry in ex.Entries)
@@ -66,9 +86,9 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             throw new InvalidOperationException();
         }
 
-        public async Task<int> SaveChangesAsync()
+        private async Task<int> SaveChangesAsyncInternal()
         {
-            int retryCount = 2;         
+            int retryCount = 2;
             while (retryCount > 0)
             {
                 try
@@ -97,29 +117,33 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             throw new InvalidOperationException();
         }
 
-        public Task SaveChangesAndPublishAsync()
+        public Task<int> SaveChangesAsync()
         {
-            if (_eventPublisher == null)
+            if (EventPublisher == null)
             {
-                return SaveChangesAsync();
+                return SaveChangesAsyncInternal();
             }
 
             return ExecuteResilientTransacion(async () =>
             {
-                await SaveChangesAsync();
+                var rows = await SaveChangesAsyncInternal();
 
-                var entities = _context.ChangeTracker.Entries<IEntity>()
-                                 .Where(x => x.Entity.HasEntityEvents())
-                                 .Select(x => x.Entity);
-
-                var events = entities.SelectMany(x => x.GetDomainEvents()).Where(x=>x.State == EventStateEnum.NotPublished);
-
-                await _eventPublisher.PublishAll(events);
-
-                foreach (var item in entities)
+                if (rows > 0)
                 {
-                    item.ClearEntityEvents(EventStateEnum.NotPublished);
+                    var entities = _context.ChangeTracker.Entries<IEntity>()
+                                     .Where(x => x.Entity.HasEntityEvents())
+                                     .Select(x => x.Entity);
+
+                    var events = entities.SelectMany(x => x.GetDomainEvents()).Where(x => x.State == EventStateEnum.NotPublished).ToList();
+
+                    await EventPublisher.PublishAll(events);
+
+                    foreach (var item in entities)
+                    {
+                        item.ClearEntityEvents(EventStateEnum.NotPublished);
+                    }
                 }
+                return rows;
             });
         }
     }

@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System.Reflection;
+
 namespace Cybtans.Messaging.RabbitMQ
 {
     public class RabbitMessageQueueOptions

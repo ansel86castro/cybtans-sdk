@@ -21,7 +21,7 @@ namespace Cybtans.Messaging.RabbitMQ
     {     
         private bool _disposed;
         private readonly IConnectionFactory _connectionFactory;
-        private readonly ILogger<RabbitMessageQueue> _logger;
+        private readonly ILogger<RabbitMessageQueue>? _logger;
         private IConnection? _connection;
         private IModel? _publishChannel;
         private IModel? _consumerChannel;
@@ -29,17 +29,17 @@ namespace Cybtans.Messaging.RabbitMQ
         private object sync_root = new object();
         private RabbitMessageQueueOptions _options;
         private string? _queueName;
+        private EventingBasicConsumer? _consumer;
         private readonly HashSet<string> _publishExchanges = new HashSet<string>();
         private readonly HashSet<string> _consumeExchanges = new HashSet<string>();
         private readonly SubscriptionManager _subscriptionManager;
 
-        public RabbitMessageQueue(IConnectionFactory connectionFactory, 
-            SubscriptionManager subscriptionManager, ILogger<RabbitMessageQueue> logger, IOptions<RabbitMessageQueueOptions>options)
+        public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null, IServiceProvider? serviceProvider = null)
         {
             _connectionFactory = connectionFactory;
-            _subscriptionManager = subscriptionManager;
+            _subscriptionManager = new SubscriptionManager(serviceProvider);
             _logger = logger;
-            _options = options.Value;
+            _options = options ?? new RabbitMessageQueueOptions();
         }
 
         public bool IsConnected =>  _connection != null && _connection.IsOpen && !_disposed;
@@ -57,7 +57,7 @@ namespace Cybtans.Messaging.RabbitMQ
             }
             catch(IOException ex)
             {
-                _logger.LogCritical(ex, ex.Message);                
+                _logger?.LogCritical(ex, ex.Message);                
             }            
         }
 
@@ -66,7 +66,7 @@ namespace Cybtans.Messaging.RabbitMQ
             if (IsConnected)
                 return;
 
-            _logger.LogInformation($"RabbitMQ Client is connecting to {_connectionFactory.Uri}");
+            _logger?.LogInformation($"RabbitMQ Client is connecting to {_connectionFactory.Uri}");
             
             lock (sync_root)
             {
@@ -77,7 +77,7 @@ namespace Cybtans.Messaging.RabbitMQ
                         .Or<BrokerUnreachableException>()
                         .WaitAndRetry(_options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                         {
-                            _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
+                            _logger?.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
                         }
                     );
 
@@ -88,7 +88,7 @@ namespace Cybtans.Messaging.RabbitMQ
 
                 if (_connection == null)
                 {
-                    _logger.LogCritical("FATAL ERROR: RabbitMQ connections could not be created and opened");
+                    _logger?.LogCritical("FATAL ERROR: RabbitMQ connections could not be created and opened");
                     throw new QueueConnectionException("RabbitMQ connection is not created");
                 }              
 
@@ -96,7 +96,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 _connection.CallbackException += OnCallbackException;
                 _connection.ConnectionBlocked += OnConnectionBlocked;
 
-                _logger.LogInformation("RabbitMQ Client acquired a persistent connection to '{HostName}' and is subscribed to failure events", _connection.Endpoint.HostName);
+                _logger?.LogInformation("RabbitMQ Client acquired a persistent connection to '{HostName}' and is subscribed to failure events", _connection.Endpoint.HostName);
                                  
             }
         }
@@ -127,7 +127,7 @@ namespace Cybtans.Messaging.RabbitMQ
 
                 _publishChannel.CallbackException += (sender, ea) =>
                   {
-                      _logger.LogWarning(ea.Exception, "Recreating RabbitMQ publishing channel");
+                      _logger?.LogWarning(ea.Exception, "Recreating RabbitMQ publishing channel");
 
                       _publishChannel.Dispose();
                       _publishChannel = null;
@@ -155,25 +155,16 @@ namespace Cybtans.Messaging.RabbitMQ
 
                 _consumerChannel.CallbackException += (sender, ea) =>
                 {
-                    _logger.LogWarning(ea.Exception, "Recreating RabbitMQ consumer channel");
+                    _logger?.LogWarning(ea.Exception, "Recreating RabbitMQ consumer channel");
 
-                    _consumerChannel.Dispose();
+                    _consumerChannel?.Dispose();
                     _consumerChannel = null;
 
                     CreateConsumerChannel();
                 };
 
                 var queue = _consumerChannel.QueueDeclare(_options.QueueName ?? "", true, _options.Exclusive, true, null);
-                _queueName = queue.QueueName;
-
-                 var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
-
-                consumer.Received += Consumer_Received;
-
-                _consumerChannel.BasicConsume(
-                    queue: _queueName,
-                    autoAck: false,
-                    consumer: consumer);
+                _queueName = queue.QueueName;                
 
             }
         }            
@@ -293,7 +284,21 @@ namespace Cybtans.Messaging.RabbitMQ
             if (_consumerChannel == null)
                 throw new QueueSubscribeException("RabbitMQ consumer channel not created");
 
-            _consumerChannel.QueueBind(_queueName, subsInfo.Exchange, subsInfo.Topic);         
+            _consumerChannel.QueueBind(_queueName, subsInfo.Exchange, subsInfo.Topic);
+
+            lock (sync_root)
+            {
+                if (_consumer == null)
+                {
+                    _consumer = new EventingBasicConsumer(_consumerChannel);
+                    _consumer.Received += Consumer_Received;
+
+                    _consumerChannel.BasicConsume(
+                        queue: _queueName,
+                        autoAck: false,
+                        consumer: _consumer);
+                }
+            }
         }
 
         public void Unsubscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
@@ -308,7 +313,7 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (_disposed) return;
 
-            _logger.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
+            _logger?.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
 
             OpenConnection();
         }
@@ -317,7 +322,7 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (_disposed) return;
 
-            _logger.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
+            _logger?.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
 
             OpenConnection();
         }
@@ -326,27 +331,28 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (_disposed) return;
 
-            _logger.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
+            _logger?.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
 
             OpenConnection();
         }
 
-        private async Task Consumer_Received(object sender, BasicDeliverEventArgs args)
+        private async void Consumer_Received(object? sender, BasicDeliverEventArgs args)
         {
             try
             {
                 await _subscriptionManager.HandleMessage(args.Exchange, args.RoutingKey, args.Body.ToArray());
                 _consumerChannel?.BasicAck(args.DeliveryTag, multiple: false);
-
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
-
+                _logger?.LogCritical(ex, ex.Message);
                 _consumerChannel?.BasicNack(args.DeliveryTag, false, true);
-
             }
+        }
 
+        public BindingInfo? GetBindingForType(Type type)
+        {
+            return _subscriptionManager.GetBindingForType(type);
         }
 
         #endregion

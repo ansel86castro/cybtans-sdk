@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities
 {
+
     public interface IEntityEventPublisher
     {
         Task Publish(EntityEvent entityEvent);
