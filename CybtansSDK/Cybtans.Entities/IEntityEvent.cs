@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Cybtans.Entities
 {
     public class EntityEvent
-    {     
-        public Guid Id { get; set; }
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
 
-        public EventStateEnum State { get; set; }
+        public EventStateEnum State { get; set; } = EventStateEnum.NotPublished;
     }
 
     public enum EventStateEnum
@@ -36,4 +36,5 @@ namespace Cybtans.Entities
         Task SaveChangesAsyc();
         
     }
+    
 }

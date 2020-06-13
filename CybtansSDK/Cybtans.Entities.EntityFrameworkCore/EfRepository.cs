@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntiyFrameworkCore
 {
-    public class DbSetRepository<T, TKey> : IRepository<T, TKey> where T : class       
+    public class EfRepository<T, TKey> : IRepository<T, TKey> where T : class       
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public DbSetRepository(DbContext context, IUnitOfWork unitOfWork)
+        public EfRepository(DbContext context, IUnitOfWork unitOfWork)
         {            
             UnitOfWork = unitOfWork;
             _context = context;
@@ -25,7 +26,13 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         }
 
         public IUnitOfWork UnitOfWork { get; }
-      
+
+        Type IQueryable.ElementType => typeof(T);
+
+        Expression IQueryable.Expression => ((IQueryable)_dbSet).Expression;
+
+        IQueryProvider IQueryable.Provider => ((IQueryable)_dbSet).Provider;
+
         public IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null)
         {
             IQueryable<T> query = _dbSet;
@@ -40,7 +47,7 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             return query.AsNoTracking();
         }
 
-        public ValueTask<T> Load(TKey key, ReadConsistency consistency = ReadConsistency.Default)
+        public ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
         {
             return _dbSet.FindAsync(key);
         }
@@ -48,46 +55,52 @@ namespace Cybtans.Entities.EntiyFrameworkCore
 
         public void Update(T item)
         {
-            var entry = _context.Entry(item);
-            if (entry.State == EntityState.Detached)
-            {
-                _dbSet.Attach(item);
-                entry.State = EntityState.Modified;                
-            }
-            else if (entry.State == EntityState.Unchanged)
-            {
-                entry.State = EntityState.Modified;                
-            }
+            _dbSet.Update(item);         
         }
 
-        public void Create(T item)
+        public void UpdateRange(IEnumerable<T> items)
+        {
+            _dbSet.UpdateRange(items);
+        }
+
+        public void Add(T item)
         {
             _dbSet.Add(item);
         }
 
-        public void Remove(T item)
+        public void AddRange(IEnumerable<T> items)
         {
-            var entry = _context.Entry(item);
-            if (entry.State == EntityState.Detached)
-            {
-                _dbSet.Attach(item);
-            }
+            _dbSet.AddRange(items);
+        }
+
+        public void Remove(T item)
+        {          
             _dbSet.Remove(item);
         }
 
         public void RemoveRange(IEnumerable<T> items)
-        {
-            foreach (var item in items)
-            {
-                var entry = _context.Entry(item);
-                if (entry.State == EntityState.Detached)
-                {
-                    _dbSet.Attach(item);
-                }
-            }
-
+        {           
             _dbSet.RemoveRange(items);
         }
 
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return ((IEnumerable<T>)_dbSet).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_dbSet).GetEnumerator();
+        }
+
+      
+    }
+
+    public class DbSetRepository<T> : EfRepository<T, int>, IRepository<T>
+        where T : class
+    {
+        public DbSetRepository(DbContext context, IUnitOfWork unitOfWork) : base(context, unitOfWork)
+        {
+        }
     }
 }

@@ -14,11 +14,11 @@ namespace Cybtans.Messaging
     public class SubscriptionManager
     {      
         readonly Dictionary<Type, BindingInfo> _exchages = new Dictionary<Type, BindingInfo>();
-        readonly SpinLock spinLock = new SpinLock();
+        SpinLock _spinLock = new SpinLock();
         readonly IServiceProvider? _serviceProvider;
         readonly Dictionary<string, BindingInfo> _exchageBidings = new Dictionary<string, BindingInfo>();
 
-        public SubscriptionManager(IServiceProvider? serviceProvider)
+        public SubscriptionManager(IServiceProvider? serviceProvider = null)
         {
             _serviceProvider = serviceProvider;
         }
@@ -30,7 +30,7 @@ namespace Cybtans.Messaging
             bool lockTaken = false;
             try
             {
-                spinLock.Enter(ref lockTaken);
+                _spinLock.Enter(ref lockTaken);
 
                 if (!_exchages.TryGetValue(type, out info))
                 {
@@ -48,7 +48,7 @@ namespace Cybtans.Messaging
             {
                 if (lockTaken)
                 {
-                    spinLock.Exit(true);
+                    _spinLock.Exit(true);
                 }
             }            
         }
@@ -61,7 +61,7 @@ namespace Cybtans.Messaging
             bool lockTaken = false;
             try
             {                
-                spinLock.Enter(ref lockTaken);
+                _spinLock.Enter(ref lockTaken);
                 
                 if (_exchages.TryGetValue(type, out var info))
                 {
@@ -83,7 +83,7 @@ namespace Cybtans.Messaging
             {
                 if (lockTaken)
                 {
-                    spinLock.Exit(true);
+                    _spinLock.Exit(true);
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Cybtans.Messaging
             bool lockTaken = false;
             try
             {
-                spinLock.Enter(ref lockTaken);
+                _spinLock.Enter(ref lockTaken);
 
                 var type = typeof(TMessage);
                 SubscriptionInfo<TMessage> handlerInfo;
@@ -135,7 +135,7 @@ namespace Cybtans.Messaging
             {
                 if (lockTaken)
                 {
-                    spinLock.Exit(true);
+                    _spinLock.Exit();
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace Cybtans.Messaging
             bool lockTaken = false;
             try
             {
-                spinLock.Enter(ref lockTaken);
+                _spinLock.Enter(ref lockTaken);
                 var type = typeof(TMessage);
                 if (exchange == null)
                 {                    
@@ -166,7 +166,7 @@ namespace Cybtans.Messaging
             {
                 if (lockTaken)
                 {
-                    spinLock.Exit(true);
+                    _spinLock.Exit();
                 }
             }
         }
