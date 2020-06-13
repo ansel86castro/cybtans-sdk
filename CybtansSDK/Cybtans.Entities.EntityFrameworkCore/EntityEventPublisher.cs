@@ -36,7 +36,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
             };
             entityEvent.State = EventStateEnum.NotPublished;
 
-            var binding = _messageQueue.GetBindingForType(type);
+            var binding = _messageQueue.GetBinding(type);
             if (binding == null)
                 throw new QueuePublishException($"Bindindg information not found for {type}");
             log.Exchange = binding.Exchange;
@@ -94,7 +94,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
                     State = EventStateEnum.NotPublished
                 };
 
-                var binding = _messageQueue.GetBindingForType(type);
+                var binding = _messageQueue.GetBinding(type);
                 if (binding == null)
                     throw new QueuePublishException($"Bindindg information not found for {type}");
 

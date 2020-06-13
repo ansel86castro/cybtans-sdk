@@ -21,7 +21,9 @@ namespace Cybtans.Messaging
             return Publish(message, null, null);
         }
 
-        BindingInfo? GetBindingForType(Type type);
+        BindingInfo? GetBinding(Type type);
+
+        void RegisterBinding<T>(string exchage, string? topic = null);
 
     }
 }

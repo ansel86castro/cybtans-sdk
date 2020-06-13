@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Cybtans.Entities;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Cybtans.Messaging.RabbitMQ.Test
     {
         private RabbitMessageQueue _messageQueue;
         public static AutoResetEvent Wait = new AutoResetEvent(false);
+
+        public static List<EntityEvent> Events = new List<EntityEvent>();
 
         public Processor()
         {
@@ -32,8 +35,12 @@ namespace Cybtans.Messaging.RabbitMQ.Test
             {
                 Console.WriteLine("Invoice Created");
 
-                Wait.Set();
+                lock (Events)
+                {
+                    Events.Add(message);
+                }
 
+                Wait.Set();
                 return Task.CompletedTask;
             }
         }

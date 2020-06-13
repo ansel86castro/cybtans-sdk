@@ -3,12 +3,14 @@
 using System.Reflection;
 
 namespace Cybtans.Messaging.RabbitMQ
-{
+{    
     public class RabbitMessageQueueOptions
     {
         public int RetryCount { get; set; } = 5;
 
         public string ExchangeType { get; set; } = "topic";
+
+        public string? Exchange { get; set; }
 
         public bool Durable { get; set; } = true;
 
@@ -19,5 +21,7 @@ namespace Cybtans.Messaging.RabbitMQ
         public string? QueueName { get; set; }
 
         public bool Exclusive { get; set; } = true;
+
+        public bool AutoDeleteExchange { get; set; } = false;
     }
 }
