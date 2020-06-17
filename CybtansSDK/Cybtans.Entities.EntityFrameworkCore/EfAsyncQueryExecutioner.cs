@@ -10,7 +10,6 @@ namespace Cybtans.Entities.EntityFrameworkCore
     public class EfAsyncQueryExecutioner : IAsyncQueryExecutioner
     {
 
-
         public Task<int> CountAsync<T>(IQueryable<T> query)
         {
             return EntityFrameworkQueryableExtensions.CountAsync(query);

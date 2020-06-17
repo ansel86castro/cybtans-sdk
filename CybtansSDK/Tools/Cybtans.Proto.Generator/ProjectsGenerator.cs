@@ -1,10 +1,10 @@
 ﻿using Cybtans.Proto.Generators;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+
+using static Cybtans.Proto.Generator.TemplateManager;
 
 namespace Cybtans.Proto.Generator
 {
@@ -144,16 +144,7 @@ namespace Cybtans.Proto.Generator
             File.WriteAllText($"{output}/{project}/{project}.csproj", content);
         }
 
-        private static string GetTemplate(string template, object args = null)
-        {
-            using var stream = typeof(Program).Assembly.GetManifestResourceStream($"Cybtans.Proto.Generator.Templates.{template}");
-            var reader = new StreamReader(stream);
-            var content = reader.ReadToEnd();
-            if (args == null)
-                return content;
-
-            return TemplateProcessor.Process(content, args);
-        }
+    
 
         private static void GenerateWebApi(Options options)
         {

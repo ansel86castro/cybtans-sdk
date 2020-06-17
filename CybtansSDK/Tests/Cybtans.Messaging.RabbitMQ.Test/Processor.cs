@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Messaging.RabbitMQ.Test
 {
-    public class Processor
+    public class Processor : IMessageHandler<EntityUpdated<Invoice>>
     {
         private RabbitMessageQueue _messageQueue;
         public static AutoResetEvent Wait = new AutoResetEvent(false);
 
         public static List<EntityEvent> Events = new List<EntityEvent>();
 
-        public Processor()
+        public Processor(string queueName)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
 
@@ -25,13 +25,31 @@ namespace Cybtans.Messaging.RabbitMQ.Test
                 builder.AddConsole();
             });
 
-            _messageQueue = new RabbitMessageQueue(factory, logger: loggerFactory.CreateLogger<RabbitMessageQueue>());
-            _messageQueue.Subscribe<InvoiceCreated, InvoiceCreateHandler>();          
+            _messageQueue = new RabbitMessageQueue(factory, new RabbitMessageQueueOptions
+            {
+                Exchange = new ExchangeConfig
+                {
+                    Name = "Invoice"
+                },
+                Queue = new QueueConfig
+                {
+                    Name = queueName
+                }
+            },
+            logger: loggerFactory.CreateLogger<RabbitMessageQueue>());
+            _messageQueue.Subscribe<EntityCreated<Invoice>, InvoiceCreateHandler>();
+            _messageQueue.Subscribe(this);
         }
 
-        public class InvoiceCreateHandler : IMessageHandler<InvoiceCreated>
+        public Task HandleMessage(EntityUpdated<Invoice> message)
+        {
+            Console.WriteLine("Invoice Updated");
+            return Task.CompletedTask;
+        }
+
+        public class InvoiceCreateHandler : IMessageHandler<EntityCreated<Invoice>>
         {             
-            public Task HandleMessage(InvoiceCreated message)
+            public Task HandleMessage(EntityCreated<Invoice> message)
             {
                 Console.WriteLine("Invoice Created");
 
@@ -39,10 +57,11 @@ namespace Cybtans.Messaging.RabbitMQ.Test
                 {
                     Events.Add(message);
                 }
-
-                Wait.Set();
+                
                 return Task.CompletedTask;
             }
         }
+
+     
     }
 }

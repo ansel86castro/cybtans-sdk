@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Messaging
 {
-    public interface IMessageQueue
-    {       
-        void Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null)          
-            where THandler : IMessageHandler<TMessage>;
+    public interface IMessageSubscriptionManager
+    {
+        void Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null) where THandler : IMessageHandler<TMessage>;
+        void Subscribe<TMessage>(IMessageHandler<TMessage> handler, string? exchange = null, string? topic = null);
+        void Unsubscribe<TMessage, THandler>(string? exchange = null, string? topic = null) where THandler : IMessageHandler<TMessage>;
+        void RegisterBinding<T>(string exchage, string? topic = null);
+    }
 
-        void Unsubscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
-            where THandler : IMessageHandler<TMessage>;
-
+    public interface IMessageQueue :IMessageSubscriptionManager, IDisposable
+    {             
         Task Publish(object message, string? exchange , string? topic);           
 
         public Task Publish(object message)
@@ -22,8 +24,8 @@ namespace Cybtans.Messaging
         }
 
         BindingInfo? GetBinding(Type type);
-
-        void RegisterBinding<T>(string exchage, string? topic = null);
+    
+        void Start();
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Cybtans.Entities;
 using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Entities.EntiyFrameworkCore;
+using Cybtans.Entities.EventLog;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
@@ -27,23 +28,33 @@ namespace Cybtans.Messaging.RabbitMQ.Test
                 builder.AddConsole();
             });            
             
-            _messageQueue = new RabbitMessageQueue(factory, logger:loggerFactory.CreateLogger<RabbitMessageQueue>());
+            _messageQueue = new RabbitMessageQueue(factory, new RabbitMessageQueueOptions
+            {
+                Exchange = new ExchangeConfig
+                {
+                    Name = "Invoice"
+                }
+            }, logger:loggerFactory.CreateLogger<RabbitMessageQueue>());
             _context = TestContext.Create();
             _context.Database.EnsureCreated();
 
             var eventLogUoW = new EfUnitOfWork(_context);             
-            var repository = new EfRepository<EntityEventLog, Guid>(_context, eventLogUoW);
+            var repository = new EfRepository<EntityEventLog, Guid>(eventLogUoW);
             _eventPublisher = new EntityEventPublisher(_messageQueue, repository, loggerFactory.CreateLogger<EntityEventPublisher>());
 
             _uow = new EfUnitOfWork(_context, _eventPublisher);
         }
 
-        public async Task AddInvoices()
+        public async Task Publish()
         {
-            var invoice = CreateInvoice();
-            invoice.AddEntityEvent(new InvoiceCreated(invoice));
-
+            var invoice = CreateInvoice();          
             _context.Add(invoice);
+
+            await _uow.SaveChangesAsync();
+
+            invoice.Code = Guid.NewGuid().ToString();
+
+            _context.Update(invoice);
 
             await _uow.SaveChangesAsync();
         }

@@ -2,7 +2,7 @@
   "profiles": {
     "Cybtans.ServiceGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "proto -n Service1 -o Services/Service1 -ts-clients-o Services/ts   -f Service1.proto"
+      "commandLineArgs": "m -o Services/Service1/Proto/Models.proto -assembly \"G:\\Projects\\Alquileres\\RMS\\backend\\RealStates\\RealStates.RestApi\\bin\\Debug\\netcoreapp3.1\\RealStates.Data.dll\" -models Building Unit Contract Client Currency"
     }
   }
 }

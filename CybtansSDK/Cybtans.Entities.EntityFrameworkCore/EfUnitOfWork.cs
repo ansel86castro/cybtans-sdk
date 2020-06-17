@@ -1,8 +1,10 @@
 ﻿using Cybtans.Entities.EntiyFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,22 +12,39 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
+    public class UnitOfWorkOptions
+    {
+        internal IEntityEventPublisher EventPublisher { get; }
+
+        public void UseEventPublisher()
+        {
+            
+        }
+    }
+
     public class EfUnitOfWork : IUnitOfWork
     {
         private DbContext _context;        
 
-        public EfUnitOfWork(DbContext context, IEntityEventPublisher? eventPublisher = null)
+        public EfUnitOfWork(DbContext context, IEntityEventPublisher? eventPublisher)
         {
             _context = context;
             EventPublisher = eventPublisher;
-        }        
+        }
+
+        public EfUnitOfWork(DbContext context) : this(context, null)
+        {
+
+        }
+
+        internal DbContext Context => _context;
 
         public IEntityEventPublisher? EventPublisher { get; set; }
 
         public IRepository<T, TKey> CreateRepository<T, TKey>()
             where T : class
         {
-            return new EfRepository<T, TKey>(_context, this);
+            return new EfRepository<T, TKey>(this);
         }
 
         public async Task ExecuteResilientTransacion(Func<Task> action)
@@ -117,34 +136,57 @@ namespace Cybtans.Entities.EntityFrameworkCore
             throw new InvalidOperationException();
         }
 
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
             if (EventPublisher == null)
             {
-                return SaveChangesAsyncInternal();
+                return await SaveChangesAsyncInternal();
             }
-
-            return ExecuteResilientTransacion(async () =>
+            else
             {
+                var entities = GetEntries();
                 var rows = await SaveChangesAsyncInternal();
-
                 if (rows > 0)
                 {
-                    var entities = _context.ChangeTracker.Entries<IEntity>()
-                                     .Where(x => x.Entity.HasEntityEvents())
-                                     .Select(x => x.Entity);
-
-                    var events = entities.SelectMany(x => x.GetDomainEvents()).Where(x => x.State == EventStateEnum.NotPublished).ToList();
+                    var events = entities.SelectMany(x => x.GetDomainEvents())
+                        .Where(x => x.State == EventStateEnum.NotPublished)
+                        .ToList();
 
                     await EventPublisher.PublishAll(events);
 
-                    foreach (var item in entities)
+                    foreach (var entry in entities)
                     {
-                        item.ClearEntityEvents(EventStateEnum.NotPublished);
+                        entry.ClearEntityEvents(EventStateEnum.Published);
                     }
                 }
+
                 return rows;
-            });
+            }
+        }
+
+        private List<IDomainEntity> GetEntries()
+        {
+            var entries = _context.ChangeTracker.Entries<IDomainEntity>();
+            foreach (var entry in entries)
+            {
+                if (!entry.Entity.HasEntityEvents())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.Entity.AddCreatedEvent();
+                            break;
+                        case EntityState.Modified:
+                            entry.Entity.AddUpdatedEvent(entry.OriginalValues.ToObject() as IDomainEntity);
+                            break;
+                        case EntityState.Deleted:
+
+                            break;
+                    }
+                }
+            }
+
+            return entries.Where(x => x.Entity.HasEntityEvents()).Select(x=>x.Entity).ToList();
         }
     }
 }

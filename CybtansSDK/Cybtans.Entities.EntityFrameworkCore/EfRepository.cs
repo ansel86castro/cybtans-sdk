@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Cybtans.Entities.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntiyFrameworkCore
@@ -13,16 +15,11 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public EfRepository(DbContext context, IUnitOfWork unitOfWork)
-        {            
+        public EfRepository(IUnitOfWork unitOfWork)
+        {                        
             UnitOfWork = unitOfWork;
-            _context = context;
-            _dbSet = context.Set<T>();
-
-            var model = context.Model.GetEntityTypes(typeof(T)).FirstOrDefault();
-            var key = model.FindPrimaryKey();
-            if (key == null)
-                throw new InvalidOperationException("Entity does not have a key");
+            _context = ((EfUnitOfWork)unitOfWork).Context;
+            _dbSet = _context.Set<T>();            
         }
 
         public IUnitOfWork UnitOfWork { get; }
@@ -65,6 +62,16 @@ namespace Cybtans.Entities.EntiyFrameworkCore
 
         public void Add(T item)
         {
+            if(item is IAuditableEntity au)
+            {
+                var principal = Thread.CurrentPrincipal;
+                if(principal?.Identity?.Name != null)
+                {
+                    au.Creator = principal?.Identity?.Name;
+                }
+                au.CreateDate = DateTime.UtcNow;
+            }
+
             _dbSet.Add(item);
         }
 
@@ -91,16 +98,15 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable)_dbSet).GetEnumerator();
-        }
-
-      
+        }      
     }
 
-    public class DbSetRepository<T> : EfRepository<T, int>, IRepository<T>
+    public class EfRepository<T> : EfRepository<T, int>, IRepository<T>
         where T : class
     {
-        public DbSetRepository(DbContext context, IUnitOfWork unitOfWork) : base(context, unitOfWork)
+        public EfRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
+
         }
     }
 }
