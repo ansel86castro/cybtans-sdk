@@ -3,29 +3,34 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cybtans.Messaging
-{    
+{
 
-    public class SubscriptionManager
+    public class MessageSubscriptionManager : IMessageSubscriptionManager
     {      
         readonly Dictionary<Type, BindingInfo> _exchages = new Dictionary<Type, BindingInfo>();
-        SpinLock _spinLock = new SpinLock();
-        readonly IServiceProvider? _serviceProvider;
+        SpinLock _spinLock = new SpinLock();        
         readonly Dictionary<string, BindingInfo> _exchageBidings = new Dictionary<string, BindingInfo>();
-        string? _globalExchange;
+        readonly string? _globalExchange;
+        readonly IServiceProvider? _serviceProvider;
 
-        public SubscriptionManager(string? globalExchange= null, IServiceProvider? serviceProvider = null)
-        {
-            _serviceProvider = serviceProvider;
+        public MessageSubscriptionManager(IServiceProvider? provider = null, string? globalExchange= null)
+        {            
             _globalExchange = globalExchange;
+            _serviceProvider = provider;
         }
 
+        public IEnumerable<BindingInfo> GetBindings() => _exchages.Values;
+
         public BindingInfo? GetBindingForType(Type type) => GetBindingForType(type, (exchage, topic) => new BindingInfo(exchage, topic));
+       
         private BindingInfo? GetBindingForType(Type type, Func<string, string, BindingInfo> createBindingFunc)
         {
             BindingInfo info;
@@ -71,9 +76,9 @@ namespace Cybtans.Messaging
             return binding != null;
         }
 
-        public void RegisterBinding<T>(string exchange, string? topic = null)
+        public void RegisterBinding<TMessage>(string exchange, string? topic = null)
         {            
-            Type type = typeof(T);
+            Type type = typeof(TMessage);
 
             bool lockTaken = false;
             try
@@ -100,7 +105,7 @@ namespace Cybtans.Messaging
             var type = typeof(TMessage);
             SubscriptionInfo<TMessage> handlerInfo;
 
-            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(_serviceProvider, typeof(THandler), exchange, topic));
+            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(typeof(THandler), exchange, topic));
             if (info == null)
             {
                 if (exchange != null)
@@ -120,7 +125,7 @@ namespace Cybtans.Messaging
 
                 if(info.GetType() == typeof(BindingInfo))
                 {
-                    handlerInfo = new SubscriptionInfo<TMessage>(_serviceProvider, typeof(THandler), info);
+                    handlerInfo = new SubscriptionInfo<TMessage>(typeof(THandler), info);
                     _exchages[type] = handlerInfo;
                 }
                 else
@@ -147,7 +152,7 @@ namespace Cybtans.Messaging
             var type = typeof(TMessage);
             SubscriptionInfo<TMessage> handlerInfo;
 
-            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(_serviceProvider, handler, exchange, topic));
+            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(handler, exchange, topic));
             if (info == null)
             {
                 if (exchange != null)
@@ -167,7 +172,7 @@ namespace Cybtans.Messaging
 
                 if (info.GetType() == typeof(BindingInfo))
                 {
-                    handlerInfo = new SubscriptionInfo<TMessage>(_serviceProvider, handler, info);
+                    handlerInfo = new SubscriptionInfo<TMessage>(handler, info);
                     _exchages[type] = handlerInfo;
                 }
                 else
@@ -190,6 +195,7 @@ namespace Cybtans.Messaging
         }
 
         public void Unsubscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
+             where THandler : IMessageHandler<TMessage>
         {
             bool lockTaken = false;
             try
@@ -220,18 +226,36 @@ namespace Cybtans.Messaging
             }
         }
 
-        public Task HandleMessage(string exchange, string topic, byte[] data)
+        public async Task HandleMessage(string exchange, string topic, byte[] data)
         {
             var key = BindingInfo.GetKey(exchange, topic);
 
             if (_exchageBidings.TryGetValue(key, out var info))
             {
-                return info.HandleMessage(data);
+                if (_serviceProvider != null)
+                {
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        await info.HandleMessage(scope.ServiceProvider, data);
+                    }
+                }
+                else
+                {
+                    await info.HandleMessage(null, data);
+                }
             }
-
-            return Task.CompletedTask;
         }
-   
 
+        void IMessageSubscriptionManager.Subscribe<TMessage, THandler>(string? exchange, string? topic)
+        {
+            Subscribe<TMessage, THandler>(exchange, topic);
+        }
+
+        void IMessageSubscriptionManager.Subscribe<TMessage>(IMessageHandler<TMessage> handler, string? exchange, string? topic)
+        {
+            Subscribe<TMessage>(handler, exchange, topic);
+        }
+
+      
     }
 }

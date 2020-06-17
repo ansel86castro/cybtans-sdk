@@ -11,11 +11,12 @@ namespace Cybtans.Messaging.RabbitMQ.Test
         static void Main(string[] args)
         {
             var publisher = new Publisher();
-            var processor = new Processor();
+            var processor = new Processor("MessageTest");
+            var processor2 = new Processor("MessageTest");
 
-            publisher.AddInvoices().GetAwaiter().GetResult();
+            publisher.Publish().GetAwaiter().GetResult();
 
-            Processor.Wait.WaitOne(5000);
+           Thread.Sleep(2000);
 
             var context = TestContext.Create();
 

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Threading.Tasks;
 
 namespace Cybtans.Messaging
@@ -11,16 +12,16 @@ namespace Cybtans.Messaging
         public string Topic { get; }
 
         public string Key => $"{Exchange}:{Topic}";
-
-        public static string GetKey(string exchange, string topic) => $"{exchange}:{topic}";
-
+       
         public BindingInfo(string exchange, string topic)
         {
             Exchange = exchange;
             Topic = topic;
         }
 
-        public virtual Task HandleMessage(byte[] message)
+        public static string GetKey(string exchange, string topic) => $"{exchange}:{topic}";
+
+        internal virtual Task HandleMessage(IServiceProvider? provider, byte[] message)
         {
             return Task.CompletedTask;
         }

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
   </ItemGroup>
 

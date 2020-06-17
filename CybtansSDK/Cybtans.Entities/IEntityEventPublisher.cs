@@ -1,5 +1,4 @@
-﻿using Cybtans.Messaging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cybtans.Entities

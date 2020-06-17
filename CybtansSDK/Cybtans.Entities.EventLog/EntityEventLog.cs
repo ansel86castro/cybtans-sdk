@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cybtans.Entities
+namespace Cybtans.Entities.EventLog
 {
     public class EntityEventLog
     {
@@ -17,6 +17,9 @@ namespace Cybtans.Entities
         public string Topic { get; set; }
 
         public byte[] Data { get; set; }
+
+        public string ErrorMessage { get; set; }
+
     }
-    
+
 }

@@ -1,4 +1,5 @@
 ﻿using Cybtans.Entities;
+using Cybtans.Entities.EventLog;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 namespace Cybtans.Messaging.RabbitMQ.Test
 {
 
-    public class Invoice:Entity
+    public class Invoice:DomainEntity
     {
         public int Id { get; set; }
 

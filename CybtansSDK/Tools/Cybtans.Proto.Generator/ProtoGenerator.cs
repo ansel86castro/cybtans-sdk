@@ -12,7 +12,7 @@ namespace Cybtans.Proto.Generator
     {
         public bool CanGenerate(string value)
         {
-            return value == "proto";
+            return value == "proto" || value == "p";
         }
 
         public bool Generate(string[] args)

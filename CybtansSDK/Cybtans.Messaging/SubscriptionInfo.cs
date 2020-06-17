@@ -7,35 +7,33 @@ using System.Threading.Tasks;
 namespace Cybtans.Messaging
 {
     public class SubscriptionInfo<T> : BindingInfo
-    {
-        private readonly IServiceProvider? _serviceProvider;
+    {       
         private Type _type;
         private IMessageHandler<T>? _handler;
 
-        public SubscriptionInfo(IServiceProvider? serviceProvider, Type type, string exchange, string topic) : base(exchange, topic) 
-        {
-            _serviceProvider = serviceProvider;
+        public SubscriptionInfo(Type type, string exchange, string topic) : base(exchange, topic) 
+        {           
             _type = type;
         }
 
-        public SubscriptionInfo(IServiceProvider? serviceProvider, Type type, BindingInfo info) 
-            : this(serviceProvider, type, info.Exchange, info.Topic)
+        public SubscriptionInfo(Type type, BindingInfo info) 
+            : this(type, info.Exchange, info.Topic)
         {
 
         }
 
-        public SubscriptionInfo(IServiceProvider? serviceProvider, IMessageHandler<T> handler, BindingInfo info)
+        public SubscriptionInfo(IMessageHandler<T> handler, BindingInfo info)
          : base(info.Exchange, info.Topic)
         {
-            _serviceProvider = serviceProvider;
+           
             _handler = handler;
             _type = _handler.GetType();
         }
 
-        public SubscriptionInfo(IServiceProvider? serviceProvider, IMessageHandler<T> handler, string exchange, string topic)
+        public SubscriptionInfo(IMessageHandler<T> handler, string exchange, string topic)
        : base(exchange, topic)
         {
-            _serviceProvider = serviceProvider;
+          
             _handler = handler;
             _type = _handler.GetType();
         }
@@ -64,19 +62,32 @@ namespace Cybtans.Messaging
             }
         }
 
-        private IMessageHandler<T> GetHandler()
+        private IMessageHandler<T> GetHandler(IServiceProvider? provider)
         {
             if (_handler == null)
             {
-                _handler = (IMessageHandler<T>)(_serviceProvider?.GetService(_type) ?? Activator.CreateInstance(_type));
+                _handler = (IMessageHandler<T>)(provider?.GetService(_type) ?? Activator.CreateInstance(_type));
             }
             return _handler;
         }
 
-        public override Task HandleMessage(byte[] content)
+        internal override Task HandleMessage(IServiceProvider? provider, byte[] content)
         {
-            var message = BinaryConvert.Deserialize<T>(content);            
-            return GetHandler().HandleMessage(message);            
+            IMessageHandler<T>? handler = _handler;
+            if (provider != null)
+            {
+                handler = (IMessageHandler<T>?)provider?.GetService(_type);
+            }
+            else if (_handler == null)
+            {
+                handler = _handler = (IMessageHandler<T>)Activator.CreateInstance(_type);
+            }
+
+            if (handler == null)            
+                return Task.CompletedTask;           
+
+            var message = BinaryConvert.Deserialize<T>(content);
+            return handler.HandleMessage(message);            
         }
     }
 }

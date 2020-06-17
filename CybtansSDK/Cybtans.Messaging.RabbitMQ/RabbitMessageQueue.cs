@@ -1,8 +1,6 @@
 ﻿using Cybtans.Serialization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
@@ -16,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Messaging.RabbitMQ
 {
-
     public sealed class RabbitMessageQueue : IMessageQueue, IDisposable
     {     
         private bool _disposed;
@@ -28,18 +25,31 @@ namespace Cybtans.Messaging.RabbitMQ
         private IBasicProperties? _properties;
         private object sync_root = new object();
         private RabbitMessageQueueOptions _options;
+        private QueueDeclareOk? _queue;
         private string? _queueName;
+        private bool _queueLocked;
         private EventingBasicConsumer? _consumer;
+        private bool _started;
         private readonly HashSet<string> _publishExchanges = new HashSet<string>();
         private readonly HashSet<string> _consumeExchanges = new HashSet<string>();
-        private readonly SubscriptionManager _subscriptionManager;
+        private readonly MessageSubscriptionManager _subscriptionManager;
 
-        public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null, IServiceProvider? serviceProvider = null)
+        public event EventHandler? Started;
+
+        public RabbitMessageQueue(IConnectionFactory connectionFactory, MessageSubscriptionManager subscriptionManager, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null)
         {
-            _connectionFactory = connectionFactory;            
+            _connectionFactory = connectionFactory;
             _logger = logger;
             _options = options ?? new RabbitMessageQueueOptions();
-            _subscriptionManager = new SubscriptionManager(_options.Exchange, serviceProvider);
+            _subscriptionManager = subscriptionManager;
+        }
+
+        public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null)            
+        {
+            _connectionFactory = connectionFactory;
+            _logger = logger;
+            _options = options ?? new RabbitMessageQueueOptions();
+            _subscriptionManager = new MessageSubscriptionManager(null, _options.Exchange.Name);
         }
 
         public bool IsConnected =>  _connection != null && _connection.IsOpen && !_disposed;
@@ -49,13 +59,14 @@ namespace Cybtans.Messaging.RabbitMQ
             if (_disposed)
                 return;
 
-            _disposed = true;
+            _disposed = true;          
+
             try
             {
                 _publishChannel?.Dispose();
                 _consumerChannel?.Dispose();
 
-                _connection?.Dispose();
+                _connection?.Dispose();                
             }
             catch(IOException ex)
             {
@@ -75,7 +86,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 if (IsConnected)
                     return;
 
-                var policy = RetryPolicy.Handle<SocketException>()
+                var policy = Policy.Handle<SocketException>()
                         .Or<BrokerUnreachableException>()
                         .WaitAndRetry(_options.RetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                         {
@@ -117,14 +128,14 @@ namespace Cybtans.Messaging.RabbitMQ
                     throw new QueuePublishException("RabbitMQ publish channel is not created");
 
                 _properties = _publishChannel.CreateBasicProperties();
-                if (_options.Durable)
+                if (_options.Exchange.PersistMessages)
                 {
                     _properties.DeliveryMode = 2; // persistent                        
                 }
 
-                if (_options.BradcastAlternateExchange != null)
+                if (_options.Exchange.BradcastAlternateExchange != null)
                 {
-                    _publishChannel.ExchangeDeclare(_options.BradcastAlternateExchange, "fanout");
+                    _publishChannel.ExchangeDeclare(_options.Exchange.BradcastAlternateExchange, "fanout");
                 }
 
                 _publishChannel.CallbackException += (sender, ea) =>
@@ -165,9 +176,19 @@ namespace Cybtans.Messaging.RabbitMQ
                     CreateConsumerChannel();
                 };
 
-                var queue = _consumerChannel.QueueDeclare(_options.QueueName ?? "", true, _options.Exclusive, true, null);
-                _queueName = queue.QueueName;                
-
+                try
+                {
+                    _queue = _consumerChannel.QueueDeclare(_options.Queue.Name ?? "", _options.Queue.Durable, _options.Queue.Exclusive, _options.Queue.AutoDelete, null);
+                    _queueName = _queue.QueueName;
+                    _queueLocked = false;
+                }
+                catch (OperationInterruptedException ex) when (ex.ShutdownReason.ReplyCode == 405)
+                {
+                    //resource-locked
+                    _queueName = null;
+                    _queueLocked = true;
+                    _logger?.LogWarning(ex, $"RabbitMQ Queue is locked {_options.Queue}, Error:{ex.ShutdownReason.ReplyText}");
+                }
             }
         }            
 
@@ -189,29 +210,32 @@ namespace Cybtans.Messaging.RabbitMQ
             if (!_publishExchanges.Contains(exchange))
             {
                 Dictionary<string, object>? args = null;
-                if (_options.BradcastAlternateExchange != null)
+                if (_options.Exchange.BradcastAlternateExchange != null)
                 {
                     args = new Dictionary<string, object>
                     {
-                        ["alternate-exchange"] = _options.BradcastAlternateExchange
+                        ["alternate-exchange"] = _options.Exchange.BradcastAlternateExchange
                     };
                 }
-                _publishChannel!.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable, autoDelete: _options.AutoDeleteExchange ,arguments: args);
+
+                _publishChannel!.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Exchange.Durable, autoDelete: _options.Exchange.AutoDelete ,arguments: args);
                 _publishExchanges.Add(exchange);
             }
         }
 
         private void AddSubscriptionExchange(string exchange)
-        {
-          
+        {          
             if(_consumerChannel == null)
             {
                 CreateConsumerChannel();
             }
 
+            if (_queueLocked)
+                return;
+
             if (!_consumeExchanges.Contains(exchange))
             {
-                _consumerChannel.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Durable, autoDelete: _options.AutoDeleteExchange);
+                _consumerChannel!.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Exchange.Durable, autoDelete: _options.Exchange.AutoDelete);
                 _consumeExchanges.Add(exchange);
             }
         }
@@ -243,16 +267,31 @@ namespace Cybtans.Messaging.RabbitMQ
         public void Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
           where THandler : IMessageHandler<TMessage>
         {
-            var subsInfo = _subscriptionManager.Subscribe<TMessage, THandler>(exchange, topic);
-            SubscribeInternal(subsInfo);
+           var binding = _subscriptionManager.Subscribe<TMessage, THandler>(exchange, topic);
+            if (_started)
+            {
+                SubscribeInternal(binding);
+            }
         }
 
-        private void SubscribeInternal<TMessage>(SubscriptionInfo<TMessage> subsInfo)
+        public void Subscribe<TMessage>(IMessageHandler<TMessage> handler, string? exchange = null, string? topic = null)
+        {
+            var binding = _subscriptionManager.Subscribe<TMessage>(handler, exchange, topic);
+            if (_started)
+            {
+                SubscribeInternal(binding);
+            }
+        }
+
+        private void SubscribeInternal(BindingInfo subsInfo)
         {
             AddSubscriptionExchange(subsInfo.Exchange);
             if (_consumerChannel == null)
                 throw new QueueSubscribeException("RabbitMQ consumer channel not created");
 
+            if (_queueLocked)            
+                return;            
+            
             _consumerChannel.QueueBind(_queueName, subsInfo.Exchange, subsInfo.Topic);
 
             lock (sync_root)
@@ -274,6 +313,27 @@ namespace Cybtans.Messaging.RabbitMQ
              where THandler : IMessageHandler<TMessage>
         {
             _subscriptionManager.Unsubscribe<TMessage, THandler>(exchange, topic);
+        }
+
+        public BindingInfo? GetBinding(Type type)
+        {
+            return _subscriptionManager.GetBindingForType(type);
+        }
+
+        public void RegisterBinding<T>(string exchage, string? topic = null)
+        {
+            _subscriptionManager.RegisterBinding<T>(exchage, topic);
+        }
+
+        public void Start()
+        {
+            foreach (var binding in _subscriptionManager.GetBindings())
+            {
+                SubscribeInternal(binding);
+            }
+
+            Started?.Invoke(this, EventArgs.Empty);
+            _started = true;
         }
 
         #region Event Handlers
@@ -305,29 +365,32 @@ namespace Cybtans.Messaging.RabbitMQ
             OpenConnection();
         }
 
-        private async void Consumer_Received(object? sender, BasicDeliverEventArgs args)
+        private void Consumer_Received(object? sender, BasicDeliverEventArgs args)
         {
-            try
+            var exchage = args.Exchange;
+            var topic = args.RoutingKey;
+            var data = args.Body.ToArray();
+            var deliveryTag = args.DeliveryTag;
+
+            Task.Run(async () =>
             {
-                await _subscriptionManager.HandleMessage(args.Exchange, args.RoutingKey, args.Body.ToArray());
-                _consumerChannel?.BasicAck(args.DeliveryTag, multiple: false);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogCritical(ex, ex.Message);
-                _consumerChannel?.BasicNack(args.DeliveryTag, false, true);
-            }
+                try
+                {
+                    await _subscriptionManager.HandleMessage(exchage, topic, data);
+                    if (deliveryTag > 0)
+                    {
+                        _consumerChannel?.BasicAck(deliveryTag, multiple: false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogCritical(ex, ex.Message);
+                    _consumerChannel?.BasicNack(deliveryTag, false, true);
+                }
+            });
         }
 
-        public BindingInfo? GetBinding(Type type)
-        {
-            return _subscriptionManager.GetBindingForType(type);
-        }
-
-        public void RegisterBinding<T>(string exchage, string? topic = null)
-        {
-            _subscriptionManager.RegisterBinding<T>(exchage, topic);
-        }
+     
 
         #endregion
     }

@@ -10,6 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="Cybtans.AspNetCore" Version="1.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />    
     <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
   </ItemGroup>
@@ -18,6 +22,9 @@
   <ItemGroup>
   	<ProjectReference Include="../Ordering.Models/Ordering.Models.csproj" />
   	<ProjectReference Include="../Ordering.Services/Ordering.Services.csproj" />
+  	<ProjectReference Include="..\..\..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
+  	<ProjectReference Include="..\..\..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
+  	<ProjectReference Include="..\Ordering.Data\Ordering.Data.csproj" />
   </ItemGroup>
 
 </Project>

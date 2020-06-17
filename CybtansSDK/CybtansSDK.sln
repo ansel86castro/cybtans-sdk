@@ -33,7 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Messaging.RabbitMQ"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3374CCAB-90D3-470E-911A-A3284EBA88A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Messaging.RabbitMQ.Test", "Tests\Cybtans.Messaging.RabbitMQ.Test\Cybtans.Messaging.RabbitMQ.Test.csproj", "{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Messaging.RabbitMQ.Test", "Tests\Cybtans.Messaging.RabbitMQ.Test\Cybtans.Messaging.RabbitMQ.Test.csproj", "{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Entities.EventLog", "Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj", "{747F9873-9A0C-4931-9BC5-4A39DFB1914E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{747F9873-9A0C-4931-9BC5-4A39DFB1914E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{747F9873-9A0C-4931-9BC5-4A39DFB1914E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{747F9873-9A0C-4931-9BC5-4A39DFB1914E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{747F9873-9A0C-4931-9BC5-4A39DFB1914E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
