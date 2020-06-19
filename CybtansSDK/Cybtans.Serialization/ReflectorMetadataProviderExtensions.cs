@@ -96,5 +96,31 @@ namespace Cybtans.Serialization
 
             return clone;
         }
+
+        public static T Map<T>(this IReflectorMetadataProvider obj) where T : IReflectorMetadataProvider, new()
+        {
+            var accesor = obj.GetAccesor();
+            T clone = new T();
+            var targetAccesor = clone.GetAccesor();
+
+            foreach (var code in accesor.GetPropertyCodes())
+            {
+                targetAccesor.SetValue(clone, code, accesor.GetValue(obj, code));
+            }
+
+            return clone;
+        }
+
+        public static object GetValue(this IReflectorMetadataProvider obj, string propertyName)
+        {
+            var accesor = obj.GetAccesor();
+            return accesor.GetValue(obj, accesor.GetPropertyCode(propertyName));
+        }
+
+        public static void SetValue(this IReflectorMetadataProvider obj, string propertyName, object value)
+        {
+            var accesor = obj.GetAccesor();
+            accesor.SetValue(obj, accesor.GetPropertyCode(propertyName), value);
+        }
     }
 }

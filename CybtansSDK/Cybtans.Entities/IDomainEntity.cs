@@ -21,8 +21,8 @@ namespace Cybtans.Entities
         void AddDeletedEvent();
     }
 
-    public interface IDomainEntity<T> : IDomainEntity
+    public interface IDomainEntity<T> : IDomainEntity, IEntity<T>
     {
-        public T Id { get; set; }
+        
     }
 }

@@ -8,34 +8,33 @@ namespace Cybtans.Entities
     {
         public GenerateMessageAttribute(string name = null)
         {
-            this.Name = name;            
-        }
-
-        public GenerateMessageAttribute(string name, params string[] excluded)
-        {
             this.Name = name;
-            this.Exclude = excluded;
         }
-
 
         public string Name { get; }
 
-        public bool GenerateCrudService { get; set; } = false;     
+        public bool Service { get; set; } = false;
 
-        public string[] Exclude { get; set; }
+        public SecurityType Security { get; set; } = SecurityType.None;
 
-        public HashSet<string> GetExcluded()
-        {
-            HashSet<string> excluded = new HashSet<string>();
-            if(Exclude != null)
-            {
-                foreach (var item in Exclude)
-                {
-                    excluded.Add(item);
-                }
-            }
-            return excluded;
-        }
+        public string AllowedRead { get; set; }
+
+        public string AllowedWrite { get; set; }
+    }
+
+    public enum SecurityType
+    {
+        None,
+        Role,
+        Policy,
+        Authorized,
+        AllowAnonymous
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class MessageExcludedAttribute : Attribute
+    {
+
     }
 
 }
