@@ -38,7 +38,7 @@ namespace Cybtans.Proto.Generators.CSharp
             {               
                 GenerateService(item.Value);                    
             }
-        }
+        }        
 
         private void GenerateService(ServiceGenInfo info)
         {
@@ -50,14 +50,14 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var clsWriter = writer.Class;
 
-            clsWriter.Append("public abstract");
+            clsWriter.Append("public");
 
             if (_option.PartialClass)
             {
                 clsWriter.Append(" partial");
             }
 
-            clsWriter.Append($" class {info.Name} ").AppendLine();                 
+            clsWriter.Append($" interface I{info.Name} ").AppendLine();                 
                         
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);
@@ -70,14 +70,14 @@ namespace Cybtans.Proto.Generators.CSharp
                 var requestInfo = rpc.RequestType;               
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public abstract {returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")});");
+                bodyWriter.Append($"{returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")});");
                 bodyWriter.AppendLine();
                 bodyWriter.AppendLine();
             }
 
             clsWriter.Append("}").AppendLine();
 
-            writer.Save(info.Name);
+            writer.Save($"{info.Name}Contract");
         }
 
         public string GetRpcName(RpcDeclaration rpc)

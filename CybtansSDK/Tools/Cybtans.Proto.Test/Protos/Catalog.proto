@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+
 package Catalog;
 
 message Product{
@@ -81,5 +82,22 @@ service CatalogService {
 	rpc DeleteProduct(DeleteRequest) returns (void){
 		option template = "{id}"; 
 		option method = "DELETE";
+	};
+}
+
+message GetRequest{
+	int32 id = 1;
+}
+
+service BrandService {
+	option (prefix) ="api/brand";
+
+	rpc Get(GetRequest) returns (Brand){
+		option method = "GET";
+		option template = "{id}";
+	};
+
+	rpc Create(Brand) returns (Brand){
+		option method = "POST";
 	};
 }

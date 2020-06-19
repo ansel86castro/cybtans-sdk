@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,6 +6,7 @@
   
   <ItemGroup>
   	<ProjectReference Include="../Ordering.Models/Ordering.Models.csproj" />
-  </ItemGroup >
+  	<ProjectReference Include="..\..\..\..\Cybtans.Entities\Cybtans.Entities.csproj" />
+  </ItemGroup>
 
 </Project>
