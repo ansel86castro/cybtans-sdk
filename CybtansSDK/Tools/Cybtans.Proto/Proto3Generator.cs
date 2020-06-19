@@ -62,9 +62,10 @@ namespace Cybtans.Proto
                 var importFile = fileResolver.GetFile(import.Name);
                 
                 var (importFileNode, importScope) = LoadFromFile(importFile.FullName);
+
                 file.ImportedFiles.Add(importFileNode);
 
-                if(importFileNode.Package != null)
+                if(importFileNode.Package != null && !importFileNode.Package.Equals(file.Package))
                 {
                     scope.AddPackage(importFileNode.Package.Id, importScope);
                 }

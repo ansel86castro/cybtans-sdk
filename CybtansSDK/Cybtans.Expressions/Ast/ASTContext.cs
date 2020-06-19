@@ -56,7 +56,7 @@ namespace Cybtans.Expressions.Ast
                 PropertyInfo modelProperty;
                 System.Linq.Expressions.Expression linqExpression;
 
-                var responseProperty = targetType.GetProperty(name);
+                var responseProperty = targetType.GetProperty(name) ?? targetType.GetProperty(name.Pascal());                
 
                 if (responseProperty == null)
                     throw new RecognitionException("Property not found " + name + " in " + targetType.Name);
