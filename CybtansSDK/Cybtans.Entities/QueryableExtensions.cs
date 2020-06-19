@@ -49,7 +49,7 @@ namespace Cybtans.Entities
             return IAsyncQueryExecutioner.Executioner.LongCountAsync(query);
         }
 
-        public static Task<int> CountAsync<T>(IQueryable<T> query)
+        public static Task<int> CountAsync<T>(this IQueryable<T> query)
         {
             if (IAsyncQueryExecutioner.Executioner == null)
                 return Task.FromResult(query.Count());
