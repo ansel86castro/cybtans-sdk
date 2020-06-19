@@ -34,8 +34,19 @@ namespace Catalog.RestApi
             services.AddOpenApiDocument();
 
             services.AddControllers()
-                .AddCybtansFormatter();            
-            
+                .AddCybtansFormatter();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.WithMethods("GET", "POST", "PUT", "DELETE");
+                    });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +64,8 @@ namespace Catalog.RestApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

@@ -36,6 +36,9 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public List<MessageFieldInfo>? GetPathBinding(string template)
         {
+            if (template == null)
+                return null;
+
             var regex = new Regex(@"{(\w+)}");
             MatchCollection matches = regex.Matches(template);
             if (matches.Any(x => x.Success))

@@ -1,7 +1,10 @@
-﻿using Ordering.Models;
+﻿using Cybtans.Entities;
+using Cybtans.Messaging;
+using Ordering.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +13,9 @@ namespace Ordering.Services
     public class OrdersServiceImpl : OrdersService
     {
         static List<Order> orders = new List<Order>();
+
+        IRepository<Order, Guid> _ordersReposiory;
+        private IMessageQueue _queue;
 
         static OrdersServiceImpl()
         {
@@ -58,24 +64,30 @@ namespace Ordering.Services
             });
         }
 
-
-        public override Task<Order> CreateOrder(Order request)
+        public OrdersServiceImpl(IRepository<Order, Guid> ordersRepository, IMessageQueue queue)
         {
-            request.Id = Guid.NewGuid();
-            orders.Add(request);
-            return Task.FromResult(request);
+            _ordersReposiory = ordersRepository;
+            _queue = queue;
         }
 
-        public override Task<Order> GetOrder(GetOrderRequest request)
+        public override async Task<Order> CreateOrder(Order request)
         {
-            return Task.FromResult(orders.FirstOrDefault(x => x.Id == request.Id));
+            _ordersReposiory.Add(request);
+            await _ordersReposiory.UnitOfWork.SaveChangesAsync();
+
+            return request;
+        }
+
+        public override async Task<Order> GetOrder(GetOrderRequest request)
+        {
+            return await _ordersReposiory.Get(request.Id);
         }
 
         public override Task<GetOrdersResponse> GetOrdersByUser(GetOrderByUserRequest request)
         {
             return Task.FromResult(new GetOrdersResponse
             {
-                Orders = orders.Where(x => x.UserId == request.UserId).ToList()
+                Orders = _ordersReposiory.Where(x => x.UserId == request.UserId).ToList()
             });
         }
     }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Cybtans.Proto.AST
 {
@@ -68,7 +69,31 @@ namespace Cybtans.Proto.AST
                 logger.AddError($"Duplicated fields numbers in {Name} ({ string.Join(",", Fields.ToLookup(x => x.Number).Where(x => x.Count() > 1).Select(x => string.Join(",", x) +"="+ x.Key)) }) , {Line},{Column}");
             }
         }
-             
+
+        public List<FieldDeclaration>? GetPathBinding(string template)
+        {
+            if (template == null)
+                return null;
+
+            var regex = new Regex(@"{(\w+)}");
+            MatchCollection matches = regex.Matches(template);
+            if (matches.Any(x => x.Success))
+            {
+                List<FieldDeclaration> fields = new List<FieldDeclaration>();
+                foreach (Match? match in matches)
+                {
+                    if (match != null && match.Success)
+                    {
+                        var name = match.Groups[1].Value;
+                        var field = Fields.First(x => x.Name == name);
+                        fields.Add(field);
+                    }
+                }
+
+                return fields;
+            }
+            return null;
+        }
     }
 
    

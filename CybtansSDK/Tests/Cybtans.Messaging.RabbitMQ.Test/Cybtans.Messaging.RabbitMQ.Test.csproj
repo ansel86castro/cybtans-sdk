@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.5" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Entities\Cybtans.Entities.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
+  </ItemGroup>
+
+</Project>

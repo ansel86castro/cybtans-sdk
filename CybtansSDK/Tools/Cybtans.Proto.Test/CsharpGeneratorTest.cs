@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Cybtans.Proto.Test
 {
-    public class Proto3GeneratorTest
+    public class CsharpGeneratorTest
     {
         [Fact]
         public void LoadProtoFromFileNoImports()
@@ -22,8 +22,9 @@ namespace Cybtans.Proto.Test
         }
 
         [Theory]
-        [InlineData("Protos/Service1.proto", "Service1")]
-        [InlineData("Protos/Catalog.proto", "Catalog")]
+        [InlineData("Protos/Service1.proto", "CSharp/Service1")]
+        [InlineData("Protos/Catalog.proto", "CSharp/Catalog")]
+        [InlineData("Protos/Customers.proto", "CSharp/Customer")]
         public void GenerateCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
@@ -55,7 +56,7 @@ namespace Cybtans.Proto.Test
             microserviceGenerator.GenerateCode(ast);
         }
 
-
+      
         private static void AssertAST(ProtoFile ast)
         {
             Assert.NotNull(ast);
