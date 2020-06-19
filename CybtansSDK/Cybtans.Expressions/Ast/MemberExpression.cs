@@ -48,7 +48,7 @@ namespace Cybtans.Expressions.Ast
             if (Left.NetType == null)
                 throw new RecognitionException(".Net Type not recognized");          
 
-            pi = Left.NetType.GetProperty(Name);
+            pi = Left.NetType.GetProperty(Name) ?? Left.NetType.GetProperty(Name.Pascal());
             if(pi == null)
             {
                 throw new RecognitionException($"Property {Name} not found in {Left.NetType.Name}");

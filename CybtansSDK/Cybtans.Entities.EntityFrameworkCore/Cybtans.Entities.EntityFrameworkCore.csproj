@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>data, .net, entities, repository, unit of work ,entityframeworkcore</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>
+      Repository and Unit of Work implementation using Entity Framework Core
+    </Description>
+    <VersionPrefix>1.0.7</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +20,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
