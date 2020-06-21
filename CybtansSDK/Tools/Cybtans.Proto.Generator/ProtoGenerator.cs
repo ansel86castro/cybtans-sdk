@@ -27,7 +27,8 @@ namespace Cybtans.Proto.Generator
         public void PrintHelp()
         {
             Console.WriteLine("Proto Generator options:");
-            Console.WriteLine("Example: ServiceGenerator proto -n Service1 -o ./Services/Service1 -f ./Protos/Service1.proto");
+            Console.WriteLine("Example: cybtans-cli proto -n Service1 -o ./Services/Service1 -f ./Protos/Service1.proto");
+            Console.WriteLine("p|proto : Generate code from a proto file");
             Console.WriteLine("-n : Service Name");
             Console.WriteLine("-o : Output Directory");
             Console.WriteLine("-f : Proto filename");

@@ -3,14 +3,14 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: $(majorMinorVersion).$(patchVersion)
+#name: $(majorMinorVersion).$(patchVersion)
 
 # pipeline variables
 variables:
-  majorMinorVersion: 1.0
+  #majorMinorVersion: 1.0
   # semanticVersion counter is automatically incremented by one in each execution of pipeline
   # second parameter is seed value to reset to every time the referenced majorMinorVersion is changed
-  patchVersion: $[counter(variables['majorMinorVersion'], 0)] 
+  #patchVersion: $[counter(variables['majorMinorVersion'], 0)] 
 
 
 trigger:
@@ -31,8 +31,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/CybtansSDK.sln'
-    arguments: '--configuration $(configuration)'
-    versioningScheme: 'byBuildNumber'
+    arguments: '--configuration $(configuration)'  
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Cybtans SDK'
@@ -48,8 +47,7 @@ steps:
     packagesToPack: '**/CybtansSDK.sln'
     configuration: '$(configuration)'
     nobuild: true
-    includesymbols: true
-    versioningScheme: 'byBuildNumber'
+    includesymbols: false
 
 - task: NuGetCommand@2
   displayName: 'Publish Artifacts'

@@ -384,6 +384,11 @@ namespace Cybtans.Services
 
             var count = await query.LongCountAsync();
 
+            if(args.Take <= 0)
+            {
+                args.Take = 100; 
+            }
+
             return new GetAllResponse<TEntityDto>
             {
                 Items = await _mapper.ProjectTo<TEntityDto>(query.Skip(args.Skip).Take(args.Take)).ToListAsync(),
