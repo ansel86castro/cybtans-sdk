@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="Cybtans.AspNetCore" Version="1.0.6" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
+    <PackageReference Include="Cybtans.AspNetCore" Version="1.0.8" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.6.1" />
   </ItemGroup>
 
 
