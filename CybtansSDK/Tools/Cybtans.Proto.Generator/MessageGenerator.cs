@@ -72,7 +72,6 @@ namespace Cybtans.Proto.Generator
             if (args == null || args.Length == 0 || !CanGenerate(args[0]))
                 return false;
 
-
             var options = new GenerationOptions();
 
             for (int i = 1; i < args.Length; i++)
@@ -159,16 +158,14 @@ namespace Cybtans.Proto.Generator
         public void PrintHelp()
         {
             Console.WriteLine("Messages options are:");
-            Console.WriteLine("m : Generates protobuff message definitions");            
+            Console.WriteLine("m|messages : Generates a proto file from an assembly");            
             Console.WriteLine("-o : The output filename");
-            Console.WriteLine("-assembly : The models assembly");
-            Console.WriteLine("-models :The list of models root to generate");
-            Console.WriteLine("-policies : one of (enabled | disabled) to generate service policies");
+            Console.WriteLine("-assembly : The models assembly");            
             Console.WriteLine("-service : Service Name");
             Console.WriteLine("-service-o : Service root directory");
             Console.WriteLine("-imports : Comma separated import paths for protobuff");
-            Console.WriteLine("Example: ServiceGenerator m -o Service1/Protos/Models.proto -assembly Services1.Data.dll");
-            Console.WriteLine("       : ServiceGenerator m -o Service1/Protos/Models.proto -assembly Services1.Data.dll -service Service1 -service-o Service1 -imports ./Common.proto");
+            Console.WriteLine("Example: cybtans-cli m -o Service1/Protos/Models.proto -assembly Services1.Data.dll");
+            Console.WriteLine("       : cybtans-cli m -o Service1/Protos/Models.proto -assembly Services1.Data.dll -service Service1 -service-o Service1 -imports ./Common.proto");
         }
 
         #region Proto Generation
@@ -514,7 +511,7 @@ message GetAllRequest {
                 writer.Append($"services.AddScoped<I{type.Name}Service, {type.Name}Service>();").AppendLine();                
             }
 
-            File.WriteAllText($"{options.GetRestAPIOutputPath()}/Startup.ServiceRegisterExtension.cs",
+            File.WriteAllText($"{options.GetRestAPIOutputPath()}/Startup.AddServicesExtensions.cs",
                TemplateProcessor.Process(StartupRegisterTemplate, new
                {
                    SERVICE = options.ServiceName,
@@ -566,9 +563,9 @@ using @{SERVICE}.Services;
 
 namespace @{SERVICE}.RestApi
 {
-    public static class StartupServiceRegisterExtension
+    public static class StartupAddServicesExtensions
     {
-        public static void Register@{SERVICE}Services(this IServiceCollection services)
+        public static void Add@{SERVICE}Services(this IServiceCollection services)
         {
             @{REGISTERS}
         }

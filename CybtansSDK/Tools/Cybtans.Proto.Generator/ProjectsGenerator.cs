@@ -37,11 +37,11 @@ namespace Cybtans.Proto.Generator
         public void PrintHelp()
         {
             Console.WriteLine("Microsevice Generator options are:");
-            Console.WriteLine("s : Generates service project structure");
+            Console.WriteLine("s|service : Generates service project structure");
             Console.WriteLine("-n : The service Name");
             Console.WriteLine("-o : The output folder");
             Console.WriteLine("-sln :The solution file to attach");
-            Console.WriteLine("Example: ServiceGenerator s -n Service1 -o Services/Service1 -sln Services.sln");
+            Console.WriteLine("Example: cybtans-cli s -n Service1 -o Services/Service1 -sln Services.sln");
         }
 
         private void GenerateMicroservice(string[] args)
@@ -105,9 +105,7 @@ namespace Cybtans.Proto.Generator
                 SERVICE = options.Name
             }));
 
-            File.WriteAllText($"{options.Output}/generate.bat", $"ServiceGenerator proto -n {options.Name} -o . -f ./Proto/{options.Name}.proto");
-
-            //GenerateProto(new string[] { "proto", "-n", options.Name, "-o", options.Output, "-f", $"{options.Output}/Proto/{options.Name}.proto" });
+            File.WriteAllText($"{options.Output}/generate.bat", $"cybtans-cli proto -n {options.Name} -o . -f ./Proto/{options.Name}.proto");
 
             if (options.Solution != null)
             {
