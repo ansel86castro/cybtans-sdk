@@ -1,5 +1,4 @@
 # ![Logo](CybtansSDK/cybtan.png) Cybtans SDK
-[![Cybtans.Serialization package in cybtans-sdk@Release feed in Azure Artifacts](https://feeds.dev.azure.com/cybtans/f890b23d-d5ed-45bb-8308-1fe776f4fa8a/_apis/public/Packaging/Feeds/c8742fb6-b06b-42df-b89a-4dc8a8b66de6%40c6956002-6052-4d67-940b-9bcb161382ee/Packages/337fb4d3-cdc2-472e-89d0-f13069e7c086/Badge)](https://dev.azure.com/cybtans/CybtansSDK/_packaging?_a=package&feed=c8742fb6-b06b-42df-b89a-4dc8a8b66de6%40c6956002-6052-4d67-940b-9bcb161382ee&package=337fb4d3-cdc2-472e-89d0-f13069e7c086&preferRelease=true)
 [![Build Status](https://dev.azure.com/cybtans/CybtansSDK/_apis/build/status/ansel86castro.cybtans-sdk?branchName=master)](https://dev.azure.com/cybtans/CybtansSDK/_build/latest?definitionId=1&branchName=master)
 
 ## Cybtans.Serialization
