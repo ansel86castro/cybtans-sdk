@@ -288,17 +288,12 @@ namespace Cybtans.Proto.Generator
                 if (propertyType.IsArray && propertyType != typeof(byte[]))
                 {
                     propertyType = propertyType.GetElementType();
+                    repeated = true;
                 }
-                else if (typeof(ICollection).IsAssignableFrom(propertyType))
+                else if (propertyType.IsGenericType && typeof(ICollection<>).IsAssignableFrom(propertyType.GetGenericTypeDefinition()))
                 {
-                    if (propertyType.IsGenericType)
-                    {
-                        propertyType = propertyType.GetGenericArguments()[0];
-                    }
-                    else
-                    {
-                        propertyType = typeof(object);
-                    }
+                    propertyType = propertyType.GetGenericArguments()[0];
+                    repeated = true;
                 }
 
                 bool optional = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
