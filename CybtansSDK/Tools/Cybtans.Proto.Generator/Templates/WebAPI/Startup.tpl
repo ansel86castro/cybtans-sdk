@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Cybtans.AspNetCore;
 
 namespace @{NAMESPACE}
 {
@@ -27,9 +26,10 @@ namespace @{NAMESPACE}
         public void ConfigureServices(IServiceCollection services)
         {
             // Register the Swagger services           
-            services.AddOpenApiDocument(config=>
-            {               
-                config.OperationProcessors.Add(new CybtansOperationProcessor());              
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "@{SERVICE}", Version = "v1" });
+                c.OperationFilter<SwachBuckleOperationFilters>();               
             });
 
             services.AddControllers()
@@ -44,8 +44,14 @@ namespace @{NAMESPACE}
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseOpenApi(); 
-            app.UseSwaggerUi3();     
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "@{SERVICE} V1");
+                c.EnableFilter();
+                c.EnableDeepLinking();
+                c.ShowCommonExtensions();                                
+            });        
 
             app.UseHttpsRedirection();
 

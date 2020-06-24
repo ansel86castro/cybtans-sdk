@@ -10,7 +10,7 @@
     <Description>
       Provides dynamic linq expression builders and support for string queries for IQueryable
     </Description>
-    <VersionPrefix>1.0.7</VersionPrefix>
+    <VersionPrefix>1.0.9</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

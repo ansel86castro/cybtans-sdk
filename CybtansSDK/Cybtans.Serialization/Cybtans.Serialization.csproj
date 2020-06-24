@@ -9,7 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>Serialization library for .netstandard. 
 The library provides binary serialization which is faster and results in smaller payloads than json.</Description>
-    <VersionPrefix>1.0.7</VersionPrefix>
+    <VersionPrefix>1.0.9</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

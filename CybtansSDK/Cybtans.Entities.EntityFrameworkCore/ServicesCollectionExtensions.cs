@@ -1,14 +1,13 @@
-﻿using Cybtans.Entities.EntiyFrameworkCore;
+﻿using Cybtans.Entities;
+using Cybtans.Entities.EntityFrameworkCore;
+using Cybtans.Entities.EntiyFrameworkCore;
 using Cybtans.Entities.EventLog;
 using Cybtans.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Cybtans.Entities.EntityFrameworkCore
+namespace Microsoft.Extensions.DependencyInjection
 {
     public interface IEventPublisherBuilder
     {
@@ -30,7 +29,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
         }
     }
 
-    public static class ServiceCollectionExtensions
+    public static class CybtansEfCoreServiceCollectionExtensions
     {
         public static IServiceCollection AddRepositories<TDbContext>(this IServiceCollection services)
             where TDbContext : DbContext
