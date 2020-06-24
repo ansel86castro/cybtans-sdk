@@ -1,11 +1,12 @@
-﻿using Cybtans.Serialization;
+﻿using Cybtans.AspNetCore;
+using Cybtans.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 
-namespace Cybtans.AspNetCore
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class CybtansFormatter
+    public static class CybtansFormatterServiceCollectionExtensions
     {
 
         public static void AddCybtansFormatter(this IMvcBuilder builder)

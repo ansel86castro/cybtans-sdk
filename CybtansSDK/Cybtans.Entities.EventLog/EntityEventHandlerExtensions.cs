@@ -1,8 +1,10 @@
-﻿using Cybtans.Messaging;
+﻿using Cybtans.Entities;
+using Cybtans.Entities.EventLog;
+using Cybtans.Messaging;
 
-namespace Cybtans.Entities.EventLog
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class EntityEventHandlerExtensions
+    public static class EntityEventHandlerServiceCollectionExtensions
     {
         public static void SubscribeHandlerForEvents<TEntity, THandler>(this IMessageSubscriptionManager subscriptionManager, string exchange)
             where THandler : IEntityEventsHandler<TEntity>

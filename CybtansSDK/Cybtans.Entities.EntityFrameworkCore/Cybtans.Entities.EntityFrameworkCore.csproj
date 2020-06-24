@@ -10,7 +10,7 @@
     <Description>
       Repository and Unit of Work implementation using Entity Framework Core
     </Description>
-    <VersionPrefix>1.0.7</VersionPrefix>
+    <VersionPrefix>1.0.9</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

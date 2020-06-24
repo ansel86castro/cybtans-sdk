@@ -165,8 +165,9 @@ namespace Cybtans.Proto.Generator
             }));
             File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Startup.cs", GetTemplate("WebAPI.Startup.tpl", new
             {
-                NAMESPACE = $"{options.Name}.RestApi"
-            }));
+                NAMESPACE = $"{options.Name}.RestApi",
+                SERVICE = options.Name
+        }));
         }
 
 

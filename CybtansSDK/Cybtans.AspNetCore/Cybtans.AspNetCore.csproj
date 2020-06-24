@@ -8,12 +8,12 @@
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
     <Description>Integrates Cybtans binary serializer with aspnet core</Description>
-    <VersionPrefix>1.0.8</VersionPrefix>
+    <VersionPrefix>1.0.9</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.6.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>

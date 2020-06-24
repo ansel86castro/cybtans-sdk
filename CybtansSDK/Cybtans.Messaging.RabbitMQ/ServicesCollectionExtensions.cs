@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Cybtans.Messaging;
+using Cybtans.Messaging.RabbitMQ;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
-using System.Transactions;
 
 #nullable enable
 
-namespace Cybtans.Messaging.RabbitMQ
+namespace Microsoft.Extensions.DependencyInjection
 {
     public interface IMessageQueueBuilder
     {
@@ -67,7 +67,7 @@ namespace Cybtans.Messaging.RabbitMQ
         
     }
 
-    public static class ServiceCollectionExtensions
+    public static class MessageQueueServiceCollectionExtensions
     {
         public static IMessageQueueBuilder AddMessageQueue(this IServiceCollection services, IConfiguration configuration)
         {         

@@ -1,35 +1,34 @@
-﻿using NSwag;
-using NSwag.Generation.Processors;
-using NSwag.Generation.Processors.Contexts;
+﻿using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 
 namespace Cybtans.AspNetCore
 {
-    public class CybtansOperationProcessor : IOperationProcessor
+    public class SwachBuckleOperationFilters : IOperationFilter
     {
-        public bool Process(OperationProcessorContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var operation = context.OperationDescription.Operation;
-            var pathParameters = operation.Parameters.Where(x => x.Kind == OpenApiParameterKind.Path).ToDictionary(x => x.Name);
+            var pathParameters = operation.Parameters.Where(x => x.In == ParameterLocation.Path).ToDictionary(x => x.Name);
 
             foreach (var item in (from p in operation.Parameters
-                                  where p.Kind != OpenApiParameterKind.Path && pathParameters.ContainsKey(p.Name.ToLowerInvariant())
+                                  where p.In != ParameterLocation.Path && pathParameters.ContainsKey(p.Name.ToLowerInvariant())
                                   select p).ToList())
             {
                 operation.Parameters.Remove(item);
             }
 
-            foreach (var p in operation.Parameters.Where(x => x.Kind == OpenApiParameterKind.Body && x.ActualSchema != null))
+            if (operation.RequestBody?.Content?.Count > 0)
             {
-                foreach (var item in (from kv in p.ActualSchema.Properties
-                                      where pathParameters.ContainsKey(kv.Key)
-                                      select kv.Key).ToList())
+                var schemaRef = operation.RequestBody.Content.FirstOrDefault().Value.Schema;
+                if (schemaRef.Reference?.Id != null)
                 {
-                    p.ActualSchema.Properties.Remove(item);
+                    var schema = context.SchemaRepository.Schemas[schemaRef.Reference.Id];
+                    foreach (var item in schema.Properties.Where(x => pathParameters.ContainsKey(x.Key)).Select(x => x.Key).ToList())
+                    {
+                        schema.Properties.Remove(item);
+                    }
                 }
             }
-
-            return true;
         }
     }
 }
