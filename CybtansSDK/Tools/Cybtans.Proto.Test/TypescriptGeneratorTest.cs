@@ -34,5 +34,35 @@ namespace Cybtans.Proto.Test
 
             tsGenerator.GenerateCode(ast);
         }
+
+        [Theory]
+        [InlineData("Protos/Service1.proto", "Angular/Service1")]
+        [InlineData("Protos/Catalog.proto", "Angular/Catalog")]
+        [InlineData("Protos/Customers.proto", "Angular/Customer")]
+        public void GenerateAngularCode(string filename, string output)
+        {
+            var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
+
+            Proto3Generator generator = new Proto3Generator(fileResolverFactory);
+            var (ast, scope) = generator.LoadFromFile(filename);
+            Assert.NotNull(ast);
+
+            TypescriptGenerator tsGenerator = new TypescriptGenerator(new TypescriptOptions
+            {
+                ModelOptions = new TsOutputOption
+                {
+                    OutputDirectory = output,
+                },
+                ClientOptions = new TsOutputOption
+                {
+                    OutputDirectory = output,
+                    Angular = true
+                }
+            });
+
+            tsGenerator.GenerateCode(ast);
+        }
+
+
     }
 }

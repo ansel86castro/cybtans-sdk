@@ -36,6 +36,13 @@ message GetProductRequest {
 	int32 id = 1;
 }
 
+message GetProductFiltered{
+	string filter = 1;
+	string sort = 2;
+	int32 skip = 3;
+	int32 take = 4;
+}
+
 message UpdateProductRequest {
 	int32 id = 1;
 	Product Product = 2 [optional = true];
@@ -58,6 +65,12 @@ service CatalogService {
 	option (prefix) ="api/catalog";
 
 	rpc GetProducts(void) returns (GetProductListResponse){		
+		option method = "GET";
+		option authorized = true;
+	};
+
+	rpc GetProductFiltered(GetProductFiltered) returns (GetProductListResponse){		
+	option template = "filtered"; 
 		option method = "GET";
 		option authorized = true;
 	};

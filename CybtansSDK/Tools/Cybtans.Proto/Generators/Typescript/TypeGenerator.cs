@@ -57,7 +57,7 @@ namespace Cybtans.Proto.Generators.Typescript
 
             foreach (var field in e.Members)
             {
-                writer.Append('\t', 1)
+                writer.Append(' ', 2)
                     .Append($"{field.Name.Camel()} = {field.Value},")
                     .AppendLine();
             }
@@ -75,8 +75,8 @@ namespace Cybtans.Proto.Generators.Typescript
 
             foreach (var field in msg.Fields)
             {
-                writer.Append('\t', 1)
-                    .Append($"{field.Name.Camel()}{IsOptional(field)} : {field.GetTypeName()};")
+                writer.Append(' ', 2)
+                    .Append($"{field.Name.Camel()}{IsOptional(field)}: {field.GetTypeName()};")
                     .AppendLine();
             }
 

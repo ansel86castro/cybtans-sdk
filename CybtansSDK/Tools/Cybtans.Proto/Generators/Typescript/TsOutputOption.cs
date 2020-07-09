@@ -2,6 +2,6 @@
 {
     public class TsOutputOption: CodeGenerationOption
     {
-        
+        public bool Angular { get; set; }
     }
 }
