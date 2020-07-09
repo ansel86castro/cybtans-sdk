@@ -1,1 +1,0 @@
-ServiceGenerator proto -n Customer -o . -f ./Proto/Customer.proto

@@ -82,6 +82,7 @@ namespace Cybtans.Proto.Generators
                     }
                     else
                     {
+                        sb.Append("@");
                         i++;
                     }
                 }

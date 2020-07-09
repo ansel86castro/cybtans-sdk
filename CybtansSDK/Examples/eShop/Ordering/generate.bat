@@ -1,1 +1,0 @@
-ServiceGenerator proto -n Ordering -o . -f ./Proto/Ordering.proto
