@@ -117,14 +117,15 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private void GenerateExtensions(ServiceGenInfo info)
         {
-            var writer = CreateWriter(Namespace);
+            var writer = CreateWriter("Microsoft.Extensions.DependencyInjection");
            
             writer.Usings.Append("using Refit;").AppendLine();
             writer.Usings.Append("using Cybtans.Refit;").AppendLine();
             writer.Usings.Append("using Cybtans.Serialization;").AppendLine(); 
             writer.Usings.Append("using Microsoft.Extensions.Configuration;").AppendLine();
             writer.Usings.Append("using Microsoft.Extensions.DependencyInjection;").AppendLine();
-            writer.Usings.Append("using System.Text;")    
+            writer.Usings.Append("using System.Text;").AppendLine();
+            writer.Usings.Append($"using {Namespace};").AppendLine()
                 .AppendLine(2);
 
             writer.Class.AppendTemplate(setupExtension, new Dictionary<string, object>
@@ -155,7 +156,7 @@ public class @{NAME}Option
 
 public static class @{NAME}Extensions
 {
-    public static void Add@{NAME}(this IServiceCollection services, IConfiguration configuration, RefitSettings settings = null)
+    public static IHttpClientBuilder Add@{NAME}(this IServiceCollection services, IConfiguration configuration, RefitSettings settings = null)
     {
         var option = configuration.GetSection(""@{NAME}"").Get<@{NAME}Option>();
 
@@ -173,7 +174,9 @@ public static class @{NAME}Extensions
             c.BaseAddress = new Uri(option.BaseUrl);
             c.DefaultRequestHeaders.Add(""Accept"", $""{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}"");
         });
-    }       
+
+        return builder;
+    }
 }
 ";
     }

@@ -19,7 +19,7 @@ namespace Cybtans.Proto.Generator
 
             public string Solution { get; set; }
         }
-
+       
         public bool Generate(string[] args)
         {
             if (args == null || args.Length == 0 || !CanGenerate(args[0]))
@@ -27,6 +27,11 @@ namespace Cybtans.Proto.Generator
 
             GenerateMicroservice(args);
             return true;
+        }
+
+        public bool Generate(CybtansConfig config, GenerationStep step)
+        {
+            return false;
         }
 
         public bool CanGenerate(string value)
@@ -105,7 +110,10 @@ namespace Cybtans.Proto.Generator
                 SERVICE = options.Name
             }));
 
-            File.WriteAllText($"{options.Output}/generate.bat", $"cybtans-cli proto -n {options.Name} -o . -f ./Proto/{options.Name}.proto");
+            File.WriteAllText($"{options.Output}/cybtans.json", GetTemplate("cybtans.tpl", new
+            {              
+                SERVICE = options.Name
+            }));            
 
             if (options.Solution != null)
             {
@@ -142,8 +150,6 @@ namespace Cybtans.Proto.Generator
             File.WriteAllText($"{output}/{project}/{project}.csproj", content);
         }
 
-    
-
         private static void GenerateWebApi(Options options)
         {
             GenerateProject("WebAPI.tpl", options.Output, $"{ options.Name }.RestApi", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
@@ -161,7 +167,8 @@ namespace Cybtans.Proto.Generator
 
             File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Program.cs", GetTemplate("WebAPI.Program.tpl", new
             {
-                NAMESPACE = $"{options.Name}.RestApi"
+                NAMESPACE = $"{options.Name}.RestApi",
+                SERVICE = options.Name
             }));
             File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Startup.cs", GetTemplate("WebAPI.Startup.tpl", new
             {
@@ -169,7 +176,6 @@ namespace Cybtans.Proto.Generator
                 SERVICE = options.Name
         }));
         }
-
-
+     
     }
 }

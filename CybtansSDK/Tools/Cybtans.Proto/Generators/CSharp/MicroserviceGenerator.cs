@@ -45,7 +45,13 @@ namespace Cybtans.Proto.Generators.CSharp
                     {
                         var client = new ClientGenerator(proto, _options.ClientOptions, serviceGenerator, typeGenerator);
                         client.GenerateCode();
-                    }
+
+                        if (_options.ApiGatewayOptions != null)
+                        {
+                            new ApiGatewayGenerator(proto, _options.ApiGatewayOptions, serviceGenerator, typeGenerator, client)
+                            .GenerateCode();
+                        }
+                    }                    
                 }
             }                        
         }     

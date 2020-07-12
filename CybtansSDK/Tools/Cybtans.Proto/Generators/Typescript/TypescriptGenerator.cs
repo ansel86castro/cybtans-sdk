@@ -23,7 +23,7 @@ namespace Cybtans.Proto.Generators.Typescript
         public void GenerateCode(ProtoFile proto, Scope? scope = null)
         {           
             new TypeGenerator(proto, _options.ModelOptions).GenerateCode();
-            if (_options.ClientOptions.Angular)
+            if (_options.ClientOptions.Framework == TsOutputOption.FRAMEWORK_ANGULAR)
             {
                 new AngularClientGenerator(proto, _options.ClientOptions).GenerateCode();
             }

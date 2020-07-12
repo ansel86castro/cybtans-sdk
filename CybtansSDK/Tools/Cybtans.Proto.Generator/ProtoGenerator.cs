@@ -1,6 +1,7 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Generators.Typescript;
+using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,79 @@ namespace Cybtans.Proto.Generator
             return true;
         }
 
+        public bool Generate(CybtansConfig config, GenerationStep step)
+        {
+            if (!CanGenerate(step.Type))
+                return false;
+
+            var options = new GenerationOptions()
+            {
+                ModelOptions = new TypeGeneratorOption()
+                {
+                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Models")
+                },
+                ServiceOptions = new TypeGeneratorOption()
+                {
+                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Services/Generated")
+                },
+                ControllerOptions = new WebApiControllerGeneratorOption()
+                {
+                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
+                    Namespace = "RestApi.Controllers"
+                },
+                ClientOptions = new TypeGeneratorOption()
+                {
+                    OutputDirectory =Path.Combine(config.Path, $"{step.Output}/{config.Service}.Clients")
+                }
+            };
+
+            if (!string.IsNullOrEmpty(step.Gateway))
+            {
+                options.ApiGatewayOptions = new ApiGateWayGeneratorOption
+                {
+                    OutputDirectory =Path.Combine(config.Path, step.Gateway),
+                    Namespace = $"Gateway.Controllers.{config.Service}"
+                };
+            }
+
+            var protoFile = Path.Combine(config.Path, step.ProtoFile);
+            if (step.SearchPath == null)
+            {
+                step.SearchPath = Path.GetDirectoryName(protoFile);
+            }
+
+            if (string.IsNullOrEmpty(step.SearchPath))
+            {
+                step.SearchPath = Environment.CurrentDirectory;
+            }
+
+            var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { step.SearchPath });
+
+            Console.WriteLine($"Compiling {protoFile}");
+
+            Proto3Generator generator = new Proto3Generator(fileResolverFactory);
+            var (ast, scope) = generator.LoadFromFile(protoFile);
+
+            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);
+
+            Console.WriteLine($"Generating csharp code from {protoFile}");
+
+            microserviceGenerator.GenerateCode(ast, scope);
+
+            Console.WriteLine("Csharp code generated succesfully");
+
+            if(step.Typecript != null)
+            {
+                Console.WriteLine($"Generating typescript code from {protoFile}");
+
+                GenerateTypecriptCode(ast, Path.Combine(config.Path, step.Typecript.Output), step.Typecript.Framework);
+
+                Console.WriteLine($"Typescript code generated succesfully in {step.Typecript.Output}");
+            }
+
+            return true;
+        }
+
         public void PrintHelp()
         {
             Console.WriteLine("Proto Generator options:");
@@ -41,7 +115,9 @@ namespace Cybtans.Proto.Generator
             Console.WriteLine("-controllers-ns : Controllers namespace");
             Console.WriteLine("-cs-clients-o : CSharp clients output directory");
             Console.WriteLine("-cs-clients-ns : CSharp clients namespace");
-            Console.WriteLine("-ts-clients-o : Typescript code output directory");
+            Console.WriteLine("-ts-o : Typescript code output directory");
+            Console.WriteLine("-ts-fr : Typescript framework, for axample -ts-fr angular");
+            Console.WriteLine("-o-gateway : Generate Api Gateway");
         }
 
         private static void GenerateProto(string[] args)
@@ -50,7 +126,7 @@ namespace Cybtans.Proto.Generator
             {
                 ModelOptions = new TypeGeneratorOption(),
                 ServiceOptions = new TypeGeneratorOption(),
-                ControllerOptions = new TypeGeneratorOption(),
+                ControllerOptions = new WebApiControllerGeneratorOption(),
                 ClientOptions = new TypeGeneratorOption()
             };
 
@@ -59,6 +135,7 @@ namespace Cybtans.Proto.Generator
             string name = null;
             string output = null;
             string tsOutput = null;
+            string tsFramework = null;
 
             for (int i = 1; i < args.Length; i++)
             {
@@ -108,14 +185,20 @@ namespace Cybtans.Proto.Generator
                     case "-cs-clients-ns":
                         options.ClientOptions.Namespace = value;
                         break;
-                    case "-ts-clients-o":
+                    case "-ts-o":
                         tsOutput = value;
+                        break;
+                    case "-ts-fr":
+                        tsFramework = value;
                         break;
                     case "-f":
                         protoFile = value;
                         break;
                     case "-search-path":
                         searchPath = value;
+                        break;
+                    case "-o-gateway":
+                        options.ApiGatewayOptions = new ApiGateWayGeneratorOption { OutputDirectory = value };
                         break;
                     default:
                         Console.WriteLine("Invalid Option");
@@ -153,6 +236,9 @@ namespace Cybtans.Proto.Generator
                 options.ControllerOptions.OutputDirectory = $"{output}/{name}.RestApi/Controllers/Generated";
                 options.ControllerOptions.Namespace = "RestApi.Controllers";
                 options.ClientOptions.OutputDirectory = $"{output}/{name}.Clients";
+
+                if(options.ApiGatewayOptions != null)
+                    options.ApiGatewayOptions.Namespace = $"Gateway.Controllers.{name.Pascal()}";
             }
 
             if (options.ModelOptions.OutputDirectory != null)
@@ -170,13 +256,13 @@ namespace Cybtans.Proto.Generator
             {
                 Console.WriteLine($"Generating typescript code from {protoFile}");
 
-                GenerateTypecriptCode(ast, tsOutput);
+                GenerateTypecriptCode(ast, tsOutput, tsFramework);
 
                 Console.WriteLine($"Typescript code generated succesfully in {tsOutput}");
             }
         }
 
-        private static void GenerateTypecriptCode(ProtoFile ast, string output)
+        private static void GenerateTypecriptCode(ProtoFile ast, string output, string framework)
         {
             TypescriptGenerator tsGenerator = new TypescriptGenerator(new TypescriptOptions
             {
@@ -186,12 +272,13 @@ namespace Cybtans.Proto.Generator
                 },
                 ClientOptions = new TsOutputOption
                 {
-                    OutputDirectory = output
+                    OutputDirectory = output,
+                    Framework = framework
                 }
             });
 
             tsGenerator.GenerateCode(ast);
         }
-
+      
     }
 }

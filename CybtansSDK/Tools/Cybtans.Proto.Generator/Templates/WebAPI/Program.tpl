@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,21 +7,77 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace @{NAMESPACE}
 {
     public class Program
-    {
-        public static void Main(string[] args)
+    {        
+        const string AppName = "@{ SERVICE }";
+        
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var configuration = GetConfiguration();
+            Log.Logger = CreateSerilogLogger(configuration);
+
+            try
+            {               
+                Log.Information("Configuring web host ({ApplicationContext})...", AppName);
+                var host = CreateHostBuilder(args).Build();               
+
+                Log.Information("Starting web host ({ApplicationContext})...", AppName);
+                host.Run();
+
+                return 0;
+            }
+            catch(Exception ex)
+            {
+                Log.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", AppName);
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+       public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .CaptureStartupErrors(false)
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseSerilog()
+                    .UseStartup<Startup>();
                 });
+
+        private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
+        {          
+            return new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("ApplicationContext", AppName)
+                .Enrich.FromLogContext()
+                // uncomment to write to Azure diagnostics stream
+                //.WriteTo.File(
+                //    @"D:\home\LogFiles\Application\identityserver.txt",
+                //    fileSizeLimitBytes: 1_000_000,
+                //    rollOnFileSizeLimit: true,
+                //    shared: true,
+                //    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .WriteTo.Console()               
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+
+        private static IConfiguration GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();         
+
+            return builder.Build();
+        }
     }
 }

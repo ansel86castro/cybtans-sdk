@@ -6,8 +6,20 @@
 
         public TypeGeneratorOption ServiceOptions { get; set; }
 
-        public TypeGeneratorOption ControllerOptions { get; set; }
+        public WebApiControllerGeneratorOption ControllerOptions { get; set; }
 
         public TypeGeneratorOption ClientOptions { get; set; }
+
+        public ApiGateWayGeneratorOption ApiGatewayOptions { get; set; }
+    }
+
+    public class WebApiControllerGeneratorOption: TypeGeneratorOption
+    {
+        
+    }
+
+    public class ApiGateWayGeneratorOption : WebApiControllerGeneratorOption
+    {
+
     }
 }

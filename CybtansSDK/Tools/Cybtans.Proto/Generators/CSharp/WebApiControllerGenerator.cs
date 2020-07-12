@@ -12,14 +12,13 @@ namespace Cybtans.Proto.Generators.CSharp
 {
     public class WebApiControllerGenerator : FileGenerator
     {
-        ServiceGenerator _serviceGenerator;
-        TypeGenerator _typeGenerator;
-
-        public WebApiControllerGenerator(ProtoFile proto, TypeGeneratorOption option,
+        protected ServiceGenerator _serviceGenerator;
+        protected TypeGenerator _typeGenerator;      
+        public WebApiControllerGenerator(ProtoFile proto, WebApiControllerGeneratorOption option,
          ServiceGenerator serviceGenerator, TypeGenerator typeGenerator) : base(proto, option)
         {
             _serviceGenerator = serviceGenerator;
-            _typeGenerator = typeGenerator;
+            _typeGenerator = typeGenerator;            
         }
 
         public override void GenerateCode()
@@ -34,25 +33,28 @@ namespace Cybtans.Proto.Generators.CSharp
             }
         }
 
-        private void GenerateController(ServiceGenInfo srvInfo)
-        {
-            var srv = srvInfo.Service;
+        protected virtual void GenerateController(ServiceGenInfo srvInfo)
+        {           
             var writer = CreateWriter($"{_proto.Option.Namespace}.{_option.Namespace ?? "Controllers"}");
 
+            writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
+            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
+            GenerateControllerInternal(srvInfo, writer);
+        }
+
+        protected void GenerateControllerInternal(ServiceGenInfo srvInfo, CsFileWriter writer)
+        {
+            var srv = srvInfo.Service;
             writer.Usings.Append($"using System.Collections.Generic;").AppendLine();
             writer.Usings.Append($"using System.Threading.Tasks;").AppendLine();
 
             writer.Usings.Append($"using Microsoft.AspNetCore.Http;").AppendLine();
             writer.Usings.Append($"using Microsoft.AspNetCore.Mvc;").AppendLine();
 
-
-            writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
-
             var clsWriter = writer.Class;
 
-            if(srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous || 
-               srv.Rpcs.Any(x=>x.Option.RequiredAuthorization || x.Option.AllowAnonymous))
+            if (srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous ||
+               srv.Rpcs.Any(x => x.Option.RequiredAuthorization || x.Option.AllowAnonymous))
             {
                 writer.Usings.Append("using Microsoft.AspNetCore.Authorization;").AppendLine();
             }
