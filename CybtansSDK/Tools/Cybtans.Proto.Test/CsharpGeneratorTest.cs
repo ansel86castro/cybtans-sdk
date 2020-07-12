@@ -43,7 +43,7 @@ namespace Cybtans.Proto.Test
                 {
                     OutputDirectory = output
                 },
-                ControllerOptions = new TypeGeneratorOption
+                ControllerOptions = new WebApiControllerGeneratorOption
                 {
                     OutputDirectory = output
                 },

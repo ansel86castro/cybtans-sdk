@@ -2,6 +2,8 @@
 {
     public class TsOutputOption: CodeGenerationOption
     {
-        public bool Angular { get; set; }
+        public const string FRAMEWORK_ANGULAR = "angular";
+
+        public string Framework { get; set; }
     }
 }

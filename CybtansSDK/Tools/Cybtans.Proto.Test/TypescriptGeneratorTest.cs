@@ -56,7 +56,7 @@ namespace Cybtans.Proto.Test
                 ClientOptions = new TsOutputOption
                 {
                     OutputDirectory = output,
-                    Angular = true
+                    Framework = TsOutputOption.FRAMEWORK_ANGULAR
                 }
             });
 

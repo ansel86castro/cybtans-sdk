@@ -1,8 +1,28 @@
 {
   "profiles": {
-    "Cybtans.ServiceGenerator": {
+    "Cybtans.ProjectGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "service -n Service1 -o Services/Service1"
+    },
+
+    "Cybtans.CodeGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "proto -n Service1 -o Services/Service1 -f Service1.proto -ts-o Services/Service1/Typescript"
+    },
+
+    "Cybtans.CodeGeneratorAngular": {
+      "commandName": "Project",
+      "commandLineArgs": "proto -n Service1 -o Services/Service1 -f Service1.proto -ts-o Services/Service1/Typescript -ts-fr angular -o-gateway Services/Gateway/Controllers/Service1"
+    },
+
+    "Cybtans.ProtoGenerator": {
       "commandName": "Project",
       "commandLineArgs": "m -o Services/Service1/Proto/Models.proto -assembly \"G:\\Projects\\CybtansSDK\\Samples\\Orders\\Orders.Domain\\bin\\Debug\\netcoreapp3.1\\Orders.Domain.dll\" -service Service1 -service-o Services/Service1 "
+    },
+
+    "Cybtans.CodeGeneratorConfigs": {
+      "commandName": "Project",
+      "commandLineArgs": "G:\\Projects\\CybtansSDK\\Examples\\eShop"
     }
   }
 }

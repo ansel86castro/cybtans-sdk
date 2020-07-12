@@ -9,7 +9,7 @@
     <Nullable>disable</Nullable>    
     <IsPackable>false</IsPackable>    
     <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>       
-    <VersionPrefix>3.0.1</VersionPrefix>
+    <VersionPrefix>3.1.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,6 +22,7 @@
     <None Remove="NetStandardLib.tlp" />
     <None Remove="Properties\NetStandardLib.tlp" />
     <None Remove="ServicesProject.tlp" />
+    <None Remove="Templates\cybtans.tpl" />
     <None Remove="Templates\ProtoServices.tpl" />
     <None Remove="Templates\WebAPI\appsettings.Development.tpl" />
     <None Remove="Templates\WebAPI\appsettings.tpl" />
@@ -34,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates\cybtans.tpl" />
     <EmbeddedResource Include="Templates\ProtoServices.tpl" />
     <EmbeddedResource Include="Templates\ServicesProject.tpl">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

@@ -99,7 +99,7 @@ namespace Cybtans.Proto.Generator
                         break;
                     case "-assembly":
                         options.AssemblyFilename = value;
-                        break;                                       
+                        break;
                     case "-service":
                         options.ServiceName = value;
                         break;
@@ -117,40 +117,62 @@ namespace Cybtans.Proto.Generator
                 PrintHelp();
                 return false;
             }
-               
+
+            GenerateProto(options);
+
+            return true;
+        }
+
+        private void GenerateProto(GenerationOptions options)
+        {
             var loadAssemblyPath = Path.GetDirectoryName(options.AssemblyFilename);
             if (string.IsNullOrEmpty(loadAssemblyPath))
             {
                 loadAssemblyPath = Environment.CurrentDirectory;
             }
 
-            var assembly = Assembly.Load(File.ReadAllBytes(options.AssemblyFilename)); 
+            var assembly = Assembly.Load(File.ReadAllBytes(options.AssemblyFilename));
             AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs args)
             {
                 var i = args.Name.IndexOf(',');
                 var name = args.Name.Substring(0, i);
                 string assemplyPath = Path.Combine(loadAssemblyPath, name + ".dll");
                 if (!File.Exists(assemplyPath))
-                    return null; 
+                    return null;
 
                 return Assembly.Load(File.ReadAllBytes(assemplyPath));
             };
 
-           var types = GenerateMessages(options, assembly.ExportedTypes);
+            var types = GenerateMessages(options, assembly.ExportedTypes);
 
             if (options.GenerateCode && options.ServiceName != null && options.ServiceDirectory != null)
             {
                 ProtoGenerator protoGenerator = new ProtoGenerator();
-                protoGenerator.Generate(new [] { 
-                    "proto", 
-                    "-n", options.ServiceName, 
-                    "-o", options.ServiceDirectory, 
+                protoGenerator.Generate(new[] {
+                    "proto",
+                    "-n", options.ServiceName,
+                    "-o", options.ServiceDirectory,
                     "-f",  options.ProtoOutputFilename });
 
                 GenerateMappings(types, options);
                 GenerateServicesImplementation(types, options);
                 GenerateRestApiRegisterExtensor(types, options);
             }
+        }
+
+        public bool Generate(CybtansConfig config, GenerationStep step)
+        {
+            if (!CanGenerate(step.Type))
+                return false;
+
+            var options = new GenerationOptions()
+            {
+                ProtoOutputFilename = Path.Combine(config.Path, step.Output),
+                AssemblyFilename = step.Assembly,
+                Imports = step.Imports
+            };
+
+            GenerateProto(options);
 
             return true;
         }
@@ -512,7 +534,7 @@ message GetAllRequest {
                    SERVICE = options.ServiceName,
                    REGISTERS = writer.ToString()
                }));
-        }
+        }      
 
         const string MappingTemplate = @"
 using System;

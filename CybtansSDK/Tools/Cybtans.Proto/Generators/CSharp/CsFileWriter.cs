@@ -41,7 +41,12 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public void Save(string name)
         {
-            File.WriteAllText(Path.Combine(_outputDirectory, $"{name}.cs"), _fileWriter.ToString());
+            SaveTo(_outputDirectory, name);            
+        }
+
+        public void SaveTo(string outputDirectory, string name)
+        {
+            File.WriteAllText(Path.Combine(outputDirectory, $"{name}.cs"), _fileWriter.ToString());
         }
     }
 
