@@ -182,12 +182,6 @@ dotnet add package Cybtans.Serialization --version 1.0.6
 |System.Text.Json |Serialize| 775147 ticks| 77 ms|
 |System.Text.Json |Deserialize| 1063610 ticks| 106 ms|
 
-
-|   Library      | Size      |
-|----------------|-----------|
-|System.Text.Json|16277 bytes |
-|Cytans Binary|10605 bytes    |
-
 #### Benchmark
 ``` ini
 BenchmarkDotNet=v0.12.1, OS=Windows 10.0.18363.836 (1909/November2018Update/19H2)
