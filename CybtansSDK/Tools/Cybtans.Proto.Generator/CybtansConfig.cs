@@ -60,7 +60,7 @@ namespace Cybtans.Proto.Generator
         #endregion
 
         #region Message Generator
-        public string Assembly { get; set; }
+        public string AssemblyFile { get; set; }
         public string[] Imports { get;  set; }
         #endregion
     }

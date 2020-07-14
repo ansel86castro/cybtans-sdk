@@ -167,9 +167,11 @@ namespace Cybtans.Proto.Generator
 
             var options = new GenerationOptions()
             {
-                ProtoOutputFilename = Path.Combine(config.Path, step.Output),
-                AssemblyFilename = step.Assembly,
-                Imports = step.Imports
+                ProtoOutputFilename = Path.Combine(config.Path, step.ProtoFile),
+                AssemblyFilename = Path.Combine(config.Path, step.AssemblyFile),
+                Imports = step.Imports,
+                ServiceName = config.Service,
+                ServiceDirectory = Path.Combine(config.Path, step.Output),
             };
 
             GenerateProto(options);
