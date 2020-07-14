@@ -157,8 +157,14 @@ namespace Cybtans.Proto.Generator
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Properties");
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Controllers");
 
-            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.Development.json", GetTemplate("WebAPI.appsettings.Development.tpl"));
-            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.json", GetTemplate("WebAPI.appsettings.tpl"));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.Development.json", GetTemplate("WebAPI.appsettings.Development.tpl", new 
+            {
+                SERVICE = options.Name
+            }));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.json", GetTemplate("WebAPI.appsettings.tpl", new 
+            {
+                SERVICE = options.Name
+            }));
 
             File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Properties/launchSettings.json", GetTemplate("WebAPI.launchSettings.tpl", new
             {
