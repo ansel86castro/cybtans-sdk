@@ -14,12 +14,13 @@ namespace Cybtans.Entities.EntiyFrameworkCore
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
-
-        public EfRepository(IUnitOfWork unitOfWork)
+        private readonly IQueryFilter _queryFilter;
+        public EfRepository(IUnitOfWork unitOfWork, IQueryFilter queryFilter = null)
         {                        
             UnitOfWork = unitOfWork;
             _context = ((EfUnitOfWork)unitOfWork).Context;
-            _dbSet = _context.Set<T>();            
+            _dbSet = _context.Set<T>();
+            _queryFilter = queryFilter;
         }
 
         public IUnitOfWork UnitOfWork { get; }
@@ -30,37 +31,37 @@ namespace Cybtans.Entities.EntiyFrameworkCore
 
         IQueryProvider IQueryable.Provider => ((IQueryable)_dbSet).Provider;
 
-        public IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null)
+        public virtual IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null)
         {
-            IQueryable<T> query = _dbSet;
-            if(include != null)
+            IQueryable<T> query = _queryFilter != null ? _queryFilter.Query<T>(_context, _dbSet) : _dbSet;            
+
+            if (include != null)
             {
                 foreach (var item in include)
                 {
-                   query = query.Include(item);
+                    query = query.Include(item);
                 }
             }
 
             return query.AsNoTracking();
         }
 
-        public ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
-        {
+        public virtual ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
+        {                       
             return _dbSet.FindAsync(key);
         }
        
-
-        public void Update(T item)
+        public virtual void Update(T item)
         {
             _dbSet.Update(item);         
         }
 
-        public void UpdateRange(IEnumerable<T> items)
+        public virtual void UpdateRange(IEnumerable<T> items)
         {
             _dbSet.UpdateRange(items);
         }
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             if(item is IAuditableEntity au)
             {
@@ -75,17 +76,17 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             _dbSet.Add(item);
         }
 
-        public void AddRange(IEnumerable<T> items)
+        public virtual void AddRange(IEnumerable<T> items)
         {
             _dbSet.AddRange(items);
         }
 
-        public void Remove(T item)
+        public virtual void Remove(T item)
         {          
             _dbSet.Remove(item);
         }
 
-        public void RemoveRange(IEnumerable<T> items)
+        public virtual void RemoveRange(IEnumerable<T> items)
         {           
             _dbSet.RemoveRange(items);
         }
