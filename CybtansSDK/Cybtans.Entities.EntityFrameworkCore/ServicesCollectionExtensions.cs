@@ -31,12 +31,31 @@ namespace Microsoft.Extensions.DependencyInjection
 
     public static class CybtansEfCoreServiceCollectionExtensions
     {
+        public static IServiceCollection AddUnitOfWork<TDbContext>(this IServiceCollection services)
+           where TDbContext : DbContext
+        {
+            services.AddScoped<IUnitOfWork>((srvProvicer) =>
+            {
+                var eventPublisher = srvProvicer.GetService<IEntityEventPublisher>();
+                return new EfUnitOfWork(srvProvicer.GetRequiredService<TDbContext>(), eventPublisher);
+            });            
+            return services;
+        }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection services)            
+        {            
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+
+            return services;
+        }
+
         public static IServiceCollection AddRepositories<TDbContext>(this IServiceCollection services)
             where TDbContext : DbContext
         {
             services.AddScoped<IUnitOfWork>((srvProvicer) =>
             {
-                var eventPublisher = srvProvicer.GetService<IEntityEventPublisher>();
+               var eventPublisher = srvProvicer.GetService<IEntityEventPublisher>();
                return new EfUnitOfWork(srvProvicer.GetRequiredService<TDbContext>(), eventPublisher);
             });
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
