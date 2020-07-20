@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,6 @@ namespace Cybtans.AspNetCore.Migrations
     public interface IDbContextSeed<TContext>
         where TContext :DbContext
     {
-        Task Seed(TContext dbContext, IServiceProvider provider);
+        Task Seed(TContext dbContext);
     }
 }

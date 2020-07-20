@@ -64,7 +64,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 if(options.Template != null)
                 {
                     var template = options.Template;
-                    path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(template) : null;
+                    path = request is MessageDeclaration ? _typeGenerator.GetMessageInfo(request).GetPathBinding(template) : null;
                     if(path != null)
                     {
                         foreach (var field in path)

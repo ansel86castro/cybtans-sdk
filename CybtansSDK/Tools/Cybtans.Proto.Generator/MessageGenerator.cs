@@ -8,7 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using static Cybtans.Proto.Generator.TemplateManager;
 
 namespace Cybtans.Proto.Generator
@@ -382,7 +384,7 @@ namespace Cybtans.Proto.Generator
             foreach (var type in types)
             {
                 var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
-                if (attr == null || !attr.Service || !type.IsClass)
+                if (attr == null || attr.Service == ServiceType.None || !type.IsClass)
                     continue;
 
                 PropertyInfo IdProp = GetKey(type);
@@ -488,13 +490,13 @@ message GetAllRequest {
         {          
             string ns = GetNamespace(types.First());
             if (ns == null)            
-                return;            
+                return;
 
             foreach (var type in types)
             {
                 var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
 
-                if (!type.IsClass || !attr.Service)
+                if (!type.IsClass || attr.Service == ServiceType.None || attr.Service == ServiceType.Interface)
                     continue;
 
                 PropertyInfo IdProp = GetKey(type);
@@ -507,14 +509,19 @@ message GetAllRequest {
                     continue;
 
                 File.WriteAllText($"{options.GetServiceImplOutputPath()}/{type.Name}Service.cs",
-                TemplateProcessor.Process(ServiceImpTemplate, new
-                {
-                    ENTITIES_NAMESPACE = ns,
-                    SERVICE = options.ServiceName,
-                    ENTITY = type.Name,
-                    TKEY = primitiveType.GetPrimitiveTypeName(),
-                    TMESSAGE = GetTypeName(type)
-                }));
+                TemplateProcessor.Process(
+                    attr.Service == ServiceType.Default ?
+                    ServiceImpTemplate :
+                    ServiceImpPartialTemplate,
+                    new
+                    {
+                        ENTITIES_NAMESPACE = ns,
+                        SERVICE = options.ServiceName,
+                        ENTITY = type.Name,
+                        TKEY = primitiveType.GetPrimitiveTypeName(),
+                        TMESSAGE = GetTypeName(type)
+                    }));
+
             }
         }
 
@@ -524,13 +531,15 @@ message GetAllRequest {
             foreach (var type in types)
             {
                 var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
-                if (!type.IsClass || !attr.Service)
+                if (!type.IsClass || attr.Service == ServiceType.None || attr.Service == ServiceType.Interface)
                     continue;
 
                 writer.Append($"services.AddScoped<I{type.Name}Service, {type.Name}Service>();").AppendLine();                
             }
 
-            File.WriteAllText($"{options.GetRestAPIOutputPath()}/Startup.AddServicesExtensions.cs",
+            Directory.CreateDirectory($"{options.GetRestAPIOutputPath()}/Extensions");
+
+            File.WriteAllText($"{options.GetRestAPIOutputPath()}/Extensions/{options.ServiceName}RegisterExtensions.cs",
                TemplateProcessor.Process(StartupRegisterTemplate, new
                {
                    SERVICE = options.ServiceName,
@@ -569,12 +578,28 @@ namespace @{ SERVICE }.Services
     public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
     {
         public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
-            : base(repository, uow, mapper, logger)
-        {
-
-        }
+            : base(repository, uow, mapper, logger) { }                
     }
 }";
+
+
+        const string ServiceImpPartialTemplate = @"
+using System;
+using AutoMapper;
+using Cybtans.Entities;
+using Cybtans.Services;
+using Microsoft.Extensions.Logging;
+using @{ ENTITIES_NAMESPACE };
+using @{ SERVICE }.Models;
+
+namespace @{ SERVICE }.Services
+{
+    public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
+    {
+        
+    }
+}";
+
 
         const string StartupRegisterTemplate = @"
 using Microsoft.Extensions.DependencyInjection;

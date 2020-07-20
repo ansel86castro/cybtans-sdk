@@ -1,7 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>.net, entity framework, migrations</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>Migration Utilities and seeding for EntityFramework Core</Description>
+    <VersionPrefix>1.0.11</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +16,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.6" />
     <PackageReference Include="Polly" Version="7.2.1" />  
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   
 </Project>

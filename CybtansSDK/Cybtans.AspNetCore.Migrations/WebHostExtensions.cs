@@ -20,12 +20,12 @@ namespace Identity.RestApi.Extensions
 
         public static IHost MigrateDbContext<TContext, TSeed>(this IHost host)
             where TContext :DbContext
-            where TSeed : IDbContextSeed<TContext>, new()
+            where TSeed : IDbContextSeed<TContext>
         {
             return MigrateDbContext<TContext>(host, (dbContext, provider) =>
             {
-                var seed = new TSeed();
-                seed.Seed(dbContext, provider);
+                var seed = provider.GetRequiredService<TSeed>();
+                seed.Seed(dbContext).Wait();
             });
         }
 

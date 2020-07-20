@@ -19,6 +19,16 @@ message GetCustomerRequest{
 	int32 id = 1;
 }
 
+message ChangePasswordRequest{
+	int32 id = 1;
+	string password = 2;
+}
+
+message UpdateUserRequest{
+	datetime date = 1;
+	string stringValue = 2;
+}
+
 service CustomerService{
 	option (prefix) ="api/customer";
 
@@ -26,5 +36,17 @@ service CustomerService{
 		option template = "{id}";
 		option method = "GET";		
 	};
+}
 
+service UserService{	
+	
+	rpc Update(UpdateUserRequest) returns (User){
+		option template = "{id}";
+		option method = "PUT";
+	};
+
+	rpc ChangePassword(ChangePasswordRequest) returns (User){
+		option template = "{id}";
+		option method = "PUT";
+	};
 }
