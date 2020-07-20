@@ -25,11 +25,11 @@ namespace Cybtans.Proto.Generators.Typescript
             new TypeGenerator(proto, _options.ModelOptions).GenerateCode();
             if (_options.ClientOptions.Framework == TsOutputOption.FRAMEWORK_ANGULAR)
             {
-                new AngularClientGenerator(proto, _options.ClientOptions).GenerateCode();
+                new AngularClientGenerator(proto, _options.ModelOptions,_options.ClientOptions).GenerateCode();
             }
             else
             {
-                new ClientGenerator(proto, _options.ClientOptions).GenerateCode();
+                new ClientGenerator(proto, _options.ModelOptions, _options.ClientOptions).GenerateCode();
             }
         }
     }
