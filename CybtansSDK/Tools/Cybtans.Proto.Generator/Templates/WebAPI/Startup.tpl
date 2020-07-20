@@ -29,43 +29,14 @@ namespace @{NAMESPACE}
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "@{SERVICE}", Version = "v1" });
-                c.OperationFilter<SwachBuckleOperationFilters>();
-
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                             Reference = new OpenApiReference
-                             {
-                                  Type = ReferenceType.SecurityScheme,
-                                  Id = "Bearer"
-                             }
-                        },
-                        new string[0]
-                    }
-                });
+                c.OperationFilter<SwachBuckleOperationFilters>();               
             });
 
             #endregion
 
             #region Authentication
 
-             services.AddAuthentication(options=>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;                
-            })
+             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 //Replace Authority with your authority url
@@ -89,14 +60,15 @@ namespace @{NAMESPACE}
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.AllowAnyOrigin()
+                       builder.SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .WithOrigins(Configuration.GetValue<string>("AllowedHosts").Split(','))
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod();                        
                     });
             });
 
             #endregion
-
+         
             services.AddControllers()
                 .AddCybtansFormatter();   
         }

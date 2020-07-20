@@ -61,6 +61,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             AddAutorizationAttribute(srv.Option, clsWriter);
 
+            clsWriter.Append("[Produces(\"application/json\")]").AppendLine();
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
             clsWriter.Append("[ApiController]").AppendLine();
             clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
@@ -122,7 +123,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 if (options.Template != null)
                 {
-                    var path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(options.Template) : null;
+                    var path = request is MessageDeclaration ? _typeGenerator.GetMessageInfo(request).GetPathBinding(options.Template) : null;
                     if (path != null)
                     {
                         foreach (var field in path)

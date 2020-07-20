@@ -25,9 +25,7 @@ namespace Cybtans.Refit
         public CybtansContentSerializer() : this(Encoding.UTF8, new SystemTextJsonContentSerializer()) { }
 
         public async Task<T> DeserializeAsync<T>(HttpContent content)
-        {
-            var str = await content.ReadAsStringAsync();
-
+        {           
             if(content.Headers.ContentType.MediaType != BinarySerializer.MEDIA_TYPE)
             {
                 return await _defaultSerializer.DeserializeAsync<T>(content);

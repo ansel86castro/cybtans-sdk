@@ -3,6 +3,7 @@ using System;
 #nullable enable
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cybtans.Proto.AST
@@ -58,6 +59,28 @@ namespace Cybtans.Proto.AST
             }
 
             Option.Set(path, value);
+        }
+
+        public void Merge(ProtoFile importFileNode)
+        {
+            var lookup = Declarations.ToDictionary(x => x.Name);
+            foreach (var decl in importFileNode.Declarations)
+            {
+                if(decl is MessageDeclaration msg)
+                {
+                    if(lookup.TryGetValue(msg.Name , out var target))
+                    {
+                        ((MessageDeclaration)target).Merge(msg);
+                    }
+                }
+                else if(decl is ServiceDeclaration srv)
+                {
+                    if (lookup.TryGetValue(srv.Name, out var target))
+                    {
+                        ((ServiceDeclaration)target).Merge(srv);
+                    }
+                }
+            }
         }
     }    
 }
