@@ -1,56 +1,39 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Cybtans.Proto.Generators.Typescript
 {
 
-    public class TypeGenerator
-    {
-        ProtoFile _proto;
-        TsOutputOption _option;
+    public class TypeGenerator: BaseSingleFileGenerator
+    {              
         public TypeGenerator(ProtoFile proto, TsOutputOption option)
+            :base(proto, option)
         {
-            _proto = proto;
-            _option = option;
-        }
+            option.Filename ??= "models";
+        }      
 
-        public void GenerateCode()
-        {
-            Directory.CreateDirectory(_option.OutputDirectory);
-
-            var writer = CreateWriter();
-            foreach (var item in _proto.ImportedFiles)
-            {                
-                GenerateCode(item, writer);
-            }
-
-            GenerateCode(_proto, writer);
-
-            writer.Save("models");
-        }
-
-        private void GenerateCode(ProtoFile proto, TsFileWriter writer)
-        {
+        protected override void GenerateCode(ProtoFile proto)
+        {          
             foreach (var item in proto.Declarations)
             {
                 if (item is MessageDeclaration msg)
                 {
-                    GenerateMessage(msg, writer.Writer);
+                    AddBlock(msg.Name,GenerateMessage(msg));
                 }
 
                 else if (item is EnumDeclaration e)
                 {
-                    GenerateEnum(e, writer.Writer);
+                    AddBlock(e.Name, GenerateEnum(e));
                 }
             }
         }
 
-        private void GenerateEnum(EnumDeclaration e, CodeWriter writer)
+        private string GenerateEnum(EnumDeclaration e)
         {
+            var writer = new CodeWriter();
+
             writer.AppendLine(2);
 
             writer.Append($"export enum {e.GetTypeName()} {{").AppendLine();
@@ -65,10 +48,14 @@ namespace Cybtans.Proto.Generators.Typescript
             writer.Append("}");
 
             writer.AppendLine(2);
+
+            return writer.ToString();
         }
 
-        private void GenerateMessage(MessageDeclaration msg, CodeWriter writer)
+        private string GenerateMessage(MessageDeclaration msg)
         {
+            var writer = new CodeWriter();
+
             writer.AppendLine();
 
             writer.Append($"export interface {msg.GetTypeName()} {{").AppendLine();
@@ -83,13 +70,11 @@ namespace Cybtans.Proto.Generators.Typescript
             writer.Append("}");
 
             writer.AppendLine();
+
+            return writer.ToString();
         }
 
-        public TsFileWriter CreateWriter()
-        {
-            return new TsFileWriter(_option.OutputDirectory ?? Environment.CurrentDirectory);
-        }
-
+    
         public string IsOptional(FieldDeclaration field)
         {
             if (field.Option.Optional && field.Type.TypeDeclaration.Nullable)
