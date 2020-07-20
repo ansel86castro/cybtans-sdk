@@ -7,7 +7,7 @@ using Polly;
 using Microsoft.Extensions.Hosting;
 using Cybtans.AspNetCore.Migrations;
 
-namespace Identity.RestApi.Extensions
+namespace Cybtans.AspNetCore.Migrations
 {
     public static class WebHostExtensions
     {
