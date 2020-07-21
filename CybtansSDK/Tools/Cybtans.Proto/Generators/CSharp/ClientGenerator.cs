@@ -30,9 +30,7 @@ namespace Cybtans.Proto.Generators.CSharp
             foreach (var item in _serviceGenerator.Services)
             {
                 GenerateClient(item.Value);                
-            }
-
-            GenerateExtensions();
+            }            
         }
 
         private void GenerateClient(ServiceGenInfo info)

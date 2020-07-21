@@ -192,31 +192,31 @@ namespace Cybtans.Proto.Generator
                 {
                     case ProjectType.Services: return new[] 
                     { 
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Services\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.11\" />",
+                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Services\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
                         "<PackageReference Include=\"AutoMapper\" Version=\"9.0.0\" />",
                         "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />"
                     };
                     case ProjectType.Domain: return new[]
                     {
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.11\" />"                       
+                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />"                       
                     };
                     case ProjectType.DomainEF: return new[]
                     {                        
                         "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.11\" />",
+                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
                     };
                     case ProjectType.WebAPI: return new[]
                     {
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.11\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"1.0.11\" />",
+                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"1.0.12\" />",
                         "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"7.0.0\" />",                        
                     };
 
