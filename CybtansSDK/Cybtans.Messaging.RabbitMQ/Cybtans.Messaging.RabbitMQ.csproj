@@ -10,7 +10,7 @@
     <Description>
       RabbitMQ message queue implementation
     </Description>
-    <VersionPrefix>1.0.11</VersionPrefix>
+    <VersionPrefix>1.0.12</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

@@ -355,10 +355,10 @@ namespace Cybtans.Services
 
         protected virtual async Task<TEntityDto> Get(TKey id)
         {
-            return await _mapper.ProjectTo<TEntityDto>(
+            return (await _mapper.ProjectTo<TEntityDto>(
                 _repository.GetAll()
                 .Where(x => x.Id.Equals(id)))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()) ?? throw new EntityNotFoundException($"Entity with Id {id} not found");
         }
 
 
