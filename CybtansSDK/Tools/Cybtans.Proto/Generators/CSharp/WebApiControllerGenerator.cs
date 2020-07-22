@@ -111,7 +111,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 }
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public async {response.GetReturnTypeName()} {rpcName}").Append("(");
+                bodyWriter.Append($"public {response.GetReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
                 bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
@@ -133,13 +133,8 @@ namespace Cybtans.Proto.Generators.CSharp
                         }
                     }
                 }
-
-                if (response != PrimitiveType.Void)
-                {
-                    methodWriter.Append("return ");
-                }
-
-                methodWriter.Append($"await _service.{rpcName}");
+              
+                methodWriter.Append($"return _service.{rpcName}");
 
                 if (request != PrimitiveType.Void)
                 {
