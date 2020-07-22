@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Services", "Cybtans
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Expressions", "Cybtans.Expressions\Cybtans.Expressions.csproj", "{E9F7EF71-C0A2-446E-9CA5-721FFDD9C0C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.AspNetCore.Migrations", "Cybtans.AspNetCore.Migrations\Cybtans.AspNetCore.Migrations.csproj", "{C5B61D1D-8D83-4103-A135-3BA9B7968128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AspNetCore.Migrations", "Cybtans.AspNetCore.Migrations\Cybtans.AspNetCore.Migrations.csproj", "{C5B61D1D-8D83-4103-A135-3BA9B7968128}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

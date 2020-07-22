@@ -57,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             _configureConnectionFactory?.Invoke(factory);
 
-            var subscriptionManager = new MessageSubscriptionManager(provider, options.Exchange.Name);
+            var subscriptionManager = new MessageSubscriptionManager(provider, options.Exchange.Name, provider.GetService<ILogger<MessageSubscriptionManager>>());
             var messageQueue = new RabbitMessageQueue(factory, subscriptionManager, options, provider.GetService<ILogger<RabbitMessageQueue>>());            
             _configureSubscription?.Invoke(subscriptionManager);            
 

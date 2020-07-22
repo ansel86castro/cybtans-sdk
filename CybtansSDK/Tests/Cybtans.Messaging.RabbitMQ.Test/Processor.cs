@@ -29,11 +29,13 @@ namespace Cybtans.Messaging.RabbitMQ.Test
             {
                 Exchange = new ExchangeConfig
                 {
-                    Name = "Invoice"
+                    Name = "Invoice",
+                     
                 },
                 Queue = new QueueConfig
                 {
-                    Name = queueName
+                    Name = queueName,
+                     AutoDelete = false                      
                 }
             },
             logger: loggerFactory.CreateLogger<RabbitMessageQueue>());            
