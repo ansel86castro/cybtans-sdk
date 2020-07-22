@@ -29,29 +29,32 @@ namespace Cybtans.Messaging
 
         public IEnumerable<BindingInfo> GetBindings() => _exchages.Values;
 
-        public BindingInfo? GetBindingForType(Type type) => GetBindingForType(type, (exchage, topic) => new BindingInfo(exchage, topic));
+        public BindingInfo? GetBindingForType(Type type, string? exchange = null, string? topic = null) => GetBindingForType(type, exchange, topic, (exchage, topic) => new BindingInfo(exchage, topic));
        
-        private BindingInfo? GetBindingForType(Type type, Func<string, string, BindingInfo> createBindingFunc)
+        private BindingInfo? GetBindingForType(Type type, string? exchange, string? topic, Func<string, string, BindingInfo> createBindingFunc)
         {
             BindingInfo info;
 
             bool lockTaken = false;
             try
             {
-                _spinLock.Enter(ref lockTaken);
-                string? exchange;
-                string topic;
+                _spinLock.Enter(ref lockTaken);                                
 
                 if (!_exchages.TryGetValue(type, out info))
                 {
-                    var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();                    
-                    exchange = attr?.Exchange ?? _globalExchange;
-                    if(exchange == null)
+                    var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();
+
+                    if (exchange == null)
                     {
-                        return null;
+                        exchange = attr?.Exchange ?? _globalExchange;
+                        if (exchange == null)
+                            return null;
                     }
 
-                    topic = attr?.Topic ?? type.FullName;
+                    if (topic == null)
+                    {
+                        topic = attr?.Topic ?? type.Name;
+                    }
                     info = createBindingFunc(exchange, topic);
                     _exchages.Add(type, info);
                 }
@@ -86,7 +89,7 @@ namespace Cybtans.Messaging
                 _spinLock.Enter(ref lockTaken);
                 if (!_exchages.TryGetValue(type, out var info))
                 {
-                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                    info = new BindingInfo(exchange, topic ?? type.Name);
                     _exchages.Add(type, info);
                 }
             }
@@ -105,12 +108,12 @@ namespace Cybtans.Messaging
             var type = typeof(TMessage);
             SubscriptionInfo<TMessage> handlerInfo;
 
-            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(typeof(THandler), exchange, topic));
+            var info = GetBindingForType(type, exchange, topic, (exchange, topic) => new SubscriptionInfo<TMessage>(typeof(THandler), exchange, topic));
             if (info == null)
             {
                 if (exchange != null)
                 {
-                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                    info = new BindingInfo(exchange, topic ?? type.Name);
                 }
                 else
                 {
@@ -152,12 +155,12 @@ namespace Cybtans.Messaging
             var type = typeof(TMessage);
             SubscriptionInfo<TMessage> handlerInfo;
 
-            var info = GetBindingForType(type, (exchange, topic) => new SubscriptionInfo<TMessage>(handler, exchange, topic));
+            var info = GetBindingForType(type, exchange, topic, (exchange, topic) => new SubscriptionInfo<TMessage>(handler, exchange, topic));
             if (info == null)
             {
                 if (exchange != null)
                 {
-                    info = new BindingInfo(exchange, topic ?? type.FullName);
+                    info = new BindingInfo(exchange, topic ?? type.Name);
                 }
                 else
                 {
@@ -212,7 +215,7 @@ namespace Cybtans.Messaging
                     topic = attr.Topic;
                 }                
 
-                topic ??= type.FullName;
+                topic ??= type.Name;
                 var key = BindingInfo.GetKey(exchange, topic);
                 _exchageBidings.Remove(key);
                 _exchages.Remove(type);

@@ -315,9 +315,9 @@ namespace Cybtans.Messaging.RabbitMQ
             _subscriptionManager.Unsubscribe<TMessage, THandler>(exchange, topic);
         }
 
-        public BindingInfo? GetBinding(Type type)
+        public BindingInfo? GetBinding(Type type, string? topic)
         {
-            return _subscriptionManager.GetBindingForType(type);
+            return _subscriptionManager.GetBindingForType(type, null, topic);
         }
 
         public void RegisterBinding<T>(string exchage, string? topic = null)

@@ -38,9 +38,8 @@ namespace Cybtans.Entities.EventLog
                 EntityEventType = type.FullName,
                 State = EventStateEnum.NotPublished
             };
-            entityEvent.State = EventStateEnum.NotPublished;
-
-            var binding = _messageQueue.GetBinding(type);
+            entityEvent.State = EventStateEnum.NotPublished;            
+            var binding = _messageQueue.GetBinding(type, entityEvent.Topic);
             if (binding == null)
                 throw new QueuePublishException($"Bindindg information not found for {type}");
 
