@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities
 {
-    public class EntityEvent
+    public interface ITopicEvent
+    {
+        public string Topic { get; }
+    }
+
+    public class EntityEvent: ITopicEvent
     {
         public Guid Id { get; set; }        
 
         public DateTime CreateTime { get; set; } = DateTime.Now;        
 
         public EventStateEnum State { get; set; } = EventStateEnum.NotPublished;
+
+        public virtual string Topic => GetType().Name;
     }
 
     public class EntityCreated<T>:EntityEvent
@@ -27,6 +34,8 @@ namespace Cybtans.Entities
         }
 
         public T Value { get; private set; }
+
+        public override string Topic => $"EntityCreated:{typeof(T).Name}";
     }
 
     public class EntityUpdated<T> : EntityEvent
@@ -45,6 +54,8 @@ namespace Cybtans.Entities
         public T NewValue { get; private set; }
 
         public T OldValue { get; private set; }
+
+        public override string Topic => $"EntityUpdated:{typeof(T).Name}";
     }
 
     public class EntityDeleted<T> : EntityEvent
@@ -60,6 +71,8 @@ namespace Cybtans.Entities
         }
 
         public T Value { get; private set; }
+
+        public override string Topic => $"EntityDeleted:{typeof(T).Name}";
     }
 
 

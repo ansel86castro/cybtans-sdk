@@ -23,7 +23,7 @@ namespace Cybtans.Messaging
             return Publish(message, null, null);
         }
 
-        BindingInfo? GetBinding(Type type);
+        BindingInfo? GetBinding(Type type, string topic);
     
         void Start();
 
