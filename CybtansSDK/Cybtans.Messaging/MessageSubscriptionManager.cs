@@ -67,17 +67,7 @@ namespace Cybtans.Messaging
                     _spinLock.Exit(true);
                 }
             }
-        }
-
-        public bool GetExchangeValues(object message, out string? exchange, out string? topic)
-        {
-            Type type = message.GetType();
-            var binding = GetBindingForType(type);
-            exchange = binding?.Exchange;
-            topic = binding?.Topic;
-                                   
-            return binding != null;
-        }
+        }      
 
         public void RegisterBinding<TMessage>(string exchange, string? topic = null)
         {            
