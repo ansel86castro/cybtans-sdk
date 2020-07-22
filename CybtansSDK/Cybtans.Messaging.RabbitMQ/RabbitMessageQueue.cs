@@ -244,14 +244,18 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (exchange == null || topic == null)
             {
-                if (!_subscriptionManager.GetExchangeValues(message, out exchange, out topic))
+                Type type = message.GetType();
+                var binding = _subscriptionManager.GetBindingForType(type, exchange, topic);
+                if (binding == null)
                 {
                     throw new QueuePublishException($"Exchange not found for {message.GetType()}", message);
                 }
-            }            
+                exchange = binding.Exchange;
+                topic = binding.Topic;
+            }
 
             var bytes = BinaryConvert.Serialize(message);
-            return Task.Run(() => PublishInternal(exchange!, topic!, bytes));
+            return Task.Run(() => PublishInternal(exchange,  topic, bytes));
         }       
 
         private void PublishInternal(string exchange, string topic, byte[] data)

@@ -36,9 +36,12 @@ namespace Cybtans.Messaging.RabbitMQ.Test
                     Name = queueName
                 }
             },
-            logger: loggerFactory.CreateLogger<RabbitMessageQueue>());
-            _messageQueue.Subscribe<EntityCreated<Invoice>, InvoiceCreateHandler>();
-            _messageQueue.Subscribe(this);
+            logger: loggerFactory.CreateLogger<RabbitMessageQueue>());            
+
+            _messageQueue.Subscribe<EntityCreated<Invoice>, InvoiceCreateHandler>(topic: EntityCreated<Invoice>.TOPIC);
+            _messageQueue.Subscribe(this, topic : EntityUpdated<Invoice>.TOPIC);
+
+            _messageQueue.Start();
         }
 
         public Task HandleMessage(EntityUpdated<Invoice> message)
