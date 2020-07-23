@@ -1,5 +1,7 @@
 ﻿using Cybtans.Proto.Generators;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,6 +13,9 @@ namespace Cybtans.Proto.Generator
 
     public class ProjectsGenerator : IGenerator
     {
+        const string EntityFramework = "ef";
+        const string SDK_VERSION = "1.0.13";
+
         public class Options
         {
             public string Name { get; set; }
@@ -18,8 +23,12 @@ namespace Cybtans.Proto.Generator
             public string Output { get; set; }
 
             public string Solution { get; set; }
+
+            public string Template { get; set; }
         }
        
+        enum ProjectType { Models , Clients , Services, WebAPI, Domain, DomainEF }
+
         public bool Generate(string[] args)
         {
             if (args == null || args.Length == 0 || !CanGenerate(args[0]))
@@ -45,6 +54,7 @@ namespace Cybtans.Proto.Generator
             Console.WriteLine("s|service : Generates service project structure");
             Console.WriteLine("-n : The service Name");
             Console.WriteLine("-o : The output folder");
+            Console.WriteLine("-t : Template");
             Console.WriteLine("-sln :The solution file to attach");
             Console.WriteLine("Example: cybtans-cli s -n Service1 -o Services/Service1 -sln Services.sln");
         }
@@ -54,42 +64,39 @@ namespace Cybtans.Proto.Generator
             Options options = new Options();
             for (int i = 1; i < args.Length; i++)
             {
-                if (args[i] == "-n")
+                var arg = args[i];
+                var value = arg;
+                if (arg.StartsWith("-"))
                 {
                     i++;
                     if (i >= args.Length)
                     {
-                        Console.WriteLine("Missing Name");
+                        Console.WriteLine("Invalid options");
                         return;
                     }
-                    options.Name = args[i];
-                }
-                else if (args[i] == "-o")
-                {
-                    i++;
-                    if (i >= args.Length)
-                    {
-                        Console.WriteLine("Missing Output");
-                        return;
-                    }
-                    options.Output = args[i];
 
+                    value = args[i];
                 }
-                else if (args[i] == "-sln")
+
+                switch (arg)
                 {
-                    i++;
-                    if (i >= args.Length)
-                    {
-                        Console.WriteLine("Missing Solution File");
-                        return;
-                    }
-                    options.Solution = args[i];
-                }
-                else
-                {
-                    PrintHelp();
-                    return;
-                }
+                    case "-n":
+                        options.Name = value;
+                        break;
+                    case "-o":
+                        options.Output = value;
+                        break;
+                    case "-sln":
+                        options.Solution = value;
+                        break;
+                    case "-t":
+                        options.Template = value;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Option");
+                        PrintHelp();
+                        break;
+                }               
             }
 
 
@@ -99,8 +106,19 @@ namespace Cybtans.Proto.Generator
 
             GenerateProject("ModelsProject.tpl", options.Output, $"{ options.Name }.Models", null);
             GenerateProject("ClientsProject.tlp", options.Output, $"{ options.Name }.Clients", new[] { $"{ options.Name }.Models" });
-            GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Services", new[] { $"{ options.Name }.Models" });
+            GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Services", GetReferences(ProjectType.Services, options)  , GetPackages(ProjectType.Services, options));
             GenerateProject("TestProject.tpl", options.Output, $"{ options.Name }.Services.Tests", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
+            
+            if(options.Template == EntityFramework)
+            {
+                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Domain", GetReferences(ProjectType.Domain, options), GetPackages(ProjectType.Domain, options));
+                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Domain.EntityFramework", GetReferences(ProjectType.DomainEF, options), GetPackages(ProjectType.DomainEF, options));
+                File.WriteAllText($"{options.Output}/{ options.Name }.Domain.EntityFramework/{ options.Name }Context.cs", GetTemplate("DbContext.tpl", new
+                {
+                    SERVICE = options.Name
+                }));
+            }
+
             GenerateWebApi(options);
 
             //Generate Proto 
@@ -124,9 +142,83 @@ namespace Cybtans.Proto.Generator
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Models/{ options.Name }.Models.csproj").WaitForExit();
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Clients/{ options.Name }.Clients.csproj").WaitForExit();
                 Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.RestApi/{ options.Name }.RestApi.csproj").WaitForExit();
+
+                if (options.Template == EntityFramework)
+                {
+                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Domain/{ options.Name }.Domain.csproj").WaitForExit();
+                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Domain.EntityFramework/{ options.Name }.Domain.EntityFramework.csproj").WaitForExit();
+                }
             }
 
             Console.WriteLine("Generation Completed");
+        }
+
+        private string[] GetReferences(ProjectType type, Options options)
+        {
+            List<string> references = new List<string>();
+
+            switch (type)
+            {
+                case ProjectType.Services: 
+                    references.Add( $"{ options.Name }.Models" );
+                    if (options.Template == EntityFramework)
+                    {
+                        references.Add($"{ options.Name }.Domain");
+                        references.Add($"{ options.Name }.Domain.EntityFramework");
+                    }
+                    break;
+                case ProjectType.WebAPI:
+                    references.AddRange(new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
+                    if (options.Template == EntityFramework)
+                    {
+                        references.Add($"{ options.Name }.Domain");
+                        references.Add($"{ options.Name }.Domain.EntityFramework");
+                    }
+                    break;
+                case ProjectType.DomainEF:
+                    references.AddRange(new[] { $"{ options.Name }.Domain"});
+                    break;
+            }
+
+            if (references.Any())
+                return references.ToArray();
+            return null;
+        }        
+
+        private string[] GetPackages(ProjectType type, Options options)
+        {            
+            if(options.Template == EntityFramework)
+            {
+                switch (type)
+                {
+                    case ProjectType.Services: return new[] 
+                    { 
+                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Messaging\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"{SDK_VERSION}\" />",
+                        "<PackageReference Include=\"AutoMapper\" Version=\"9.0.0\" />",
+                        "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />"
+                    };
+                    case ProjectType.Domain: return new[]
+                    {
+                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />"
+                    };
+                    case ProjectType.DomainEF: return new[]
+                    {                        
+                        "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",                       
+                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
+                    };
+                    case ProjectType.WebAPI: return new[]
+                    {                        
+                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
+                        $"<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"{SDK_VERSION}\" />",
+                        "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"7.0.0\" />",                        
+                    };
+
+                }
+            }
+            return null;
         }
 
         private static string References(params string[] references)
@@ -134,18 +226,17 @@ namespace Cybtans.Proto.Generator
             return string.Join(Environment.NewLine, references.Select(x => $"\t<ProjectReference Include=\"{x}\" />"));
         }
 
-        private static void GenerateProject(string template, string output, string project, string[] references)
+        private static void GenerateProject(string template, string output, string project, IEnumerable<string> references, IEnumerable<string> packages = null)
         {
             Directory.CreateDirectory($"{output}/{project}");
 
             var content = GetTemplate(template);
-            if (references != null)
+            content = TemplateProcessor.Process(content, new
             {
-                content = TemplateProcessor.Process(content, new
-                {
-                    FERERENCES = "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}/{x}.csproj").ToArray()) + "\r\n</ItemGroup >"
-                });
-            }
+                FERERENCES = references != null ? "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}/{x}.csproj").ToArray()) + "\r\n</ItemGroup >" : "",
+                PACKAGES = packages != null ? "<ItemGroup>\r\n" + string.Join("\r\n", packages) + "\r\n</ItemGroup >" : ""
+            });
+
 
             File.WriteAllText($"{output}/{project}/{project}.csproj", content);
         }
@@ -157,8 +248,14 @@ namespace Cybtans.Proto.Generator
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Properties");
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Controllers");
 
-            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.Development.json", GetTemplate("WebAPI.appsettings.Development.tpl"));
-            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.json", GetTemplate("WebAPI.appsettings.tpl"));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.Development.json", GetTemplate("WebAPI.appsettings.Development.tpl", new 
+            {
+                SERVICE = options.Name
+            }));
+            File.WriteAllText($"{options.Output}/{options.Name}.RestApi/appsettings.json", GetTemplate("WebAPI.appsettings.tpl", new 
+            {
+                SERVICE = options.Name
+            }));
 
             File.WriteAllText($"{options.Output}/{options.Name}.RestApi/Properties/launchSettings.json", GetTemplate("WebAPI.launchSettings.tpl", new
             {

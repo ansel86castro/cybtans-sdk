@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Cybtans.AspNetCore
 {
-    public class AuthenticatedHttpClientHandler : DelegatingHandler
+    public class HttpClientAuthorizationHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public AuthenticatedHttpClientHandler(IHttpContextAccessor accessor)
+        public HttpClientAuthorizationHandler(IHttpContextAccessor accessor)
         {
             _contextAccessor = accessor;
         }
@@ -25,7 +25,7 @@ namespace Cybtans.AspNetCore
             {
                 if (_contextAccessor.HttpContext.Request.Headers.ContainsKey(HeaderNames.Authorization))
                 {
-                    var token = _contextAccessor.HttpContext.GetTokenAsync("access_token").Result;
+                    var token = await _contextAccessor.HttpContext.GetTokenAsync("access_token");
                     request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, token);
                 }
             }

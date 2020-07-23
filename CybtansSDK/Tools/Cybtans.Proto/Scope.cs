@@ -21,11 +21,13 @@ namespace Cybtans.Proto
         {
             this._parent = parent;
             this._declarations = stdDeclarations == null ? new Dictionary<string, ITypeDeclaration>() : stdDeclarations.ToDictionary(x => x.Name);
-        }        
+        }
+
+        public IReadOnlyCollection<ITypeDeclaration> Declarations => _declarations.Values;
         
         public void AddDeclaration(ITypeDeclaration type)
-        {
-            this._declarations.Add(type.Name, type);
+        {            
+            this._declarations[type.Name] = type;
         }
 
         public ITypeDeclaration? GetDeclaration(string name)
@@ -113,7 +115,7 @@ namespace Cybtans.Proto
             foreach (var item in scope._declarations)
             {
                 if (!this._declarations.TryAdd(item.Key, item.Value))
-                {
+                {                   
                     throw new InvalidOperationException($"There is already a declaration with the same name {item.Key}");
                 }
             }

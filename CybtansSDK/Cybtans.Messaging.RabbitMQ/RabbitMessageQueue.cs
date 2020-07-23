@@ -63,8 +63,8 @@ namespace Cybtans.Messaging.RabbitMQ
 
             try
             {
-                _publishChannel?.Dispose();
-                _consumerChannel?.Dispose();
+                //_publishChannel?.Dispose();
+               // _consumerChannel?.Dispose();
 
                 _connection?.Dispose();                
             }
@@ -244,14 +244,18 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             if (exchange == null || topic == null)
             {
-                if (!_subscriptionManager.GetExchangeValues(message, out exchange, out topic))
+                Type type = message.GetType();
+                var binding = _subscriptionManager.GetBindingForType(type, exchange, topic);
+                if (binding == null)
                 {
                     throw new QueuePublishException($"Exchange not found for {message.GetType()}", message);
                 }
-            }            
+                exchange = binding.Exchange;
+                topic = binding.Topic;
+            }
 
             var bytes = BinaryConvert.Serialize(message);
-            return Task.Run(() => PublishInternal(exchange!, topic!, bytes));
+            return Task.Run(() => PublishInternal(exchange,  topic, bytes));
         }       
 
         private void PublishInternal(string exchange, string topic, byte[] data)
@@ -261,7 +265,11 @@ namespace Cybtans.Messaging.RabbitMQ
             if (_publishChannel == null)
                 throw new QueuePublishException("RabbitMQ publish channel not created");
 
+            _logger?.LogDebug("Publishing Message {Exchange} {Topic}", exchange, topic);
+
             _publishChannel.BasicPublish(exchange, topic, false, _properties, data);
+
+            _logger?.LogDebug("Message Published {Exchange} {Topic}", exchange, topic);
         }
 
         public void Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null)
@@ -315,9 +323,9 @@ namespace Cybtans.Messaging.RabbitMQ
             _subscriptionManager.Unsubscribe<TMessage, THandler>(exchange, topic);
         }
 
-        public BindingInfo? GetBinding(Type type)
+        public BindingInfo? GetBinding(Type type, string? topic)
         {
-            return _subscriptionManager.GetBindingForType(type);
+            return _subscriptionManager.GetBindingForType(type, null, topic);
         }
 
         public void RegisterBinding<T>(string exchage, string? topic = null)
@@ -372,10 +380,14 @@ namespace Cybtans.Messaging.RabbitMQ
             var data = args.Body.ToArray();
             var deliveryTag = args.DeliveryTag;
 
+            _logger?.LogDebug("Message Received {Exchange} {Topic}", exchage, topic);
+
             Task.Run(async () =>
             {
                 try
                 {
+                    _logger?.LogDebug("Message Dispatched {Exchange} {Topic}", exchage, topic);
+
                     await _subscriptionManager.HandleMessage(exchage, topic, data);
                     if (deliveryTag > 0)
                     {
@@ -384,7 +396,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogCritical(ex, ex.Message);
+                    _logger?.LogError(ex, ex.Message);
                     _consumerChannel?.BasicNack(deliveryTag, false, true);
                 }
             });
