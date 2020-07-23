@@ -147,7 +147,7 @@ namespace Cybtans.Proto.Generator
 
             var types = GenerateMessages(options, assembly.ExportedTypes);
 
-            if (options.GenerateCode && options.ServiceName != null && options.ServiceDirectory != null)
+            if (types.Any() && options.GenerateCode && options.ServiceName != null && options.ServiceDirectory != null)
             {
                 ProtoGenerator protoGenerator = new ProtoGenerator();
                 protoGenerator.Generate(new[] {
@@ -158,7 +158,7 @@ namespace Cybtans.Proto.Generator
 
                 GenerateMappings(types, options);
                 GenerateServicesImplementation(types, options);
-                GenerateRestApiRegisterExtensor(types, options);
+                //GenerateRestApiRegisterExtensor(types, options);
             }
         }
 

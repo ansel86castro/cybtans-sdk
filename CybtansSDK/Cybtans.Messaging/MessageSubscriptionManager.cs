@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Cybtans.Messaging
 {
@@ -20,11 +21,13 @@ namespace Cybtans.Messaging
         readonly Dictionary<string, BindingInfo> _exchageBidings = new Dictionary<string, BindingInfo>();
         readonly string? _globalExchange;
         readonly IServiceProvider? _serviceProvider;
+        private readonly ILogger<MessageSubscriptionManager>? _logger;
 
-        public MessageSubscriptionManager(IServiceProvider? provider = null, string? globalExchange= null)
+        public MessageSubscriptionManager(IServiceProvider? provider = null, string? globalExchange= null, ILogger<MessageSubscriptionManager> logger = null)
         {            
             _globalExchange = globalExchange;
             _serviceProvider = provider;
+            _logger = logger;
         }
 
         public IEnumerable<BindingInfo> GetBindings() => _exchages.Values;
@@ -225,17 +228,25 @@ namespace Cybtans.Messaging
 
             if (_exchageBidings.TryGetValue(key, out var info))
             {
+                _logger?.LogDebug("Handler found with key {Key}", key);
+
                 if (_serviceProvider != null)
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
+                        _logger?.LogDebug("Executing Handler {Key} {Type}", key, info.GetType());
                         await info.HandleMessage(scope.ServiceProvider, data);
                     }
                 }
                 else
                 {
+                    _logger?.LogDebug("Executing Handler {Key}", key);
                     await info.HandleMessage(null, data);
                 }
+            }
+            else
+            {
+                _logger?.LogDebug("Handler not found for {Key}", key);
             }
         }
 
