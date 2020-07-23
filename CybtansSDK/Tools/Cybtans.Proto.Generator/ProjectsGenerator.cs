@@ -14,6 +14,7 @@ namespace Cybtans.Proto.Generator
     public class ProjectsGenerator : IGenerator
     {
         const string EntityFramework = "ef";
+        const string SDK_VERSION = "1.0.13";
 
         public class Options
         {
@@ -182,41 +183,36 @@ namespace Cybtans.Proto.Generator
             if (references.Any())
                 return references.ToArray();
             return null;
-        }
+        }        
 
         private string[] GetPackages(ProjectType type, Options options)
-        {
+        {            
             if(options.Template == EntityFramework)
             {
                 switch (type)
                 {
                     case ProjectType.Services: return new[] 
                     { 
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Services\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
+                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Messaging\" Version=\"{SDK_VERSION}\" />",
+                        $"<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"{SDK_VERSION}\" />",
                         "<PackageReference Include=\"AutoMapper\" Version=\"9.0.0\" />",
                         "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />"
                     };
                     case ProjectType.Domain: return new[]
                     {
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />"                       
+                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />"
                     };
                     case ProjectType.DomainEF: return new[]
                     {                        
-                        "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
+                        "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",                       
+                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
                     };
                     case ProjectType.WebAPI: return new[]
-                    {
-                        "<PackageReference Include=\"Cybtans.Entities\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging\" Version=\"1.0.12\" />",
-                        "<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"1.0.12\" />",
+                    {                        
+                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
+                        $"<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"{SDK_VERSION}\" />",
                         "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"7.0.0\" />",                        
                     };
 
