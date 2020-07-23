@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  
-  @{FERERENCES}
+     
+  @{PACKAGES}  
+
+  @{FERERENCES}  
 
 </Project>

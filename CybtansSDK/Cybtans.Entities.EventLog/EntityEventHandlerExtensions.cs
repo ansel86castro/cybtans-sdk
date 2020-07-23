@@ -9,9 +9,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void SubscribeHandlerForEvents<TEntity, THandler>(this IMessageSubscriptionManager subscriptionManager, string exchange)
             where THandler : IEntityEventsHandler<TEntity>
         {
-            subscriptionManager.RegisterBinding<EntityCreated<TEntity>>(exchange);
-            subscriptionManager.RegisterBinding<EntityUpdated<TEntity>>(exchange);
-            subscriptionManager.RegisterBinding<EntityDeleted<TEntity>>(exchange);
+            subscriptionManager.RegisterBinding<EntityCreated<TEntity>>(exchange, EntityCreated<TEntity>.TOPIC);
+            subscriptionManager.RegisterBinding<EntityUpdated<TEntity>>(exchange, EntityUpdated<TEntity>.TOPIC);
+            subscriptionManager.RegisterBinding<EntityDeleted<TEntity>>(exchange, EntityDeleted<TEntity>.TOPIC);
 
             subscriptionManager.Subscribe<EntityCreated<TEntity>, THandler>();
             subscriptionManager.Subscribe<EntityUpdated<TEntity>, THandler>();

@@ -29,16 +29,21 @@ namespace Cybtans.Messaging.RabbitMQ.Test
             {
                 Exchange = new ExchangeConfig
                 {
-                    Name = "Invoice"
+                    Name = "Invoice",
+                     
                 },
                 Queue = new QueueConfig
                 {
-                    Name = queueName
+                    Name = queueName,
+                     AutoDelete = false                      
                 }
             },
-            logger: loggerFactory.CreateLogger<RabbitMessageQueue>());
-            _messageQueue.Subscribe<EntityCreated<Invoice>, InvoiceCreateHandler>();
-            _messageQueue.Subscribe(this);
+            logger: loggerFactory.CreateLogger<RabbitMessageQueue>());            
+
+            _messageQueue.Subscribe<EntityCreated<Invoice>, InvoiceCreateHandler>(topic: EntityCreated<Invoice>.TOPIC);
+            _messageQueue.Subscribe(this, topic : EntityUpdated<Invoice>.TOPIC);
+
+            _messageQueue.Start();
         }
 
         public Task HandleMessage(EntityUpdated<Invoice> message)

@@ -1,182 +1,171 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Cybtans.Proto.Generators.Typescript
 {
-    public class AngularClientGenerator
+    public class AngularClientGenerator :BaseSingleFileGenerator
     {
-        ProtoFile _proto;
-        TsOutputOption _option;
+        HashSet<string> _types = new HashSet<string>();
+        TsOutputOption _modelsOptions;
 
-        public AngularClientGenerator(ProtoFile proto, TsOutputOption option)
+        public AngularClientGenerator(ProtoFile proto, TsOutputOption modelsOptions , TsOutputOption option)
+            :base(proto, option)
         {
-            _proto = proto;
-            _option = option;
+            option.Filename ??= "services";
+            _modelsOptions = modelsOptions;
         }
 
-        public void GenerateCode()
+        public override void OnGenerationBegin(TsFileWriter writer)
         {
-            Directory.CreateDirectory(_option.OutputDirectory);           
-
-            var writer = new TsFileWriter(_option.OutputDirectory ?? Environment.CurrentDirectory);
             writer.Writer.Append("import { Injectable } from '@angular/core';\r\n");
             writer.Writer.Append("import { Observable, of } from 'rxjs';\r\n");
             writer.Writer.Append("import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';\r\n");
-            writer.Writer.Append("import { @{IMPORT} } from \'./models\';");            
+            writer.Writer.Append($"import {{ @{{IMPORT}} }} from \'./{_modelsOptions.Filename}\';");
 
-            writer.Writer.AppendLine();          
+            writer.Writer.AppendLine();
+        }
 
-            HashSet<ITypeDeclaration> types = new HashSet<ITypeDeclaration>();
-
-            foreach (var item in _proto.ImportedFiles)
-            {
-                writer.Writer.AppendLine();
-
-                GenerateCode(item, writer.Writer, types);
-
-                writer.Writer.AppendLine();
-            }
-
-            GenerateCode(_proto, writer.Writer, types);
-
+        public override void OnGenerationEnd(TsFileWriter writer)
+        {
             var importWriter = new CodeWriter();
             writer.Writer.AddWriter(importWriter, "IMPORT");
 
             int i = 0;
-            foreach (var item in types)
+            foreach (var item in _types)
             {
                 if (i++ > 0)
                 {
                     importWriter.Append(", ");
                 }
-                importWriter.Append(item.Name.Pascal());
+                importWriter.Append(item);
             }
-
-            writer.Save("services");
         }
 
-        private void GenerateCode(ProtoFile item, CodeWriter writer, HashSet<ITypeDeclaration> types)
+        protected override void GenerateCode(ProtoFile proto)
         {
+            foreach (var srv in proto.Declarations.Where(x => x is ServiceDeclaration).Select(x => (ServiceDeclaration)x))
+            {
+                AddBlock(srv.Name, GenerateCode(srv));
+            }
+        }
+
+
+        private string GenerateCode(ServiceDeclaration srv)
+        {
+            var writer = new CodeWriter();
             writer.AppendLine();
 
-            foreach (var srv in item.Declarations.Where(x => x is ServiceDeclaration).Select(x => (ServiceDeclaration)x))
+            CodeWriter methods = new CodeWriter();
+
+            foreach (var rpc in srv.Rpcs)
             {
-                writer.AppendLine();
+                methods.AppendLine();
 
-                CodeWriter methods = new CodeWriter();
+                var options = rpc.Option;
+                var request = rpc.RequestType;
+                var response = rpc.ResponseType;
 
-                foreach (var rpc in srv.Rpcs)
+                if (!request.IsBuildIn)
+                    _types.Add(request.Name.Pascal());
+
+                if (!response.IsBuildIn)
+                    _types.Add(response.Name.Pascal());
+
+                string url = $"{srv.Option.Prefix}";
+                List<FieldDeclaration> path = null;
+
+                if (options.Template != null)
                 {
-                    methods.AppendLine();
+                    url += $"/{options.Template.Replace("{", "@{")}";
 
-                    var options = rpc.Option;
-                    var request = rpc.RequestType;
-                    var response = rpc.ResponseType;
-
-                    if (!request.IsBuildIn)
-                        types.Add(request);
-
-                    if (!response.IsBuildIn)
-                        types.Add(response);
-
-                    string url = $"{srv.Option.Prefix}";
-                    List<FieldDeclaration> path = null;
-
-                    if (options.Template != null)
-                    {
-                        url += $"/{options.Template.Replace("{", "@{")}";
-
-                        path = request is MessageDeclaration ? ((MessageDeclaration)request).GetPathBinding(options.Template) : null;
-                    }
-
-                    methods.Append($"{rpc.Name.Camel()}");
-                    if (request == PrimitiveType.Void)
-                    {
-                        methods.Append("()");
-                    }
-                    else
-                    {
-                        methods.Append($"(request: {request.GetTypeName()})");
-                    }
-
-                    var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "{}";
-                    methods.Append($" : Observable<{responseType}>");
-
-                    methods.Append(" {").AppendLine();
-
-                    var body = methods.Append(' ', 2).Block(rpc.Name);
-                                    
-
-                    body.Append($"return this.http.{options.Method.ToLowerInvariant()}<{responseType}>(");
-                    if (path != null)
-                    {
-                        body.AppendTemplate($"`{url}`", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
-                    }
-                    else
-                    {
-                        body.Append($"`{url}`");
-                    }
-
-                    if (options.Method == "POST" || options.Method == "PUT")
-                    {
-                        body.Append(", request");
-                    }
-
-                    body.Append(", {").AppendLine();
-
-                    if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
-                    {
-                        body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer')");
-                    }
-                    else
-                    {
-                        body.Append(' ', 4).Append("headers: this.headers");
-                    }                    
-                   
-
-                    if ((options.Method == "GET" || options.Method == "DELETE") && request is MessageDeclaration msg)
-                    {
-                        if (path != null)
-                        {
-                            var queryFields = msg.Fields.Except(path);
-                            if (queryFields.Any())
-                            {
-                                var queryObj = string.Join(", ", queryFields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
-
-                                body.Append(",").AppendLine();
-                                body.Append(' ', 4).Append($"params: {{ {queryObj} }}");
-                            }
-                        }
-                        else
-                        {
-                            body.Append(",").AppendLine();
-                            body.Append(' ', 4).Append($"params: request");
-                        }
-                    }
-
-                    body.AppendLine();
-                    body.Append("});");
-
-                    body.AppendLine();                 
-
-                    methods.Append("}");
-
-                    methods.AppendLine();
+                    path = request is MessageDeclaration ? ((MessageDeclaration)request).GetPathBinding(options.Template) : null;
                 }
 
-                writer.AppendTemplate(serviceTemplate, new Dictionary<string, object>
-                {                    
-                    ["NAME"] = srv.Name.Pascal(),
-                    ["METHODS"] = methods.ToString()
-                });
+                methods.Append($"{rpc.Name.Camel()}");
+                if (request == PrimitiveType.Void)
+                {
+                    methods.Append("()");
+                }
+                else
+                {
+                    methods.Append($"(request: {request.GetTypeName()})");
+                }
 
+                var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "{}";
+                methods.Append($" : Observable<{responseType}>");
+
+                methods.Append(" {").AppendLine();
+
+                var body = methods.Append(' ', 2).Block(rpc.Name);
+
+
+                body.Append($"return this.http.{options.Method.ToLowerInvariant()}<{responseType}>(");
+                if (path != null)
+                {
+                    body.AppendTemplate($"`{url}`", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
+                }
+                else
+                {
+                    body.Append($"`{url}`");
+                }
+
+                if (options.Method == "POST" || options.Method == "PUT")
+                {
+                    body.Append(", request");
+                }
+
+                body.Append(", {").AppendLine();
+
+                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                {
+                    body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer')");
+                }
+                else
+                {
+                    body.Append(' ', 4).Append("headers: this.headers");
+                }
+
+
+                if ((options.Method == "GET" || options.Method == "DELETE") && request is MessageDeclaration msg)
+                {
+                    if (path != null)
+                    {
+                        var queryFields = msg.Fields.Except(path);
+                        if (queryFields.Any())
+                        {
+                            var queryObj = string.Join(", ", queryFields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
+
+                            body.Append(",").AppendLine();
+                            body.Append(' ', 4).Append($"params: {{ {queryObj} }}");
+                        }
+                    }
+                    else
+                    {
+                        body.Append(",").AppendLine();
+                        body.Append(' ', 4).Append($"params: request");
+                    }
+                }
+
+                body.AppendLine();
+                body.Append("});");
+
+                body.AppendLine();
+
+                methods.Append("}");
+
+                methods.AppendLine();
             }
-        }
+
+            writer.AppendTemplate(serviceTemplate, new Dictionary<string, object>
+            {
+                ["NAME"] = srv.Name.Pascal(),
+                ["METHODS"] = methods.ToString()
+            });
+
+            return writer.ToString();
+        }     
 
         string serviceTemplate =
 @"@Injectable({

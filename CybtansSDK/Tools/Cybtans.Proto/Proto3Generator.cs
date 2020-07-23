@@ -78,6 +78,7 @@ namespace Cybtans.Proto
                     }
 
                     scope.Merge(importScope);
+                    file.Merge(importFileNode);
                 }
             }
         }

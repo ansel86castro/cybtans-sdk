@@ -61,6 +61,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             AddAutorizationAttribute(srv.Option, clsWriter);
 
+            clsWriter.Append("[Produces(\"application/json\")]").AppendLine();
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
             clsWriter.Append("[ApiController]").AppendLine();
             clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
@@ -110,7 +111,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 }
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public async {response.GetReturnTypeName()} {rpcName}").Append("(");
+                bodyWriter.Append($"public {response.GetReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
                 bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
@@ -122,7 +123,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 if (options.Template != null)
                 {
-                    var path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(options.Template) : null;
+                    var path = request is MessageDeclaration ? _typeGenerator.GetMessageInfo(request).GetPathBinding(options.Template) : null;
                     if (path != null)
                     {
                         foreach (var field in path)
@@ -132,13 +133,8 @@ namespace Cybtans.Proto.Generators.CSharp
                         }
                     }
                 }
-
-                if (response != PrimitiveType.Void)
-                {
-                    methodWriter.Append("return ");
-                }
-
-                methodWriter.Append($"await _service.{rpcName}");
+              
+                methodWriter.Append($"return _service.{rpcName}");
 
                 if (request != PrimitiveType.Void)
                 {

@@ -2,6 +2,8 @@
 using Cybtans.Proto.Options;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 namespace Cybtans.Proto.AST
@@ -19,15 +21,47 @@ namespace Cybtans.Proto.AST
         {
             base.CheckSemantic(scope, logger);
 
+            if(Rpcs.ToLookup(x=>x.Name).Any(x => x.Count() > 1))
+            {
+                logger.AddError($"Duplicated fields numbers in {Name} ({ string.Join(",", Rpcs.ToLookup(x => x.Name).Where(x => x.Count() > 1).Select(x => string.Join(",", x) + "=" + x.Key)) }) , {Line},{Column}");
+            }
+
             foreach (var item in Rpcs)
             {
                 item.CheckSemantic(scope, logger);
+            }
+        }
+
+        public void Merge(ServiceDeclaration srv)
+        {
+            var lookup = Rpcs.ToDictionary(x => x.Name);            
+            foreach (var rpc in srv.Rpcs)
+            {
+                if(!lookup.TryGetValue(rpc.Name, out var target))               
+                {
+                    Rpcs.Add(rpc.Clone());
+                }
+            }
+
+            foreach (var option in srv.Options)
+            {
+                if (!Options.Any(x => x.Id == option.Id))
+                {
+                    Options.Add(option);
+                }
             }
         }
     }
 
     public class RpcDeclaration : DeclarationNode<RpcOptions>
     {
+        public RpcDeclaration(string name, IdentifierExpression request, IdentifierExpression response)
+        {
+            Name = name;
+            Request = request;
+            Response = response;
+        }
+
         public RpcDeclaration(string name, IdentifierExpression request, IdentifierExpression response, IToken start) :
             base(start)
         {
@@ -53,6 +87,16 @@ namespace Cybtans.Proto.AST
 
             RequestType = scope.GetDeclaration(Request);
             ResponseType = scope.GetDeclaration(Response);
+        }
+
+        public RpcDeclaration Clone()
+        {
+            return new RpcDeclaration(Name, Request, Response) 
+            {
+                Line = Line, 
+                Column = Column,
+                Options = Options
+            };
         }
     }
 }

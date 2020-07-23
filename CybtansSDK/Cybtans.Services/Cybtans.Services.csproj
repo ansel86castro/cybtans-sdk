@@ -9,20 +9,18 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Utility library for cross cutting concerns
-    </Description>    
-     <VersionPrefix>1.0.14</VersionPrefix>
+    </Description>
+    <VersionPrefix>1.0.13</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
     <ProjectReference Include="..\Cybtans.Expressions\Cybtans.Expressions.csproj" />
-    <ProjectReference Include="..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 
