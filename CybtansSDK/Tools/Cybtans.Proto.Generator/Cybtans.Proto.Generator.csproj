@@ -9,7 +9,7 @@
     <Nullable>disable</Nullable>    
     <IsPackable>false</IsPackable>    
     <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>       
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.2</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -64,7 +64,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Cybtans.Entities\Cybtans.Entities.csproj" />
+    <PackageReference Include="Cybtans.Entities" Version="1.0.14-rc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Cybtans.Proto\Cybtans.Proto.csproj" />
   </ItemGroup>
 
