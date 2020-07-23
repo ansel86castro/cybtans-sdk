@@ -10,7 +10,7 @@
     <Description>
       Message queue abstraction
     </Description>
-    <VersionPrefix>1.0.12</VersionPrefix>
+    <VersionPrefix>1.0.13</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
