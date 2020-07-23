@@ -9,8 +9,8 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Utility library for cross cutting concerns
-    </Description>
-    <VersionPrefix>1.0.9</VersionPrefix>
+    </Description>    
+     <VersionPrefix>1.0.14</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
     <ProjectReference Include="..\Cybtans.Expressions\Cybtans.Expressions.csproj" />
+    <ProjectReference Include="..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 
