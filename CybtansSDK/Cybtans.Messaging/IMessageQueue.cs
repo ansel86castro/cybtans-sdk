@@ -17,15 +17,15 @@ namespace Cybtans.Messaging
     public interface IMessageQueue :IMessageSubscriptionManager, IDisposable
     {             
         Task Publish(object message, string? exchange , string? topic);           
+       
+        BindingInfo? GetBinding(Type type, string topic);
+    
+        void Start();
 
         public Task Publish(object message)
         {
             return Publish(message, null, null);
         }
-
-        BindingInfo? GetBinding(Type type);
-    
-        void Start();
 
     }
 }

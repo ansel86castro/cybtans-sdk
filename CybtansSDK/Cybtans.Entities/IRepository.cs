@@ -34,7 +34,7 @@ namespace Cybtans.Entities
         IUnitOfWork UnitOfWork { get; }
     }
 
-    public interface IRepository<T>:IRepository<T, int>
+    public interface IRepository<T>:IRepository<T, object>
     {
 
     }

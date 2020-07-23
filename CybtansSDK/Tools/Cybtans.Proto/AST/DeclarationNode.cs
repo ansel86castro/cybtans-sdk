@@ -39,7 +39,7 @@ namespace Cybtans.Proto.AST
     public abstract class DeclarationNode<TOption> : DeclarationNode, IOptionsContainer
         where TOption : ProtobufOption, new()
     {
-        public TOption Option { get; } = new TOption();
+        public TOption Option { get; protected set; } = new TOption();
 
         public DeclarationNode()
         {

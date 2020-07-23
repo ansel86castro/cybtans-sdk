@@ -332,15 +332,15 @@ namespace Cybtans.Services
         }
 
         public virtual async Task<TEntityDto> Create(TEntityDto request)
-        {
-            var entity = _mapper.Map<TEntityDto, TEntity>(request);
+        {            
+            var entity = _mapper.Map<TEntity>(request);
             _repository.Add(entity);
 
             await _uow.SaveChangesAsync();
 
             _logger.LogDebug($"Entity {typeof(TEntity)} saved id:{entity.Id}");
 
-            return _mapper.Map<TEntity, TEntityDto>(entity);
+            return _mapper.Map<TEntityDto>(entity);
         }
 
         public virtual async Task Delete(TDeleteRequest request)
@@ -355,10 +355,10 @@ namespace Cybtans.Services
 
         protected virtual async Task<TEntityDto> Get(TKey id)
         {
-            return await _mapper.ProjectTo<TEntityDto>(
+            return (await _mapper.ProjectTo<TEntityDto>(
                 _repository.GetAll()
                 .Where(x => x.Id.Equals(id)))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()) ?? throw new EntityNotFoundException($"Entity with Id {id} not found");
         }
 
 

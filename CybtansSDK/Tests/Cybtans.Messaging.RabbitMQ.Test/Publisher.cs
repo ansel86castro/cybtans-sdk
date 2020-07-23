@@ -18,6 +18,7 @@ namespace Cybtans.Messaging.RabbitMQ.Test
         IEntityEventPublisher _eventPublisher;
         TestContext _context;
         EfUnitOfWork _uow;
+        IRepository<Invoice, int> _repository;
 
         public Publisher()
         {
@@ -43,18 +44,19 @@ namespace Cybtans.Messaging.RabbitMQ.Test
             _eventPublisher = new EntityEventPublisher(_messageQueue, repository, loggerFactory.CreateLogger<EntityEventPublisher>());
 
             _uow = new EfUnitOfWork(_context, _eventPublisher);
+            _repository = new EfRepository<Invoice, int>(_uow);
         }
 
         public async Task Publish()
         {
-            var invoice = CreateInvoice();          
-            _context.Add(invoice);
+            var invoice = CreateInvoice();
+            _repository.Add(invoice);
 
             await _uow.SaveChangesAsync();
 
             invoice.Code = Guid.NewGuid().ToString();
 
-            _context.Update(invoice);
+            _repository.Update(invoice);
 
             await _uow.SaveChangesAsync();
         }

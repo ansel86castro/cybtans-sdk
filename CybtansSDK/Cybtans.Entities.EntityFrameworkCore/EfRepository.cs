@@ -13,54 +13,74 @@ namespace Cybtans.Entities.EntiyFrameworkCore
     public class EfRepository<T, TKey> : IRepository<T, TKey> where T : class       
     {
         private readonly DbContext _context;
-        private readonly DbSet<T> _dbSet;
-
+        private readonly DbSet<T> _dbSet;      
+        
         public EfRepository(IUnitOfWork unitOfWork)
         {                        
             UnitOfWork = unitOfWork;
             _context = ((EfUnitOfWork)unitOfWork).Context;
-            _dbSet = _context.Set<T>();            
+            _dbSet = _context.Set<T>();
         }
+
+        protected DbContext Context => _context;
+
+        protected DbSet<T> DbSet => _dbSet;
 
         public IUnitOfWork UnitOfWork { get; }
 
-        Type IQueryable.ElementType => typeof(T);
+        Type IQueryable.ElementType => GetQueryable().ElementType;
 
-        Expression IQueryable.Expression => ((IQueryable)_dbSet).Expression;
+        Expression IQueryable.Expression => GetQueryable().Expression;
 
-        IQueryProvider IQueryable.Provider => ((IQueryable)_dbSet).Provider;
+        IQueryProvider IQueryable.Provider => GetQueryable().Provider;
 
-        public IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null)
+        protected virtual IQueryable<T> GetQueryable() => _dbSet;
+
+        public virtual IQueryable<T> WithDetails()
         {
-            IQueryable<T> query = _dbSet;
-            if(include != null)
+            return GetQueryable();
+        }
+
+        public virtual IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors)
+        {
+            IQueryable<T> query = GetQueryable();
+
+            if (propertySelectors != null)
             {
-                foreach (var item in include)
+                foreach (var item in propertySelectors)
                 {
-                   query = query.Include(item);
+                    query = query.Include(item);
                 }
             }
+            return query;
+        }
 
+
+        public virtual IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] propertySelectors = null)
+        {
+            IQueryable<T> query = propertySelectors != null ? 
+                WithDetails(propertySelectors) : 
+                GetQueryable();       
+            
             return query.AsNoTracking();
         }
 
-        public ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
-        {
+        public virtual ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
+        {                       
             return _dbSet.FindAsync(key);
         }
        
-
-        public void Update(T item)
+        public virtual void Update(T item)
         {
             _dbSet.Update(item);         
         }
 
-        public void UpdateRange(IEnumerable<T> items)
+        public virtual void UpdateRange(IEnumerable<T> items)
         {
             _dbSet.UpdateRange(items);
         }
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             if(item is IAuditableEntity au)
             {
@@ -75,33 +95,34 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             _dbSet.Add(item);
         }
 
-        public void AddRange(IEnumerable<T> items)
+        public virtual void AddRange(IEnumerable<T> items)
         {
             _dbSet.AddRange(items);
         }
 
-        public void Remove(T item)
+        public virtual void Remove(T item)
         {          
             _dbSet.Remove(item);
         }
 
-        public void RemoveRange(IEnumerable<T> items)
+        public virtual void RemoveRange(IEnumerable<T> items)
         {           
             _dbSet.RemoveRange(items);
         }
+     
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return ((IEnumerable<T>)_dbSet).GetEnumerator();
+            return GetQueryable().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)_dbSet).GetEnumerator();
+            return GetQueryable().GetEnumerator();
         }      
     }
 
-    public class EfRepository<T> : EfRepository<T, int>, IRepository<T>
+    public class EfRepository<T> : EfRepository<T, object>, IRepository<T>
         where T : class
     {
         public EfRepository(IUnitOfWork unitOfWork) : base(unitOfWork)

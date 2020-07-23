@@ -5,5 +5,8 @@
         public const string FRAMEWORK_ANGULAR = "angular";
 
         public string Framework { get; set; }
+
+        public string Filename { get; set; }
+       
     }
 }

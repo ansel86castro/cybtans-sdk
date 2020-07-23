@@ -29,10 +29,8 @@ namespace Cybtans.Proto.Generators.CSharp
 
             foreach (var item in _serviceGenerator.Services)
             {
-                GenerateClient(item.Value);
-
-                GenerateExtensions(item.Value);
-            }
+                GenerateClient(item.Value);                
+            }            
         }
 
         private void GenerateClient(ServiceGenInfo info)
@@ -64,7 +62,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 if(options.Template != null)
                 {
                     var template = options.Template;
-                    path = request is MessageDeclaration ? _typeGenerator.Messages[request].GetPathBinding(template) : null;
+                    path = request is MessageDeclaration ? _typeGenerator.GetMessageInfo(request).GetPathBinding(template) : null;
                     if(path != null)
                     {
                         foreach (var field in path)
@@ -113,27 +111,46 @@ namespace Cybtans.Proto.Generators.CSharp
 
             writer.Save($"I{info.Name}");
 
-        }       
+        }              
 
-        private void GenerateExtensions(ServiceGenInfo info)
+        private void GenerateExtensions()
         {
             var writer = CreateWriter("Microsoft.Extensions.DependencyInjection");
-           
+
             writer.Usings.Append("using Refit;").AppendLine();
             writer.Usings.Append("using Cybtans.Refit;").AppendLine();
-            writer.Usings.Append("using Cybtans.Serialization;").AppendLine(); 
+            writer.Usings.Append("using Cybtans.Serialization;").AppendLine();
             writer.Usings.Append("using Microsoft.Extensions.Configuration;").AppendLine();
             writer.Usings.Append("using Microsoft.Extensions.DependencyInjection;").AppendLine();
             writer.Usings.Append("using System.Text;").AppendLine();
             writer.Usings.Append($"using {Namespace};").AppendLine()
                 .AppendLine(2);
 
+            StringBuilder namedSb = new StringBuilder();
+            StringBuilder genericSb = new StringBuilder();
+
+            foreach (var item in _serviceGenerator.Services)
+            {              
+                namedSb.Append(TemplateProcessor.Process(namedRegister, new
+                {
+                    PACKAGE = _proto.Package.ToString(),
+                    NAME = item.Value.Name
+                }));
+
+                namedSb.AppendLine();
+                
+                genericSb.Append($"services.AddClient<I{item.Value.Name}>(baseUrl, configure);");
+                genericSb.AppendLine();
+            }
+
             writer.Class.AppendTemplate(setupExtension, new Dictionary<string, object>
             {
-                ["NAME"] = info.Name
+                ["NAME"] = _proto.Package.ToString(),
+                ["NAMED_REGISTER"] = namedSb.ToString(),
+                ["GENERIC_REGISTER"] = genericSb.ToString()
             });
 
-            writer.Save($"{info.Name}Extensions");
+            writer.Save($"{_proto.Package}ServiceCollectionExtensions");
         }
 
         private object GetRequestBinding(string method)
@@ -156,28 +173,48 @@ public class @{NAME}Option
 
 public static class @{NAME}Extensions
 {
-    public static IHttpClientBuilder Add@{NAME}(this IServiceCollection services, IConfiguration configuration, RefitSettings settings = null)
+    @{NAMED_REGISTER}
+    
+    public static IServiceCollection Add@{NAME}Services(this IServiceCollection services, string baseUrl, Action<IHttpClientBuilder> configure = null)
     {
-        var option = configuration.GetSection(""@{NAME}"").Get<@{NAME}Option>();
+		@{GENERIC_REGISTER}
+		return services;
+	}
 
-        if(settings == null)
-        {
-            settings = new RefitSettings();
-        }
-
-        settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
-
-        var builder = services.AddRefitClient<I@{NAME}>(settings);
-
-        builder.ConfigureHttpClient(c =>
-        {                
-            c.BaseAddress = new Uri(option.BaseUrl);
-            c.DefaultRequestHeaders.Add(""Accept"", $""{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}"");
-        });
-
-        return builder;
+	private static IServiceCollection AddClient<T>(this IServiceCollection services, string baseUrl, Action<IHttpClientBuilder> configure)
+		where T:class
+    {
+	    var httpClientBuilder = services.AddClient<T>(baseUrl);
+		configure?.Invoke(httpClientBuilder);
+		return services;
     }
 }
 ";
+
+        string namedRegister = @"
+public static IHttpClientBuilder Add@{NAME}(this IServiceCollection services, IConfiguration configuration, RefitSettings settings = null)
+{
+    var option = configuration.GetSection(""@{PACKAGE}Option"").Get<@{PACKAGE}Option>();
+
+    if(settings == null)
+    {
+        settings = new RefitSettings();
+    }
+
+    settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
+
+    var builder = services.AddRefitClient<I@{NAME}>(settings);
+
+    builder.ConfigureHttpClient(c =>
+    {                
+        c.BaseAddress = new Uri(option.BaseUrl);
+        c.DefaultRequestHeaders.Add(""Accept"", $""{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}"");
+    });
+
+    return builder;
+}
+";
+
+
     }
 }

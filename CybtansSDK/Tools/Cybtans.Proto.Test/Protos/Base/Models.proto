@@ -9,4 +9,30 @@ message User {
 	datetime updateDate = 6 [optional = true];	
 }
 
+message GetUserRequest{
+	int32 id = 1;
+}
+
+message UpdateUserRequest{
+	int32 id = 1;
+	User user = 2;
+}
+
+service UserService{
+	option (prefix) ="api/users";
+
+	rpc Get(GetUserRequest) returns (User){		
+		option template = "{id}";
+		option method = "GET";		
+	};
+
+	rpc Create(User) returns (User){
+		option method = "POST";
+	};
+
+	rpc Update(UpdateUserRequest) returns (User){
+		option template = "{id}";
+		option method = "PUT";
+	};
+}
 
