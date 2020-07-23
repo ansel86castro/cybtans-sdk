@@ -8,7 +8,7 @@
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
     <Description>Integrates Cybtans binary serializer with Refit</Description>
-    <VersionPrefix>1.0.9</VersionPrefix>
+    <VersionPrefix>1.0.14</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
