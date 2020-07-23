@@ -10,10 +10,8 @@ using System.Text;
 namespace Cybtans.Messaging.RabbitMQ.Test
 {
 
-    public class Invoice:DomainEntity
-    {
-        public int Id { get; set; }
-
+    public class Invoice:DomainTenantEntity<int>
+    {        
         public string Code { get; set; }
 
         public List<InvoiceItems> Items { get; set; }
