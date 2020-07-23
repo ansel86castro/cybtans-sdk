@@ -68,6 +68,12 @@ namespace Cybtans.Proto.AST
             {
                 logger.AddError($"Duplicated fields numbers in {Name} ({ string.Join(",", Fields.ToLookup(x => x.Number).Where(x => x.Count() > 1).Select(x => string.Join(",", x) +"="+ x.Key)) }) , {Line},{Column}");
             }
+
+            if (Fields.ToLookup(x => x.Name).Any(x => x.Count() > 1))
+            {
+                logger.AddError($"Duplicated fields names in {Name} ({ string.Join(",", Fields.ToLookup(x => x.Name).Where(x => x.Count() > 1).Select(x => string.Join(",", x) + "=" + x.Key)) }) , {Line},{Column}");
+            }
+
         }
 
         public List<FieldDeclaration>? GetPathBinding(string template)
@@ -93,6 +99,17 @@ namespace Cybtans.Proto.AST
                 return fields;
             }
             return null;
+        }
+
+        public void Merge(MessageDeclaration msg)
+        {
+            var max = Fields.Max(x => x.Number);
+            msg.Fields.ForEach(x => x.Number += max);
+
+            Fields.AddRange(msg.Fields);             
+
+            Enums.AddRange(msg.Enums);
+            InnerMessages.AddRange(msg.InnerMessages);
         }
     }
 

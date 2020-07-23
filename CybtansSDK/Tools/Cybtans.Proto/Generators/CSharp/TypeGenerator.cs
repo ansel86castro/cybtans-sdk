@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Markup;
 
@@ -22,15 +23,23 @@ namespace Cybtans.Proto.Generators.CSharp
     }
 
     public class TypeGenerator : FileGenerator
-    {           
+    {        
+        Dictionary<ITypeDeclaration, MessageClassInfo> _messages = new Dictionary<ITypeDeclaration, MessageClassInfo>();
+
         public TypeGenerator(ProtoFile proto, TypeGeneratorOption option):base(proto, option)
         {
-            Namespace = $"{proto.Option.Namespace}.{option.Namespace ?? "Models"}";
+            Namespace = $"{proto.Option.Namespace}.{option.Namespace ?? "Models"}";            
         }
 
-        public Dictionary<EnumDeclaration, EnumInfo> Enums { get; } = new Dictionary<EnumDeclaration, EnumInfo>();
-
-        public Dictionary<ITypeDeclaration, MessageClassInfo> Messages { get; } = new Dictionary<ITypeDeclaration, MessageClassInfo>();
+        public MessageClassInfo GetMessageInfo(ITypeDeclaration declaration)
+        {            
+            if(!_messages.TryGetValue(declaration, out var info))
+            {
+                info = new MessageClassInfo((MessageDeclaration)declaration, _option, _proto);
+                _messages.Add(declaration, info);
+            }
+            return info;
+        }        
 
         public string Namespace { get; set; }
 
@@ -44,8 +53,8 @@ namespace Cybtans.Proto.Generators.CSharp
             {
                 var enumInfo = new EnumInfo((EnumDeclaration)_proto.Declarations.First(x => x is EnumDeclaration), _option, _proto);
                 enumWriter = CreateWriter(enumInfo.Namespace);                
-            }
-
+            }          
+    
             foreach (var item in _proto.Declarations)
             {
                 if (item is MessageDeclaration msg)
@@ -54,16 +63,14 @@ namespace Cybtans.Proto.Generators.CSharp
 
                     GenerateMessage(info);                
 
-                    Messages.Add(msg, info);
+                    _messages.Add(msg, info);
                 }
 
                 else if (item is EnumDeclaration e && enumWriter!=null)
                 {
                     var info = new EnumInfo(e, _option, _proto);
                     
-                    GenerateEnum(info, enumWriter.Class);
-
-                    Enums.Add(e, info);
+                    GenerateEnum(info, enumWriter.Class);                   
                 }
             }
 
@@ -71,6 +78,8 @@ namespace Cybtans.Proto.Generators.CSharp
             {
                 enumWriter.Save("Enums");               
             }
+
+            
         }
      
         private void GenerateEnum(EnumInfo info, CodeWriter clsWriter)

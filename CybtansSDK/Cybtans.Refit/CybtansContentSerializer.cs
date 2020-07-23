@@ -26,9 +26,7 @@ namespace Cybtans.Refit
 
         public async Task<T> DeserializeAsync<T>(HttpContent content)
         {
-            var str = await content.ReadAsStringAsync();
-
-            if(content.Headers.ContentType.MediaType != BinarySerializer.MEDIA_TYPE)
+            if (content.Headers.ContentType != null && content.Headers.ContentType.MediaType != BinarySerializer.MEDIA_TYPE)
             {
                 return await _defaultSerializer.DeserializeAsync<T>(content);
             }

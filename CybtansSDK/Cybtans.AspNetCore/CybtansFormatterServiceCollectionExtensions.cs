@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static void AddAuthenticatedHttpHandler(this IServiceCollection services)
         {
-            services.AddTransient<AuthenticatedHttpClientHandler>();
+            services.AddTransient<HttpClientAuthorizationHandler>();
         }
     }
 }
