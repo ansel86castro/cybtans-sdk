@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
+    <ProjectReference Include="..\Cybtans.Test.Domain\Cybtans.Test.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

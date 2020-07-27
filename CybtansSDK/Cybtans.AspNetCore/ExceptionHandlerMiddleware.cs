@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Cybtans.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Cybtans.AspNetCore
-{
-    // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
+{    
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
+            
 
         public ExceptionHandlingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
         {
@@ -32,16 +35,30 @@ namespace Cybtans.AspNetCore
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return context.Response.WriteAsync(new
+            if (context.Request.Headers.ContainsKey("Accept") && context.Request.Headers["Accept"].FirstOrDefault() == BinarySerializer.MEDIA_TYPE)
             {
-                context.Response.StatusCode,
-                Message = $"Internal Server Error {exception.Message}",
-
-            }.ToString());
+                context.Response.ContentType = BinarySerializer.MEDIA_TYPE;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;                
+                await context.Response.BodyWriter.WriteAsync(BinaryConvert.Serialize(
+                    new
+                    {
+                        context.Response.StatusCode,
+                        Message = $"Internal Server Error {exception.Message}",
+                    }));
+            }
+            else
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    context.Response.StatusCode,
+                    Message = $"Internal Server Error {exception.Message}",
+                }));
+            }
+            
         }
     }
 

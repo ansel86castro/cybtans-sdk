@@ -38,11 +38,14 @@ namespace Cybtans.Proto.Generators.CSharp
             var writer = CreateWriter(Namespace);
 
             writer.Usings.Append($"using Refit;").AppendLine();
+            writer.Usings.Append($"using Cybtans.Refit;").AppendLine();
             writer.Usings.Append($"using System.Net.Http;").AppendLine();
             writer.Usings.Append($"using System.Threading.Tasks;").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
 
             var clsWriter = writer.Class;
+
+            clsWriter.Append("[ApiClient]").AppendLine();
             clsWriter.Append($"public interface I{info.Name}").AppendLine();
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);

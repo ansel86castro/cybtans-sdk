@@ -8,11 +8,12 @@
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
     <Description>Integrates Cybtans binary serializer with aspnet core</Description>
-    <VersionPrefix>1.0.14</VersionPrefix>
+    <VersionPrefix>1.0.15</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="refit" Version="5.1.67" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
