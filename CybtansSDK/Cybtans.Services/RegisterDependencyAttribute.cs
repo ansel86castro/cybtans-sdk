@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cybtans.Services.DependencyInjection
+namespace Cybtans.Services
 {
 
     public class RegisterDependencyAttribute : Attribute

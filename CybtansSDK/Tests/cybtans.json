@@ -1,0 +1,11 @@
+{
+  "Service": "Coordinations",
+  "Steps": [
+    {
+      "Type": "messages",
+      "Output": ".",
+      "ProtoFile": "./Proto/Domain.proto",
+      "AssemblyFile": "./Cybtans.Test.Domain/bin/Debug/netcoreapp3.1/Cybtans.Test.Domain.dll"
+    }
+  ]
+}

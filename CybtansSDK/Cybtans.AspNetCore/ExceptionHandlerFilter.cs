@@ -1,6 +1,8 @@
-﻿using Cybtans.Services;
+﻿using Cybtans.Entities;
+using Cybtans.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -8,26 +10,38 @@ using System.Text;
 
 namespace Cybtans.AspNetCore
 {
-    public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
+    public class HttpResponseExceptionFilter : IExceptionFilter
     {
-        public int Order { get; set; } = int.MaxValue - 10;
+        ILogger<HttpResponseExceptionFilter> _logger;
 
-        public void OnActionExecuting(ActionExecutingContext context) { }
+        public HttpResponseExceptionFilter(ILogger<HttpResponseExceptionFilter> logger)
+        {
+            _logger = logger;
+        }
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {           
+        public void OnException(ExceptionContext context)
+        {
             switch (context.Exception)
             {
                 case ValidationException ve:
                     context.Result = new ObjectResult(ve.ValidationResult) { StatusCode = (int)HttpStatusCode.BadRequest };
                     context.ExceptionHandled = true;
                     break;
+                case EntityNotFoundException en:
+                    context.Result = new ObjectResult(new ValidationResult(en.Message)) { StatusCode = (int)HttpStatusCode.NotFound };
+                    context.ExceptionHandled = true;
+                    break;
                 case ActionException actionException:
-                    context.Result = new ObjectResult(new { ErrorMessage = actionException.Message, Response = actionException.Response }) 
-                    { 
+                    context.Result = new ObjectResult(new ValidationResult(actionException.Response.ToString()))
+                    {
                         StatusCode = (int)actionException.StatusCode
                     };
-                    context.ExceptionHandled = true;                                  
+                    context.ExceptionHandled = true;
+                    break;
+                default:
+                    _logger.LogError(context.Exception, context.Exception.Message);
+                    context.Result = new ObjectResult(new ValidationResult(context.Exception.Message)) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                    context.ExceptionHandled = true;
                     break;
             }
         }

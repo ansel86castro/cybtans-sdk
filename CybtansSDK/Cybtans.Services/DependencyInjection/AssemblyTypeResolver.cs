@@ -6,7 +6,7 @@ namespace Cybtans.Services.DependencyInjection
 {
     public class AssemblyTypeResolver : ITypeResolver
     {
-        struct RegisterInfo
+        public struct RegisterInfo
         {
             public Type Type;
 
@@ -22,6 +22,8 @@ namespace Cybtans.Services.DependencyInjection
         }
 
         public List<Assembly> Assemblies { get; private set; } = new List<Assembly>();
+
+        public Dictionary<Type, RegisterInfo> Dependencies => mappings;
 
         public void Init()
         {
@@ -43,7 +45,7 @@ namespace Cybtans.Services.DependencyInjection
                             };
                         }
 
-                        if (attr.Contracts != null)
+                       else if (attr.Contracts != null)
                         {
                             foreach (var c in attr.Contracts)
                             {
