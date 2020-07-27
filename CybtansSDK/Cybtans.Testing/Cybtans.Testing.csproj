@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>testing ,xunit</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>
+      Testing Utilities
+    </Description>
+    <VersionPrefix>1.0.15</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>    
