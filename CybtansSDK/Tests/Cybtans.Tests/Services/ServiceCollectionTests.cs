@@ -51,7 +51,7 @@ namespace Cybtans.Tests.Services
 
                 var customer = await client.GetCustomer(Guid.Parse("E9FC9439-497F-4170-A79B-380F255A1420"));
                 Assert.NotNull(customer);
-                Assert.Equal("Customer", customer.Name);
+                Assert.Equal("", customer.Name);
             }         
         }
     }
@@ -65,7 +65,7 @@ namespace Cybtans.Tests.Services
                 Content = new ByteArrayContent(BinaryConvert.Serialize(new Customer
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Customer"
+                    Name = ""
                 })),
                 StatusCode = System.Net.HttpStatusCode.OK
             };
