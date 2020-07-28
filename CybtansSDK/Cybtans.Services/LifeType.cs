@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cybtans.Services.DependencyInjection
+namespace Cybtans.Services
 {
     public enum LifeType
     {
@@ -12,7 +12,7 @@ namespace Cybtans.Services.DependencyInjection
         /// defult life type. Objects are not cached so the object is always created when requesting the dependence.
         /// If the object is disposable you must ensure to call Dispose
         /// </summary>
-        Default,
+        Transient,
         /// <summary>
         /// The object is singleton. The same instance is returned allways 
         /// </summary>

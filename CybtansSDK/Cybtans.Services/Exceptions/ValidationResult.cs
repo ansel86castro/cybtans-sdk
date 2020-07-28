@@ -10,56 +10,40 @@ namespace Cybtans.Services
     {
         public string ErrorMessage { get; set; }
 
-        public List<MemberValidationResult> Members { get; set; } = new List<MemberValidationResult>();
+        public Dictionary<string, List<string>> Errors { get; private set; }
 
         public ValidationResult()
         {
-            Members = new List<MemberValidationResult>();
+            Errors = new Dictionary<string, List<string>>();
         }
 
-        public ValidationResult(string errorMessage)
-            : this()
+        public ValidationResult(string errorMessage): this()
         {
             ErrorMessage = errorMessage;
         }
 
-
-        public ValidationResult(string errorMessage, MemberValidationResult[] members)
-            : this(errorMessage)
+        public ValidationResult(string errorMessage, Dictionary<string, List<string>> errors): this(errorMessage)
         {
-            Members.AddRange(members);
+            Errors = errors;
         }
 
         public ValidationResult AddError(string member, string error)
-        {
-            Members.Add(new MemberValidationResult { Member = member, ErrorMessage = error });
+        { 
+            if(!Errors.TryGetValue(member, out var list))
+            {
+                Errors.Add(member, new List<string>());
+            }
+            Errors[member].Add(error);            
             return this;
         }
 
-
-        public bool ContainsError
+        public bool HasErrors
         {
             get
             {
-                return Members != null && Members.Count > 0 || !string.IsNullOrWhiteSpace(ErrorMessage);
+                return Errors != null && Errors.Count > 0 || !string.IsNullOrWhiteSpace(ErrorMessage);
             }
         }
 
-    }
-
-
-    public class MemberValidationResult
-    {
-        public string Member { get; set; }
-
-        public string ErrorMessage { get; set; }
-
-        public MemberValidationResult() { }
-
-        public MemberValidationResult(string member, string errorMessage)
-        {
-            Member = member;
-            ErrorMessage = errorMessage;
-        }
     }
 }

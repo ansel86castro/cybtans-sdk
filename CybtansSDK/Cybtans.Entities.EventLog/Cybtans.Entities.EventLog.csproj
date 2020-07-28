@@ -10,7 +10,7 @@
     <Description>
       Provides event publisher implementation for entity changes
     </Description>
-    <VersionPrefix>1.0.14</VersionPrefix>
+    <VersionPrefix>1.0.15</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

@@ -575,6 +575,7 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
+    [RegisterDependency(typeof(I@{ENTITY}Service))]
     public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
     {
         public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
@@ -594,6 +595,7 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
+    [RegisterDependency(typeof(I@{ENTITY}Service))]
     public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
     {
         
