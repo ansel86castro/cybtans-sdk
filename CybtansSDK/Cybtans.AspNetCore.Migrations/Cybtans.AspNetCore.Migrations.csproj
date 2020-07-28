@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
@@ -8,7 +7,7 @@
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
     <Description>Migration Utilities and seeding for EntityFramework Core</Description>
-    <VersionPrefix>1.0.14</VersionPrefix>
+    <VersionPrefix>1.0.15</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

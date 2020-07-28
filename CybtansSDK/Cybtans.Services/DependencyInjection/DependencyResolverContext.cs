@@ -157,7 +157,7 @@ namespace Cybtans.Services.DependencyInjection
                 if (!serviceType.IsInterface && !serviceType.IsAbstract)
                 {
                     implementer = serviceType;
-                    life = LifeType.Default;
+                    life = LifeType.Transient;
                 }
                 else
                 {

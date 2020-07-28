@@ -10,7 +10,7 @@
     <Description>
       Repository and Unit of Work abstractions
     </Description>
-    <VersionPrefix>1.0.14</VersionPrefix>
+    <VersionPrefix>1.0.15</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

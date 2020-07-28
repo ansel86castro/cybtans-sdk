@@ -221,7 +221,7 @@ namespace Cybtans.Serialization
             var bytes = _memory.Span;
 
             var bytesCount = _encoding.GetByteCount(chars);
-            var bytesPerChar = bytesCount / chars.Length;
+            var bytesPerChar = chars.Length == 0 ? 0 : bytesCount / chars.Length;
 
             WriteLenght(stream, bytesCount, Types.TYPE_STRING_8, Types.TYPE_STRING_16, Types.TYPE_STRING_32);
 
