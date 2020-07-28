@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cybtans.Entities" Version="1.0.14-rc" />
+    <PackageReference Include="Cybtans.Entities" Version="1.0.15-rc-1" />
   </ItemGroup>
 
   <ItemGroup>
