@@ -19,6 +19,7 @@ message User {
 	int16 shortValue = 12;
 	bool boolean = 13;
 	bytes buffer = 14;
+	decimal decimalValue = 15;
 }
 
 message Message {

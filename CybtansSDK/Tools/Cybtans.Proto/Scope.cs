@@ -153,7 +153,8 @@ namespace Cybtans.Proto
                 PrimitiveType.Map,
                 PrimitiveType.Object,
                 PrimitiveType.Void,
-                PrimitiveType.Guid
+                PrimitiveType.Guid,
+                PrimitiveType.Decimal
             });
         }
     }

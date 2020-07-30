@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.Proto\Cybtans.Entities.Proto.csproj" />
     <ProjectReference Include="..\..\Cybtans.Entities\Cybtans.Entities.csproj" />
   </ItemGroup>
 

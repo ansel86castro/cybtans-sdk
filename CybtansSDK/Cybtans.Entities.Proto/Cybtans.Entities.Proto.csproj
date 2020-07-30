@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>Cybtans.Entities</RootNamespace>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>    
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>
+          Support library for the protobuff generator
+    </Description>
+    <VersionPrefix>1.0.15</VersionPrefix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+
+</Project>

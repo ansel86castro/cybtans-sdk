@@ -14,7 +14,7 @@ namespace Cybtans.Proto.Generator
     public class ProjectsGenerator : IGenerator
     {
         const string EntityFramework = "ef";
-        const string SDK_VERSION = "1.0.13";
+        const string SDK_VERSION = "1.0.15-rc-1";
 
         public class Options
         {
@@ -61,7 +61,8 @@ namespace Cybtans.Proto.Generator
 
         private void GenerateMicroservice(string[] args)
         {
-            Options options = new Options();
+            Options options = new Options() { Template = EntityFramework };
+
             for (int i = 1; i < args.Length; i++)
             {
                 var arg = args[i];
@@ -107,8 +108,14 @@ namespace Cybtans.Proto.Generator
             GenerateProject("ModelsProject.tpl", options.Output, $"{ options.Name }.Models", null);
             GenerateProject("ClientsProject.tlp", options.Output, $"{ options.Name }.Clients", new[] { $"{ options.Name }.Models" });
             GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Services", GetReferences(ProjectType.Services, options)  , GetPackages(ProjectType.Services, options));
+            File.WriteAllText($"{options.Output}/{ options.Name }.Services/{ options.Name }Stub.cs", GetTemplate("Stub.tpl", new
+            {
+                SERVICE = options.Name
+            }));
+
             GenerateProject("TestProject.tpl", options.Output, $"{ options.Name }.Services.Tests", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
             
+
             if(options.Template == EntityFramework)
             {
                 GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Domain", GetReferences(ProjectType.Domain, options), GetPackages(ProjectType.Domain, options));
@@ -186,39 +193,68 @@ namespace Cybtans.Proto.Generator
         }        
 
         private string[] GetPackages(ProjectType type, Options options)
-        {            
-            if(options.Template == EntityFramework)
-            {
-                switch (type)
-                {
-                    case ProjectType.Services: return new[] 
-                    { 
-                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
-                        $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" />",
-                        $"<PackageReference Include=\"Cybtans.Messaging\" Version=\"{SDK_VERSION}\" />",
-                        $"<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"{SDK_VERSION}\" />",
-                        "<PackageReference Include=\"AutoMapper\" Version=\"9.0.0\" />",
-                        "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />"
-                    };
-                    case ProjectType.Domain: return new[]
-                    {
-                        $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />"
-                    };
-                    case ProjectType.DomainEF: return new[]
-                    {                        
-                        "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",                       
-                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
-                    };
-                    case ProjectType.WebAPI: return new[]
-                    {                        
-                        $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",                        
-                        $"<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"{SDK_VERSION}\" />",
-                        "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"7.0.0\" />",                        
-                    };
+        {
+            List<string> packages = new List<string>();
 
-                }
+
+            switch (type)
+            {
+                case ProjectType.Services:
+                    if (options.Template == EntityFramework)
+                    {
+                        packages.AddRange(new[]
+                        {
+                                $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
+                                $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" />",
+                                $"<PackageReference Include=\"Cybtans.Messaging\" Version=\"{SDK_VERSION}\" />",
+                                $"<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"{SDK_VERSION}\" />",
+                                "<PackageReference Include=\"AutoMapper\" Version=\"10.0.0\" />",
+                                "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />",
+                                "<PackageReference Include=\"FluentValidation\" Version=\"9.0.1\" />"
+                            });
+                    }
+                    break;
+                case ProjectType.Domain:
+                    packages.AddRange(new[]
+                    {
+                            $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
+                            $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"{SDK_VERSION}\" />"
+                        });
+                    break;
+                case ProjectType.DomainEF:
+                    packages.AddRange(new[]
+                    {
+                            "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",
+                            $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",
+                        });
+                    break;
+                case ProjectType.WebAPI:
+                    packages.AddRange(new[]
+                    {                        
+                        "<PackageReference Include=\"Swashbuckle.AspNetCore\" Version=\"5.5.1\" />",
+                        "<PackageReference Include=\"Swashbuckle.AspNetCore.ReDoc\" Version=\"5.5.1\" />",
+                        "<PackageReference Include=\"Microsoft.AspNetCore.Authentication.JwtBearer\" Version=\"3.1.6\" />",
+                        "<PackageReference Include=\"Serilog.AspNetCore\" Version=\"3.4.0\" />",
+                        $"<PackageReference Include=\"Cybtans.AspNetCore\" Version=\"{SDK_VERSION}\" />"
+                    });
+
+                    if (options.Template == EntityFramework)
+                    {
+                        packages.AddRange(new[]
+                        {
+                                $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",
+                                $"<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"{SDK_VERSION}\" />",
+                                $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" /> ",
+                                "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"8.0.1\" />",
+                                "<PackageReference Include=\"FluentValidation.AspNetCore\" Version=\"9.0.1\" />",
+                                "<PackageReference Include=\"Microsoft.EntityFrameworkCore.SqlServer\" Version=\"3.1.6\" />"
+                            });
+                    }
+                    break;
             }
-            return null;
+            
+            if(packages.Count == 0) return null;
+            return packages.ToArray();
         }
 
         private static string References(params string[] references)
@@ -241,9 +277,9 @@ namespace Cybtans.Proto.Generator
             File.WriteAllText($"{output}/{project}/{project}.csproj", content);
         }
 
-        private static void GenerateWebApi(Options options)
+        private  void GenerateWebApi(Options options)
         {
-            GenerateProject("WebAPI.tpl", options.Output, $"{ options.Name }.RestApi", new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
+            GenerateProject("WebAPI.tpl", options.Output, $"{ options.Name }.RestApi", GetReferences(ProjectType.WebAPI, options), GetPackages(ProjectType.WebAPI, options));
 
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Properties");
             Directory.CreateDirectory($"{options.Output}/{options.Name}.RestApi/Controllers");
