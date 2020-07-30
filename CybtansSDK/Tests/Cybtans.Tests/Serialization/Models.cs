@@ -21,7 +21,7 @@ namespace Cybtans.Serialization.Tests.Serialization
 
         public double SmallDouble { get; set; } = 5;
 
-        public double SmallDecimal { get; set; } = 700.50;
+        public decimal SmallDecimal { get; set; } = 700.50m;
 
         public float SmallFloat { get; set; } = 50;
 

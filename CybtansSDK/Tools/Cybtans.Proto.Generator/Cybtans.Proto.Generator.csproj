@@ -25,6 +25,7 @@
     <None Remove="Templates\cybtans.tpl" />
     <None Remove="Templates\DbContext.tpl" />
     <None Remove="Templates\ProtoServices.tpl" />
+    <None Remove="Templates\Stub.tpl" />
     <None Remove="Templates\WebAPI\appsettings.Development.tpl" />
     <None Remove="Templates\WebAPI\appsettings.tpl" />
     <None Remove="Templates\WebAPI\launchSettings.tpl" />
@@ -37,6 +38,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Templates\cybtans.tpl" />
+    <EmbeddedResource Include="Templates\Stub.tpl" />
     <EmbeddedResource Include="Templates\DbContext.tpl" />
     <EmbeddedResource Include="Templates\ProtoServices.tpl" />
     <EmbeddedResource Include="Templates\ServicesProject.tpl">

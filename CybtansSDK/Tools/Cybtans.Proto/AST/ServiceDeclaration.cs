@@ -87,6 +87,16 @@ namespace Cybtans.Proto.AST
 
             RequestType = scope.GetDeclaration(Request);
             ResponseType = scope.GetDeclaration(Response);
+
+            if(RequestType == null)
+            {
+                logger.AddError($"Type {RequestType} is not defined at {Line},{Column}");
+            }
+
+            if(ResponseType == null)
+            {
+                logger.AddError($"Type {ResponseType} is not defined at {Line},{Column}");
+            }
         }
 
         public RpcDeclaration Clone()
