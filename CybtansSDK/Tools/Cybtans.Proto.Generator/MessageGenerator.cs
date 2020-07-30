@@ -432,10 +432,10 @@ namespace Cybtans.Proto.Generator
 
         string GetAllTemplate = @"
 message GetAllRequest {
-	string filter = 1;
-	string sort = 2;
-	int32 skip = 3;
-	int32 take = 4;
+	string filter = 1 [optional = true];
+	string sort = 2 [optional = true];
+	int32 skip = 3 [optional = true];
+	int32 take = 4 [optional = true];
 }
 ";
 

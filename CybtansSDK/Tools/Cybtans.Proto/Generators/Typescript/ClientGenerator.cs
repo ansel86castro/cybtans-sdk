@@ -31,15 +31,11 @@ namespace Cybtans.Proto.Generators.Typescript
         {
             var importWriter = new CodeWriter();
             writer.Writer.AddWriter(importWriter, "IMPORT");
-
-            int i = 0;
+            
+            importWriter.AppendLine();            
             foreach (var item in _types)
             {
-                if (i++ > 0)
-                {
-                    importWriter.Append(", ");
-                }
-                importWriter.Append(item);
+                importWriter.Append(' ', 1).Append(item).Append(",").AppendLine();
             }
         }
 
