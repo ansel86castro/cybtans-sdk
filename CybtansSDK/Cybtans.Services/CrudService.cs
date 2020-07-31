@@ -214,9 +214,9 @@ namespace Cybtans.Services
 
         public string Sort { get; set; }
 
-        public int Skip { get; set; }
+        public int? Skip { get; set; }
 
-        public int Take { get; set; }
+        public int? Take { get; set; }
 
         public IReflectorMetadata GetAccesor()
         {
@@ -268,8 +268,8 @@ namespace Cybtans.Services
                 {
                     Filter => typeof(string),
                     Sort => typeof(string),
-                    Skip => typeof(int),
-                    Take => typeof(int),
+                    Skip => typeof(int?),
+                    Take => typeof(int?),
 
                     _ => throw new InvalidOperationException("property code not supported"),
                 };
@@ -296,8 +296,8 @@ namespace Cybtans.Services
                 {
                     case Filter: obj.Filter = (string)value; break;
                     case Sort: obj.Sort = (string)value; break;
-                    case Skip: obj.Skip = (int)value; break;
-                    case Take: obj.Take = (int)value; break;
+                    case Skip: obj.Skip = (int?)value; break;
+                    case Take: obj.Take = (int?)value; break;
 
                     default: throw new InvalidOperationException("property code not supported");
                 }
@@ -384,17 +384,22 @@ namespace Cybtans.Services
 
             var count = await query.LongCountAsync();
 
-            if(args.Take <= 0)
+            args.Skip ??= 0;
+
+            if(args.Take == null || args.Take <= 0)
             {
                 args.Take = 100; 
             }
 
+            var skip = (int)args.Skip;
+            var take = (int)args.Take;
+
             return new GetAllResponse<TEntityDto>
             {
-                Items = await _mapper.ProjectTo<TEntityDto>(query.Skip(args.Skip).Take(args.Take)).ToListAsync(),
+                Items = await _mapper.ProjectTo<TEntityDto>(query.Skip(skip).Take(take)).ToListAsync(),
                 TotalCount = count,
-                Page = args.Skip / args.Take,
-                TotalPages = count / args.Take + (count % args.Take == 0 ? 0 : 1)
+                Page = skip / take,
+                TotalPages = count / take + (count % take == 0 ? 0 : 1)
             }.Map<TGetAllResponse>();
         }
 
