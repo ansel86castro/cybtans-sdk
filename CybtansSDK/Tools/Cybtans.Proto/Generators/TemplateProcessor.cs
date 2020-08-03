@@ -69,7 +69,7 @@ namespace Cybtans.Proto.Generators
                 else if (c == '\t')
                     tabs++;
 
-                while (template[i] == '@' && i < template.Length)
+                while (i < template.Length && template[i] == '@')
                 {
                     var key = ReadSymbol(template, ref i);
                     if (key != null)

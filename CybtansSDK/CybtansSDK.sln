@@ -49,7 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Test.Domain.EF", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Testing", "Cybtans.Testing\Cybtans.Testing.csproj", "{39146D9C-6500-4827-8743-0371B2840D23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Tests.Services", "Tests\Cybtans.Tests.Services\Cybtans.Tests.Services.csproj", "{34829353-DACF-461F-A68B-C5B077181AE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Services", "Tests\Cybtans.Tests.Services\Cybtans.Tests.Services.csproj", "{34829353-DACF-461F-A68B-C5B077181AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Entities.Proto", "Cybtans.Entities.Proto\Cybtans.Entities.Proto.csproj", "{216A4B5C-D026-4D23-B010-1F404B824783}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +143,10 @@ Global
 		{34829353-DACF-461F-A68B-C5B077181AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34829353-DACF-461F-A68B-C5B077181AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34829353-DACF-461F-A68B-C5B077181AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{216A4B5C-D026-4D23-B010-1F404B824783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216A4B5C-D026-4D23-B010-1F404B824783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216A4B5C-D026-4D23-B010-1F404B824783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216A4B5C-D026-4D23-B010-1F404B824783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

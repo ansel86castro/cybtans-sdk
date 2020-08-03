@@ -25,6 +25,10 @@ namespace Cybtans.Proto.Generators.Typescript
             writer.Writer.Append($"import {{ @{{IMPORT}} }} from \'./{_modelsOptions.Filename}\';");
 
             writer.Writer.AppendLine();
+
+            writer.Writer.Append(templateQueryFunction);
+
+            writer.Writer.AppendLine();
         }
 
         public override void OnGenerationEnd(TsFileWriter writer)
@@ -32,14 +36,10 @@ namespace Cybtans.Proto.Generators.Typescript
             var importWriter = new CodeWriter();
             writer.Writer.AddWriter(importWriter, "IMPORT");
 
-            int i = 0;
+            importWriter.AppendLine();            
             foreach (var item in _types)
-            {
-                if (i++ > 0)
-                {
-                    importWriter.Append(", ");
-                }
-                importWriter.Append(item);
+            {                
+                importWriter.Append(' ',1).Append(item).Append(",").AppendLine();
             }
         }
 
@@ -94,7 +94,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "{}";
-                methods.Append($" : Observable<{responseType}>");
+                methods.Append($": Observable<{responseType}>");
 
                 methods.Append(" {").AppendLine();
 
@@ -104,12 +104,36 @@ namespace Cybtans.Proto.Generators.Typescript
                 body.Append($"return this.http.{options.Method.ToLowerInvariant()}<{responseType}>(");
                 if (path != null)
                 {
-                    body.AppendTemplate($"`{url}`", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
+                    body.AppendTemplate($"`{url}", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
                 }
                 else
                 {
-                    body.Append($"`{url}`");
+                    body.Append($"`{url}");
                 }
+
+                if ((options.Method == "GET" || options.Method == "DELETE") && request is MessageDeclaration msg)
+                {
+                    if (path != null)
+                    {
+                        var queryFields = msg.Fields.Except(path);
+                        if (queryFields.Any())
+                        {
+                            var queryObj = string.Join(", ", queryFields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
+                            body.Append($"${{ getQueryString({{ {queryObj} }}) }}");
+
+                            //body.Append(",").AppendLine();
+                            //body.Append(' ', 4).Append($"params: {{ {queryObj} }},");
+                        }
+                    }
+                    else
+                    {
+                        body.Append($"${{ getQueryString(request) }}");
+                        //var queryObj = string.Join(", ", msg.Fields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
+                        //body.Append(' ', 4).Append($"params: {{ {queryObj} }},");
+                    }
+                }
+
+                body.Append("`");
 
                 if (options.Method == "POST" || options.Method == "PUT")
                 {
@@ -120,34 +144,13 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
                 {
-                    body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer')");
+                    body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer'),");
                 }
                 else
                 {
-                    body.Append(' ', 4).Append("headers: this.headers");
+                    body.Append(' ', 4).Append("headers: this.headers,");
                 }
-
-
-                if ((options.Method == "GET" || options.Method == "DELETE") && request is MessageDeclaration msg)
-                {
-                    if (path != null)
-                    {
-                        var queryFields = msg.Fields.Except(path);
-                        if (queryFields.Any())
-                        {
-                            var queryObj = string.Join(", ", queryFields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
-
-                            body.Append(",").AppendLine();
-                            body.Append(' ', 4).Append($"params: {{ {queryObj} }}");
-                        }
-                    }
-                    else
-                    {
-                        body.Append(",").AppendLine();
-                        body.Append(' ', 4).Append($"params: request");
-                    }
-                }
-
+            
                 body.AppendLine();
                 body.Append("});");
 
@@ -169,17 +172,40 @@ namespace Cybtans.Proto.Generators.Typescript
 
         string serviceTemplate =
 @"@Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class @{NAME} {  
 
     private headers =  new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+       Accept: 'application/json',
     });
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient) {}
     @{METHODS}
+
+}
+";
+
+        string templateQueryFunction =
+@"
+function getQueryString(data:any): string|undefined {
+  if(!data) return '';
+  let args = [];
+  for (const key in data) {
+      if (data.hasOwnProperty(key)) {                
+          const element = data[key];
+          if(element){
+              if(element instanceof Array){
+                  element.forEach(e=>args.push(key+'='+ encodeURIComponent(e)) );
+              }else{
+                  args.push(key+'='+ encodeURIComponent(element));
+              }
+          }
+      }
+  }
+
+  return args.length > 0 ? '?' + args.join('&') : '';   
 }
 ";
     }
