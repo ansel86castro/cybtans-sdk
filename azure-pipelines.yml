@@ -3,15 +3,14 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-#name: $(majorMinorVersion).$(patchVersion)
+name: $(majorMinorPathVersion)-rc-($buildVersion)
 
 # pipeline variables
 variables:
-   majorMinorVersion: 1.0
+   majorMinorPathVersion: 1.0.16
   # semanticVersion counter is automatically incremented by one in each execution of pipeline
-  # second parameter is seed value to reset to every time the referenced majorMinorVersion is changed
-   patchVersion: $[counter(variables['majorMinorVersion'], 0)] 
-
+  # second parameter is seed value to reset to every time the referenced majorMinorPathVersion is changed
+   buildVersion: $[counter(variables['majorMinorPathVersion'], 1)] 
 
 trigger:
 - master
@@ -31,7 +30,8 @@ steps:
   inputs:
     command: 'build'
     projects: '**/CybtansSDK.sln'
-    arguments: '--configuration $(configuration)'  
+    arguments: '--configuration $(configuration)'
+    versioningScheme: 'byBuildNumber' 
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Cybtans SDK'
@@ -45,7 +45,16 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/CybtansSDK.sln'
-    configuration: '$(configuration)'
+    configuration: '$(configuration)'    
+    arguments: -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
     nobuild: true
-    includesymbols: false
+    versioningScheme: 'byBuildNumber' 
 
+- task: NuGetCommand@2
+  displayName: 'Push to Artifacts'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'f890b23d-d5ed-45bb-8308-1fe776f4fa8a/c8742fb6-b06b-42df-b89a-4dc8a8b66de6'
+    allowPackageConflicts: true
