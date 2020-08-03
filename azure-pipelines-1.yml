@@ -54,10 +54,9 @@ steps:
     versioningScheme: byEnvVar
 
 - task: NuGetCommand@2
-  displayName: 'Push to Artifacts'
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'f890b23d-d5ed-45bb-8308-1fe776f4fa8a/c8742fb6-b06b-42df-b89a-4dc8a8b66de6'
-    allowPackageConflicts: true
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;!$(Build.ArtifactStagingDirectory)/**/Cybtans*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Cybtans Nuget'
+    arguments: '--skip-duplicate'
