@@ -9,5 +9,17 @@
       }
     }
   },
-  "AllowedHosts": "*"
+  
+  "AllowedHosts": "*",
+  
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(LocalDb)\\MSSQLLocalDB;Database=@{SERVICE};Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+
+  "Identity": {
+    "Authority": "https://localhost:6001",    
+    "Swagger": "https://localhost:6001",
+    "Secret": "Secret"
+  }
+
 }

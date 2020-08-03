@@ -22,6 +22,7 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Object = new PrimitiveType("object", typeof(object));
         public static readonly PrimitiveType Void = new PrimitiveType("void", typeof(void));
         public static readonly PrimitiveType Guid = new PrimitiveType("guid", typeof(Guid));
+        public static readonly PrimitiveType Decimal = new PrimitiveType("decimal", typeof(decimal));
 
         public PrimitiveType(string name, Type clrType)
         {
@@ -62,6 +63,7 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(object)) return Object;
             else if (type == typeof(void)) return Void;
             else if (type == typeof(Dictionary<,>)) return Map;
+            else if (type == typeof(decimal)) return Decimal;
             else return null;
         }
     }

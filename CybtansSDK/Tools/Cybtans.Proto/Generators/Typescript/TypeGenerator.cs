@@ -77,7 +77,7 @@ namespace Cybtans.Proto.Generators.Typescript
     
         public string IsOptional(FieldDeclaration field)
         {
-            if (field.Option.Optional && field.Type.TypeDeclaration.Nullable)
+            if (field.Option.Optional || field.Type.TypeDeclaration.Nullable)
             {
                 //check ist the type is nullable
                 return "?";

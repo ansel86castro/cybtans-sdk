@@ -20,6 +20,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 case "uint32":
                 case "uint64":
                 case "float":
+                case "decimal":
                 case "double": return "number";
                 case "bool": return "boolean";
                 case "string": return "string";
