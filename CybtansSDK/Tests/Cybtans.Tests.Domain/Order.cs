@@ -18,6 +18,6 @@ namespace Cybtans.Test.Domain
 
         public virtual Customer Customer { get; set; }
 
-        public virtual ICollection<OrderItem> Items { get; set; } 
+        public virtual ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();
     }
 }

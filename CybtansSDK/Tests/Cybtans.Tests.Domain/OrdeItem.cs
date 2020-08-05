@@ -4,7 +4,7 @@ using System;
 namespace Cybtans.Test.Domain
 {
     [GenerateMessage]
-    public class OrderItem: Entity<int>
+    public class OrderItem: Entity<Guid>
     {
         public string ProductName { get; set; }
 
@@ -13,5 +13,7 @@ namespace Cybtans.Test.Domain
         public float Discount { get; set; }
 
         public Guid OrderId { get; set; }
+
+        public virtual Order Order { get; set; }
     }
 }
