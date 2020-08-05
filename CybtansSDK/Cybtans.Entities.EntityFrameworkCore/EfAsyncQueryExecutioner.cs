@@ -9,6 +9,10 @@ namespace Cybtans.Entities.EntityFrameworkCore
 {
     public class EfAsyncQueryExecutioner : IAsyncQueryExecutioner
     {
+        public static void Setup()
+        {
+            IAsyncQueryExecutioner.Executioner = new EfAsyncQueryExecutioner();
+        }
 
         public Task<int> CountAsync<T>(IQueryable<T> query)
         {

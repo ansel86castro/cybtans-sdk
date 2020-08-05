@@ -477,7 +477,7 @@ message GetAllRequest {
                 writer.Append($"CreateMap<{GetTypeName(type)},{type.Name}>();").AppendLine();
             }
 
-            File.WriteAllText($"{options.GetMappingOutputPath()}/{options.ServiceName}AutoMapperProfile.cs", 
+            File.WriteAllText($"{options.GetMappingOutputPath()}/GeneratedAutoMapperProfile.cs", 
             TemplateProcessor.Process(MappingTemplate, new
             {
                 ENTITIES_NAMESPACE = ns,
@@ -555,9 +555,9 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
-    public class @{ SERVICE }AutoMapperProfile:Profile
+    public class GeneratedAutoMapperProfile:Profile
     {
-        public @{ SERVICE }AutoMapperProfile()
+        public GeneratedAutoMapperProfile()
         {
            @{ MAPPINGS }        
         }

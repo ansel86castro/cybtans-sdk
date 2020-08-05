@@ -72,11 +72,22 @@ namespace Cybtans.Entities.EntiyFrameworkCore
        
         public virtual void Update(T item)
         {
+            if (item is IAuditableEntity au)
+            {              
+                au.UpdateDate = DateTime.UtcNow;
+            }
             _dbSet.Update(item);         
         }
 
         public virtual void UpdateRange(IEnumerable<T> items)
         {
+            foreach (var item in items)
+            {
+                if (item is IAuditableEntity au)
+                {
+                    au.UpdateDate = DateTime.UtcNow;
+                }
+            }
             _dbSet.UpdateRange(items);
         }
 
@@ -97,6 +108,18 @@ namespace Cybtans.Entities.EntiyFrameworkCore
 
         public virtual void AddRange(IEnumerable<T> items)
         {
+            foreach (var item in items)
+            {
+                if (item is IAuditableEntity au)
+                {
+                    var principal = Thread.CurrentPrincipal;
+                    if (principal?.Identity?.Name != null)
+                    {
+                        au.Creator = principal?.Identity?.Name;
+                    }
+                    au.CreateDate = DateTime.UtcNow;
+                }
+            }
             _dbSet.AddRange(items);
         }
 

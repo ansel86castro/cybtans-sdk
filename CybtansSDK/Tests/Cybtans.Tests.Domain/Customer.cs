@@ -12,5 +12,8 @@ namespace Cybtans.Test.Domain
 
         public string SecondLastName { get; set; }
 
+        public Guid? CustomerProfileId { get; set; }
+
+        public virtual CustomerProfile CustomerProfile { get; set; }
     }
 }
