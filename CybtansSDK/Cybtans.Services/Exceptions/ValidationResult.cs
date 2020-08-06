@@ -6,10 +6,25 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Services
 {
-    public class ValidationResult
+
+    public class ErrorInfo
     {
         public string ErrorMessage { get; set; }
 
+        public string StackTrace { get; set; }
+
+        public int ErrorCode { get; set; }
+
+        public ErrorInfo() { }
+
+        public ErrorInfo(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
+        }
+    }
+
+    public class ValidationResult:ErrorInfo
+    {        
         public Dictionary<string, List<string>> Errors { get; private set; }
 
         public ValidationResult()

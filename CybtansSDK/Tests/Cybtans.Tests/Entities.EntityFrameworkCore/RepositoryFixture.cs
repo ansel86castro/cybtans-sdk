@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Entities.EntityFrameworkCore
@@ -89,27 +90,30 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
 
         public static async Task Seed(AdventureContext context)
         {
-            context.OrderStates.AddRange(
-                new OrderState { Id = 1, Name = "Draft" },
-                new OrderState { Id = 2, Name = "Submitted" },
-                new OrderState { Id = 3, Name = "Processed" },
-                new OrderState { Id = 4, Name = "Shipped" },
-                new OrderState { Id = 5, Name = "Delivered" });
-
-            context.Add(new Customer
+            if (!context.OrderStates.Any())
             {
-                Id = CustomerId,
-                Name = "Test",
-                FirstLastName = "Test",
-                SecondLastName = "Test",
-                CustomerProfile = new CustomerProfile
-                {
-                    Id = CustomerProfileId,
-                     Name ="Test Profile"
-                }
-            });
+                context.OrderStates.AddRange(
+                    new OrderState { Id = 1, Name = "Draft" },
+                    new OrderState { Id = 2, Name = "Submitted" },
+                    new OrderState { Id = 3, Name = "Processed" },
+                    new OrderState { Id = 4, Name = "Shipped" },
+                    new OrderState { Id = 5, Name = "Delivered" });
 
-            await context.SaveChangesAsync();
+                context.Add(new Customer
+                {
+                    Id = CustomerId,
+                    Name = "Test",
+                    FirstLastName = "Test",
+                    SecondLastName = "Test",
+                    CustomerProfile = new CustomerProfile
+                    {
+                        Id = CustomerProfileId,
+                        Name = "Test Profile"
+                    }
+                });
+
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

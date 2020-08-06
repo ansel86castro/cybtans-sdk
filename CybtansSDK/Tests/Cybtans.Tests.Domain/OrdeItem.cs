@@ -14,6 +14,7 @@ namespace Cybtans.Test.Domain
 
         public Guid OrderId { get; set; }
 
+        [MessageExcluded]
         public virtual Order Order { get; set; }
     }
 }

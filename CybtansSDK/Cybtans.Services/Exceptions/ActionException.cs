@@ -18,7 +18,7 @@ namespace Cybtans.Services
         {
         }
 
-        public ActionException(HttpStatusCode statusCode, object response, string message = null) : base(message)
+        public ActionException(HttpStatusCode statusCode, object response, string message = null) : base(message ?? response?.ToString())
         {
             StatusCode = statusCode;
             Response = response;
@@ -31,6 +31,6 @@ namespace Cybtans.Services
 
         public HttpStatusCode? StatusCode { get; set; }
 
-        public object Response { get; set; }
+        public object Response { get; private set; }
     }
 }

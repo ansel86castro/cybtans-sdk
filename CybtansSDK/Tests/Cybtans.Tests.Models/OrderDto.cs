@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.Collections.Generic;
 
 namespace Cybtans.Tests.Models
 {
@@ -16,6 +17,8 @@ namespace Cybtans.Tests.Models
 		public OrderStateDto OrderState {get; set;}
 		
 		public CustomerDto Customer {get; set;}
+		
+		public List<OrderItemDto> Items {get; set;}
 		
 		public Guid? TenantId {get; set;}
 		
@@ -41,14 +44,15 @@ namespace Cybtans.Tests.Models
 		public const int OrderStateId = 3;
 		public const int OrderState = 4;
 		public const int Customer = 5;
-		public const int TenantId = 6;
-		public const int Id = 7;
-		public const int CreateDate = 8;
-		public const int UpdateDate = 9;
-		public const int Creator = 10;
+		public const int Items = 6;
+		public const int TenantId = 7;
+		public const int Id = 8;
+		public const int CreateDate = 9;
+		public const int UpdateDate = 10;
+		public const int Creator = 11;
 		private readonly int[] _props = new []
 		{
-			Description,CustomerId,OrderStateId,OrderState,Customer,TenantId,Id,CreateDate,UpdateDate,Creator
+			Description,CustomerId,OrderStateId,OrderState,Customer,Items,TenantId,Id,CreateDate,UpdateDate,Creator
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -62,6 +66,7 @@ namespace Cybtans.Tests.Models
 		       OrderStateId => "OrderStateId",
 		       OrderState => "OrderState",
 		       Customer => "Customer",
+		       Items => "Items",
 		       TenantId => "TenantId",
 		       Id => "Id",
 		       CreateDate => "CreateDate",
@@ -81,6 +86,7 @@ namespace Cybtans.Tests.Models
 		        "OrderStateId" => OrderStateId,
 		        "OrderState" => OrderState,
 		        "Customer" => Customer,
+		        "Items" => Items,
 		        "TenantId" => TenantId,
 		        "Id" => Id,
 		        "CreateDate" => CreateDate,
@@ -100,6 +106,7 @@ namespace Cybtans.Tests.Models
 		        OrderStateId => typeof(int),
 		        OrderState => typeof(OrderStateDto),
 		        Customer => typeof(CustomerDto),
+		        Items => typeof(List<OrderItemDto>),
 		        TenantId => typeof(Guid?),
 		        Id => typeof(Guid),
 		        CreateDate => typeof(DateTime),
@@ -120,6 +127,7 @@ namespace Cybtans.Tests.Models
 		        OrderStateId => obj.OrderStateId,
 		        OrderState => obj.OrderState,
 		        Customer => obj.Customer,
+		        Items => obj.Items,
 		        TenantId => obj.TenantId,
 		        Id => obj.Id,
 		        CreateDate => obj.CreateDate,
@@ -140,6 +148,7 @@ namespace Cybtans.Tests.Models
 		        case OrderStateId:  obj.OrderStateId = (int)value;break;
 		        case OrderState:  obj.OrderState = (OrderStateDto)value;break;
 		        case Customer:  obj.Customer = (CustomerDto)value;break;
+		        case Items:  obj.Items = (List<OrderItemDto>)value;break;
 		        case TenantId:  obj.TenantId = (Guid?)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		        case CreateDate:  obj.CreateDate = (DateTime)value;break;

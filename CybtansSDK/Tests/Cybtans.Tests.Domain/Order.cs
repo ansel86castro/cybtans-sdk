@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Cybtans.Test.Domain
 {
-    [GenerateMessage(Service = ServiceType.Default)]
+    [GenerateMessage(Service = ServiceType.Interface)]
     public class Order:DomainTenantEntity<Guid>
     {
         public string Description { get; set; }        

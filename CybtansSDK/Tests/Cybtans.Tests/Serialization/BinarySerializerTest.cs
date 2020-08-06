@@ -1,5 +1,6 @@
 using Cybtans.Serialization;
 using Cybtans.Serialization.Tests.Models;
+using Cybtans.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -155,6 +156,18 @@ namespace Cybtans.Serialization.Tests.Serialization
             Assert.Equal(products.Count, result.Count);
 
             AssertProducts(products, result);
+        }
+
+        [Fact]
+        public void SerializeValidationResult()
+        {
+            var result = new ValidationResult("An error occurred while updating the entries. See the inner exception for details.\r\n----Inner Exception-- -\r\nSQLite Error 19: 'UNIQUE constraint failed: Ordes.Id'.\r\n");
+
+            var bytes = BinaryConvert.Serialize(result);
+            Assert.NotEmpty(bytes);
+
+            var obj = BinaryConvert.Deserialize<ValidationResult>(bytes);
+            Assert.NotNull(obj);
         }
 
         [Theory]

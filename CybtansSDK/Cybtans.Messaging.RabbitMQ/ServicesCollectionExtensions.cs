@@ -15,7 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         IMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action);
     }
-
    
     internal class MessageQueueBuilder : IMessageQueueBuilder
     {
@@ -72,6 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMessageQueueBuilder AddMessageQueue(this IServiceCollection services, IConfiguration configuration)
         {         
             MessageQueueBuilder builder = new MessageQueueBuilder(configuration);
+
             services.AddSingleton<IMessageQueue>(provider => builder.Create(provider));
             return builder;
         }

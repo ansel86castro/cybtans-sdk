@@ -3,7 +3,7 @@ using System;
 
 namespace Cybtans.Test.Domain
 {
-    [GenerateMessage(Service = ServiceType.Default)]
+    [GenerateMessage(Service = ServiceType.Interface)]
     public class Customer: DomainTenantEntity<Guid>
     {
         public string Name { get; set; }

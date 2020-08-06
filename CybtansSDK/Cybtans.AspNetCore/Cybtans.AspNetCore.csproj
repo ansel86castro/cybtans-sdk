@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
     <ProjectReference Include="..\Cybtans.Services\Cybtans.Services.csproj" />
   </ItemGroup>

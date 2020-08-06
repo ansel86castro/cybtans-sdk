@@ -3,17 +3,20 @@ using Refit;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cybtans.Refit
 {
     public class CybtansContentSerializer : IContentSerializer
     {
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer(Encoding.UTF8));
+
         private readonly Encoding _encoding;
         private readonly string _mediaType;
         private readonly IContentSerializer _defaultSerializer;
 
-        public CybtansContentSerializer(Encoding encoding, IContentSerializer defaultSerializer)
+        private CybtansContentSerializer(Encoding encoding, IContentSerializer defaultSerializer)
         {
             _encoding = encoding;
             _mediaType = $"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}";
@@ -28,16 +31,17 @@ namespace Cybtans.Refit
         {
             if (content.Headers.ContentType != null && content.Headers.ContentType.MediaType != BinarySerializer.MEDIA_TYPE)
             {
-                return await _defaultSerializer.DeserializeAsync<T>(content);
+                return await _defaultSerializer.DeserializeAsync<T>(content).ConfigureAwait(false);
             }
 
-            var serializer = new BinarySerializer(_encoding);
-            return serializer.Deserialize<T>(await content.ReadAsStreamAsync());            
+            var serializer = _encoding == Encoding.UTF8 ? Serializer.Value : new BinarySerializer(_encoding);
+            return serializer.Deserialize<T>(await content.ReadAsStreamAsync().ConfigureAwait(false));        
         }
 
         public Task<HttpContent> SerializeAsync<T>(T item)
-        {            
-            var serializer = new BinarySerializer(_encoding);
+        {
+            var serializer = _encoding == Encoding.UTF8 ? Serializer.Value : new BinarySerializer(_encoding);
+
             var bytes = serializer.Serialize(item);
 
             var httpContent = new ByteArrayContent(bytes);
