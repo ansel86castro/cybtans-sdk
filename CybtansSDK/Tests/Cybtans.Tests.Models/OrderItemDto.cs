@@ -15,8 +15,6 @@ namespace Cybtans.Tests.Models
 		
 		public Guid OrderId {get; set;}
 		
-		public OrderDto Order {get; set;}
-		
 		public Guid Id {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
@@ -32,11 +30,10 @@ namespace Cybtans.Tests.Models
 		public const int Price = 2;
 		public const int Discount = 3;
 		public const int OrderId = 4;
-		public const int Order = 5;
-		public const int Id = 6;
+		public const int Id = 5;
 		private readonly int[] _props = new []
 		{
-			ProductName,Price,Discount,OrderId,Order,Id
+			ProductName,Price,Discount,OrderId,Id
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -49,7 +46,6 @@ namespace Cybtans.Tests.Models
 		       Price => "Price",
 		       Discount => "Discount",
 		       OrderId => "OrderId",
-		       Order => "Order",
 		       Id => "Id",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -64,7 +60,6 @@ namespace Cybtans.Tests.Models
 		        "Price" => Price,
 		        "Discount" => Discount,
 		        "OrderId" => OrderId,
-		        "Order" => Order,
 		        "Id" => Id,
 		
 		        _ => -1,
@@ -79,7 +74,6 @@ namespace Cybtans.Tests.Models
 		        Price => typeof(float),
 		        Discount => typeof(float),
 		        OrderId => typeof(Guid),
-		        Order => typeof(OrderDto),
 		        Id => typeof(Guid),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -95,7 +89,6 @@ namespace Cybtans.Tests.Models
 		        Price => obj.Price,
 		        Discount => obj.Discount,
 		        OrderId => obj.OrderId,
-		        Order => obj.Order,
 		        Id => obj.Id,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -111,7 +104,6 @@ namespace Cybtans.Tests.Models
 		        case Price:  obj.Price = (float)value;break;
 		        case Discount:  obj.Discount = (float)value;break;
 		        case OrderId:  obj.OrderId = (Guid)value;break;
-		        case Order:  obj.Order = (OrderDto)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");

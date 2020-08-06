@@ -1,5 +1,6 @@
 ﻿using Cybtans.Testing;
 using Cybtans.Tests.Clients;
+using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,12 @@ namespace Cybtans.Tests.Integrations
     public class CustomerTest : IClassFixture<IntegrationFixture>
     {
         IntegrationFixture _fixture;
-        ITestOutputHelper _testOutputHelper;
-        HttpClient _httpClient;
+        ITestOutputHelper _testOutputHelper;        
 
         public CustomerTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
-            _testOutputHelper = testOutputHelper;
-            _httpClient = fixture.CreateClient();
+            _testOutputHelper = testOutputHelper;            
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace Cybtans.Tests.Integrations
             var customer = await CreateCustomerInternal("Integration");
             Assert.NotEqual(new DateTime(), customer.CreateDate);
 
-            var client = _fixture.GetClient<ICustomerService>(_httpClient);
+            var client = _fixture.GetClient<ICustomerService>();
 
             var result =await client.GetAll(new GetAllRequest
             {
@@ -47,7 +46,7 @@ namespace Cybtans.Tests.Integrations
             var customer = await CreateCustomerInternal("Integration");
             customer.SecondLastName = "LastName";
 
-            var client = _fixture.GetClient<ICustomerService>(_httpClient);
+            var client = _fixture.GetClient<ICustomerService>();
             var result = await client.Update(new UpdateCustomerRequest
             {
                 Id = customer.Id,
@@ -62,7 +61,7 @@ namespace Cybtans.Tests.Integrations
         [Fact]
         public async Task DeleteCustomer()
         {
-            var client = _fixture.GetClient<ICustomerService>(_httpClient);
+            var client = _fixture.GetClient<ICustomerService>();
             var customer = await CreateCustomerInternal("Integration");
             var result = await client.GetAll(new GetAllRequest
             {
@@ -93,7 +92,7 @@ namespace Cybtans.Tests.Integrations
                 }
             };
 
-            var client = _fixture.GetClient<ICustomerService>(_httpClient);
+            var client = _fixture.GetClient<ICustomerService>();
             var result = await client.Create(customer);
 
             Assert.NotNull(result);
@@ -106,6 +105,17 @@ namespace Cybtans.Tests.Integrations
 
             return result;
 
+        }
+
+        [Fact]
+        public async Task GetCustomer()
+        {
+            var client = _fixture.GetClient<ICustomerService>();
+            var customer = await client.Get(RepositoryFixture.CustomerId);
+
+            Assert.NotNull(customer);
+            Assert.NotNull(customer.CustomerProfile);
+            Assert.Equal(RepositoryFixture.CustomerId, customer.Id);
         }
 
     }

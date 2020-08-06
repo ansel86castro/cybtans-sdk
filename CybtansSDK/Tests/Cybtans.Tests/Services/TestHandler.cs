@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cybtans.Tests.Services
+namespace Cybtans.Tests
 {
     public class TestHandler : DelegatingHandler
     {
