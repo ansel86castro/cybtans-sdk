@@ -35,7 +35,11 @@ namespace Cybtans.Expressions.Ast
         {
             ExpressionType expType = ExpressionType.Custom;
             if (type == typeof(int) || type == typeof(int?) ||
-                type == typeof(short) || type == typeof(short?))
+                type == typeof(short) || type == typeof(short?) ||
+                type == typeof(long) || type == typeof(long?) ||
+                type == typeof(byte) || type == typeof(byte?) ||
+                type == typeof(uint) || type == typeof(uint?) ||
+                type == typeof(ulong) || type == typeof(ulong?))
             {
                 expType = ExpressionType.Integer;
             }
@@ -44,7 +48,8 @@ namespace Cybtans.Expressions.Ast
                 expType = ExpressionType.Bool;
             }
             else if (type == typeof(double) || type == typeof(double?) ||
-                      type == typeof(float) || type == typeof(float?))
+                      type == typeof(float) || type == typeof(float?) ||
+                      type == typeof(decimal) || type == typeof(decimal?))
             {
                 expType = ExpressionType.Double;
             }
@@ -56,6 +61,10 @@ namespace Cybtans.Expressions.Ast
             {
                 expType = ExpressionType.String;
             }
+            else if (type == typeof(Guid) || type == typeof(Guid?))
+            {
+                expType = ExpressionType.String;
+            }
             return expType;
         }
 
@@ -63,17 +72,29 @@ namespace Cybtans.Expressions.Ast
         {
             expLeft = left.GenerateLinqExpression(context);
 
-            if (expLeft.Type == typeof(DateTime) || expLeft.Type == typeof(DateTime?))
+            if ((expLeft.Type == typeof(DateTime) || expLeft.Type == typeof(DateTime?)) ||
+               ( expLeft.Type == typeof(Guid) || expLeft.Type == typeof(Guid?)))
             {
                 if (right.Type == ExpressionType.String && right is LiteralExpression)
                 {
                     var literal = (LiteralExpression)right;
-                    
-                    if (DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+
+                    if (expLeft.Type == typeof(Guid) || expLeft.Type == typeof(Guid?))
                     {
-                        throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
+                        if (!Guid.TryParse(literal.Value, out var guid))
+                        {
+                            throw new RecognitionException($"Invalid guid format '{literal.Value}'", literal.Col, literal.Row);
+                        }
+                        expRight = LinqExpression.Constant(guid);
                     }
-                    expRight = LinqExpression.Constant(date);
+                    else
+                    {
+                        if (DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                        {
+                            throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
+                        }
+                        expRight = LinqExpression.Constant(date);
+                    }
                 }
                 else
                 {
@@ -83,14 +104,29 @@ namespace Cybtans.Expressions.Ast
             else
             {
                 expRight = right.GenerateLinqExpression(context);
-                if ((expRight.Type == typeof(DateTime) || expLeft.Type == typeof(DateTime?)) && left.Type == ExpressionType.String && left is LiteralExpression)
+                if ((expRight.Type == typeof(DateTime) || expLeft.Type == typeof(DateTime?)) ||
+                    (expRight.Type == typeof(Guid) || expLeft.Type == typeof(Guid?)))
                 {
-                    var literal = (LiteralExpression)left;
-                    if ( DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                    if (left.Type == ExpressionType.String && left is LiteralExpression)
                     {
-                        throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
+                        var literal = (LiteralExpression)left;
+                        if (expRight.Type == typeof(Guid) || expLeft.Type == typeof(Guid?))
+                        {
+                            if (!Guid.TryParse(literal.Value, out var guid))
+                            {
+                                throw new RecognitionException($"Invalid guid format '{literal.Value}'", literal.Col, literal.Row);
+                            }
+                            expLeft = LinqExpression.Constant(guid);
+                        }
+                        else
+                        {
+                            if (DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                            {
+                                throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
+                            }
+                            expLeft = LinqExpression.Constant(date);
+                        }
                     }
-                    expLeft = LinqExpression.Constant(date);
                 }
             }
         }

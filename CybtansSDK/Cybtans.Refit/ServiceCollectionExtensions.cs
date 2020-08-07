@@ -2,6 +2,7 @@
 using Cybtans.Serialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Refit;
 using System;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where T:class
 		{
             var serviceName = typeof(T).Name;
-            return AddClient<T>(services, configuration.GetSection($"{serviceName}:BaseUrl"));   
+            return AddClient<T>(services, configuration.GetValue<string>($"{serviceName}:BaseUrl"));   
         }
 
         public static IHttpClientBuilder AddClient<T>(this IServiceCollection services, string baseUrl)
@@ -34,6 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.BaseAddress = new Uri(baseUrl);
                 c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");
             })
+            .AddHttpMessageHandler(()=> new HttpClientErrorHandler())
             .AddTypedClient(c => RestService.For<T>(c, settings));            
         }
 
@@ -49,15 +51,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.BaseAddress = new Uri(baseUrl);
                 c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");
             });
+            builder.AddHttpMessageHandler(() => new HttpClientErrorHandler());
 
-            builder.Services.AddTransient(interfaceType, s =>
+            builder.Services.TryAddSingleton(interfaceType, s =>
             {
                 var httpClientFactory = s.GetRequiredService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient(builder.Name);
 
                 return RestService.For(interfaceType, httpClient, settings);
-            });
-
+            });            
+           
             return builder;
         }
 

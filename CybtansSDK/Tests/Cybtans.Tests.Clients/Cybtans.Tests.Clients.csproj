@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>  
+    <PackageReference Include="Refit" Version="5.1.67" />    
+  </ItemGroup>
+  
+  <ItemGroup>
+  	<ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
+  	<ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
+  </ItemGroup>  
+
+</Project>

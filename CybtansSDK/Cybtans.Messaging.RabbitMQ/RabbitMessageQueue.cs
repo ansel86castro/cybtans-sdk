@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 namespace Cybtans.Messaging.RabbitMQ
 {
     public sealed class RabbitMessageQueue : IMessageQueue, IDisposable
-    {     
+    {       
         private bool _disposed;
         private readonly IConnectionFactory _connectionFactory;
         private readonly ILogger<RabbitMessageQueue>? _logger;
@@ -239,7 +240,12 @@ namespace Cybtans.Messaging.RabbitMQ
                 _consumeExchanges.Add(exchange);
             }
         }
-     
+
+        public Task Publish(byte[] bytes, string exchange, string topic)
+        {            
+            return Task.Run(() => PublishInternal(exchange, topic, bytes));
+        }
+
         public Task Publish(object message, string? exchange, string? topic)
         {
             if (exchange == null || topic == null)
@@ -388,7 +394,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 {
                     _logger?.LogDebug("Message Dispatched {Exchange} {Topic}", exchage, topic);
 
-                    await _subscriptionManager.HandleMessage(exchage, topic, data);
+                    await _subscriptionManager.HandleMessage(exchage, topic, data).ConfigureAwait(false);
                     if (deliveryTag > 0)
                     {
                         _consumerChannel?.BasicAck(deliveryTag, multiple: false);

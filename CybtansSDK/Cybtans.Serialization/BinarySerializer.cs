@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -167,14 +168,23 @@ namespace Cybtans.Serialization
                     WriteLenght(stream, array.Length, Types.TYPE_ARRAY_8, Types.TYPE_ARRAY_16, Types.TYPE_ARRAY_32);
                     WriteArray(stream, array);
                     break;
-                case IList list:
-                    WriteLenght(stream, list.Count, Types.TYPE_LIST_8, Types.TYPE_LIST_16, Types.TYPE_LIST_32);
-                    WriteList(stream, list);
-                    break;
-                case IDictionary dict:
-                    WriteLenght(stream, dict.Count, Types.TYPE_MAP_8, Types.TYPE_MAP_16, Types.TYPE_MAP_32);
-                    WriteMap(stream, dict);
-                    break;
+                case ICollection collection:
+                    if (collection is IDictionary dict)
+                    {
+                        WriteLenght(stream, dict.Count, Types.TYPE_MAP_8, Types.TYPE_MAP_16, Types.TYPE_MAP_32);
+                        WriteMap(stream, dict);
+                    }
+                    else if(collection is IList list)
+                    {
+                        WriteLenght(stream, list.Count, Types.TYPE_LIST_8, Types.TYPE_LIST_16, Types.TYPE_LIST_32);
+                        WriteList(stream, list);
+                    }
+                    else
+                    {
+                        WriteLenght(stream, collection.Count, Types.TYPE_LIST_8, Types.TYPE_LIST_16, Types.TYPE_LIST_32);
+                        WriteEnumerable(stream, collection);
+                    }
+                    break;                
                 case IReflectorMetadataProvider accesorProvider:
                     WriteObject(stream, accesorProvider);
                     break;
@@ -229,8 +239,10 @@ namespace Cybtans.Serialization
             int bytesOffset = 0;
 
             for (int i = 0; i < loops; i++)
-            {
-                int numBytes = _encoding.GetBytes(chars.Slice(bytesOffset / bytesPerChar), bytes);
+            {                
+                int len = Math.Min(bytes.Length, bytesCount - bytesOffset);
+                
+                int numBytes = _encoding.GetBytes(chars.Slice(bytesOffset / bytesPerChar, len / bytesPerChar), bytes);
                 stream.Write(bytes.Slice(0, numBytes));
 
                 bytesOffset += numBytes;
@@ -262,6 +274,14 @@ namespace Cybtans.Serialization
             {
                 Serialize(stream, list[i]);
             }
+        }
+
+        private void WriteEnumerable(Stream stream, IEnumerable collection)
+        {
+            foreach (var item in collection)
+            {
+                Serialize(stream, item);
+            }            
         }
 
         protected void WriteMap(Stream stream, IDictionary map)
@@ -601,34 +621,35 @@ namespace Cybtans.Serialization
             var value = ReadNumber<long>(stream);
             return EPOCH.AddTicks(value);
         }
+               
+        private ICollection ReadArray8(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<byte>(stream), arrayType, true);
+        private ICollection ReadArray16(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<ushort>(stream), arrayType, true);
+        private ICollection ReadArray32(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<int>(stream), arrayType, true);
+     
+        private ICollection ReadList8(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<byte>(stream), arrayType, false);
+        private ICollection ReadList16(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<ushort>(stream), arrayType, false);
+        private ICollection ReadList32(Stream stream, Type? arrayType) => ReadCollection(stream, ReadNumber<int>(stream), arrayType, false);
 
-        private Array ReadArray8(Stream stream, Type? arrayType) => ReadArray(stream, ReadNumber<byte>(stream), arrayType);
-        private Array ReadArray16(Stream stream, Type? arrayType) => ReadArray(stream, ReadNumber<ushort>(stream), arrayType);
-        private Array ReadArray32(Stream stream, Type? arrayType) => ReadArray(stream, ReadNumber<int>(stream), arrayType);
-        private Array ReadArray(Stream stream, int length, Type? arrayType)
+        private Array ReadArray(Stream stream, int length, Type? type)
         {
-            Type? type = null;
-            if (arrayType != null)
+            Type? elementType = null;
+            if (type != null)
             {
-                if (!arrayType.IsArray)
-                    throw new InvalidOperationException($"Type {arrayType} is not an array");
+                if (!type.IsArray)
+                    throw new InvalidOperationException($"Type {type} is not an array");
 
-                type = arrayType.GetElementType();
+                elementType = type.GetElementType();
             }
 
-            var array = Array.CreateInstance(type ?? typeof(object), length);
+            var array = Array.CreateInstance(elementType ?? typeof(object), length);
             for (int i = 0; i < length; i++)
             {
-                var value = Deserialize(stream, type == typeof(object) ? null : type);
+                var value = Deserialize(stream, elementType == typeof(object) ? null : elementType);
                 array.SetValue(value, i);
             }
 
             return array;
         }
-
-        private IList ReadList8(Stream stream, Type? arrayType) => ReadList(stream, ReadNumber<byte>(stream), arrayType);
-        private IList ReadList16(Stream stream, Type? arrayType) => ReadList(stream, ReadNumber<ushort>(stream), arrayType);
-        private IList ReadList32(Stream stream, Type? arrayType) => ReadList(stream, ReadNumber<int>(stream), arrayType);
 
         private IList ReadList(Stream stream, int length, Type? listType)
         {
@@ -646,6 +667,69 @@ namespace Cybtans.Serialization
             }
 
             return list;
+        }
+
+        private ICollection ReadCollection(Stream stream, int length, Type? type, bool arrayCode)
+        {
+            IList list;
+            Type? elementType = null;
+
+            if (type == null)
+            {
+                if (arrayCode)
+                {
+                    var array = new object?[length];
+                    for (int i = 0; i < length; i++)
+                    {
+                        array[i] = Deserialize(stream, null);
+                    }
+
+                    return array;
+                }
+                else
+                {
+                    list = new List<object?>(length);
+                    for (int i = 0; i < length; i++)
+                    {
+                        list.Add(Deserialize(stream, null));
+                    }
+
+                    return list;
+                }
+            }
+            else if (type.IsArray)
+            {
+                elementType = type.GetElementType();
+                var array = Array.CreateInstance(elementType, length);
+                for (int i = 0; i < length; i++)
+                {
+                    array.SetValue(Deserialize(stream, elementType), i);
+                }
+
+                return array;
+            }
+            else if (type.IsInterface)
+            {
+                elementType = type.GetGenericArguments()[0];
+                list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType), length);
+                for (int i = 0; i < length; i++)
+                {
+                    list.Add(Deserialize(stream, elementType));
+                }
+
+                return list;
+            }
+            else
+            {
+                elementType = type.GetGenericArguments()[0];
+                list = (IList)Activator.CreateInstance(type, length);
+                for (int i = 0; i < length; i++)
+                {
+                    list.Add(Deserialize(stream, elementType));
+                }
+
+                return list;
+            }
         }
 
         private object ReadMap8(Stream stream, Type? type) => ReadMap(stream, ReadNumber<byte>(stream), type);
@@ -701,15 +785,17 @@ namespace Cybtans.Serialization
                     }
 
                     return dic;
-                }               
+                }
                 else
                 {
                     throw new InvalidOperationException($"Can not deserialize {type}");
                 }
 
             }
-                       
+
             var props = GetPropertiesMap(type);
+
+
             obj = Activator.CreateInstance(type);
 
             for (int i = 0; i < count; i++)
@@ -772,7 +858,6 @@ namespace Cybtans.Serialization
         }
 
        
-
         private unsafe Guid ReadGuid(Stream stream)
         {
             Span<byte> span = stackalloc byte[16];          

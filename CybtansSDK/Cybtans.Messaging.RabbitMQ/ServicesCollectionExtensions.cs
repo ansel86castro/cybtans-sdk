@@ -1,6 +1,7 @@
 ﻿using Cybtans.Messaging;
 using Cybtans.Messaging.RabbitMQ;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
@@ -15,7 +16,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         IMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action);
     }
-
    
     internal class MessageQueueBuilder : IMessageQueueBuilder
     {
@@ -46,33 +46,52 @@ namespace Microsoft.Extensions.DependencyInjection
             _configureConnectionFactory = action;
             return this;
         }
+      
 
-        internal IMessageQueue Create(IServiceProvider provider)
+        internal void AddMessageQueue(IServiceCollection services)
+        {
+            AddSubscriptionManager(services);
+            services.TryAddSingleton<IMessageQueue>(provider =>
+            {
+                var options = provider.GetRequiredService<RabbitMessageQueueOptions>();
+                var subscriptionManager = provider.GetRequiredService<MessageSubscriptionManager>();
+
+                var factory = new ConnectionFactory() { HostName = options.Hostname };
+                _configureConnectionFactory?.Invoke(factory);
+
+                return new RabbitMessageQueue(factory, subscriptionManager, options, provider.GetService<ILogger<RabbitMessageQueue>>());
+            });
+        }
+
+        internal void AddSubscriptionManager(IServiceCollection services)
+        {
+            services.TryAddSingleton(provider => CreateOptions());
+            services.TryAddSingleton(provider =>
+            {
+                var options = provider.GetRequiredService<RabbitMessageQueueOptions>();
+                var subscriptionManager =  new MessageSubscriptionManager(provider, options.Exchange.Name, provider.GetService<ILogger<MessageSubscriptionManager>>());
+                _configureSubscription?.Invoke(subscriptionManager);
+
+                return subscriptionManager;
+            });            
+        }
+
+        private RabbitMessageQueueOptions CreateOptions()
         {
             var options = new RabbitMessageQueueOptions();
             ConfigurationBinder.Bind(_configuration, "RabbitMessageQueueOptions", options);
             _configureOptions?.Invoke(options);
-
-            var factory = new ConnectionFactory() { HostName = options.Hostname };
-
-            _configureConnectionFactory?.Invoke(factory);
-
-            var subscriptionManager = new MessageSubscriptionManager(provider, options.Exchange.Name, provider.GetService<ILogger<MessageSubscriptionManager>>());
-            var messageQueue = new RabbitMessageQueue(factory, subscriptionManager, options, provider.GetService<ILogger<RabbitMessageQueue>>());            
-            _configureSubscription?.Invoke(subscriptionManager);            
-
-            return messageQueue;
+            return options;
         }
 
-        
     }
 
     public static class MessageQueueServiceCollectionExtensions
-    {
+    {       
         public static IMessageQueueBuilder AddMessageQueue(this IServiceCollection services, IConfiguration configuration)
         {         
             MessageQueueBuilder builder = new MessageQueueBuilder(configuration);
-            services.AddSingleton<IMessageQueue>(provider => builder.Create(provider));
+            builder.AddMessageQueue(services);            
             return builder;
         }
 
