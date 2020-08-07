@@ -38,7 +38,7 @@ namespace Cybtans.AspNetCore
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             if (context.Request.Headers.ContainsKey("Accept") && context.Request.Headers["Accept"].FirstOrDefault() == BinarySerializer.MEDIA_TYPE)
-            {
+            {                
                 context.Response.ContentType = BinarySerializer.MEDIA_TYPE;
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;                
                 await context.Response.BodyWriter.WriteAsync(BinaryConvert.Serialize(
