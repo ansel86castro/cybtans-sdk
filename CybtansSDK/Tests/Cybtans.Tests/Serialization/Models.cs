@@ -35,13 +35,17 @@ namespace Cybtans.Serialization.Tests.Serialization
 
         public string[] ArrayStringValue { get; set; } = new string[] { "Baar", "Foo", "Delta" };
 
-        public List<string> ListStringValue { get; set; } = new List<string>();
+        public List<string> ListStringValue { get; set; }
+
+        public List<string> EmptyList { get; set; } = new List<string>();
 
         public ModelB ModelBValue { get; set; }
 
         public List<ModelB> ModelBListValue { get; set; }
 
         public Dictionary<string, ModelB> MapValue { get; set; }
+
+        public ICollection<ModelB> ModelBCollection { get; set; }
 
         public bool Equals([AllowNull] ModelA other)
         {
@@ -63,8 +67,11 @@ namespace Cybtans.Serialization.Tests.Serialization
                 ArrayStringValue.SequenceEqual(other.ArrayStringValue) &&
                 ModelBValue.Equals(other.ModelBValue) &&
                 ModelBListValue.SequenceEqual(other.ModelBListValue) &&
+                ModelBCollection.SequenceEqual(other.ModelBCollection) &&
                 MapValue.SequenceEqual(other.MapValue) &&
-                ListStringValue.SequenceEqual(other.ListStringValue);
+                ListStringValue.SequenceEqual(other.ListStringValue) &&
+                EmptyList.SequenceEqual(other.EmptyList);
+
 
         }
 

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace Cybtans.Serialization
 {
     public static class BinaryConvert
     {
-        public static byte[] Serialize(object obj) => new BinarySerializer().Serialize(obj);
+        private static ThreadLocal<BinarySerializer> serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        public static byte[] Serialize(object obj) => new BinarySerializer().Serialize(obj);
 
-        public static void Serialize(Stream stream, object obj) => new BinarySerializer().Serialize(stream, obj);
+        public static void Serialize(Stream stream, object obj) => serializer.Value.Serialize(stream, obj);
 
         public static T Deserialize<T>(Stream stream) => (T)Deserialize(stream, typeof(T));
 
@@ -23,7 +24,7 @@ namespace Cybtans.Serialization
             return Deserialize(stream, type);
         }
 
-        public static object? Deserialize(Stream stream, Type? type) => new BinarySerializer().Deserialize(stream, type);
+        public static object? Deserialize(Stream stream, Type? type) => serializer.Value.Deserialize(stream, type);
 
         public static object ConvertTo(Type type, object value)
         {

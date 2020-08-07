@@ -1,11 +1,16 @@
 {
-  "Service": "Coordinations",
+  "Service": "Cybtans.Tests",
   "Steps": [
     {
       "Type": "messages",
       "Output": ".",
       "ProtoFile": "./Proto/Domain.proto",
-      "AssemblyFile": "./Cybtans.Test.Domain/bin/Debug/netcoreapp3.1/Cybtans.Test.Domain.dll"
+      "AssemblyFile": "./Cybtans.Tests.RestApi/bin/Debug/netcoreapp3.1/Cybtans.Tests.Domain.dll"
+    },
+    {
+      "Type": "proto",
+      "Output": ".",
+      "ProtoFile": "./Proto/Test.proto"
     }
   ]
 }

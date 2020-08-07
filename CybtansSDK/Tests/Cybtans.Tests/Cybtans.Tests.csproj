@@ -6,12 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Refit\**" />
+    <EmbeddedResource Remove="Refit\**" />
+    <None Remove="Refit\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="4.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -34,12 +43,8 @@
     <ProjectReference Include="..\..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
     <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
     <ProjectReference Include="..\..\Cybtans.Testing\Cybtans.Testing.csproj" />
-    <ProjectReference Include="..\Cybtans.Test.Domain.EF\Cybtans.Test.Domain.EF.csproj" />
-    <ProjectReference Include="..\Cybtans.Tests.Services\Cybtans.Tests.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Refit\" />
+    <ProjectReference Include="..\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj" />
+    <ProjectReference Include="..\Cybtans.Tests.RestApi\Cybtans.Tests.RestApi.csproj" />
   </ItemGroup>
 
 </Project>

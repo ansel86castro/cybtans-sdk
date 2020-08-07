@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -15,8 +16,10 @@ namespace Cybtans.Messaging
     }
 
     public interface IMessageQueue :IMessageSubscriptionManager, IDisposable
-    {             
-        Task Publish(object message, string? exchange , string? topic);           
+    {
+        Task Publish(byte[] bytes, string exchange, string topic);
+
+        Task Publish(object message, string? exchange , string? topic);
        
         BindingInfo? GetBinding(Type type, string topic);
     
