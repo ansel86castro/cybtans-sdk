@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cybtans.Entities
 {
@@ -12,11 +8,12 @@ namespace Cybtans.Entities
     }
 
     public class EntityEvent: ITopicProvider
-    {
-        public Guid Id { get; set; }        
+    {        
+        public Guid Id { get; set; }
 
-        public DateTime CreateTime { get; set; } = DateTime.Now;        
-
+        [EventMember]
+        public DateTime CreateTime { get; set; } = DateTime.Now;
+     
         public EventStateEnum State { get; set; } = EventStateEnum.NotPublished;
 
         public virtual string Topic => GetType().Name;
@@ -35,6 +32,7 @@ namespace Cybtans.Entities
             Value = value;
         }
 
+        [EventMember]
         public T Value { get; private set; }
 
         public override string Topic => TOPIC;
@@ -55,8 +53,10 @@ namespace Cybtans.Entities
             OldValue = oldValue;
         }
 
+        [EventMember]
         public T NewValue { get; private set; }
 
+        [EventMember]
         public T OldValue { get; private set; }
 
         public override string Topic => TOPIC;        
@@ -76,11 +76,11 @@ namespace Cybtans.Entities
             Value = value;
         }
 
+        [EventMember]
         public T Value { get; private set; }
 
         public override string Topic => TOPIC;
     }
-
 
 
     public enum EventStateEnum

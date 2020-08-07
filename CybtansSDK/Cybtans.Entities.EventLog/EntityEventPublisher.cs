@@ -28,13 +28,15 @@ namespace Cybtans.Entities.EventLog
         }
 
         private async Task<EntityEventLog> PublishInternal(EntityEvent entityEvent)
-        {
-
+        {            
+            entityEvent.CreateTime = DateTime.Now;            
             var type = entityEvent.GetType();
+
+            var data = EntityUtilities.ToDictionary(entityEvent);
             EntityEventLog log = new EntityEventLog
             {
                 CreateTime = DateTime.Now,
-                Data = BinaryConvert.Serialize(entityEvent),
+                Data = BinaryConvert.Serialize(data),
                 EntityEventType = type.FullName,
                 State = EventStateEnum.NotPublished
             };
@@ -45,12 +47,13 @@ namespace Cybtans.Entities.EventLog
 
             log.Exchange = binding.Exchange;
             log.Topic = binding.Topic;
-
+            
             try
             {
                 entityEvent.State = EventStateEnum.Published;
-                log.State = EventStateEnum.Published;
-                await _messageQueue.Publish(entityEvent).ConfigureAwait(false);
+                log.State = EventStateEnum.Published;                
+
+                await _messageQueue.Publish(log.Data, binding.Exchange, binding.Topic).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -80,7 +83,7 @@ namespace Cybtans.Entities.EventLog
                     _context.Update(log);
                 }
 
-                await _context.UnitOfWork.SaveChangesAsync();
+                await _context.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 entityEvent.Id = log.Id;
             }
         }
@@ -110,7 +113,7 @@ namespace Cybtans.Entities.EventLog
                     }
                 }
 
-                await _context.UnitOfWork.SaveChangesAsync();
+                await _context.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 var nonPublished = entityEvents.Where(e => e.State == EventStateEnum.NotPublished).ToList();
                 if (nonPublished.Count > 0)
                 {

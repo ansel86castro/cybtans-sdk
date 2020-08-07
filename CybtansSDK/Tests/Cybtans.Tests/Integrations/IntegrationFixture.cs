@@ -15,69 +15,49 @@ using System.Security.Claims;
 using System.Threading;
 using Xunit;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using Cybtans.AspNetCore;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityModel;
+using SQLitePCL;
+using Microsoft.AspNetCore.TestHost;
 
 namespace Cybtans.Tests.Integrations
 {
-    public class IntegrationFixture: WebApplicationFactory<Startup>, IAsyncLifetime
+    public class IntegrationFixture: BaseIntegrationFixture<Startup>
     {
-        HttpClient _httpClient;
-
-        public HttpClient Client => _httpClient;
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        public IntegrationFixture()
         {
-            builder.ConfigureServices(services =>
+            Claims = new Claim[]
             {
-                var sp = services.BuildServiceProvider();
-
-                using (var scope = sp.CreateScope())
-                {
-                    var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<AdventureContext>();
-
-                    db.Database.EnsureCreated();
-
-                    RepositoryFixture.Seed(db).Wait();
-                }
-            });
+                new Claim(JwtRegisteredClaimNames.Sub, "admin"),
+                new Claim(JwtClaimTypes.Name, "admin"),
+                new Claim(JwtRegisteredClaimNames.Email, "admin@gmail.com"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.Role, "test"),
+                new Claim(JwtClaimTypes.Scope, "test"),
+                new Claim("tenant", Guid.NewGuid().ToString())
+            };
         }
-        
-        protected override void ConfigureClient(HttpClient client)
-        {           
-            client.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");           
-            base.ConfigureClient(client);
-        }
-             
-                   
-        public T GetClient<T>(HttpClient httpClient = null)
-          where T : class
+
+        public override void ConfigureServices(IServiceCollection services)
         {
-            httpClient ??= _httpClient;
-            var settings = new RefitSettings();
-            settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
-            return RestService.For<T>(httpClient, settings);
-        }
+            base.ConfigureServices(services);
 
-        private void CreatePrincipal()
-        {
-            if (Thread.CurrentPrincipal == null)
-            {                
-                var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
-                var identity = new ClaimsIdentity(claims, "Test");
-                var principal = new ClaimsPrincipal(identity);
-                AppDomain.CurrentDomain.SetThreadPrincipal(principal);
+            services.AddInternalMessageQueue();
+
+            var sp = services.BuildServiceProvider();
+
+            using (var scope = sp.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<AdventureContext>();
+
+                db.Database.EnsureCreated();
+
+                RepositoryFixture.Seed(db).Wait();
             }
-        }
-
-        public Task InitializeAsync()
-        {
-            _httpClient = CreateDefaultClient(new HttpClientErrorHandler());
-            return Task.CompletedTask;
-        }
-
-        public Task DisposeAsync()
-        {
-            return Task.CompletedTask;
-        }
+        }       
     }
 }

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Domain\Cybtans.Tests.Domain.csproj" />
   </ItemGroup>
 

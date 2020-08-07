@@ -1,5 +1,4 @@
-﻿using Cybtans.Refit;
-using Cybtans.Serialization;
+﻿using Cybtans.Serialization;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
@@ -8,7 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cybtans.Tests
+namespace Cybtans.Refit
 {
     public class HttpClientErrorHandler : DelegatingHandler
     {

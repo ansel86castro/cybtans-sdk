@@ -1,10 +1,12 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Cybtans.Entities.EntityFrameworkCore;
+using Cybtans.Entities.EventLog;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
 namespace Cybtans.Test.Domain.EF
 {
-    public partial class AdventureContext : DbContext
+    public partial class AdventureContext : DbContext, IEntityEventLogContext
     {
         public AdventureContext()
         {
@@ -24,6 +26,8 @@ namespace Cybtans.Test.Domain.EF
         public DbSet<OrderState> OrderStates { get; set; }
 
         public DbSet<CustomerProfile> CustomerProfiles { get; set; }
+
+        public DbSet<EntityEventLog> EntityEventLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
