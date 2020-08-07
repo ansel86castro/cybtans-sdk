@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
     <ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Domain.EF\Cybtans.Tests.Domain.EF.csproj" />

@@ -200,30 +200,30 @@ service OrderStateService {
 
 	rpc GetAll(GetAllRequest) returns (GetAllOrderStateResponse){		
 		option method = "GET";
-		
+		option roles = "admin";
 	};
 
 	rpc Get(GetOrderStateRequest) returns (OrderStateDto){	
 		option template = "{id}"; 
 		option method = "GET";
-		
+		option roles = "admin";
 	};
 
 	rpc Create(OrderStateDto) returns (OrderStateDto){			
 		option method = "POST";
-		
+		option roles = "admin";
 	};
 
 	rpc Update(UpdateOrderStateRequest) returns (OrderStateDto){			
 		option template = "{id}"; 
 		option method = "PUT";
-		
+		option roles = "admin";
 	};
 
 	rpc Delete(DeleteOrderStateRequest) returns (void){
 		option template = "{id}"; 
 		option method = "DELETE";
-		
+		option roles = "admin";
 	};
 }
 

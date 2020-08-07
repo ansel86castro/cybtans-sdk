@@ -76,6 +76,16 @@ namespace Cybtans.Test.RestApi
             .AddCybtansFormatter();  
 
             services.AddCybtansServices(typeof(TestStub).Assembly);
+
+            services.AddSingleton<EntityEventDelegateHandler<OrderMessageHandler>>();
+            services.AddTransient<OrderMessageHandler>();
+            services.AddMessageQueue(Configuration)
+             .ConfigureSubscriptions(sm =>
+             {
+                 sm.SubscribeHandlerForEvents<Order, OrderMessageHandler>("Test", "Order2");
+              });
+
+            services.AddDbContextEventPublisher<AdventureContext>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -192,14 +202,33 @@ namespace Cybtans.Test.RestApi
 
         void AddAuthentication(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
+                options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+                {
+                    OnTokenValidated = async ctx =>
+                    {
+
+                    },
+                    OnAuthenticationFailed = async cts =>
+                    {
+
+                    },
+                    OnMessageReceived = async ctx =>
+                    {
+
+                    },
+                    OnForbidden = async ctx =>
+                    {
+
+                    },
+                    OnChallenge = async ctx =>
+                    {
+
+                    }
+                };
+
                 options.Authority = Configuration.GetValue<string>("Identity:Authority");
                 options.Audience = $"{options.Authority}/resources";                 
                 options.RequireHttpsMetadata = false;                    

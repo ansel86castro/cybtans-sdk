@@ -41,7 +41,13 @@ namespace Cybtans.Serialization.Tests.Serialization
                 ModelBListValue = Enumerable.Range(1, 100).Select(x => new ModelB
                 {
                     Id = x,
-                    Name = $"Foo Bar {x}",
+                    Name = $"Foo Bar List {x}",
+                    CreateDate = DateTime.Now
+                }).ToList(),
+                ModelBCollection = Enumerable.Range(1, 100).Select(x => new ModelB
+                {
+                    Id = x,
+                    Name = $"Foo Bar Collection {x}",
                     CreateDate = DateTime.Now
                 }).ToList(),
                 ArrayIntValue = Enumerable.Range(1, 1000).ToArray(),
@@ -161,13 +167,19 @@ namespace Cybtans.Serialization.Tests.Serialization
         [Fact]
         public void SerializeValidationResult()
         {
-            var result = new ValidationResult("An error occurred while updating the entries. See the inner exception for details.\r\n----Inner Exception-- -\r\nSQLite Error 19: 'UNIQUE constraint failed: Ordes.Id'.\r\n");
+            var result = new ValidationResult("An error occurred while updating the entries. See the inner exception for details.\r\n----Inner Exception-- -\r\nSQLite Error 19: 'UNIQUE constraint failed: Ordes.Id'.\r\n")
+            {
+                StackTrace = "   at Cybtans.Entities.EntityFrameworkCore.EfUnitOfWork.SaveChangesAsyncInternal() in C:\\projects\\Cybtans\\cybtans-sdk\\CybtansSDK\\Cybtans.Entities.EntityFrameworkCore\\EfUnitOfWork.cs:line 122\r\n   at Cybtans.Entities.EntityFrameworkCore.EfUnitOfWork.SaveChangesAsync() in C:\\projects\\Cybtans\\cybtans-sdk\\CybtansSDK\\Cybtans.Entities.EntityFrameworkCore\\EfUnitOfWork.cs:line 143\r\n   at Cybtans.Entities.EventLog.EntityEventPublisher.PublishAll(IEnumerable`1 entityEvents) in C:\\projects\\Cybtans\\cybtans-sdk\\CybtansSDK\\Cybtans.Entities.EventLog\\EntityEventPublisher.cs:line 117\r\n   at Cybtans.Entities.EntityFrameworkCore.EfUnitOfWork.SaveChangesAsync() in C:\\projects\\Cybtans\\cybtans-sdk\\CybtansSDK\\Cybtans.Entities.EntityFrameworkCore\\EfUnitOfWork.cs:line 155\r\n   at Cybtans.Services.CrudService`8.Create(TEntityDto request) in C:\\projects\\Cybtans\\cybtans-sdk\\CybtansSDK\\Cybtans.Services\\CrudService.cs:line 339\r\n   at lambda_method(Closure , Object )\r\n   at Microsoft.Extensions.Internal.ObjectMethodExecutorAwaitable.Awaiter.GetResult()\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()\r\n--- End of stack trace from previous location where exception was thrown ---\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextExceptionFilterAsync>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)"
+            };
 
             var bytes = BinaryConvert.Serialize(result);
             Assert.NotEmpty(bytes);
 
             var obj = BinaryConvert.Deserialize<ValidationResult>(bytes);
+
             Assert.NotNull(obj);
+            Assert.NotEmpty(obj.ErrorMessage);
+            Assert.NotEmpty(obj.StackTrace);
         }
 
         [Theory]
