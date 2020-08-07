@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Cybtans.AspNetCore
 {
-    public class RefitExceptionHandler : IExceptionFilter
+    public class UpstreamExceptionFilter : IExceptionFilter
     {       
         public void OnException(ExceptionContext context)
         {
