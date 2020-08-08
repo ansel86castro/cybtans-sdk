@@ -28,7 +28,7 @@ namespace Cybtans.Messaging
 
         public Task Publish(byte[] bytes, string exchange, string topic)
         {
-            return Task.Run( async ()=> await _subscriptionManager.HandleMessage(exchange, topic, bytes).ConfigureAwait(false));
+            return _subscriptionManager.HandleMessage(exchange, topic, bytes);
         }
 
         public async Task Publish(object message, string? exchange, string? topic)

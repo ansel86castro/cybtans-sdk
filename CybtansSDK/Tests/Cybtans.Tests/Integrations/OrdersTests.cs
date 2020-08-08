@@ -1,12 +1,18 @@
 ﻿using Cybtans.AspNetCore;
+using Cybtans.Entities;
 using Cybtans.Refit;
 using Cybtans.Services;
+using Cybtans.Services.Utils;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
+using Cybtans.Tests.Services;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -17,13 +23,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;        
-        IOrderService _service;
+        Clients.IOrderService _service;
 
         public OrdersTests(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<IOrderService>();
+            _service = fixture.GetClient<Clients.IOrderService>();
         }
 
         private async Task<OrderDto> CreateOrderInternal()
@@ -50,7 +56,16 @@ namespace Cybtans.Tests.Integrations
         [Fact]
         public async Task CreateOrder()
         {
-            var createdOrder = await CreateOrderInternal();
+            OrderDto createdOrder = null;
+            await Assert.RaisesAnyAsync<EntityEventArg>(
+                x => _fixture.OrderEvents.OnCreated += x, 
+                x => _fixture.OrderEvents.OnCreated -= x, 
+                async ()=>
+                {
+                    createdOrder = await CreateOrderInternal();
+                });
+
+            Assert.NotNull(createdOrder);
             var order = await _service.Get(createdOrder.Id);
 
             Assert.NotNull(order);
@@ -113,11 +128,21 @@ namespace Cybtans.Tests.Integrations
             var order = await _service.Get(createResult.Id);
             order.Items.Add(new OrderItemDto { ProductName = "Updated Product", Price = 20 });
 
-            var updateResult = await _service.Update(new UpdateOrderRequest
-            {
-                Id = order.Id,
-                Value = order
-            });
+            OrderDto updateResult = null;
+            await Assert.RaisesAnyAsync<EntityEventArg>(
+              x => _fixture.OrderEvents.OnUpdated += x,
+              x => _fixture.OrderEvents.OnUpdated -= x,
+              async () =>
+              {
+                  updateResult = await _service.Update(new UpdateOrderRequest
+                  {
+                      Id = order.Id,
+                      Value = order
+                  });
+
+              });
+
+            Assert.NotNull(updateResult);
 
             Assert.Equal(2, updateResult.Items.Count);
             Assert.NotNull(updateResult.Items.FirstOrDefault(x => x.ProductName == "Updated Product"));
@@ -130,9 +155,9 @@ namespace Cybtans.Tests.Integrations
 
             var order = await _service.Get(createResult.Id);
 
-            order.Items.Remove(order.Items.First(x => x.ProductName == "Product 1"));            
+            order.Items.Remove(order.Items.First(x => x.ProductName == "Product 1"));
 
-            var updateResult = await _service.Update(new UpdateOrderRequest
+            OrderDto updateResult = await _service.Update(new UpdateOrderRequest
             {
                 Id = order.Id,
                 Value = order
@@ -158,20 +183,63 @@ namespace Cybtans.Tests.Integrations
                 {
                     Name = "Update Test Customer"
                 }
-            };            
+            };
 
-            var updateResult = await _service.Update(new UpdateOrderRequest
-            {
-                Id = order.Id,
-                Value = order
-            });
+            OrderDto updateResult = null;
+            await Assert.RaisesAnyAsync<EntityEventArg>(
+              x => _fixture.OrderEvents.OnUpdated += x,
+              x => _fixture.OrderEvents.OnUpdated -= x,
+              async () =>
+              {
+                  updateResult = await _service.Update(new UpdateOrderRequest
+                  {
+                      Id = order.Id,
+                      Value = order
+                  });
+
+              });
+            Assert.NotNull(updateResult);
 
             Assert.NotEmpty(updateResult.Items);
             Assert.NotNull(updateResult.Items.FirstOrDefault(x => x.ProductName == "Product 1"));
         }
 
         [Fact]
-        public async Task ShouldGetValidationResult()
+        public async Task DeleteOrder()
+        {
+            var order = await CreateOrderInternal();          
+            await Assert.RaisesAnyAsync<EntityEventArg>(
+              x => _fixture.OrderEvents.OnDeleted += x,
+              x => _fixture.OrderEvents.OnDeleted -= x,
+              async () =>
+              {
+                  await _service.Delete(order.Id);
+              });
+
+            var exception = await Assert.ThrowsAsync<ApiException>(() => _service.Delete(order.Id));
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, exception.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_Should_ThrowNotFound()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(() => _service.Get(Guid.NewGuid()));
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, exception.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_Should_ThrowNotFound()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(() => _service.Update(new UpdateOrderRequest
+            {
+                Id = Guid.NewGuid(),
+                Value = new OrderDto()
+            }));
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, exception.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_Should_ThrowValidationResult()
         {
             var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Create(new OrderDto
             {

@@ -25,10 +25,36 @@ namespace Microsoft.Extensions.DependencyInjection
              SubscribeHandlerForEvents<TEntity, THandler>(subscriptionManager, exchange, typeof(TEntity).Name);
         }       
 
-        public static void SubscribeForEvents<TEntity, TKey>(this IMessageSubscriptionManager subscriptionManager, string exchange)
-            where TEntity : IEntity<TKey>
+        public static void SubscribeForEvents<TEntity>(this IMessageSubscriptionManager subscriptionManager, string exchange)            
         {
-            subscriptionManager.SubscribeHandlerForEvents<TEntity, EntityEventsHandler<TEntity, TKey>>(exchange);
+            SubscribeHandlerForEvents<TEntity, EntityEventsHandler<TEntity>>(subscriptionManager, exchange);
         }
+
+        public static void SubscribeForEvents<TEntity>(this IMessageSubscriptionManager subscriptionManager, string exchange, string entityName)            
+        {
+            SubscribeHandlerForEvents<TEntity, EntityEventsHandler<TEntity>>(subscriptionManager, exchange, entityName);
+        }
+
+        public static void SubscribeForEvents<TEntity, TEvent>(this IMessageSubscriptionManager subscriptionManager, string exchange)           
+        {
+            SubscribeHandlerForEvents<TEvent, EntityEventsHandler<TEntity, TEvent>>(subscriptionManager, exchange, typeof(TEvent).Name);
+        }
+
+        public static void SubscribeForEvents<TEntity, TEvent>(this IMessageSubscriptionManager subscriptionManager, string exchange, string eventName)          
+        {
+            SubscribeHandlerForEvents<TEvent, EntityEventsHandler<TEntity, TEvent>>(subscriptionManager, exchange, eventName);
+        }
+
+        public static void AddMessageHandler<TEntity>(this IServiceCollection services)
+        {
+            services.AddScoped<EntityEventsHandler<TEntity>>();
+        }
+     
+        public static void AddMessageHandler<TEntity, TEvent>(this IServiceCollection services)
+        {
+            services.AddScoped<EntityEventsHandler<TEntity, TEvent>>();
+        }
+
+
     }
 }

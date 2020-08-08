@@ -17,6 +17,7 @@ namespace Cybtans.Test.Domain
         [EventMember]
         public int OrderStateId { get; set; }
 
+        [EventMember]
         public virtual OrderState OrderState { get; set; }
         
         public virtual Customer Customer { get; set; }

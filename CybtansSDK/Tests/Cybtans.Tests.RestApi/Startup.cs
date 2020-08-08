@@ -79,11 +79,15 @@ namespace Cybtans.Test.RestApi
 
             services.AddSingleton<EntityEventDelegateHandler<OrderMessageHandler>>();
             services.AddTransient<OrderMessageHandler>();
+            services.AddMessageHandler<CustomerEvent, Customer>();
+
             services.AddMessageQueue(Configuration)
              .ConfigureSubscriptions(sm =>
              {
-                 sm.SubscribeHandlerForEvents<Order, OrderMessageHandler>("Test", "Order2");
-              });
+                 sm.SubscribeHandlerForEvents<Order, OrderMessageHandler>("Test");
+                 sm.SubscribeForEvents<CustomerEvent, Customer>("Test");
+
+             });
 
             services.AddDbContextEventPublisher<AdventureContext>();
         }

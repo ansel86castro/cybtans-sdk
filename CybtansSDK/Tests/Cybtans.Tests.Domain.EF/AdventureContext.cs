@@ -23,6 +23,8 @@ namespace Cybtans.Test.Domain.EF
 
         public DbSet<Customer> Customers { get; set; }
 
+        public DbSet<CustomerEvent> CustomerEvents { get; set; }
+
         public DbSet<OrderState> OrderStates { get; set; }
 
         public DbSet<CustomerProfile> CustomerProfiles { get; set; }
