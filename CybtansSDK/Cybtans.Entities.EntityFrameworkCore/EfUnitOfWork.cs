@@ -12,16 +12,7 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
-    public class UnitOfWorkOptions
-    {
-        internal IEntityEventPublisher EventPublisher { get; }
-
-        public void UseEventPublisher()
-        {
-            
-        }
-    }
-
+  
     public class EfUnitOfWork : IUnitOfWork
     {
         private DbContext _context;        
@@ -180,7 +171,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
                             entry.Entity.AddUpdatedEvent(entry.OriginalValues.ToObject() as IDomainEntity);
                             break;
                         case EntityState.Deleted:
-
+                            entry.Entity.AddDeletedEvent();
                             break;
                     }
                 }
