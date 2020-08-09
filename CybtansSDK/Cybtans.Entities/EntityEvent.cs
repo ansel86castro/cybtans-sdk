@@ -11,7 +11,7 @@ namespace Cybtans.Entities
     {        
         public Guid Id { get; set; }
 
-        [EventMember]
+        [EventData]
         public DateTime CreateTime { get; set; } = DateTime.Now;
      
         public EventStateEnum State { get; set; } = EventStateEnum.NotPublished;
@@ -32,7 +32,7 @@ namespace Cybtans.Entities
             Value = value;
         }
 
-        [EventMember]
+        [EventData]
         public T Value { get; private set; }
 
         public override string Topic => TOPIC;
@@ -53,10 +53,10 @@ namespace Cybtans.Entities
             OldValue = oldValue;
         }
 
-        [EventMember]
+        [EventData]
         public T NewValue { get; private set; }
 
-        [EventMember]
+        [EventData]
         public T OldValue { get; private set; }
 
         public override string Topic => TOPIC;        
@@ -76,7 +76,7 @@ namespace Cybtans.Entities
             Value = value;
         }
 
-        [EventMember]
+        [EventData]
         public T Value { get; private set; }
 
         public override string Topic => TOPIC;

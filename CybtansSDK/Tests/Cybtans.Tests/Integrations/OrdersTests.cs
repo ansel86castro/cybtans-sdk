@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -283,5 +284,32 @@ namespace Cybtans.Tests.Integrations
             Assert.NotEmpty(result.ErrorMessage);
         }
 
+        [Fact]
+        public async Task ShouldThrowNotAcceptable()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Baar());
+            Assert.NotNull(exception);
+            Assert.Equal(HttpStatusCode.NotAcceptable, exception.StatusCode);
+
+            var errorInfo = exception.ToErrorInfo();
+            Assert.Equal("Method Baar no allowed", errorInfo.ErrorMessage);
+            Assert.Equal((int?)HttpStatusCode.NotAcceptable, errorInfo.ErrorCode);
+            Assert.NotNull(errorInfo.StackTrace);
+        }
+
+
+        [Fact]
+        public async Task ShouldThrowInternalServerError()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Foo());
+            Assert.NotNull(exception);
+            Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
+
+            var errorInfo = exception.ToErrorInfo();            
+
+            Assert.Equal((int?)HttpStatusCode.InternalServerError, errorInfo.ErrorCode);
+            Assert.NotNull(errorInfo.StackTrace);
+            Assert.NotNull(errorInfo.ErrorMessage);
+        }
     }
 }

@@ -6,13 +6,13 @@ namespace Cybtans.Test.Domain
     [GenerateMessage]
     public class OrderItem: Entity<Guid>
     {
-        [EventMember]
+        [EventData]
         public string ProductName { get; set; }
 
-        [EventMember]
+        [EventData]
         public float Price { get; set; }
 
-        [EventMember]
+        [EventData]
         public float Discount { get; set; }
 
         public Guid OrderId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
+using NuGet.Frameworks;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,6 +33,16 @@ namespace Cybtans.Tests.Integrations
 
             Assert.NotNull(createOrder);
             Assert.Equal("Test State", createOrder.Name);
+        }
+
+        [Fact]
+        public async Task GetOrderStates()
+        {
+            var result = await _service.GetAll();
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Items);
+            Assert.True(result.TotalCount > 0);
+            Assert.Equal(result.TotalCount, result.Items.Count);
         }
     }
 }

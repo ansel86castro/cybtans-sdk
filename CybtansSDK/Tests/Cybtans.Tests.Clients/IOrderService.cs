@@ -11,6 +11,12 @@ namespace Cybtans.Tests.Clients
 	public interface IOrderService
 	{
 		
+		[Get("/api/Order/foo")]
+		Task Foo();
+		
+		[Get("/api/Order/baar")]
+		Task Baar();
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		

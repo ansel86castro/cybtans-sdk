@@ -8,21 +8,21 @@ namespace Cybtans.Test.Domain
     [GenerateMessage(Service = ServiceType.Interface)]
     public class Order:DomainTenantEntity<Guid>
     {
-        [EventMember]
+        [EventData]
         public string Description { get; set; }
 
-        [EventMember]
+        [EventData]
         public Guid CustomerId { get; set; }
 
-        [EventMember]
+        [EventData]
         public int OrderStateId { get; set; }
 
-        [EventMember]
+        [EventData]
         public virtual OrderState OrderState { get; set; }
         
         public virtual Customer Customer { get; set; }
 
-        [EventMember]
+        [EventData]
         public virtual ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();
     }
 }

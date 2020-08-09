@@ -12,21 +12,22 @@ namespace Cybtans.Refit
     public class HttpClientErrorHandler : DelegatingHandler
     {
         private AsyncRetryPolicy<HttpResponseMessage> _policy;
+        private Random rand = new Random();
 
         public HttpClientErrorHandler()
         {
             _policy = HttpPolicyExtensions
-              .HandleTransientHttpError()
-              .WaitAndRetryAsync(new TimeSpan[]
-                {
-                    TimeSpan.FromSeconds(3),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(8),
-                });
+              .HandleTransientHttpError()             
+              .WaitAndRetryAsync(3, retry => 
+                    TimeSpan.FromSeconds(Math.Pow(2, retry) + Jitter()));
         }
+
+        private double Jitter() => rand.NextDouble();
+        
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = await _policy.ExecuteAsync((ctx) => base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
+            var response = await _policy.ExecuteAsync(ctx => base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
                 throw await ApiException.Create(request, response).ConfigureAwait(false);
