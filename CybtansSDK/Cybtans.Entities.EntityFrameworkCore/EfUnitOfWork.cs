@@ -12,16 +12,7 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
-    public class UnitOfWorkOptions
-    {
-        internal IEntityEventPublisher EventPublisher { get; }
-
-        public void UseEventPublisher()
-        {
-            
-        }
-    }
-
+  
     public class EfUnitOfWork : IUnitOfWork
     {
         private DbContext _context;        
@@ -140,19 +131,19 @@ namespace Cybtans.Entities.EntityFrameworkCore
         {
             if (EventPublisher == null)
             {
-                return await SaveChangesAsyncInternal();
+                return await SaveChangesAsyncInternal().ConfigureAwait(false);
             }
             else
             {
                 var entities = GetEntries();
-                var rows = await SaveChangesAsyncInternal();
+                var rows = await SaveChangesAsyncInternal().ConfigureAwait(false);
                 if (rows > 0)
                 {
                     var events = entities.SelectMany(x => x.GetDomainEvents())
                         .Where(x => x.State == EventStateEnum.NotPublished)
                         .ToList();
 
-                    await EventPublisher.PublishAll(events);
+                    await EventPublisher.PublishAll(events).ConfigureAwait(false);
 
                     foreach (var entry in entities)
                     {
@@ -180,7 +171,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
                             entry.Entity.AddUpdatedEvent(entry.OriginalValues.ToObject() as IDomainEntity);
                             break;
                         case EntityState.Deleted:
-
+                            entry.Entity.AddDeletedEvent();
                             break;
                     }
                 }

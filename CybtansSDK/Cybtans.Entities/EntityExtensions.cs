@@ -100,7 +100,7 @@ namespace Cybtans.Entities
                 if (!p.CanRead)
                     continue;
                 
-                var attr = p.GetCustomAttribute<EventMemberAttribute>(true);
+                var attr = p.GetCustomAttribute<EventDataAttribute>(true);
                 if (attr == null)
                     continue;
 

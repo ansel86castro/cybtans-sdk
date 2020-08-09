@@ -3,3 +3,18 @@ syntax = "proto3";
 import "./Domain.proto";
 
 package Cybtans.Tests;
+
+
+service OrderService {
+	
+	rpc Foo(void) returns (void){	
+		option template = "foo"; 
+		option method = "GET";		
+	};
+
+	rpc Baar(void) returns (void){	
+		option template = "baar"; 
+		option method = "GET";		
+	};
+
+}

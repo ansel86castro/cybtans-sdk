@@ -1,9 +1,11 @@
-﻿using Cybtans.Testing;
+﻿using Cybtans.Refit;
+using Cybtans.Testing;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,69 +17,81 @@ namespace Cybtans.Tests.Integrations
     public class CustomerTest : IClassFixture<IntegrationFixture>
     {
         IntegrationFixture _fixture;
-        ITestOutputHelper _testOutputHelper;        
-
+        ITestOutputHelper _testOutputHelper;
+        Clients.ICustomerEventService _customerEventService;
+        Clients.ICustomerService _service;
         public CustomerTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
-            _testOutputHelper = testOutputHelper;            
+            _testOutputHelper = testOutputHelper;
+            _customerEventService = fixture.GetClient<Clients.ICustomerEventService>();
+            _service = fixture.GetClient<Clients.ICustomerService>();
         }
 
         [Fact]
         public async Task CreateCustomer()
         {           
             var customer = await CreateCustomerInternal("Integration");
-            Assert.NotEqual(new DateTime(), customer.CreateDate);
+            Assert.NotEqual(new DateTime(), customer.CreateDate);            
 
-            var client = _fixture.GetClient<ICustomerService>();
-
-            var result =await client.GetAll(new GetAllRequest
+            var result =await _service.GetAll(new GetAllRequest
             {
                  Filter = "name eq 'Integration'"
             });
 
             Assert.True(result.TotalCount > 0);
             Assert.NotEmpty(result.Items);
+
+            var customerEvent = await _customerEventService.Get(customer.Id);
+            Assert.NotNull(customerEvent);
+            Assert.NotEmpty(customerEvent.FullName);
+            Assert.Equal("Integration Integration", customerEvent.FullName.Trim());
         }
 
         [Fact]
         public async Task UpdateCustomer()
         {
             var customer = await CreateCustomerInternal("Integration");
-            customer.SecondLastName = "LastName";
-
-            var client = _fixture.GetClient<ICustomerService>();
-            var result = await client.Update(new UpdateCustomerRequest
+            customer.FirstLastName = "Foo";
+            customer.SecondLastName = "Baar";
+            
+            var result = await _service.Update(new UpdateCustomerRequest
             {
                 Id = customer.Id,
                 Value = customer
             });
 
             Assert.NotNull(result);
-            Assert.Equal("LastName", result.SecondLastName);
+            Assert.Equal("Baar", result.SecondLastName);
             Assert.NotNull(result.UpdateDate);
+
+            var customerEvent = await _customerEventService.Get(customer.Id);
+            Assert.NotNull(customerEvent);
+             Assert.Equal("Integration Foo Baar", customerEvent.FullName.Trim());
         }
 
         [Fact]
         public async Task DeleteCustomer()
-        {
-            var client = _fixture.GetClient<ICustomerService>();
+        {            
             var customer = await CreateCustomerInternal("Integration");
-            var result = await client.GetAll(new GetAllRequest
+            var result = await _service.GetAll(new GetAllRequest
             {
                 Filter = $"id eq '{customer.Id}'"
             });
             Assert.Equal(1, result.TotalCount);
 
            
-            await client.Delete(customer.Id);
+            await _service.Delete(customer.Id);
 
-            result = await client.GetAll(new GetAllRequest
+            result = await _service.GetAll(new GetAllRequest
             {
                 Filter = $"id eq '{customer.Id}'"
             });
             Assert.Equal(0, result.TotalCount);
             Assert.Empty(result.Items);
+
+            var ex = await Assert.ThrowsAsync<ApiException>(() => _customerEventService.Get(customer.Id));
+            Assert.Equal(HttpStatusCode.NotFound, ex.StatusCode);
         }
 
         private async Task<CustomerDto> CreateCustomerInternal(string name)
@@ -91,9 +105,8 @@ namespace Cybtans.Tests.Integrations
                     Name = $"{name} Profile"
                 }
             };
-
-            var client = _fixture.GetClient<ICustomerService>();
-            var result = await client.Create(customer);
+            
+            var result = await _service.Create(customer);
 
             Assert.NotNull(result);
             Assert.True(result.Id != Guid.Empty);
@@ -110,8 +123,7 @@ namespace Cybtans.Tests.Integrations
         [Fact]
         public async Task GetCustomer()
         {
-            var client = _fixture.GetClient<ICustomerService>();
-            var customer = await client.Get(RepositoryFixture.CustomerId);
+            var customer = await _service.Get(RepositoryFixture.CustomerId);
 
             Assert.NotNull(customer);
             Assert.NotNull(customer.CustomerProfile);

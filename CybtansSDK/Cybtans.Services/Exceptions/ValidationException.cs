@@ -1,44 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#nullable enable
 
 namespace Cybtans.Services
 {
-    public class ValidationException : Exception
+    public class ValidationException : CybtansException
     {
-        public ValidationException()
+        public ValidationException():base(System.Net.HttpStatusCode.BadRequest)
         {
-
+            ValidationResult = new ValidationResult();            
         }
 
         public ValidationException(string message)
-            : base(message)
+            : base(System.Net.HttpStatusCode.BadRequest, message)
         {
             ValidationResult = new ValidationResult(message);
         }
 
         public ValidationException(ValidationResult validationResult)
+            :base(System.Net.HttpStatusCode.BadRequest, validationResult.ErrorMessage)
         {
             ValidationResult = validationResult;
         }
 
-        public ValidationException(ValidationResult validationResult, string message, Exception innerException)
-            : base(message, innerException)
-        {
-            ValidationResult = validationResult;
-        }
+        public ValidationResult ValidationResult { get; }
+
         public ValidationException AddError(string member, string error)
-        {
-            if (ValidationResult == null)
-                ValidationResult = new ValidationResult();
-
+        {          
             ValidationResult.AddError(member, error);
             return this;
-        }
-
-        public ValidationResult ValidationResult { get; private set; }
+        }     
 
     }
 }

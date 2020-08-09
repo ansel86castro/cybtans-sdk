@@ -9,57 +9,45 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Produces("application/json")]
-	[Route("api/Order")]
+	[Route("api/CustomerEvent")]
 	[ApiController]
-	public class OrderServiceController : ControllerBase
+	public class CustomerEventServiceController : ControllerBase
 	{
-		private readonly IOrderService _service;
+		private readonly ICustomerEventService _service;
 		
-		public OrderServiceController(IOrderService service)
+		public CustomerEventServiceController(ICustomerEventService service)
 		{
 			_service = service;
 		}
 		
-		[HttpGet("foo")]
-		public Task Foo()
-		{
-			return _service.Foo();
-		}
-		
-		[HttpGet("baar")]
-		public Task Baar()
-		{
-			return _service.Baar();
-		}
-		
 		[HttpGet]
-		public Task<GetAllOrderResponse> GetAll([FromQuery]GetAllRequest __request)
+		public Task<GetAllCustomerEventResponse> GetAll([FromQuery]GetAllRequest __request)
 		{
 			return _service.GetAll(__request);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<OrderDto> Get(Guid id, [FromQuery]GetOrderRequest __request)
+		public Task<CustomerEventDto> Get(Guid id, [FromQuery]GetCustomerEventRequest __request)
 		{
 			__request.Id = id;
 			return _service.Get(__request);
 		}
 		
 		[HttpPost]
-		public Task<OrderDto> Create([FromBody]OrderDto __request)
+		public Task<CustomerEventDto> Create([FromBody]CustomerEventDto __request)
 		{
 			return _service.Create(__request);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<OrderDto> Update(Guid id, [FromBody]UpdateOrderRequest __request)
+		public Task<CustomerEventDto> Update(Guid id, [FromBody]UpdateCustomerEventRequest __request)
 		{
 			__request.Id = id;
 			return _service.Update(__request);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]DeleteOrderRequest __request)
+		public Task Delete(Guid id, [FromQuery]DeleteCustomerEventRequest __request)
 		{
 			__request.Id = id;
 			return _service.Delete(__request);

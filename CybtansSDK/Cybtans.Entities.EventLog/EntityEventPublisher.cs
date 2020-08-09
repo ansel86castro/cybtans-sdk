@@ -61,7 +61,7 @@ namespace Cybtans.Entities.EventLog
                 log.State = EventStateEnum.NotPublished;
                 log.ErrorMessage = ex.Message;
 
-                _logger?.LogCritical(ex, $"Unable to publish event of type {type}");
+                _logger?.LogError(ex, $"Unable to publish event {type.Name} Exchange:{log.Exchange} Topic:{log.Topic}");
             }
 
             return log;
@@ -114,11 +114,11 @@ namespace Cybtans.Entities.EventLog
                 }
 
                 await _context.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                var nonPublished = entityEvents.Where(e => e.State == EventStateEnum.NotPublished).ToList();
-                if (nonPublished.Count > 0)
-                {
-                    throw new EntityEventIntegrationException("Integration events not published", nonPublished);
-                }
+                //var nonPublished = entityEvents.Where(e => e.State == EventStateEnum.NotPublished).ToList();
+                //if (nonPublished.Count > 0)
+                //{
+                //    throw new EntityEventIntegrationException("Integration events not published", nonPublished);
+                //}
             }
         }
     }

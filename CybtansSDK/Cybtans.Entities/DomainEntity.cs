@@ -71,13 +71,13 @@ namespace Cybtans.Entities
 
     public class DomainEntity<TKey> : DomainAuditableEntity, IDomainEntity<TKey>
     {
-        [EventMember]
+        [EventData]
         public TKey Id { get; set; }
     }
 
     public class DomainTenantEntity<TKey> : DomainEntity<TKey>
     {
-        [EventMember]
+        [EventData]
         public Guid? TenantId { get; set; }
     }
 

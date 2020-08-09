@@ -24,6 +24,12 @@ message CustomerProfileDto {
 	string creator = 6;
 }
 
+message CustomerEventDto {
+	string fullName = 1;
+	guid customerProfileId = 2 [optional = true];
+	guid id = 3;
+}
+
 message OrderItemDto {
 	string productName = 1;
 	float price = 2;
@@ -116,6 +122,62 @@ service CustomerService {
 }
 
 // **************************** END Customer **********************************************
+
+// **************************** START CustomerEvent **********************************************
+
+message GetCustomerEventRequest {
+	guid id = 1;
+}
+
+message UpdateCustomerEventRequest {
+	guid id = 1;
+	CustomerEventDto value = 2;
+}
+
+message DeleteCustomerEventRequest{
+	guid id = 1;
+}
+
+message GetAllCustomerEventResponse {
+	repeated CustomerEventDto items = 1;
+	int64 page = 2;
+	int64 totalPages = 3;
+	int64 totalCount = 4;
+}
+
+service CustomerEventService {
+	option (prefix) ="api/CustomerEvent";
+
+	rpc GetAll(GetAllRequest) returns (GetAllCustomerEventResponse){		
+		option method = "GET";
+		
+	};
+
+	rpc Get(GetCustomerEventRequest) returns (CustomerEventDto){	
+		option template = "{id}"; 
+		option method = "GET";
+		
+	};
+
+	rpc Create(CustomerEventDto) returns (CustomerEventDto){			
+		option method = "POST";
+		
+	};
+
+	rpc Update(UpdateCustomerEventRequest) returns (CustomerEventDto){			
+		option template = "{id}"; 
+		option method = "PUT";
+		
+	};
+
+	rpc Delete(DeleteCustomerEventRequest) returns (void){
+		option template = "{id}"; 
+		option method = "DELETE";
+		
+	};
+}
+
+// **************************** END CustomerEvent **********************************************
 
 // **************************** START Order **********************************************
 
