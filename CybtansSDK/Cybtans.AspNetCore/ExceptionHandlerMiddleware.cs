@@ -26,12 +26,12 @@ namespace Cybtans.AspNetCore
         {
             try
             {
-                await _next(httpContext);
+                await _next(httpContext).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                await HandleExceptionAsync(httpContext, e);
+                await HandleExceptionAsync(httpContext, e).ConfigureAwait(false);
             }
         }
 

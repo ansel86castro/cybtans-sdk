@@ -11,8 +11,6 @@ namespace Cybtans.Tests.Models
 		
 		public Guid? CustomerProfileId {get; set;}
 		
-		public CustomerProfileDto CustomerProfile {get; set;}
-		
 		public Guid Id {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
@@ -26,11 +24,10 @@ namespace Cybtans.Tests.Models
 	{
 		public const int FullName = 1;
 		public const int CustomerProfileId = 2;
-		public const int CustomerProfile = 3;
-		public const int Id = 4;
+		public const int Id = 3;
 		private readonly int[] _props = new []
 		{
-			FullName,CustomerProfileId,CustomerProfile,Id
+			FullName,CustomerProfileId,Id
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -41,7 +38,6 @@ namespace Cybtans.Tests.Models
 		    {
 		       FullName => "FullName",
 		       CustomerProfileId => "CustomerProfileId",
-		       CustomerProfile => "CustomerProfile",
 		       Id => "Id",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -54,7 +50,6 @@ namespace Cybtans.Tests.Models
 		    {
 		        "FullName" => FullName,
 		        "CustomerProfileId" => CustomerProfileId,
-		        "CustomerProfile" => CustomerProfile,
 		        "Id" => Id,
 		
 		        _ => -1,
@@ -67,7 +62,6 @@ namespace Cybtans.Tests.Models
 		    {
 		        FullName => typeof(string),
 		        CustomerProfileId => typeof(Guid?),
-		        CustomerProfile => typeof(CustomerProfileDto),
 		        Id => typeof(Guid),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -81,7 +75,6 @@ namespace Cybtans.Tests.Models
 		    {
 		        FullName => obj.FullName,
 		        CustomerProfileId => obj.CustomerProfileId,
-		        CustomerProfile => obj.CustomerProfile,
 		        Id => obj.Id,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -95,7 +88,6 @@ namespace Cybtans.Tests.Models
 		    {
 		        case FullName:  obj.FullName = (string)value;break;
 		        case CustomerProfileId:  obj.CustomerProfileId = (Guid?)value;break;
-		        case CustomerProfile:  obj.CustomerProfile = (CustomerProfileDto)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");

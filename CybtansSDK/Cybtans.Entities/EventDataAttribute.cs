@@ -3,7 +3,7 @@
 namespace Cybtans.Entities
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class EventMemberAttribute : Attribute
+    public class EventDataAttribute : Attribute
     {
 
     }

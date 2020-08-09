@@ -6,19 +6,19 @@ namespace Cybtans.Test.Domain
     [GenerateMessage(Service = ServiceType.Interface)]
     public class Customer: DomainTenantEntity<Guid>
     {
-        [EventMember]
+        [EventData]
         public string Name { get; set; }
 
-        [EventMember]
+        [EventData]
         public string FirstLastName { get; set; }
 
-        [EventMember]
+        [EventData]
         public string SecondLastName { get; set; }
 
-        [EventMember]
+        [EventData]
         public Guid? CustomerProfileId { get; set; }
 
-        [EventMember]
+        [EventData]
         public virtual CustomerProfile CustomerProfile { get; set; }
     }
 }

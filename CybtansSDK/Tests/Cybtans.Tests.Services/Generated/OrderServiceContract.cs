@@ -8,6 +8,12 @@ namespace Cybtans.Tests.Services
 	public interface IOrderService 
 	{
 		
+		Task Foo();
+		
+		
+		Task Baar();
+		
+		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);
 		
 		

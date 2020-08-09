@@ -27,8 +27,7 @@ message CustomerProfileDto {
 message CustomerEventDto {
 	string fullName = 1;
 	guid customerProfileId = 2 [optional = true];
-	CustomerProfileDto customerProfile = 3;
-	guid id = 4;
+	guid id = 3;
 }
 
 message OrderItemDto {
