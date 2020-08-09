@@ -1,19 +1,13 @@
-﻿using Cybtans.Entities;
+﻿using AutoMapper.Mappers;
+using Cybtans.Entities;
 using Cybtans.Entities.EventLog;
 using Cybtans.Test.Domain;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Services
 {
-    public class EntityEventDelegateHandler<T>
-    {
-        public EventHandler<EntityEvent> OnCreated { get; set; }
-        public EventHandler<EntityEvent> OnUpdated { get; set; }
-        public EventHandler<EntityEvent> OnDeleted { get; set; }
-    }
 
     public class OrderMessageHandler : IEntityEventsHandler<Order>
     {

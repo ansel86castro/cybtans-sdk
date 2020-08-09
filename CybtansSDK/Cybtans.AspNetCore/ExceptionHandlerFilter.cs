@@ -4,19 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Cybtans.AspNetCore
 {
     public class HttpResponseExceptionFilter : IExceptionFilter
     {
         ILogger<HttpResponseExceptionFilter> _logger;
-        IHostingEnvironment _env;
+        IHostEnvironment _env;
 
-        public HttpResponseExceptionFilter(IHostingEnvironment env, ILogger<HttpResponseExceptionFilter> logger)
+        public HttpResponseExceptionFilter(IHostEnvironment env, ILogger<HttpResponseExceptionFilter> logger)
         {
             _logger = logger;
             _env = env;
@@ -29,24 +26,29 @@ namespace Cybtans.AspNetCore
                 case ValidationException ve:
                     if (_env.IsDevelopment())
                     {
-                        ve.ValidationResult.StackTrace = context.Exception.StackTrace;
-                        ve.ValidationResult.ErrorCode = (int)HttpStatusCode.BadRequest;
+                        ve.ValidationResult.StackTrace = context.Exception.StackTrace;                       
                     }
-                    context.Result = new ObjectResult(ve.ValidationResult) { StatusCode = (int)HttpStatusCode.BadRequest };
+                    context.Result = new ObjectResult(ve.ValidationResult) 
+                    { 
+                        StatusCode = ve.ErrorCode 
+                    };                    
                     context.ExceptionHandled = true;
                     break;
                 case EntityNotFoundException en:
                     context.Result = new ObjectResult(new ValidationResult(en.Message)
                     {
                          ErrorCode = (int)HttpStatusCode.NotFound,
-                          StackTrace = _env.IsDevelopment()?  en.StackTrace: null
-                    }) { StatusCode = (int)HttpStatusCode.NotFound };
+                         StackTrace = _env.IsDevelopment()?  en.StackTrace: null
+                    }) 
+                    { 
+                        StatusCode = (int)HttpStatusCode.NotFound 
+                    };
                     context.ExceptionHandled = true;
                     break;
-                case ActionException actionException:
+                case CybtansException actionException:
                     context.Result = new ObjectResult(new ValidationResult(actionException.Message) 
                     { 
-                        ErrorCode = (int)actionException.StatusCode, 
+                        ErrorCode = actionException.ErrorCode, 
                         StackTrace = _env.IsDevelopment() ? actionException.StackTrace : null  })
                     {
                         StatusCode = (int)actionException.StatusCode
@@ -55,8 +57,15 @@ namespace Cybtans.AspNetCore
                     break;
                 default:
                     _logger.LogError(context.Exception, context.Exception.Message);
-                    context.Result = new ObjectResult(new ValidationResult(context.Exception.GetFullErrorMessage())) { StatusCode = (int)HttpStatusCode.InternalServerError };
-                    context.ExceptionHandled = true;
+
+                    context.Result = new ObjectResult(new ValidationResult(context.Exception.GetFullErrorMessage())
+                    {
+                        ErrorCode = (int)HttpStatusCode.InternalServerError,
+                        StackTrace = _env.IsDevelopment() ? context.Exception.StackTrace : null
+                    })
+                    { StatusCode = (int)HttpStatusCode.InternalServerError };
+
+                    context.ExceptionHandled = true;                    
                     break;
             }
         }

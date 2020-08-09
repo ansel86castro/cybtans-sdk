@@ -21,11 +21,17 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using SQLitePCL;
 using Microsoft.AspNetCore.TestHost;
+using Cybtans.Tests.Services;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Security.Cryptography;
 
 namespace Cybtans.Tests.Integrations
 {
     public class IntegrationFixture: BaseIntegrationFixture<Startup>
     {
+        public EntityEventDelegateHandler<OrderMessageHandler> OrderEvents { get; private set; }
+
         public IntegrationFixture()
         {
             Claims = new Claim[]
@@ -39,15 +45,25 @@ namespace Cybtans.Tests.Integrations
                 new Claim(JwtClaimTypes.Scope, "test"),
                 new Claim("tenant", Guid.NewGuid().ToString())
             };
+
+            OrderEvents = new EntityEventDelegateHandler<OrderMessageHandler>();
         }
+        
 
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
 
             services.AddInternalMessageQueue();
+            
+            var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(EntityEventDelegateHandler<OrderMessageHandler>));
+            if(descriptor != null)
+            {
+                services.Remove(descriptor);
+                services.AddSingleton(OrderEvents);
+            }
 
-            var sp = services.BuildServiceProvider();
+            var sp= services.BuildServiceProvider();
 
             using (var scope = sp.CreateScope())
             {
@@ -58,6 +74,6 @@ namespace Cybtans.Tests.Integrations
 
                 RepositoryFixture.Seed(db).Wait();
             }
-        }       
+        }        
     }
 }

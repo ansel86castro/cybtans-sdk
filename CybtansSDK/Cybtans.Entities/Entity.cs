@@ -5,7 +5,7 @@ namespace Cybtans.Entities
 
     public class Entity<TKey> : IEntity<TKey>
     {
-        [EventMember]
+        [EventData]
         public TKey Id { get; set; }
     }
 
