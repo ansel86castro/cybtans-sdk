@@ -1,5 +1,5 @@
-﻿using Cybtans.Entities.EntityFrameworkCore;
-using Cybtans.Entities.EventLog;
+﻿using Cybtans.Entities;
+using Cybtans.Entities.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;

@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
     <ProjectReference Include="..\Cybtans.Expressions\Cybtans.Expressions.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
