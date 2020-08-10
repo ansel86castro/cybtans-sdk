@@ -1,57 +1,16 @@
 ﻿using AutoMapper;
+using Cybtans.Entities;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace Cybtans.Entities.EventLog
+namespace Cybtans.Services
 {
-    public class EntityEventsHandler<T> : IEntityEventsHandler<T>
-    {
-        IRepository<T> _repository;
-
-        public EntityEventsHandler(IRepository<T> repository)
-        {
-            _repository = repository;
-        }
-
-        public virtual async Task HandleMessage(EntityCreated<T> message)
-        {
-            _repository.Add(message.Value);
-            await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        public virtual async Task HandleMessage(EntityUpdated<T> message)
-        {
-            _repository.Update(message.NewValue);
-            try
-            {
-                await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            }
-            catch (EntityNotFoundException)
-            {
-                _repository.Remove(message.NewValue);
-
-                EntityCreated<T> created = new EntityCreated<T>(message.NewValue);
-                await HandleMessage(created);
-            }
-        }
-
-        public virtual async Task HandleMessage(EntityDeleted<T> message)
-        {
-            _repository.Remove(message.Value);
-            try
-            {
-                await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            }
-            catch (EntityNotFoundException)
-            {
-                //Do nothing
-            }
-        }
-    }
-
     public class EntityEventsHandler<TEntity, TEvent> : IEntityEventsHandler<TEvent>
     {
         private readonly IRepository<TEntity> _repository;
         private readonly IMapper _mapper;
+        private readonly ILogger<EntityEventsHandler<TEntity, TEvent>> _logger;
+
         public EntityEventsHandler(IRepository<TEntity> repository, IMapper mapper)
         {
             _repository = repository;
@@ -63,6 +22,8 @@ namespace Cybtans.Entities.EventLog
             var entity = _mapper.Map<TEvent, TEntity>(message.Value);
             _repository.Add(entity);
             await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            _logger.LogDebug($"IntegrationEvent: Entity {typeof(TEntity).Name} Created");
         }
 
         public virtual async Task HandleMessage(EntityUpdated<TEvent> message)
@@ -72,6 +33,8 @@ namespace Cybtans.Entities.EventLog
             try
             {
                 await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                _logger.LogDebug($"IntegrationEvent: Entity {typeof(TEntity).Name} Updated");
             }
             catch (EntityNotFoundException)
             {
@@ -89,13 +52,15 @@ namespace Cybtans.Entities.EventLog
             try
             {
                 await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+                _logger.LogDebug($"IntegrationEvent: Entity {typeof(TEntity).Name} Removed");
             }
             catch (EntityNotFoundException)
             {
                 //Do nothing
+                _logger.LogWarning($"IntegrationEvent: Entity {typeof(TEntity).Name} can not be removed beacause is not found");
             }
         }
     }
-
 
 }

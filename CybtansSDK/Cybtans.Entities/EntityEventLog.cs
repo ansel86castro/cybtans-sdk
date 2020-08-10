@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace Cybtans.Entities.EventLog
+namespace Cybtans.Entities
 {
-    public class EntityEventLog
-    {
-        public Guid Id { get; set; }
-
+    public class EntityEventLog:Entity<Guid>
+    {        
         public DateTime CreateTime { get; set; }
 
         public EventStateEnum State { get; set; }

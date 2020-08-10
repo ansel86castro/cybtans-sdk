@@ -14,11 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Cybtans.Entities\Cybtans.Entities.csproj" />
     <ProjectReference Include="..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
   </ItemGroup>

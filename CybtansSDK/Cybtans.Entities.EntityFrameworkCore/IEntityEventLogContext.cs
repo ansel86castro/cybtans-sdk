@@ -1,5 +1,4 @@
-﻿using Cybtans.Entities.EventLog;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {

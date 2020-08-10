@@ -3,8 +3,6 @@ using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Entities.EntiyFrameworkCore;
 using Cybtans.Entities.EventLog;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;

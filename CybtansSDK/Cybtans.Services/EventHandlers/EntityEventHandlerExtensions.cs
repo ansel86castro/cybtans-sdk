@@ -1,6 +1,6 @@
 ﻿using Cybtans.Entities;
-using Cybtans.Entities.EventLog;
 using Cybtans.Messaging;
+using Cybtans.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
