@@ -11,10 +11,11 @@ namespace Cybtans.Services
         private readonly IMapper _mapper;
         private readonly ILogger<EntityEventsHandler<TEntity, TEvent>> _logger;
 
-        public EntityEventsHandler(IRepository<TEntity> repository, IMapper mapper)
+        public EntityEventsHandler(IRepository<TEntity> repository, IMapper mapper, ILogger<EntityEventsHandler<TEntity, TEvent>> logger)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public virtual async Task HandleMessage(EntityCreated<TEvent> message)
