@@ -17,7 +17,6 @@
   <ItemGroup>
   	<ProjectReference Include="..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
-  	<ProjectReference Include="..\..\Cybtans.Entities.EventLog\Cybtans.Entities.EventLog.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
