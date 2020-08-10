@@ -1,9 +1,6 @@
-﻿using AutoMapper.Mappers;
-using Cybtans.Entities;
-using Cybtans.Entities.EventLog;
+﻿using Cybtans.Entities;
+using Cybtans.Services;
 using Cybtans.Test.Domain;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Services

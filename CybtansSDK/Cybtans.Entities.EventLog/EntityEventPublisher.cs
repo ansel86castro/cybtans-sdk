@@ -1,20 +1,20 @@
-﻿using Cybtans.Messaging;
+﻿using Cybtans.Entities;
+using Cybtans.Messaging;
 using Cybtans.Serialization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 #nullable enable
 
 namespace Cybtans.Entities.EventLog
 {
-  
+
     public class EntityEventPublisher : IEntityEventPublisher
     {
         private readonly IMessageQueue _messageQueue;
-        private readonly IRepository<EntityEventLog, Guid>? _context;
+        private readonly IRepository<EntityEventLog, Guid>? _repository;
         private readonly ILogger<EntityEventPublisher>? _logger;
 
         public EntityEventPublisher(
@@ -22,14 +22,14 @@ namespace Cybtans.Entities.EventLog
             IRepository<EntityEventLog, Guid>? context = null,
             ILogger<EntityEventPublisher>? logger = null)
         {
-            _context = context;
+            _repository = context;
             _messageQueue = messageQueue;
             _logger = logger;
         }
 
         private async Task<EntityEventLog> PublishInternal(EntityEvent entityEvent)
-        {            
-            entityEvent.CreateTime = DateTime.Now;            
+        {
+            entityEvent.CreateTime = DateTime.Now;
             var type = entityEvent.GetType();
 
             var data = EntityUtilities.ToDictionary(entityEvent);
@@ -40,18 +40,18 @@ namespace Cybtans.Entities.EventLog
                 EntityEventType = type.FullName,
                 State = EventStateEnum.NotPublished
             };
-            entityEvent.State = EventStateEnum.NotPublished;            
+            entityEvent.State = EventStateEnum.NotPublished;
             var binding = _messageQueue.GetBinding(type, entityEvent.Topic);
             if (binding == null)
                 throw new QueuePublishException($"Bindindg information not found for {type}");
 
             log.Exchange = binding.Exchange;
             log.Topic = binding.Topic;
-            
+
             try
             {
                 entityEvent.State = EventStateEnum.Published;
-                log.State = EventStateEnum.Published;                
+                log.State = EventStateEnum.Published;
 
                 await _messageQueue.Publish(log.Data, binding.Exchange, binding.Topic).ConfigureAwait(false);
             }
@@ -70,20 +70,20 @@ namespace Cybtans.Entities.EventLog
         public async Task Publish(EntityEvent entityEvent)
         {
             var log = await PublishInternal(entityEvent).ConfigureAwait(false);
-            if (_context != null)
+            if (_repository != null)
             {
                 if (entityEvent.Id == Guid.Empty)
                 {
                     entityEvent.Id = Guid.NewGuid();
-                    _context.Add(log);
+                    _repository.Add(log);
                 }
                 else
                 {
                     log.Id = entityEvent.Id;
-                    _context.Update(log);
+                    _repository.Update(log);
                 }
 
-                await _context.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 entityEvent.Id = log.Id;
             }
         }
@@ -96,7 +96,7 @@ namespace Cybtans.Entities.EventLog
                 logs.Add((await PublishInternal(item), item));
             }
 
-            if (_context != null)
+            if (_repository != null)
             {
 
                 foreach (var (log, ev) in logs)
@@ -104,16 +104,16 @@ namespace Cybtans.Entities.EventLog
                     if (ev.Id == Guid.Empty)
                     {
                         ev.Id = Guid.NewGuid();
-                        _context.Add(log);
+                        _repository.Add(log);
                     }
                     else
                     {
                         log.Id = ev.Id;
-                        _context.Update(log);
+                        _repository.Update(log);
                     }
                 }
 
-                await _context.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await _repository.UnitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 //var nonPublished = entityEvents.Where(e => e.State == EventStateEnum.NotPublished).ToList();
                 //if (nonPublished.Count > 0)
                 //{

@@ -1,6 +1,7 @@
-﻿using Cybtans.Messaging;
+﻿using Cybtans.Entities;
+using Cybtans.Messaging;
 
-namespace Cybtans.Entities.EventLog
+namespace Cybtans.Services
 {
     public interface IEntityEventsHandler<T> :
         IMessageHandler<EntityCreated<T>>,
