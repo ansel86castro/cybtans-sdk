@@ -8,6 +8,7 @@ using Cybtans.Test.Domain;
 using Cybtans.Tests.Models;
 using System.Threading.Tasks;
 using System.Net;
+using System.Collections.Generic;
 
 namespace Cybtans.Tests.Services
 {
@@ -25,6 +26,19 @@ namespace Cybtans.Tests.Services
         public Task Foo()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task Test()
+        {
+            await ValidateTest();
+        }
+
+        private async Task ValidateTest()
+        {
+            await Task.Delay(10);
+
+            throw new ValidationException("Error Test")
+                .AddError("Test", "Tiene que existir algún análisis especificado");
         }
     }
 }

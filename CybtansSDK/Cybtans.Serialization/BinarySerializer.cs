@@ -24,7 +24,7 @@ namespace Cybtans.Serialization
 
         readonly Encoding _encoding;
         readonly Encoder _encoder;
-        readonly byte[] _buffer;
+        readonly byte[] _buffer = new byte[256];
         Memory<byte> _memory;
         Dictionary<Type, TypeCache>? _typeCache;
 
@@ -76,7 +76,7 @@ namespace Cybtans.Serialization
             TYPE_GUID = 0x74
         };
 
-        public BinarySerializer() : this(new UTF8Encoding(false, true))
+        public BinarySerializer() : this(Encoding.UTF8)
         {
 
         }
@@ -84,8 +84,7 @@ namespace Cybtans.Serialization
         public BinarySerializer(Encoding encoding)
         {
             _encoding = encoding;
-            _encoder = encoding.GetEncoder();
-            _buffer = new byte[256];
+            _encoder = encoding.GetEncoder();            
             _memory = _buffer.AsMemory();
         }
 
@@ -194,7 +193,6 @@ namespace Cybtans.Serialization
             }
         }
 
-
         private void WriteObject(Stream stream, object obj, Type type)
         {
             var props = GetPropertiesList(type);
@@ -226,27 +224,35 @@ namespace Cybtans.Serialization
         }
 
         private unsafe void WriteString(Stream stream, string value)
-        {
-            var chars = value.AsSpan();
-            var bytes = _memory.Span;
-
-            var bytesCount = _encoding.GetByteCount(chars);
-            var bytesPerChar = chars.Length == 0 ? 0 : bytesCount / chars.Length;
-
+        {                       
+            var bytesCount = _encoding.GetByteCount(value);
+           
             WriteLenght(stream, bytesCount, Types.TYPE_STRING_8, Types.TYPE_STRING_16, Types.TYPE_STRING_32);
 
-            int loops = (bytesCount / _buffer.Length) + (bytesCount % _buffer.Length > 0 ? 1 : 0);
-            int bytesOffset = 0;
-
-            for (int i = 0; i < loops; i++)
-            {                
-                int len = Math.Min(bytes.Length, bytesCount - bytesOffset);
-                
-                int numBytes = _encoding.GetBytes(chars.Slice(bytesOffset / bytesPerChar, len / bytesPerChar), bytes);
-                stream.Write(bytes.Slice(0, numBytes));
-
-                bytesOffset += numBytes;
+            if(bytesCount <= _buffer.Length)
+            {
+                var numBytes =_encoding.GetBytes(value, 0, value.Length, _buffer, 0);
+                stream.Write(_buffer, 0, numBytes);
             }
+            else
+            {
+                var chars = value.AsSpan();
+                var bytes = _memory.Span;
+
+                int loops = (bytesCount / _buffer.Length) + (bytesCount % _buffer.Length > 0 ? 1 : 0);
+                            
+                int totalChars = 0;
+                for (int i = 0; i < loops; i++)
+                {
+                    _encoder.Convert(chars.Slice(totalChars), bytes, i == (loops - 1), out var charsUsed, out var bytesWritten, out var completed);
+
+                    stream.Write(bytes.Slice(0, bytesWritten));
+                    totalChars += charsUsed;
+
+                    if (completed)
+                        break;
+                }   
+            }                      
         }
 
         private unsafe void WriteChar(Stream stream, char ch)
@@ -590,16 +596,15 @@ namespace Cybtans.Serialization
         private unsafe string ReadString8(Stream stream) => ReadString(stream, ReadNumber<byte>(stream));
         private unsafe string ReadString16(Stream stream) => ReadString(stream, ReadNumber<ushort>(stream));
         private unsafe string ReadString32(Stream stream) => ReadString(stream, ReadNumber<int>(stream));
-
         private unsafe string ReadString(Stream stream, int length)
-        {
+        {            
             if (length <= _buffer.Length)
             {
                 stream.Read(_buffer, 0, length);
 
                 return _encoding.GetString(_buffer, 0, length);
             }
-
+            
             byte[] buff = new byte[length];
             stream.Read(buff, 0, length);
             return _encoding.GetString(buff);
