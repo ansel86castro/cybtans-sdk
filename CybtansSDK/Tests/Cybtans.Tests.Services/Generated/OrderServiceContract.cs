@@ -14,6 +14,12 @@ namespace Cybtans.Tests.Services
 		Task Baar();
 		
 		
+		Task Test();
+		
+		
+		Task Argument();
+		
+		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);
 		
 		

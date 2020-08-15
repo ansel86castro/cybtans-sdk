@@ -19,15 +19,28 @@ namespace Cybtans.AspNetCore
             {
                 if (apiException.ContentHeaders?.ContentType?.MediaType == BinarySerializer.MEDIA_TYPE)
                 {                    
-                    result = BinaryConvert.Deserialize<ValidationResult>(apiException.Content);
+                    if (apiException.ContentHeaders.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
+                    {
+                        result = BinaryConvert.Deserialize<ValidationResult>(apiException.Content);
+                    }
+                    else
+                    {
+                        var encoding = Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet);
+                        var serializer = new BinarySerializer(encoding);
+                        result = serializer.Deserialize<ValidationResult>(apiException.Content);
+                    }
                 }
-                else if (apiException.ContentHeaders?.ContentType?.MediaType == "application/json" && apiException.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                else if (IsJson(apiException.ContentHeaders?.ContentType?.MediaType) && apiException.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    var encoding = Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet);
+                    var encoding = apiException.ContentHeaders?.ContentType?.CharSet != null ?
+                        Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet) :
+                        Encoding.UTF8;
+
                     var json = encoding.GetString(apiException.Content);
                     var apiValidation = System.Text.Json.JsonSerializer.Deserialize<FluentValidationResult>(json);
 
-                    result = new ValidationResult(apiValidation.title, apiValidation.errors) { ErrorCode = (int)apiException.StatusCode };
+                    result = new ValidationResult(apiValidation.title, apiValidation.errors) 
+                    { ErrorCode = (int)apiException.StatusCode };
                 }
             }
 
@@ -37,6 +50,11 @@ namespace Cybtans.AspNetCore
             }
 
             return result;
+        }
+
+        private static bool IsJson(string? mediaType)
+        {
+            return mediaType == "application/problem+json" || mediaType == "application/json";
         }
 
         internal static string GetFullErrorMessage(this Exception exception)
