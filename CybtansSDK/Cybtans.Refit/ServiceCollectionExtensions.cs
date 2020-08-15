@@ -33,7 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
            return services.AddHttpClient(serviceName, c =>
             {
                 c.BaseAddress = new Uri(baseUrl);
-                c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");
+                c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
             })
             .AddHttpMessageHandler(()=> new HttpClientErrorHandler())
             .AddTypedClient(c => RestService.For<T>(c, settings));            
@@ -49,7 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var builder = services.AddHttpClient(serviceName, c =>
             {
                 c.BaseAddress = new Uri(baseUrl);
-                c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");
+                c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
             });
             builder.AddHttpMessageHandler(() => new HttpClientErrorHandler());
 

@@ -71,7 +71,10 @@ namespace Cybtans.Test.RestApi
             services.AddAutoMapper(typeof(TestStub));
          
             services
-            .AddControllers(options => options.Filters.Add<HttpResponseExceptionFilter>())
+            .AddControllers(options =>
+            {
+                options.Filters.Add<HttpResponseExceptionFilter>();
+            })
             .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
             .AddCybtansFormatter();  
 

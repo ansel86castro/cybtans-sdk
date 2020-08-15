@@ -22,4 +22,8 @@ service OrderService {
 		option method = "GET";		
 	};
 
+	rpc Argument(void) returns (void){
+		option template = "arg"; 
+		option method = "GET";		
+	};
 }

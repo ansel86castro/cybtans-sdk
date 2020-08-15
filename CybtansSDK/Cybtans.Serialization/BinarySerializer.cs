@@ -19,8 +19,8 @@ namespace Cybtans.Serialization
     public class BinarySerializer
     {
         public const string MEDIA_TYPE = "application/x-cybtans";
-
         public static DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static Encoding DefaultEncoding { get; set; } = Encoding.UTF8;
 
         readonly Encoding _encoding;
         readonly Encoder _encoder;
@@ -76,7 +76,7 @@ namespace Cybtans.Serialization
             TYPE_GUID = 0x74
         };
 
-        public BinarySerializer() : this(Encoding.UTF8)
+        public BinarySerializer() : this(DefaultEncoding)
         {
 
         }

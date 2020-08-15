@@ -9,14 +9,14 @@ namespace Cybtans.AspNetCore
 {
     public class BinaryOutputFormatter : OutputFormatter
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer(Encoding.UTF8));
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
 
         private readonly Encoding _encoding;
         private readonly string _mediaType;
        
-        public BinaryOutputFormatter() : this(Encoding.UTF8) { }
+        public BinaryOutputFormatter() : this(BinarySerializer.DefaultEncoding) { }
 
-        private BinaryOutputFormatter(Encoding encoding)
+        public BinaryOutputFormatter(Encoding encoding)
         {
             _encoding = encoding;
             _mediaType = $"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}";
@@ -26,19 +26,20 @@ namespace Cybtans.AspNetCore
 
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
+            context.ContentType = _mediaType;
             return true;
         }
 
         protected override bool CanWriteType(Type type)
         {
             return true;
-        }
+        }     
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
             var response = context.HttpContext.Response;
-
-            var serializer = _encoding == Encoding.UTF8 ? Serializer.Value : new BinarySerializer(_encoding);
+            
+            var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
 
             var data = serializer.Serialize(context.Object);
 
