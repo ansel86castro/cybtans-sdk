@@ -32,6 +32,12 @@ namespace Cybtans.Tests.RestApi.Controllers
 			return _service.Baar();
 		}
 		
+		[HttpGet("test")]
+		public Task Test()
+		{
+			return _service.Test();
+		}
+		
 		[HttpGet]
 		public Task<GetAllOrderResponse> GetAll([FromQuery]GetAllRequest __request)
 		{

@@ -311,5 +311,17 @@ namespace Cybtans.Tests.Integrations
             Assert.NotNull(errorInfo.StackTrace);
             Assert.NotNull(errorInfo.ErrorMessage);
         }
+
+        [Fact]
+        public async Task Test()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Test());
+            Assert.NotNull(exception);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+
+            var errorInfo = exception.ToErrorInfo() as ValidationResult;
+            Assert.NotNull(errorInfo);
+            Assert.Equal("Tiene que existir algún análisis especificado", errorInfo.Errors["Test"].First());
+        }
     }
 }
