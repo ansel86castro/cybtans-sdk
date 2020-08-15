@@ -6,7 +6,8 @@ namespace Cybtans.Serialization
 {
     public static class BinaryConvert
     {
-        private static ThreadLocal<BinarySerializer> serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        public static byte[] Serialize(object obj) => new BinarySerializer().Serialize(obj);
+        private static ThreadLocal<BinarySerializer> serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
+        public static byte[] Serialize(object obj) => new BinarySerializer().Serialize(obj);
 
         public static void Serialize(Stream stream, object obj) => serializer.Value.Serialize(stream, obj);
 

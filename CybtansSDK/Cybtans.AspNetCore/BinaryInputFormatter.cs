@@ -3,26 +3,27 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.IO;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Cybtans.AspNetCore
 {
     public class BinaryInputFormatter : InputFormatter
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer(Encoding.UTF8));
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
 
-        private readonly Encoding _encoding;
-        private readonly string _mediaType;
+        private readonly Encoding _encoding;        
 
-        public BinaryInputFormatter() : this(Encoding.UTF8) { }
+        public BinaryInputFormatter() : this(BinarySerializer.DefaultEncoding) { }
 
-        private BinaryInputFormatter(Encoding encoding)
+        public BinaryInputFormatter(Encoding encoding)
         {
-            _encoding = encoding;
-            _mediaType = $"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}";
-            SupportedMediaTypes.Add(_mediaType);
+            _encoding = encoding;            
+            SupportedMediaTypes.Add($"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}");
             SupportedMediaTypes.Add(BinarySerializer.MEDIA_TYPE);
         }
 
@@ -41,8 +42,8 @@ namespace Cybtans.AspNetCore
             using MemoryStream stream = new MemoryStream();
             await request.Body.CopyToAsync(stream).ConfigureAwait(false);
             stream.Position = 0;
-
-            var serializer = _encoding == Encoding.UTF8 ? Serializer.Value : new BinarySerializer(_encoding);
+            
+            var serializer = _encoding ==BinarySerializer.DefaultEncoding ? Serializer.Value! : new BinarySerializer(_encoding);
 
             var result = serializer.Deserialize(stream, type);
             return await InputFormatterResult.SuccessAsync(result).ConfigureAwait(false);

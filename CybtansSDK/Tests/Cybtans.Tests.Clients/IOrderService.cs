@@ -20,6 +20,9 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/test")]
 		Task Test();
 		
+		[Get("/api/Order/arg")]
+		Task Argument();
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		

@@ -60,8 +60,7 @@ namespace Cybtans.Proto.Generators.CSharp
             }
 
             AddAutorizationAttribute(srv.Option, clsWriter);
-
-            clsWriter.Append("[Produces(\"application/json\")]").AppendLine();
+            
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
             clsWriter.Append("[ApiController]").AppendLine();
             clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
