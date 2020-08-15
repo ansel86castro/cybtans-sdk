@@ -17,4 +17,13 @@ service OrderService {
 		option method = "GET";		
 	};
 
+	rpc Test(void) returns (void){
+		option template = "test"; 
+		option method = "GET";		
+	};
+
+	rpc Argument(void) returns (void){
+		option template = "arg"; 
+		option method = "GET";		
+	};
 }

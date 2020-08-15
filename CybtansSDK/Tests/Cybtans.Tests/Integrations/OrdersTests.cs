@@ -303,13 +303,40 @@ namespace Cybtans.Tests.Integrations
         {
             var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Foo());
             Assert.NotNull(exception);
-            Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
+            Assert.Equal(HttpStatusCode.NotImplemented, exception.StatusCode);
 
             var errorInfo = exception.ToErrorInfo();            
 
-            Assert.Equal((int?)HttpStatusCode.InternalServerError, errorInfo.ErrorCode);
+            Assert.Equal((int?)HttpStatusCode.NotImplemented, errorInfo.ErrorCode);
             Assert.NotNull(errorInfo.StackTrace);
             Assert.NotNull(errorInfo.ErrorMessage);
         }
+
+        [Fact]
+        public async Task Test()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Test());
+            Assert.NotNull(exception);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+
+            var errorInfo = exception.ToErrorInfo() as ValidationResult;
+            Assert.NotNull(errorInfo);
+            Assert.Equal("Tiene que existir algún análisis especificado", errorInfo.Errors["Test"].First());
+        }
+
+        [Fact]
+        public async Task ShouldThrowArgumentException()
+        {
+            var exception = await Assert.ThrowsAsync<ApiException>(async () => await _service.Argument());
+            Assert.NotNull(exception);
+            Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+
+            var errorInfo = exception.ToErrorInfo();
+
+            Assert.Equal((int?)HttpStatusCode.BadRequest, errorInfo.ErrorCode);
+            Assert.NotNull(errorInfo.StackTrace);
+            Assert.NotNull(errorInfo.ErrorMessage);
+        }
+
     }
 }

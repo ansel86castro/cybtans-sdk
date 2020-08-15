@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
-	[Produces("application/json")]
 	[Route("api/Order")]
 	[ApiController]
 	public class OrderServiceController : ControllerBase
@@ -30,6 +29,18 @@ namespace Cybtans.Tests.RestApi.Controllers
 		public Task Baar()
 		{
 			return _service.Baar();
+		}
+		
+		[HttpGet("test")]
+		public Task Test()
+		{
+			return _service.Test();
+		}
+		
+		[HttpGet("arg")]
+		public Task Argument()
+		{
+			return _service.Argument();
 		}
 		
 		[HttpGet]

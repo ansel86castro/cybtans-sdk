@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
-	[Produces("application/json")]
 	[Route("api/CustomerEvent")]
 	[ApiController]
 	public class CustomerEventServiceController : ControllerBase

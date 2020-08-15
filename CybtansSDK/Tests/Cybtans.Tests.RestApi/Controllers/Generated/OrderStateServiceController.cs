@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
-	[Produces("application/json")]
 	[Route("api/OrderState")]
 	[ApiController]
 	public class OrderStateServiceController : ControllerBase
