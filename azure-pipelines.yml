@@ -35,7 +35,17 @@ steps:
     verbose: true
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
     ArtifactName: 'cybtans-cli'
     publishLocation: 'Container'
+
+- task: AzureFileCopy@4
+  displayName: 'Upload to Blob Storage'
+  inputs:
+    SourcePath: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
+    azureSubscription: 'Evaluación gratuita(e5d99fb9-0a00-4157-8a2f-e79ac9337a57)'
+    Destination: 'AzureBlob'
+    storage: 'cybtans'
+    ContainerName: 'cybtanssdk'
