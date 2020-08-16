@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(majorMinorPathVersion).$(buildVersion)
+
+# pipeline variables
+variables:
+   majorMinorPathVersion: 1.0.16
+  # semanticVersion counter is automatically incremented by one in each execution of pipeline
+  # second parameter is seed value to reset to every time the referenced majorMinorPathVersion is changed
+   buildVersion: $[counter(variables['majorMinorPathVersion'], 1)]   
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: CmdLine@2
+  displayName: "Publish Code Generator"
+  inputs:
+    script: 'dotnet publish .\CybtansSDK\Tools\Cybtans.Proto.Generator\Cybtans.Proto.Generator.csproj -p:PublishProfile=FolderProfile -o Release'    
+
+- task: ArchiveFiles@2
+  displayName: "Zip File"
+  inputs:
+    rootFolderOrFile: 'Release/cybtans-cli.exe'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
+    replaceExistingArchive: true
+    verbose: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
+    ArtifactName: 'cybtans-cli-x64.zip'
+    publishLocation: 'Container'
