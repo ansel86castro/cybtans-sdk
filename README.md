@@ -6,7 +6,7 @@ The Cybtans command-line interface (CLI) is a cross-platform code generation too
 
 ### Getting Started
 
-First [download](https://github.com/ansel86castro/cybtans-sdk/releases/download/v3.1.0/cybtans-cli_x64.zip) the **cybtans-cli** tool from the latest release. Extract it and additionally add the directory where you extract the executable to your PATH.
+First [download cybtans-cli-x64](https://cybtans.blob.core.windows.net/cybtanssdk/cybtans-cli-x64.zip) the **cybtans-cli** tool from the latest release. Extract it and additionally add the directory where you extract the executable to your PATH.
 
 Let's create a solution file for this example
 ```bash
