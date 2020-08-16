@@ -13,7 +13,13 @@ variables:
    buildVersion: $[counter(variables['majorMinorPathVersion'], 1)]   
 
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+      - CybtansSDK/Tools/*
 
 pool:
   vmImage: 'windows-latest'
@@ -22,7 +28,7 @@ steps:
 - task: CmdLine@2
   displayName: "Publish Code Generator"
   inputs:
-    script: 'dotnet publish .\CybtansSDK\Tools\Cybtans.Proto.Generator\Cybtans.Proto.Generator.csproj -p:PublishProfile=FolderProfile -o Release'    
+    script: 'dotnet publish CybtansSDK/Tools/Cybtans.Proto.Generator/Cybtans.Proto.Generator.csproj -p:PublishProfile=FolderProfile -o Release'    
 
 - task: ArchiveFiles@2
   displayName: "Zip File"
