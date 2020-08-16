@@ -37,5 +37,5 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
-    ArtifactName: 'cybtans-cli-x64.zip'
+    ArtifactName: 'cybtans-cli'
     publishLocation: 'Container'
