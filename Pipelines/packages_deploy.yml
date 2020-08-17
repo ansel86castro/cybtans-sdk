@@ -3,13 +3,12 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-name: $(majorMinorPachVersion).$(buildVersion)
+name: $(majorMinorVersion).$(buildVersion)
 
 # pipeline variables
-variables:
-   majorMinorPachVersion: 1.0.16   
-   buildVersion: $[counter(variables['majorMinorPachVersion'], 1)]
-   packVersion: $(majorMinorPachVersion)-beta.$(buildVersion)
+variables:   
+   buildVersion: $[counter(variables['majorMinorVersion'], 1)]
+   packVersion: $(majorMinorVersion).$(buildVersion)-beta
 
 
 trigger:
