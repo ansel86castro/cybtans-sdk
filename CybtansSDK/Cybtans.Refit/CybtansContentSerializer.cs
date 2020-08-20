@@ -1,5 +1,6 @@
 ﻿using Cybtans.Serialization;
 using Refit;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -36,20 +37,20 @@ namespace Cybtans.Refit
             }
 
             BinarySerializer serializer;
-            if(content.Headers.ContentType == null || content.Headers.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
+            if (content.Headers.ContentType == null || content.Headers.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
             {
                 serializer = Serializer.Value;
             }
             else
             {
-                var encoding = content.Headers.ContentType.CharSet == _encoding.WebName ? 
-                    _encoding : 
+                var encoding = content.Headers.ContentType.CharSet == _encoding.WebName ?
+                    _encoding :
                     Encoding.GetEncoding(content.Headers.ContentType.CharSet);
 
                 serializer = new BinarySerializer(encoding);
             }
-            
-            return serializer.Deserialize<T>(await content.ReadAsStreamAsync().ConfigureAwait(false));        
+
+            return serializer.Deserialize<T>(await content.ReadAsStreamAsync().ConfigureAwait(false));
         }
 
         public Task<HttpContent> SerializeAsync<T>(T item)

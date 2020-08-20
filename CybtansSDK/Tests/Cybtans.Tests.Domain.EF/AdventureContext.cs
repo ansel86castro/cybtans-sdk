@@ -17,7 +17,7 @@ namespace Cybtans.Test.Domain.EF
         {
         }         
         
-        public DbSet<Order> Ordes { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderItem> OrderItems { get; set; }
 

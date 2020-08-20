@@ -6,6 +6,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,7 +100,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                     new OrderState { Id = 4, Name = "Shipped" },
                     new OrderState { Id = 5, Name = "Delivered" });
 
-                context.Add(new Customer
+                context.Customers.Add(new Customer
                 {
                     Id = CustomerId,
                     Name = "Test",
@@ -109,6 +110,27 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                     {
                         Id = CustomerProfileId,
                         Name = "Test Profile"
+                    }
+                });
+
+                await context.SaveChangesAsync();
+
+                context.Orders.Add(new Order
+                {
+                    OrderStateId = 1,
+                    CustomerId = CustomerId,
+                    Description = "Order 1",
+                    OrderType = OrderTypeEnum.Normal,
+                    OrderTypeNullable = OrderTypeEnum.Shipping,
+                    CreateDate = DateTime.Now,
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem
+                        {
+                                ProductName = "Product 1",
+                                Discount = 0,
+                                Price = 10
+                        }
                     }
                 });
 

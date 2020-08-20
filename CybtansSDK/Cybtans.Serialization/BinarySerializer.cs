@@ -107,6 +107,8 @@ namespace Cybtans.Serialization
             }
 
             var type = obj.GetType();
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
             switch (obj)
             {
                 case bool boolValue:
@@ -186,9 +188,16 @@ namespace Cybtans.Serialization
                     break;                
                 case IReflectorMetadataProvider accesorProvider:
                     WriteObject(stream, accesorProvider);
-                    break;
+                    break;                
                 default:
-                    WriteObject(stream, obj, type);
+                    if (type.IsEnum)
+                    {
+                        WriteInteger(stream, System.Convert.ToInt32(obj));
+                    }
+                    else
+                    {
+                        WriteObject(stream, obj, type);
+                    }
                     break;
             }
         }
@@ -569,7 +578,8 @@ namespace Cybtans.Serialization
                     value = ReadCodedMap(stream, typeCode, type);
                     break;
                 case Types.TYPE_DECIMAL:
-                    return ReadNumber<decimal>(stream);
+                    value = ReadNumber<decimal>(stream);
+                    break;
                 default:
                     throw new NotSupportedException($"TYPE CODE {typeByte} not supported");
             }
