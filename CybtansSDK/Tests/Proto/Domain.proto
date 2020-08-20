@@ -42,14 +42,22 @@ message OrderDto {
 	string description = 1;
 	guid customerId = 2;
 	int32 orderStateId = 3;
-	OrderStateDto orderState = 4;
-	CustomerDto customer = 5;
-	repeated OrderItemDto items = 6;
-	guid tenantId = 7 [optional = true];
-	guid id = 8;
-	datetime createDate = 9;
-	datetime updateDate = 10 [optional = true];
-	string creator = 11;
+	OrderTypeEnum orderType = 4;
+	OrderTypeEnum orderTypeNullable = 5 [optional = true];
+	OrderStateDto orderState = 6;
+	CustomerDto customer = 7;
+	repeated OrderItemDto items = 8;
+	guid tenantId = 9 [optional = true];
+	guid id = 10;
+	datetime createDate = 11;
+	datetime updateDate = 12 [optional = true];
+	string creator = 13;
+}
+
+enum OrderTypeEnum {
+	Default = 0;
+	Normal = 1;
+	Shipping = 2;
 }
 
 message OrderStateDto {

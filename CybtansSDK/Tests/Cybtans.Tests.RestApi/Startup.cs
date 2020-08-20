@@ -102,8 +102,9 @@ namespace Cybtans.Test.RestApi
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
-                app.UseExceptionHandlingMiddleware();
+                
             }
+            app.UseExceptionHandlingMiddleware();
 
             app.UseCors();
 

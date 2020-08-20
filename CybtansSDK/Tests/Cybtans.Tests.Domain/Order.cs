@@ -18,11 +18,25 @@ namespace Cybtans.Test.Domain
         public int OrderStateId { get; set; }
 
         [EventData]
+        public OrderTypeEnum OrderType { get; set; }
+
+        [EventData]
+        public OrderTypeEnum? OrderTypeNullable { get; set; }
+
+        [EventData]
         public virtual OrderState OrderState { get; set; }
         
         public virtual Customer Customer { get; set; }
 
         [EventData]
         public virtual ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();
+    }
+
+    [GenerateMessage]
+    public enum OrderTypeEnum
+    {
+        Default,
+        Normal,
+        Shipping
     }
 }
