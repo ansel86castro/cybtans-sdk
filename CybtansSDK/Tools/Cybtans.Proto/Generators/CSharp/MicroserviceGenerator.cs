@@ -20,11 +20,7 @@ namespace Cybtans.Proto.Generators.CSharp
         public void GenerateCode(ProtoFile proto, Scope? scope =null)
         {            
             foreach (var item in proto.ImportedFiles)
-            {
-                if(item.Package == null)
-                {
-                    item.Package = proto.Package;
-                }
+            {               
                 GenerateCode(item, null);
             }
             

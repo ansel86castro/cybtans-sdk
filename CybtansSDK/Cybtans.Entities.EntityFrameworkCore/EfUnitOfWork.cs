@@ -64,6 +64,8 @@ namespace Cybtans.Entities.EntityFrameworkCore
 
         public virtual int SaveChanges()
         {
+            ApplySoftDelete();
+
             int retryCount = 2;
             while (retryCount > 0)
             {

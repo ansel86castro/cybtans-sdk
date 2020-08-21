@@ -120,8 +120,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                     OrderStateId = 1,
                     CustomerId = CustomerId,
                     Description = "Order 1",
-                    OrderType = OrderTypeEnum.Normal,
-                    OrderTypeNullable = OrderTypeEnum.Shipping,
+                    OrderType = OrderTypeEnum.Normal,                    
                     CreateDate = DateTime.Now,
                     Items = new List<OrderItem>
                     {

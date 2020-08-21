@@ -74,7 +74,8 @@ namespace Cybtans.Proto
                     if (file.Package != null)
                     {
                         importFileNode.Package = file.Package;
-                        importFileNode.Option.Namespace = file.Package.ToString();
+                        if (importFileNode.Option.Namespace == null)
+                            importFileNode.Option.Namespace = file.Option.Namespace ?? file.Package.ToString();
                     }
 
                     scope.Merge(importScope);
