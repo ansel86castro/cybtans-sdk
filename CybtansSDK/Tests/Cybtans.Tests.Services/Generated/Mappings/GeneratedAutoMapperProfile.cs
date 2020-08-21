@@ -28,6 +28,12 @@ namespace Cybtans.Tests.Services
            
            CreateMap<OrderState, OrderStateDto>();
            CreateMap<OrderStateDto,OrderState>();
+           
+           CreateMap<SoftDeleteOrder, SoftDeleteOrderDto>();
+           CreateMap<SoftDeleteOrderDto,SoftDeleteOrder>();
+           
+           CreateMap<SoftDeleteOrderItem, SoftDeleteOrderItemDto>();
+           CreateMap<SoftDeleteOrderItemDto,SoftDeleteOrderItem>();
         
         }
     }

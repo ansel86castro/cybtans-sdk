@@ -49,7 +49,7 @@ namespace Cybtans.Serialization
                     {
                         value = Enum.ToObject(type, value);
                     }
-                    else
+                    else if (!type.IsAssignableFrom(valueType))
                     {
                         value = System.Convert.ChangeType(value, type);
                     }

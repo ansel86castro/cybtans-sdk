@@ -1,105 +1,125 @@
 ﻿using Cybtans.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Cybtans.Refit
 {
     public class ApiException:Exception
     {
-        public HttpStatusCode StatusCode { get; }
-        public string ReasonPhrase { get; }
+        public HttpStatusCode StatusCode { get; }        
         public HttpResponseHeaders Headers { get; }
         public HttpMethod HttpMethod { get; }
         public Uri Uri => RequestMessage.RequestUri;
         public HttpRequestMessage RequestMessage { get; }
-        public HttpContentHeaders ContentHeaders { get; private set; }
-        public byte[] Content { get; private set; }
+        public HttpContentHeaders? ContentHeaders { get; private set; }
+        public byte[]? Content { get; private set; }
+        public ApiErrorInfo? Errors { get; private set; }
 
-        public string RemoteExceptionMessage { get; private set; }
-
-        public string RemoteExceptionStackTrace { get; private set; }
-
-        protected ApiException(HttpRequestMessage message, HttpMethod httpMethod, HttpStatusCode statusCode, string reasonPhrase, HttpResponseHeaders headers) :
-          base($"Response status code does not indicate success: {(int)statusCode} ({reasonPhrase}).")
+        protected ApiException(HttpRequestMessage request, HttpMethod httpMethod, HttpStatusCode statusCode, HttpResponseHeaders headers, string message) :
+          base(message)
         {
-            RequestMessage = message;
+            RequestMessage = request;
             HttpMethod = httpMethod;
-            StatusCode = statusCode;
-            ReasonPhrase = reasonPhrase;
+            StatusCode = statusCode;            
             Headers = headers;            
-        }
+        }        
 
         public static async Task<ApiException> Create(HttpRequestMessage message, HttpResponseMessage response)
         {
-            var exception = new ApiException(message, message.Method, response.StatusCode, response.ReasonPhrase, response.Headers);
+            byte[]? content = null;
+            ApiErrorInfo? info = null;
 
-            if (response.Content == null)
+            if(response.Content != null)
             {
-                return exception;
-            }
-
-            try
-            {
-                exception.ContentHeaders = response.Content.Headers;
-                exception.Content = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);               
-
-                response.Content.Dispose();
-
-                var errorInfo = ToErrorInfo(exception);
-                if(errorInfo != null)
+                try
                 {
-                    exception.RemoteExceptionMessage = errorInfo.ErrorMessage;
-                    exception.RemoteExceptionStackTrace = errorInfo.StackTrace;
+                    content = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                    info = ToErrorInfo(response.StatusCode, response.Content.Headers, content);
+
+                    response.Content.Dispose();
+                }
+                catch
+                {
+                    // NB: We're already handling an exception at this point, 
+                    // so we want to make sure we don't throw another one 
+                    // that hides the real error.
                 }
             }
-            catch
+
+            var msg = $"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}).";
+            if(info != null)
             {
-                // NB: We're already handling an exception at this point, 
-                // so we want to make sure we don't throw another one 
-                // that hides the real error.
+                msg += "\r\n" + info.ToString();
             }
+
+            var exception = new ApiException(message, message.Method, response.StatusCode, response.Headers, msg);
+            if(response.Content != null)
+            {
+                exception.ContentHeaders = response.Content.Headers;
+                exception.Content = content;
+                exception.Errors = info;
+            }                       
 
             return exception;
         }
 
-        private static ErrorInfo? ToErrorInfo(ApiException apiException)
-        {
-            ErrorInfo? result = null;
 
-            if (apiException.Content != null)
+        private static ApiErrorInfo? ToErrorInfo(HttpStatusCode statusCode, HttpContentHeaders contentHeaders, byte[]content )
+        {
+            ApiErrorInfo? result = null;
+
+            var contentType = contentHeaders.ContentType;
+
+            if (content != null)
             {
-                if (apiException.ContentHeaders?.ContentType?.MediaType == BinarySerializer.MEDIA_TYPE)
+                if (contentType?.MediaType == BinarySerializer.MEDIA_TYPE)
                 {
-                    if (apiException.ContentHeaders.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
+                    if (contentHeaders.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
                     {
-                        result = BinaryConvert.Deserialize<ErrorInfo>(apiException.Content);
+                        result = BinaryConvert.Deserialize<ApiErrorInfo>(content);
                     }
                     else
                     {
-                        var encoding = Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet);
+                        var encoding = Encoding.GetEncoding(contentHeaders.ContentType.CharSet);
                         var serializer = new BinarySerializer(encoding);
-                        result = serializer.Deserialize<ErrorInfo>(apiException.Content);
+                        result = serializer.Deserialize<ApiErrorInfo>(content);
                     }
                 }
-                else if (IsJson(apiException.ContentHeaders?.ContentType?.MediaType) && apiException.StatusCode == HttpStatusCode.BadRequest)
+                else if (IsJson(contentType?.MediaType))
                 {
-                    var encoding = apiException.ContentHeaders?.ContentType?.CharSet != null ?
-                        Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet) :
+                    var encoding = contentType?.CharSet != null ?
+                        Encoding.GetEncoding(contentHeaders.ContentType.CharSet) :
                         Encoding.UTF8;
 
-                    var json = encoding.GetString(apiException.Content);
-                    var apiValidation = System.Text.Json.JsonSerializer.Deserialize<FluentValidationResult>(json);
+                    var json = encoding.GetString(content);
 
-                    result = new ErrorInfo { ErrorMessage = apiValidation.title, ErrorCode = (int)apiException.StatusCode };                    
+                    if (statusCode == HttpStatusCode.BadRequest)
+                    {
+                        var apiValidation = System.Text.Json.JsonSerializer.Deserialize<JsonProblemResult>(json);
+
+                        result = new ApiErrorInfo
+                        {
+                            ErrorMessage = apiValidation.title,
+                            ErrorCode = apiValidation.status,
+                            Errors = apiValidation.errors
+                        };
+                    }
+                    else
+                    {
+                        result = System.Text.Json.JsonSerializer.Deserialize<ApiErrorInfo>(json);
+                    }
                 }
             }
            
-
             return result;
         }
 
@@ -108,22 +128,45 @@ namespace Cybtans.Refit
             return mediaType == "application/problem+json" || mediaType == "application/json";
         }
 
-        private class FluentValidationResult
+        private class JsonProblemResult
         {
             public int status { get; set; }
             public string? title { get; set; }
             public Dictionary<string, List<string>>? errors { get; set; }
 
-        }
+        }     
+    }
 
-        private class ErrorInfo
+    public class ApiErrorInfo
+    {
+        public string? ErrorMessage { get; internal set; }
+
+        public string? StackTrace { get; internal set; }
+
+        public int? ErrorCode { get; internal set; }
+
+        public Dictionary<string, List<string>>? Errors { get; internal set; }
+
+        [Pure]
+        public override string ToString()
         {
-            public string ErrorMessage { get; set; }
+            StringBuilder sb = new StringBuilder(ErrorMessage);
 
-            public string StackTrace { get; set; }
+            if (Errors != null && Errors.Count > 0)
+            {
+                sb.AppendLine();
+                sb.Append(Errors.Select(x => $"{x.Key}=[{ string.Join(", ", x.Value)}]")
+                .Aggregate((x, y) => $"{x}.\r\n{y}"));
+            }
+            
+            if(StackTrace!= null)
+            {
+                sb.AppendLine();
+                sb.Append("StackTrace:" + StackTrace);
+            }
 
-            public int? ErrorCode { get; set; }
-        }          
+            return sb.ToString();
+        }
 
     }
 }

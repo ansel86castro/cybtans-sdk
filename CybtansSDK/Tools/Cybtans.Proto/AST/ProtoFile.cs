@@ -31,6 +31,11 @@ namespace Cybtans.Proto.AST
 
             foreach (var item in Declarations) 
             {
+                if (item.ProtoDeclaration == null)
+                {
+                    item.ProtoDeclaration = this;
+                }
+
                 if(item is ITypeDeclaration type)
                 {
                     scope.AddDeclaration(type);

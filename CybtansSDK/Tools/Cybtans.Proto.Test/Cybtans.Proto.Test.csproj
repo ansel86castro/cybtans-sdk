@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Protos\Base\Enums.proto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Protos\Base\Models.proto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
