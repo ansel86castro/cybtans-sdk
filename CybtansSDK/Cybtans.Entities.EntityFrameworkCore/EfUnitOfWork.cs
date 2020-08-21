@@ -1,18 +1,15 @@
 ﻿using Cybtans.Entities.EntiyFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 #nullable enable
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
-  
+
     public class EfUnitOfWork : IUnitOfWork
     {
         private DbContext _context;        
@@ -28,11 +25,11 @@ namespace Cybtans.Entities.EntityFrameworkCore
 
         }
 
-        internal DbContext Context => _context;
+        internal protected DbContext Context => _context;
 
         public IEntityEventPublisher? EventPublisher { get; set; }
 
-        public IRepository<T, TKey> CreateRepository<T, TKey>()
+        public virtual IRepository<T, TKey> CreateRepository<T, TKey>()
             where T : class
         {
             return new EfRepository<T, TKey>(this);
@@ -65,8 +62,10 @@ namespace Cybtans.Entities.EntityFrameworkCore
             });
         }
 
-        public int SaveChanges()
+        public virtual int SaveChanges()
         {
+            ApplySoftDelete();
+
             int retryCount = 2;
             while (retryCount > 0)
             {
@@ -98,6 +97,8 @@ namespace Cybtans.Entities.EntityFrameworkCore
 
         private async Task<int> SaveChangesAsyncInternal()
         {
+            ApplySoftDelete();
+
             int retryCount = 2;
             while (retryCount > 0)
             {
@@ -128,14 +129,14 @@ namespace Cybtans.Entities.EntityFrameworkCore
         }
 
         public async Task<int> SaveChangesAsync()
-        {
+        {                       
             if (EventPublisher == null)
             {
                 return await SaveChangesAsyncInternal().ConfigureAwait(false);
             }
             else
             {
-                var entities = GetEntries();
+                var entities = GetDomainEntries();
                 var rows = await SaveChangesAsyncInternal().ConfigureAwait(false);
                 if (rows > 0)
                 {
@@ -155,7 +156,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
             }
         }
 
-        private List<IDomainEntity> GetEntries()
+        private List<IDomainEntity> GetDomainEntries()
         {
             var entries = _context.ChangeTracker.Entries<IDomainEntity>();
             foreach (var entry in entries)
@@ -178,6 +179,15 @@ namespace Cybtans.Entities.EntityFrameworkCore
             }
 
             return entries.Where(x => x.Entity.HasEntityEvents()).Select(x=>x.Entity).ToList();
+        }
+
+        private void  ApplySoftDelete()
+        {
+            foreach (var entry in _context.ChangeTracker.Entries<ISoftDelete>().Where(x=>x.State == EntityState.Deleted))
+            {
+                entry.State = EntityState.Unchanged;
+                entry.Entity.IsDeleted = true;
+            }
         }
     }
 }

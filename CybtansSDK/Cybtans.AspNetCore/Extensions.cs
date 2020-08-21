@@ -30,17 +30,26 @@ namespace Cybtans.AspNetCore
                         result = serializer.Deserialize<ValidationResult>(apiException.Content);
                     }
                 }
-                else if (IsJson(apiException.ContentHeaders?.ContentType?.MediaType) && apiException.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                else if (IsJson(apiException.ContentHeaders?.ContentType?.MediaType))
                 {
                     var encoding = apiException.ContentHeaders?.ContentType?.CharSet != null ?
                         Encoding.GetEncoding(apiException.ContentHeaders.ContentType.CharSet) :
                         Encoding.UTF8;
 
                     var json = encoding.GetString(apiException.Content);
-                    var apiValidation = System.Text.Json.JsonSerializer.Deserialize<FluentValidationResult>(json);
+                    if (apiException.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        var apiValidation = System.Text.Json.JsonSerializer.Deserialize<FluentValidationResult>(json);
 
-                    result = new ValidationResult(apiValidation.title, apiValidation.errors) 
-                    { ErrorCode = (int)apiException.StatusCode };
+                        result = new ValidationResult(apiValidation.title, apiValidation.errors)
+                        {
+                            ErrorCode = (int)apiException.StatusCode
+                        };
+                    }
+                    else
+                    {
+                        result = System.Text.Json.JsonSerializer.Deserialize<ValidationResult>(json);
+                    }
                 }
             }
 
