@@ -6,4 +6,9 @@ namespace Cybtans.Entities
     {
         Guid? TenantId { get; set; }
     }
+
+    public interface ISoftDelete : IEntity
+    {
+        bool IsDeleted { get; set; }
+    }
 }

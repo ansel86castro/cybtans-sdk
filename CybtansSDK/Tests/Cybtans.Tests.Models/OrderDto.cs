@@ -14,6 +14,8 @@ namespace Cybtans.Tests.Models
 		
 		public int OrderStateId {get; set;}
 		
+		public OrderTypeEnum OrderType {get; set;}
+		
 		public OrderStateDto OrderState {get; set;}
 		
 		public CustomerDto Customer {get; set;}
@@ -42,17 +44,18 @@ namespace Cybtans.Tests.Models
 		public const int Description = 1;
 		public const int CustomerId = 2;
 		public const int OrderStateId = 3;
-		public const int OrderState = 4;
-		public const int Customer = 5;
-		public const int Items = 6;
-		public const int TenantId = 7;
-		public const int Id = 8;
-		public const int CreateDate = 9;
-		public const int UpdateDate = 10;
-		public const int Creator = 11;
+		public const int OrderType = 4;
+		public const int OrderState = 5;
+		public const int Customer = 6;
+		public const int Items = 7;
+		public const int TenantId = 8;
+		public const int Id = 9;
+		public const int CreateDate = 10;
+		public const int UpdateDate = 11;
+		public const int Creator = 12;
 		private readonly int[] _props = new []
 		{
-			Description,CustomerId,OrderStateId,OrderState,Customer,Items,TenantId,Id,CreateDate,UpdateDate,Creator
+			Description,CustomerId,OrderStateId,OrderType,OrderState,Customer,Items,TenantId,Id,CreateDate,UpdateDate,Creator
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -64,6 +67,7 @@ namespace Cybtans.Tests.Models
 		       Description => "Description",
 		       CustomerId => "CustomerId",
 		       OrderStateId => "OrderStateId",
+		       OrderType => "OrderType",
 		       OrderState => "OrderState",
 		       Customer => "Customer",
 		       Items => "Items",
@@ -84,6 +88,7 @@ namespace Cybtans.Tests.Models
 		        "Description" => Description,
 		        "CustomerId" => CustomerId,
 		        "OrderStateId" => OrderStateId,
+		        "OrderType" => OrderType,
 		        "OrderState" => OrderState,
 		        "Customer" => Customer,
 		        "Items" => Items,
@@ -104,6 +109,7 @@ namespace Cybtans.Tests.Models
 		        Description => typeof(string),
 		        CustomerId => typeof(Guid),
 		        OrderStateId => typeof(int),
+		        OrderType => typeof(OrderTypeEnum),
 		        OrderState => typeof(OrderStateDto),
 		        Customer => typeof(CustomerDto),
 		        Items => typeof(List<OrderItemDto>),
@@ -125,6 +131,7 @@ namespace Cybtans.Tests.Models
 		        Description => obj.Description,
 		        CustomerId => obj.CustomerId,
 		        OrderStateId => obj.OrderStateId,
+		        OrderType => obj.OrderType,
 		        OrderState => obj.OrderState,
 		        Customer => obj.Customer,
 		        Items => obj.Items,
@@ -146,6 +153,7 @@ namespace Cybtans.Tests.Models
 		        case Description:  obj.Description = (string)value;break;
 		        case CustomerId:  obj.CustomerId = (Guid)value;break;
 		        case OrderStateId:  obj.OrderStateId = (int)value;break;
+		        case OrderType:  obj.OrderType = (OrderTypeEnum)value;break;
 		        case OrderState:  obj.OrderState = (OrderStateDto)value;break;
 		        case Customer:  obj.Customer = (CustomerDto)value;break;
 		        case Items:  obj.Items = (List<OrderItemDto>)value;break;

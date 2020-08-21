@@ -25,6 +25,8 @@ namespace Cybtans.Proto.AST
 
         public string Name { get; set; }
 
+        public ProtoFile ProtoDeclaration { get; set; }
+
         public List<OptionsExpression> Options { get; set; } = new List<OptionsExpression>();       
 
         public override string ToString()

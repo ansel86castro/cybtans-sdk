@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "./Base/Models.proto";
+import "./Base/Enums.proto";
 
 package Customers;
 
@@ -10,9 +11,9 @@ message Customer{
 	string description = 3;
 	string pictureUrl = 4;	
 	datetime createDate = 5;
-	datetime updateDate = 6 [optional = true];
-	
+	datetime updateDate = 6 [optional = true];	
 	User user = 7;
+	CustomerType customerType = 8; 
 }
 
 message GetCustomerRequest{

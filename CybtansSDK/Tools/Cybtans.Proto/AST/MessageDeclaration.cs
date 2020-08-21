@@ -23,6 +23,8 @@ namespace Cybtans.Proto.AST
 
         public List<EnumDeclaration> Enums { get; } = new List<EnumDeclaration>();
 
+        public string Namespace => ProtoDeclaration?.Option?.Namespace;
+
         public Scope GetScope(Scope parent)
         {
             if(_scope == null)

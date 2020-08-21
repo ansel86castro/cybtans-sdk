@@ -42,19 +42,48 @@ message OrderDto {
 	string description = 1;
 	guid customerId = 2;
 	int32 orderStateId = 3;
-	OrderStateDto orderState = 4;
-	CustomerDto customer = 5;
-	repeated OrderItemDto items = 6;
-	guid tenantId = 7 [optional = true];
-	guid id = 8;
-	datetime createDate = 9;
-	datetime updateDate = 10 [optional = true];
-	string creator = 11;
+	OrderTypeEnum orderType = 4;
+	OrderStateDto orderState = 5;
+	CustomerDto customer = 6;
+	repeated OrderItemDto items = 7;
+	guid tenantId = 8 [optional = true];
+	guid id = 9;
+	datetime createDate = 10;
+	datetime updateDate = 11 [optional = true];
+	string creator = 12;
+}
+
+enum OrderTypeEnum {
+	Default = 0;
+	Normal = 1;
+	Shipping = 2;
 }
 
 message OrderStateDto {
 	string name = 1;
 	int32 id = 2;
+}
+
+message SoftDeleteOrderDto {
+	string name = 1;
+	bool isDeleted = 2;
+	repeated SoftDeleteOrderItemDto items = 3;
+	guid tenantId = 4 [optional = true];
+	guid id = 5;
+	datetime createDate = 6;
+	datetime updateDate = 7 [optional = true];
+	string creator = 8;
+}
+
+message SoftDeleteOrderItemDto {
+	string name = 1;
+	bool isDeleted = 2;
+	guid softDeleteOrderId = 3;
+	guid tenantId = 4 [optional = true];
+	guid id = 5;
+	datetime createDate = 6;
+	datetime updateDate = 7 [optional = true];
+	string creator = 8;
 }
 
 
@@ -290,3 +319,59 @@ service OrderStateService {
 }
 
 // **************************** END OrderState **********************************************
+
+// **************************** START SoftDeleteOrder **********************************************
+
+message GetSoftDeleteOrderRequest {
+	guid id = 1;
+}
+
+message UpdateSoftDeleteOrderRequest {
+	guid id = 1;
+	SoftDeleteOrderDto value = 2;
+}
+
+message DeleteSoftDeleteOrderRequest{
+	guid id = 1;
+}
+
+message GetAllSoftDeleteOrderResponse {
+	repeated SoftDeleteOrderDto items = 1;
+	int64 page = 2;
+	int64 totalPages = 3;
+	int64 totalCount = 4;
+}
+
+service SoftDeleteOrderService {
+	option (prefix) ="api/SoftDeleteOrder";
+
+	rpc GetAll(GetAllRequest) returns (GetAllSoftDeleteOrderResponse){		
+		option method = "GET";
+		
+	};
+
+	rpc Get(GetSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){	
+		option template = "{id}"; 
+		option method = "GET";
+		
+	};
+
+	rpc Create(SoftDeleteOrderDto) returns (SoftDeleteOrderDto){			
+		option method = "POST";
+		
+	};
+
+	rpc Update(UpdateSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){			
+		option template = "{id}"; 
+		option method = "PUT";
+		
+	};
+
+	rpc Delete(DeleteSoftDeleteOrderRequest) returns (void){
+		option template = "{id}"; 
+		option method = "DELETE";
+		
+	};
+}
+
+// **************************** END SoftDeleteOrder **********************************************

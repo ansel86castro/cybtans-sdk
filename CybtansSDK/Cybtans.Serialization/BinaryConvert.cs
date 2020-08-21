@@ -32,18 +32,26 @@ namespace Cybtans.Serialization
             if (value != null && type != null)
             {
                 var valueType = value.GetType();
+
                 if (valueType != type)
                 {
-                    if (valueType.IsPrimitive && IsPrimitiveNullable(type, out var nullableType))
+                    Type nullable = Nullable.GetUnderlyingType(type);
+                    if (nullable != null)
                     {
-                        if (nullableType != valueType)
+                        if (nullable != valueType)
                         {
-                            value = System.Convert.ChangeType(value, nullableType);
+                            value = nullable.IsEnum ?
+                                Enum.ToObject(nullable, value) :
+                                System.Convert.ChangeType(value, nullable);
                         }
                     }
-                    else if (!type.IsAssignableFrom(valueType) && value is IConvertible convertible)
+                    else if (type.IsEnum)
                     {
-                        value = convertible.ToType(type, null);
+                        value = Enum.ToObject(type, value);
+                    }
+                    else if (!type.IsAssignableFrom(valueType))
+                    {
+                        value = System.Convert.ChangeType(value, type);
                     }
                 }
             }

@@ -97,7 +97,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            Assert.False(_repository.GetAll().Any());
+            Assert.False(_repository.GetAll().Any(x=>x.Id == order.Id));
         }
 
         private async Task<Order> GetOrCreateOrder()

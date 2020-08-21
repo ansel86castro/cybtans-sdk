@@ -3,6 +3,7 @@ using Cybtans.Entities;
 using Cybtans.Refit;
 using Cybtans.Services;
 using Cybtans.Services.Utils;
+using Cybtans.Test.Domain.EF;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
@@ -17,6 +18,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using Cybtans.Test.Domain;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -78,6 +82,25 @@ namespace Cybtans.Tests.Integrations
             Assert.Single(order.Items);
 
             Assert.Equal("Product 1", order.Items.First().ProductName);
+        }
+
+
+        [Fact]
+        public async Task ShouldGetAll()
+        {
+            var result = await _service.GetAll();
+
+            using var scope = _fixture.Services.CreateScope();
+            var mapper = scope.ServiceProvider.GetService<IMapper>();
+            var context = scope.ServiceProvider.GetService<AdventureContext>();
+            var order = await context.Orders.ToListAsync();
+            var orderDto = mapper.Map<Order, OrderDto>(order.First());
+            var orderDtos = await mapper.ProjectTo<OrderDto>(context.Orders).ToListAsync();
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Items);
+            Assert.True(result.TotalCount > 0);
+            Assert.Contains(result.Items, x => x.OrderType == Cybtans.Tests.Models.OrderTypeEnum.Normal);            
         }
 
         [Fact]

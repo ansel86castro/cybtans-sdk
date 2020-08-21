@@ -17,7 +17,7 @@ namespace Cybtans.Test.Domain.EF
         {
         }         
         
-        public DbSet<Order> Ordes { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderItem> OrderItems { get; set; }
 
@@ -31,9 +31,13 @@ namespace Cybtans.Test.Domain.EF
 
         public DbSet<EntityEventLog> EntityEventLogs { get; set; }
 
+        public DbSet<SoftDeleteOrder> SoftDeleteOrders { get; set; }
+
+        public DbSet<SoftDeleteOrderItem> SoftDeleteOrderItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.AddSoftDeleteQueryFilters();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
