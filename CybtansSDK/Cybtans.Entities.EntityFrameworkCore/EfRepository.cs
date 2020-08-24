@@ -42,7 +42,7 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         }
 
         public virtual IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors)
-        {
+        {            
             IQueryable<T> query = GetQueryable();
 
             if (propertySelectors != null)
