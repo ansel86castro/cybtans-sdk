@@ -15,6 +15,9 @@ namespace Cybtans.Entities
 
     public interface IRepository<T, TKey> :IQueryable<T>
     {
+        IQueryable<T> WithDetails();
+        IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors);
+
         IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null);
 
         ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default);
@@ -32,6 +35,11 @@ namespace Cybtans.Entities
         void RemoveRange(IEnumerable<T> item);
 
         IUnitOfWork UnitOfWork { get; }
+
+        public Task SaveChanges()
+        {
+            return UnitOfWork.SaveChangesAsync();
+        }
     }
 
     public interface IRepository<T>:IRepository<T, object>
