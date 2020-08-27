@@ -1,6 +1,7 @@
 ﻿using Cybtans.Serialization;
 using Refit;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Cybtans.Refit
 {
     public class CybtansContentSerializer : IContentSerializer
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        
 
         private readonly Encoding _encoding;
         private readonly string _mediaType;
@@ -50,14 +51,23 @@ namespace Cybtans.Refit
                 serializer = new BinarySerializer(encoding);
             }
 
-            return serializer.Deserialize<T>(await content.ReadAsStreamAsync().ConfigureAwait(false));
+            using MemoryStream stream = content.Headers?.ContentLength != null ?
+                new MemoryStream((int)content.Headers.ContentLength) :
+                new MemoryStream();
+
+            await content.CopyToAsync(stream);
+            stream.Position = 0;
+
+            return serializer.Deserialize<T>(stream);
         }
 
         public Task<HttpContent> SerializeAsync<T>(T item)
         {
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
 
-            var bytes = serializer.Serialize(item);
+            using var stream = new MemoryStream();
+            serializer.Serialize(stream, item);
+            var bytes = stream.ToArray();
 
             var httpContent = new ByteArrayContent(bytes);
             httpContent.Headers.ContentType = MediaTypeHeaderValue.Parse(_mediaType);
