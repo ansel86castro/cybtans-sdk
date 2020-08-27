@@ -44,8 +44,9 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/CybtansSDK.sln'
-    configuration: '$(configuration)'    
-    arguments: -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+    configuration: '$(configuration)'
+    includesymbols: true
+    arguments: '-p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
     nobuild: true
     versionEnvVar: packVersion
     versioningScheme: byEnvVar
@@ -53,7 +54,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;!$(Build.ArtifactStagingDirectory)/**/Cybtans*.symbols.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.symbols.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.snupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Cybtans Nuget'
     arguments: '--skip-duplicate'
