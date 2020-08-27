@@ -20,6 +20,9 @@ namespace Cybtans.Tests.Services
 		Task Argument();
 		
 		
+		Task<UploadImageResponse> UploadImage(UploadImageRequest request);
+		
+		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);
 		
 		

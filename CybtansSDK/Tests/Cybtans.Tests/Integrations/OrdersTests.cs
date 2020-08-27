@@ -21,6 +21,8 @@ using Xunit.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using Cybtans.Test.Domain;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -359,6 +361,56 @@ namespace Cybtans.Tests.Integrations
             Assert.Equal((int?)HttpStatusCode.BadRequest, errorInfo.ErrorCode);
             Assert.NotNull(errorInfo.StackTrace);
             Assert.NotNull(errorInfo.ErrorMessage);
+        }
+
+        [Fact]
+        public async Task ShouldUploadImage()
+        {
+            if (File.Exists("Image.png"))
+            {
+                File.Delete("Image.png");
+            }
+
+            using var fs = File.OpenRead("cybtan.png");
+
+            var result = await _service.UploadImage(new UploadImageRequest
+            {
+                Size = (int)fs.Length,
+                Name = "Image.png",
+                Image = fs
+            });
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Url);
+            Assert.True(File.Exists("Image.png"));
+        }
+
+        [Fact]
+        public async Task ShouldUploadImageMultipartJson()
+        {
+            var client = _fixture.CreateClient();
+
+            if (File.Exists("Image2.png"))
+            {
+                File.Delete("Image2.png");
+            }
+
+            using var fs = File.OpenRead("cybtan.png");
+
+
+            var content = new MultipartFormDataContent("----WebKitFormBoundarymx2fSWqWSd0OxQq1");
+            content.Add(new StringContent(JsonConvert.SerializeObject(new
+            {
+                Size = fs.Length,
+                Name = "Image2.png"
+            })), "content");
+
+            content.Add(new StreamContent(fs, (int)fs.Length), "Image");
+
+            var response = await client.PostAsync("/api/order/upload", content);
+
+            Assert.NotNull(response);
+            Assert.True(response.IsSuccessStatusCode);            
         }
 
     }

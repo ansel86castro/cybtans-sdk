@@ -9,6 +9,7 @@ using Cybtans.Tests.Models;
 using System.Threading.Tasks;
 using System.Net;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Cybtans.Tests.Services
 {
@@ -37,6 +38,24 @@ namespace Cybtans.Tests.Services
         public async Task Test()
         {
             await ValidateTest();
+        }
+
+        public async Task<UploadImageResponse> UploadImage(UploadImageRequest request)
+        {
+            if (request.Image == null)
+            {
+                throw new ValidationException().AddError("Image", "Image is required");
+            }
+
+            using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
+            {
+                await request.Image.CopyToAsync(fs);
+            }
+
+            return new UploadImageResponse
+            {
+                Url = "http://localhost/image.jpg"
+            };
         }
 
         private async Task ValidateTest()

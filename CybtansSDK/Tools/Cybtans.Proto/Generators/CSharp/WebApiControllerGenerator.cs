@@ -63,7 +63,7 @@ namespace Cybtans.Proto.Generators.CSharp
             
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
             clsWriter.Append("[ApiController]").AppendLine();
-            clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
+            clsWriter.Append($"public partial class {srvInfo.Name}Controller : ControllerBase").AppendLine();
 
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);

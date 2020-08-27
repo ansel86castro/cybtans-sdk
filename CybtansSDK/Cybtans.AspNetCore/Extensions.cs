@@ -1,16 +1,20 @@
 ﻿using Cybtans.Refit;
 using Cybtans.Serialization;
 using Cybtans.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 #nullable enable
 
 namespace Cybtans.AspNetCore
 {
     public static class Extensions
-    {
+    {       
+
         public static ErrorInfo ToErrorInfo(this ApiException apiException)
         {
             ErrorInfo? result = null;

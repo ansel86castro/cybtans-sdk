@@ -38,6 +38,11 @@ message GetUserRequest{
 	RequestType type = 3;
 }
 
+message StreamRequest {
+	string name = 1;
+	stream data = 2;
+}
+
 enum RequestType {
 	VALUE1  = 0;
 	VALUE2  = 1;

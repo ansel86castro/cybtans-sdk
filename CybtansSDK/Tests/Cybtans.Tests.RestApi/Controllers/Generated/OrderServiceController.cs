@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Cybtans.AspNetCore;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/Order")]
 	[ApiController]
-	public class OrderServiceController : ControllerBase
+	public partial class OrderServiceController : ControllerBase
 	{
 		private readonly IOrderService _service;
 		
@@ -41,6 +42,12 @@ namespace Cybtans.Tests.RestApi.Controllers
 		public Task Argument()
 		{
 			return _service.Argument();
+		}
+		
+		[HttpPost("upload")]
+		public Task<UploadImageResponse> UploadImage([ModelBinder(BinderType = typeof(CybtansModelBinder))]UploadImageRequest __request)
+		{
+			return _service.UploadImage(__request);
 		}
 		
 		[HttpGet]

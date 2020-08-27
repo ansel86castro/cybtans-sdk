@@ -47,7 +47,7 @@ namespace Cybtans.Serialization
 
             TYPE_BINARY_8 = 0x33,
             TYPE_BINARY_16 = 0x34,
-            TYPE_BINARY_32 = 0x35,
+            TYPE_BINARY_32 = 0x35,            
 
             TYPE_DATETIME = 0x40,
 
@@ -68,7 +68,11 @@ namespace Cybtans.Serialization
             TYPE_LIST_8 = 0x71,
             TYPE_LIST_16 = 0x72,
             TYPE_LIST_32 = 0x73,
-            TYPE_GUID = 0x74
+            TYPE_GUID = 0x74,
+
+            TYPE_STREAM_8 = 0x80,
+            TYPE_STREAM_16 = 0x81,
+            TYPE_STREAM_32 = 0x82
         };
 
         public BinarySerializer() : this(DefaultEncoding)
@@ -183,7 +187,13 @@ namespace Cybtans.Serialization
                     break;                
                 case IReflectorMetadataProvider accesorProvider:
                     WriteObject(stream, accesorProvider);
-                    break;                
+                    break;
+                case Stream st:
+                    if (st.Length > int.MaxValue)
+                        throw new InvalidOperationException("Can not serialize more than 2GB of data for an stream");
+                    WriteLenght(stream, (int)st.Length, Types.TYPE_STREAM_8, Types.TYPE_STREAM_16, Types.TYPE_STREAM_32);
+                    WriteStream(stream, st);
+                    break;
                 default:
                     if (type.IsEnum)
                     {
@@ -482,6 +492,30 @@ namespace Cybtans.Serialization
             }
         }
 
+        private void WriteLenght(Stream stream, long length, Types type1, Types type2, Types type3, Types type4)
+        {
+            if (length >= byte.MinValue && length <= byte.MaxValue)
+            {
+                stream.WriteByte((byte)type1);
+                WriteNumber((byte)length, stream);
+            }
+            else if (length >= ushort.MinValue && length <= ushort.MaxValue)
+            {
+                stream.WriteByte((byte)type2);
+                WriteNumber((ushort)length, stream);
+            }
+            else if (length >= int.MinValue && length <= int.MaxValue)
+            {
+                stream.WriteByte((byte)type3);
+                WriteNumber((int)length, stream);
+            }
+            else
+            {
+                stream.WriteByte((byte)type4);
+                WriteNumber(length, stream);
+            }
+        }
+
         private unsafe void WriteGuid(Stream stream, Guid guid)
         {
             stream.WriteByte((byte)Types.TYPE_GUID);
@@ -491,6 +525,14 @@ namespace Cybtans.Serialization
                 throw new InvalidOperationException("Unable to serialize Guid");
 
             stream.Write(span);
+        }
+
+        private unsafe void WriteStream(Stream stream, Stream value)
+        {            
+            for (int bytes = value.Read(_buffer,0, _buffer.Length); bytes > 0; bytes = value.Read(_buffer, 0, _buffer.Length))
+            {
+                stream.Write(_buffer, 0, bytes);
+            }
         }
         #endregion
 
@@ -538,35 +580,20 @@ namespace Cybtans.Serialization
                 case Types.TYPE_BINARY_8: value = ReadBinary8(stream); break;
                 case Types.TYPE_BINARY_16: value = ReadBinary16(stream); break;
                 case Types.TYPE_BINARY_32: value = ReadBinary32(stream); break;
+                case Types.TYPE_STREAM_8: value = ReadStream8(stream); break;
+                case Types.TYPE_STREAM_16: value = ReadStream16(stream); break;
+                case Types.TYPE_STREAM_32: value = ReadStream32(stream); break;
                 case Types.TYPE_DATETIME: value = ReadDateTime(stream); break;
                 case Types.TYPE_GUID: value = ReadGuid(stream); break;
-                case Types.TYPE_ARRAY_8:
-                    value = ReadArray8(stream, type);
-                    break;
-                case Types.TYPE_ARRAY_16:
-                    value = ReadArray16(stream, type);
-                    break;
-                case Types.TYPE_ARRAY_32:
-                    value = ReadArray32(stream, type);
-                    break;
-                case Types.TYPE_LIST_8:
-                    value = ReadList8(stream, type);
-                    break;
-                case Types.TYPE_LIST_16:
-                    value = ReadList16(stream, type);
-                    break;
-                case Types.TYPE_LIST_32:
-                    value = ReadList32(stream, type);
-                    break;
-                case Types.TYPE_MAP_8:
-                    value = ReadMap8(stream, type);
-                    break;
-                case Types.TYPE_MAP_16:
-                    value = ReadMap16(stream, type);
-                    break;
-                case Types.TYPE_MAP_32:
-                    value = ReadMap32(stream, type);
-                    break;
+                case Types.TYPE_ARRAY_8: value = ReadArray8(stream, type);break;
+                case Types.TYPE_ARRAY_16:value = ReadArray16(stream, type);break;
+                case Types.TYPE_ARRAY_32:value = ReadArray32(stream, type);break;
+                case Types.TYPE_LIST_8:value = ReadList8(stream, type);break;
+                case Types.TYPE_LIST_16:value = ReadList16(stream, type);break;
+                case Types.TYPE_LIST_32:value = ReadList32(stream, type);break;
+                case Types.TYPE_MAP_8:value = ReadMap8(stream, type);break;
+                case Types.TYPE_MAP_16:value = ReadMap16(stream, type);break;
+                case Types.TYPE_MAP_32:value = ReadMap32(stream, type);break;                
                 case Types.TYPE_CODED_MAP_8:
                 case Types.TYPE_CODED_MAP_16:
                 case Types.TYPE_CODED_MAP_32:
@@ -618,12 +645,20 @@ namespace Cybtans.Serialization
         private byte[] ReadBinary8(Stream stream) => ReadBinary(stream, ReadNumber<byte>(stream));
         private byte[] ReadBinary16(Stream stream) => ReadBinary(stream, ReadNumber<ushort>(stream));
         private byte[] ReadBinary32(Stream stream) => ReadBinary(stream, ReadNumber<int>(stream));
+        private Stream ReadStream8(Stream stream) => ReadStream(stream, ReadNumber<byte>(stream));
+        private Stream ReadStream16(Stream stream) => ReadStream(stream, ReadNumber<ushort>(stream));
+        private Stream ReadStream32(Stream stream) => ReadStream(stream, ReadNumber<int>(stream));
 
         private byte[] ReadBinary(Stream stream, int length)
         {
             byte[] buff = new byte[length];
             stream.Read(buff, 0, length);
             return buff;
+        }
+
+        private Stream ReadStream(Stream stream, int length)
+        {
+            return new MemoryStream(ReadBinary(stream, length));
         }
 
         private DateTime ReadDateTime(Stream stream)

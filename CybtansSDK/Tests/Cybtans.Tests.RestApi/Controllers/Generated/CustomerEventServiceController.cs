@@ -10,7 +10,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/CustomerEvent")]
 	[ApiController]
-	public class CustomerEventServiceController : ControllerBase
+	public partial class CustomerEventServiceController : ControllerBase
 	{
 		private readonly ICustomerEventService _service;
 		

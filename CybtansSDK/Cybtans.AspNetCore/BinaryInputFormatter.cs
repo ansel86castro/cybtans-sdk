@@ -48,5 +48,7 @@ namespace Cybtans.AspNetCore
             var result = serializer.Deserialize(stream, type);
             return await InputFormatterResult.SuccessAsync(result).ConfigureAwait(false);
         }
+
+        
     }
 }

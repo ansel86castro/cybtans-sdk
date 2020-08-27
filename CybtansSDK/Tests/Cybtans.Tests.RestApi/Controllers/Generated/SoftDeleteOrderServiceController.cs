@@ -10,7 +10,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/SoftDeleteOrder")]
 	[ApiController]
-	public class SoftDeleteOrderServiceController : ControllerBase
+	public partial class SoftDeleteOrderServiceController : ControllerBase
 	{
 		private readonly ISoftDeleteOrderService _service;
 		
