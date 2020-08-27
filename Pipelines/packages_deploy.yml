@@ -39,22 +39,15 @@ steps:
     projects: '**/CybtansSDK.sln'
     testRunTitle: 'Run Tests Cybtans SDK'
 
-- task: DotNetCoreCLI@2
+- task: CmdLine@2
   displayName: 'Package Nuget Packages'
   inputs:
-    command: 'pack'
-    packagesToPack: '**/CybtansSDK.sln'
-    configuration: '$(configuration)'
-    includesymbols: true
-    arguments: '-p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
-    nobuild: true
-    versionEnvVar: packVersion
-    versioningScheme: byEnvVar
+    script: 'dotnet pack **/CybtansSDK.sln -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
 
 - task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.symbols.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.snupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.snupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Cybtans Nuget'
     arguments: '--skip-duplicate'
