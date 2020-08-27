@@ -32,17 +32,10 @@ steps:
     arguments: '--configuration $(configuration)'
     versioningScheme: 'byBuildNumber' 
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test Cybtans SDK'
-  inputs:
-    command: 'test'
-    projects: '**/CybtansSDK.sln'
-    testRunTitle: 'Run Tests Cybtans SDK'
-
 - task: CmdLine@2
   displayName: 'Package Nuget Packages'
   inputs:
-    script: 'dotnet pack **/CybtansSDK.sln -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
+    script: 'dotnet pack ./CybtansSDK/CybtansSDK.sln --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
 
 - task: NuGetCommand@2
   inputs:
