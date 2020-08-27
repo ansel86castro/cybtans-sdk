@@ -4,6 +4,15 @@ import "./Domain.proto";
 
 package Cybtans.Tests;
 
+message UploadImageRequest {
+	string name = 1;
+	int32 size =2;
+	stream image=3;
+}
+
+message UploadImageResponse{
+	string url = 1;
+}
 
 service OrderService {
 	
@@ -25,5 +34,10 @@ service OrderService {
 	rpc Argument(void) returns (void){
 		option template = "arg"; 
 		option method = "GET";		
+	};
+
+	rpc UploadImage(UploadImageRequest) returns(UploadImageResponse) {
+		option template = "upload";
+		option method = "POST";
 	};
 }

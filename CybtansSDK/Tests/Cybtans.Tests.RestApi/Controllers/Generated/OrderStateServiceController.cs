@@ -11,7 +11,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/OrderState")]
 	[ApiController]
-	public class OrderStateServiceController : ControllerBase
+	public partial class OrderStateServiceController : ControllerBase
 	{
 		private readonly IOrderStateService _service;
 		

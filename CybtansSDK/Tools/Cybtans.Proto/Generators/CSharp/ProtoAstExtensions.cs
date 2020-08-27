@@ -59,6 +59,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 case "void": return "void";
                 case "guid": return "Guid";
                 case "decimal": return "decimal";
+                case "stream": return "System.IO.Stream";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");

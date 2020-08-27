@@ -30,6 +30,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 case "void": return "void";
                 case "guid": return "string";
                 case "map": return "any";
+                case "stream": return "ArrayBuffer";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");
@@ -48,14 +49,12 @@ namespace Cybtans.Proto.Generators.Typescript
             {
                 name = $"{name}[]|null";
             }
-            else if (type.IsMap)
+            else if (type.IsMap || 
+                type.TypeDeclaration is MessageDeclaration || 
+                type.TypeDeclaration == PrimitiveType.Stream)
             {
                 name += "|null";
-            }
-            else if (type.TypeDeclaration is MessageDeclaration)
-            {
-                name += "|null";
-            }
+            }            
 
             return name;
         }

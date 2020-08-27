@@ -23,6 +23,9 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/arg")]
 		Task Argument();
 		
+		[Post("/api/Order/upload")]
+		Task<UploadImageResponse> UploadImage([Body(buffered: true)]UploadImageRequest request);
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		
