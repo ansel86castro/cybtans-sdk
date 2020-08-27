@@ -40,7 +40,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg;$(Build.ArtifactStagingDirectory)/**/Cybtans*.snupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Cybtans Nuget'
     arguments: '--skip-duplicate'
