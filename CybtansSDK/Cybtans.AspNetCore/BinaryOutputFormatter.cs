@@ -1,6 +1,7 @@
 ﻿using Cybtans.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,12 +42,14 @@ namespace Cybtans.AspNetCore
             
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
 
-            var data = serializer.Serialize(context.Object);
+            var stream = new MemoryStream();
+            serializer.Serialize(stream,context.Object);
+            stream.Position = 0;
 
             response.ContentType = _mediaType;
-            response.ContentLength = data.Length;
+            response.ContentLength = stream.Length;
 
-            return response.Body.WriteAsync(data, 0, data.Length);
+            return stream.CopyToAsync(response.Body);
         }
     }
 }
