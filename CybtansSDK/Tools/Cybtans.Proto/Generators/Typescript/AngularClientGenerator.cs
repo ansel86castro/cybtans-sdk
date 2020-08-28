@@ -73,7 +73,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 if (!response.IsBuildIn)
                     _types.Add(response.Name.Pascal());
 
-                string url = $"{srv.Option.Prefix}";
+                string url = srv.Option.Prefix != null ? $"/{srv.Option.Prefix}" : "";
                 List<FieldDeclaration> path = null;
 
                 if (options.Template != null)
