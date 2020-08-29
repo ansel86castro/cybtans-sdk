@@ -45,6 +45,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpPost("upload")]
+		[DisableFormValueModelBinding]
 		public Task<UploadImageResponse> UploadImage([ModelBinder(BinderType = typeof(CybtansModelBinder))]UploadImageRequest __request)
 		{
 			return _service.UploadImage(__request);

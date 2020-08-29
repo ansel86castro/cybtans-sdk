@@ -23,6 +23,7 @@ using AutoMapper;
 using Cybtans.Test.Domain;
 using System.IO;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -399,18 +400,41 @@ namespace Cybtans.Tests.Integrations
 
 
             var content = new MultipartFormDataContent("----WebKitFormBoundarymx2fSWqWSd0OxQq1");
-            content.Add(new StringContent(JsonConvert.SerializeObject(new
-            {
-                Size = fs.Length,
-                Name = "Image2.png"
-            })), "content");
+            var json = JsonConvert.SerializeObject(new { Size = fs.Length, Name = "Image2.png" });
 
-            content.Add(new StreamContent(fs, (int)fs.Length), "Image");
+            content.Add(new StringContent(json, Encoding.UTF8, "application/json") , "content");
+            content.Add(new StreamContent(fs, (int)fs.Length), "Image", "Image.png");
 
             var response = await client.PostAsync("/api/order/upload", content);
 
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);            
+        }
+
+        [Fact]
+        public async Task ShouldUploadImageMultipartForm()
+        {
+            var client = _fixture.CreateClient();
+
+            if (File.Exists("Image2.png"))
+            {
+                File.Delete("Image2.png");
+            }
+
+            using var fs = File.OpenRead("cybtan.png");
+
+
+            var content = new MultipartFormDataContent("----WebKitFormBoundarymx2fSWqWSd0OxQq1");
+
+            var form = $"Size={fs.Length}&Name=Image2.png";
+
+            content.Add(new StringContent(form, Encoding.UTF8), "content");
+            content.Add(new StreamContent(fs, (int)fs.Length), "Image", "Image.png");
+
+            var response = await client.PostAsync("/api/order/upload", content);
+
+            Assert.NotNull(response);
+            Assert.True(response.IsSuccessStatusCode);
         }
 
     }
