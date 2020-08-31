@@ -198,7 +198,7 @@ export class Base@{SERVICE}Service {
         for (let key in data) {
             if (data.hasOwnProperty(key)) {                
                 let element = data[key];
-                if(element !== undefined){
+                if(element !== undefined && element !== null && element !== ''){
                     if(element instanceof Array){
                         element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
                     }else{
