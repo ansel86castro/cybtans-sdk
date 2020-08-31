@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
-    public class WebApiControllerGenerator : FileGenerator
+    public class WebApiControllerGenerator : FileGenerator<WebApiControllerGeneratorOption>
     {
         protected ServiceGenerator _serviceGenerator;
         protected TypeGenerator _typeGenerator;      
@@ -23,7 +23,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public override void GenerateCode()
         {
-            Directory.CreateDirectory(_option.OutputDirectory);
+            Directory.CreateDirectory(_option.OutputPath);
 
             foreach (var item in _serviceGenerator.Services)
             {              
@@ -35,7 +35,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         protected virtual void GenerateController(ServiceGenInfo srvInfo)
         {           
-            var writer = CreateWriter($"{_proto.Option.Namespace}.{_option.Namespace ?? "Controllers"}");
+            var writer = CreateWriter($"{Proto.Option.Namespace}.{_option.Namespace ?? "Controllers"}");
 
             writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();

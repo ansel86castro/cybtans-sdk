@@ -34,20 +34,20 @@ namespace Cybtans.Proto.Generator
             {
                 ModelOptions = new TypeGeneratorOption()
                 {
-                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Models")
+                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Models")
                 },
                 ServiceOptions = new TypeGeneratorOption()
                 {
-                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Services/Generated")
+                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Services/Generated")
                 },
                 ControllerOptions = new WebApiControllerGeneratorOption()
                 {
-                    OutputDirectory = Path.Combine(config.Path, $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
+                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
                     Namespace = "RestApi.Controllers"
                 },
                 ClientOptions = new TypeGeneratorOption()
                 {
-                    OutputDirectory =Path.Combine(config.Path, $"{step.Output}/{config.Service}.Clients")
+                    OutputPath =Path.Combine(config.Path, $"{step.Output}/{config.Service}.Clients")
                 }
             };
 
@@ -55,7 +55,7 @@ namespace Cybtans.Proto.Generator
             {
                 options.ApiGatewayOptions = new ApiGateWayGeneratorOption
                 {
-                    OutputDirectory =Path.Combine(config.Path, step.Gateway),
+                    OutputPath =Path.Combine(config.Path, step.Gateway),
                     Namespace = $"Gateway.Controllers.{config.Service}"
                 };
             }
@@ -162,25 +162,25 @@ namespace Cybtans.Proto.Generator
                         output = value;
                         break;
                     case "-models-o":
-                        options.ModelOptions.OutputDirectory = value;
+                        options.ModelOptions.OutputPath = value;
                         break;
                     case "-models-ns":
                         options.ModelOptions.Namespace = value;
                         break;
                     case "-services-o":
-                        options.ServiceOptions.OutputDirectory = value;
+                        options.ServiceOptions.OutputPath = value;
                         break;
                     case "-services-ns":
                         options.ServiceOptions.Namespace = value;
                         break;
                     case "-controllers-o":
-                        options.ControllerOptions.OutputDirectory = value;
+                        options.ControllerOptions.OutputPath = value;
                         break;
                     case "-controllers-ns":
                         options.ControllerOptions.Namespace = value;
                         break;
                     case "-cs-clients-o":
-                        options.ClientOptions.OutputDirectory = value;
+                        options.ClientOptions.OutputPath = value;
                         break;
                     case "-cs-clients-ns":
                         options.ClientOptions.Namespace = value;
@@ -198,7 +198,7 @@ namespace Cybtans.Proto.Generator
                         searchPath = value;
                         break;
                     case "-o-gateway":
-                        options.ApiGatewayOptions = new ApiGateWayGeneratorOption { OutputDirectory = value };
+                        options.ApiGatewayOptions = new ApiGateWayGeneratorOption { OutputPath = value };
                         break;
                     default:
                         Console.WriteLine("Invalid Option");
@@ -231,17 +231,17 @@ namespace Cybtans.Proto.Generator
 
             if (name != null && output != null)
             {
-                options.ModelOptions.OutputDirectory = $"{output}/{name}.Models";
-                options.ServiceOptions.OutputDirectory = $"{output}/{name}.Services/Generated";
-                options.ControllerOptions.OutputDirectory = $"{output}/{name}.RestApi/Controllers/Generated";
+                options.ModelOptions.OutputPath = $"{output}/{name}.Models";
+                options.ServiceOptions.OutputPath = $"{output}/{name}.Services/Generated";
+                options.ControllerOptions.OutputPath = $"{output}/{name}.RestApi/Controllers/Generated";
                 options.ControllerOptions.Namespace = "RestApi.Controllers";
-                options.ClientOptions.OutputDirectory = $"{output}/{name}.Clients";
+                options.ClientOptions.OutputPath = $"{output}/{name}.Clients";
 
                 if(options.ApiGatewayOptions != null)
                     options.ApiGatewayOptions.Namespace = $"Gateway.Controllers.{name.Pascal()}";
             }
 
-            if (options.ModelOptions.OutputDirectory != null)
+            if (options.ModelOptions.OutputPath != null)
             {
                 MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);
 
@@ -268,11 +268,11 @@ namespace Cybtans.Proto.Generator
             {
                 ModelOptions = new TsOutputOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                 },
                 ClientOptions = new TsOutputOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                     Framework = framework
                 }
             });

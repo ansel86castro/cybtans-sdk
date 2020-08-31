@@ -37,19 +37,19 @@ namespace Cybtans.Proto.Test
             {
                 ModelOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                 },
                 ServiceOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = output
+                    OutputPath = output
                 },
                 ControllerOptions = new WebApiControllerGeneratorOption
                 {
-                    OutputDirectory = output
+                    OutputPath = output
                 },
                 ClientOptions = new TypeGeneratorOption
                 {
-                     OutputDirectory = output
+                     OutputPath = output
                 }
             });
 

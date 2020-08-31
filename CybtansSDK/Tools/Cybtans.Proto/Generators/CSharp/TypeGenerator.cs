@@ -22,7 +22,7 @@ namespace Cybtans.Proto.Generators.CSharp
         public bool GenerateAccesor { get; set; } = true;
     }
 
-    public class TypeGenerator : FileGenerator
+    public class TypeGenerator : FileGenerator<TypeGeneratorOption>
     {        
         Dictionary<ITypeDeclaration, MessageClassInfo> _messages = new Dictionary<ITypeDeclaration, MessageClassInfo>();
 
@@ -35,73 +35,29 @@ namespace Cybtans.Proto.Generators.CSharp
         {            
             if(!_messages.TryGetValue(declaration, out var info))
             {
-                info = new MessageClassInfo((MessageDeclaration)declaration, _option, _proto);
+                info = new MessageClassInfo((MessageDeclaration)declaration, _option, Proto);
                 _messages.Add(declaration, info);
             }
             return info;
         }        
 
         public string Namespace { get; set; }
-
-        public override void GenerateCode()
-        {
-            Directory.CreateDirectory(_option.OutputDirectory);
-
-            CsFileWriter? enumWriter = null;
-            bool hasEnums = _proto.Declarations.Any(x => x is EnumDeclaration);
-            if (hasEnums)
-            {
-                var enumInfo = new EnumInfo((EnumDeclaration)_proto.Declarations.First(x => x is EnumDeclaration), _option, _proto);
-                enumWriter = CreateWriter(enumInfo.Namespace);                
-            }          
-    
-            foreach (var item in _proto.Declarations)
+        
+        protected override void GenerateCode(ProtoFile proto)
+        {                                  
+            foreach (var item in proto.Declarations)
             {
                 if (item is MessageDeclaration msg)
                 {                    
-                    var info = new MessageClassInfo(msg, _option, _proto);
+                    var info = new MessageClassInfo(msg, _option, proto);
 
                     GenerateMessage(info);                
 
                     _messages.Add(msg, info);
-                }
-
-                else if (item is EnumDeclaration e && enumWriter!=null)
-                {
-                    var info = new EnumInfo(e, _option, _proto);
-                    
-                    GenerateEnum(info, enumWriter.Class);                   
-                }
-            }
-
-            if (enumWriter != null)
-            {
-                enumWriter.Save("Enums");               
-            }
-
-            
+                }               
+            }            
         }
      
-        private void GenerateEnum(EnumInfo info, CodeWriter clsWriter)
-        {                     
-            clsWriter.Append("public ");
-            clsWriter.Append($"enum {info.Name} ").AppendLine();
-
-            clsWriter.Append("{").AppendLine();
-            clsWriter.Append('\t', 1);
-
-            var bodyWriter = clsWriter.Block($"BODY_{info.Name}");
-
-            foreach (var item in info.Fields.Values.OrderBy(x=>x.Field.Value))
-            {                               
-                bodyWriter.Append(item.Name).Append(" = ").Append(item.Field.Value.ToString()).Append(",");
-                bodyWriter.AppendLine();
-                bodyWriter.AppendLine();
-            }
-            
-            clsWriter.Append("}").AppendLine();            
-        }
-
         private void GenerateMessage(MessageClassInfo info)
         {
             var writer = CreateWriter(info.Namespace);
@@ -319,7 +275,7 @@ public void SetValue(object target, int propertyCode, object value)
 
     }
 
-   
 
-    
+
+
 }
