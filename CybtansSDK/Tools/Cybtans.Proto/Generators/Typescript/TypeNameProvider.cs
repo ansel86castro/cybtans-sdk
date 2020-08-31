@@ -30,7 +30,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 case "void": return "void";
                 case "guid": return "string";
                 case "map": return "any";
-                case "stream": return "ArrayBuffer";
+                case "stream": return "Blob";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");

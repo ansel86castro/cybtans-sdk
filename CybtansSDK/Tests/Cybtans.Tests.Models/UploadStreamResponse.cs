@@ -3,28 +3,30 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class UpdateSoftDeleteOrderRequest : IReflectorMetadataProvider
+	public partial class UploadStreamResponse : IReflectorMetadataProvider
 	{
-		private static readonly UpdateSoftDeleteOrderRequestAccesor __accesor = new UpdateSoftDeleteOrderRequestAccesor();
+		private static readonly UploadStreamResponseAccesor __accesor = new UploadStreamResponseAccesor();
 		
-		public Guid Id {get; set;}
-		
-		public SoftDeleteOrderDto Value {get; set;}
+		public string M5checksum {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator UploadStreamResponse(string m5Checksum)
+		{
+			return new UploadStreamResponse { M5checksum = m5Checksum };
+		}
 	}
 	
 	
-	public sealed class UpdateSoftDeleteOrderRequestAccesor : IReflectorMetadata
+	public sealed class UploadStreamResponseAccesor : IReflectorMetadata
 	{
-		public const int Id = 1;
-		public const int Value = 2;
+		public const int M5checksum = 1;
 		private readonly int[] _props = new []
 		{
-			Id,Value
+			M5checksum
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -33,8 +35,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		       Id => "Id",
-		       Value => "Value",
+		       M5checksum => "M5checksum",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -44,8 +45,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyName switch
 		    {
-		        "Id" => Id,
-		        "Value" => Value,
+		        "M5checksum" => M5checksum,
 		
 		        _ => -1,
 		    };
@@ -55,8 +55,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		        Id => typeof(Guid),
-		        Value => typeof(SoftDeleteOrderDto),
+		        M5checksum => typeof(string),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -64,11 +63,10 @@ namespace Cybtans.Tests.Models
 		       
 		public object GetValue(object target, int propertyCode)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    UploadStreamResponse obj = (UploadStreamResponse)target;
 		    return propertyCode switch
 		    {
-		        Id => obj.Id,
-		        Value => obj.Value,
+		        M5checksum => obj.M5checksum,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -76,11 +74,10 @@ namespace Cybtans.Tests.Models
 		
 		public void SetValue(object target, int propertyCode, object value)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    UploadStreamResponse obj = (UploadStreamResponse)target;
 		    switch (propertyCode)
 		    {
-		        case Id:  obj.Id = (Guid)value;break;
-		        case Value:  obj.Value = (SoftDeleteOrderDto)value;break;
+		        case M5checksum:  obj.M5checksum = (string)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

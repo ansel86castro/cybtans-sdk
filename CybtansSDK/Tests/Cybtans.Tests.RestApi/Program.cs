@@ -45,7 +45,7 @@ namespace Cybtans.Test.RestApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
+                    webBuilder                    
                     .CaptureStartupErrors(false)
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseSerilog()

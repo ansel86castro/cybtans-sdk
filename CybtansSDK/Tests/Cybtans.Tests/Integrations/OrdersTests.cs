@@ -2,19 +2,15 @@
 using Cybtans.Entities;
 using Cybtans.Refit;
 using Cybtans.Services;
-using Cybtans.Services.Utils;
 using Cybtans.Test.Domain.EF;
-using Cybtans.Tests.Clients;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
 using Cybtans.Tests.Services;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -24,6 +20,9 @@ using Cybtans.Test.Domain;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text;
+using Cybtans.Serialization;
+using System.Net.Http.Headers;
+using Cybtans.Services.Security;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -436,6 +435,81 @@ namespace Cybtans.Tests.Integrations
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
         }
+
+        [Fact]
+        public async Task ShouldUploadImageMultipartBinary()
+        {
+            var client = _fixture.CreateClient();
+
+            if (File.Exists("Image2.png"))
+            {
+                File.Delete("Image2.png");
+            }
+
+            using var fs = File.OpenRead("cybtan.png");
+
+
+            var content = new MultipartFormDataContent("----WebKitFormBoundarymx2fSWqWSd0OxQq1");
+
+            var bytes = BinaryConvert.Serialize(new { Size = fs.Length, Name = "Image2.png" });
+
+            var byteArrayContent = new ByteArrayContent(bytes);
+            byteArrayContent.Headers.ContentType = MediaTypeHeaderValue.Parse($"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
+           
+            content.Add(byteArrayContent);
+            content.Add(new StreamContent(fs, (int)fs.Length), "Image", "Image.png");
+
+            var response = await client.PostAsync("/api/order/upload", content);
+
+            Assert.NotNull(response);
+            Assert.True(response.IsSuccessStatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldUploadStreamById()
+        {
+        
+            using var fs = File.OpenRead("cybtan.png");
+            var result = await _service.UploadStreamById(new UploadStreamByIdRequest
+            {
+                Id = Guid.NewGuid().ToString(),
+                Data = fs
+            });
+
+            Assert.NotNull(result);
+
+            fs.Seek(0, SeekOrigin.Begin);
+            var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
+
+            Assert.NotNull(result.M5checksum);
+            Assert.Equal(hash, result.M5checksum);
+        }
+
+        //[Fact]
+        //public async Task ShouldUploadStream()
+        //{
+        //    FileStream fs = null;
+        //    try
+        //    {
+        //        fs = File.OpenRead("cybtan.png");
+        //        var result = await _service.UploadStream(fs);                
+
+        //        Assert.NotNull(result);
+
+        //        if (!fs.CanRead)
+        //        {
+        //            fs = File.OpenRead("cybtan.png");
+        //        }                
+        //        var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
+        //
+        //        Assert.NotNull(result.M5checksum);
+        //        Assert.Equal(hash, result.M5checksum);
+        //    }
+        //    finally
+        //    {
+        //        fs?.Close();
+        //    }
+        //}
 
     }
 }

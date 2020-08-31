@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics.Contracts;
+using Cybtans.Services.Security;
 
 namespace Cybtans.Tests.Services
 {
@@ -50,12 +52,35 @@ namespace Cybtans.Tests.Services
             using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
             {
                 await request.Image.CopyToAsync(fs);
+
+                await fs.FlushAsync();
             }
+
+            request.Image.Position = 0;
+            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Imag));
+            var checkSum = CryptoService.ToStringX2(hash);
 
             return new UploadImageResponse
             {
                 Url = "http://localhost/image.jpg"
             };
+        }
+
+        public async Task<UploadStreamResponse> UploadStream(Stream request)
+        {                        
+            using var stream = new MemoryStream();
+            await request.CopyToAsync(stream);
+
+            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(stream));
+            var checkSum = CryptoService.ToStringX2(hash);
+            return checkSum;
+        }
+
+        public async Task<UploadStreamResponse> UploadStreamById(UploadStreamByIdRequest request)
+        {          
+            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Data));
+
+            return CryptoService.ToStringX2(hash);
         }
 
         private async Task ValidateTest()

@@ -12,6 +12,16 @@ message UploadImageRequest {
 
 message UploadImageResponse{
 	string url = 1;
+	string m5Checksum = 2;
+}
+
+message UploadStreamByIdRequest{
+	string id = 1;
+	stream data = 2;
+}
+
+message UploadStreamResponse{
+	string m5Checksum = 1;
 }
 
 service OrderService {
@@ -38,6 +48,16 @@ service OrderService {
 
 	rpc UploadImage(UploadImageRequest) returns(UploadImageResponse) {
 		option template = "upload";
+		option method = "POST";
+	};
+
+	rpc UploadStreamById(UploadStreamByIdRequest) returns (UploadStreamResponse) {
+		option template = "{id}/upload";
+		option method = "POST";
+	};
+
+	rpc UploadStream(stream) returns (UploadStreamResponse) {
+		option template = "stream";
 		option method = "POST";
 	};
 }

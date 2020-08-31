@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class UploadImageRequest : IReflectorMetadataProvider
+	public partial class UploadImageRequest : IReflectorMetadataProvider
 	{
 		private static readonly UploadImageRequestAccesor __accesor = new UploadImageRequestAccesor();
 		

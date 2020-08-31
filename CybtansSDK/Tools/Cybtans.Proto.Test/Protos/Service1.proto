@@ -39,9 +39,11 @@ message GetUserRequest{
 }
 
 message StreamRequest {
-	string name = 1;
-	stream data = 2;
+	string id = 1;
+	string name = 2;
+	stream data = 3;
 }
+
 
 enum RequestType {
 	VALUE1  = 0;
@@ -74,5 +76,10 @@ service UserService{
 	rpc UpdateUser(User) returns (User){
 		option template = "{id}";
 		option method = "PUT";
+	};
+
+	rpc Upload(StreamRequest) returns (void){		
+		option method = "POST";
+		option template = "{id}/upload";
 	};
 }

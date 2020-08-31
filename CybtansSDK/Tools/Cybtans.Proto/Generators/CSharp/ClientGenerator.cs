@@ -158,14 +158,19 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private object GetRequestBinding(string method)
         {
-            return method switch
+            switch (method)
             {
-                "GET" => "",
-                "POST" => "[Body(buffered: true)]",
-                "PUT" => "[Body(buffered: true)]",
-                "DELETE" => "",
-                _ => throw new NotImplementedException()
-            };
+                case "GET":
+                case "DELETE":
+                    return "";
+
+                case "POST":
+                case "PUT":
+                case "PATCH":
+                    return "[Body]";
+                default:
+                    throw new NotImplementedException();
+            }            
         }
 
         string setupExtension = @"

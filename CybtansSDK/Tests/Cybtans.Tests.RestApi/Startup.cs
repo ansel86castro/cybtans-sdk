@@ -20,6 +20,7 @@ using Cybtans.Test.Domain;
 using Cybtans.Test.Domain.EF;
 using Cybtans.Tests.Services;
 using System.Data.Common;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Cybtans.Test.RestApi
 {
@@ -33,7 +34,7 @@ namespace Cybtans.Test.RestApi
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-        {
+        {         
             services.AddHttpContextAccessor();
 
             AddSwagger(services);

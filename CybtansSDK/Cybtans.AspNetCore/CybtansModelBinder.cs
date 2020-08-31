@@ -27,22 +27,26 @@ namespace Cybtans.AspNetCore
         {            
         }
 
+        private async Task<object> DeserializeBinary(Stream source, ModelBindingContext bindingContext)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                await source.CopyToAsync(stream).ConfigureAwait(false);
+                stream.Position = 0;
+
+                var obj = Serializer.Value.Deserialize(stream, bindingContext.ModelType);
+                return obj;
+            }
+        }
         public async Task BindModelAsync(ModelBindingContext bindingContext)
-        {            
+        {
             var request = bindingContext.HttpContext.Request;
             if (request.ContentType != null)
             {
                 var contentType = MediaTypeHeaderValue.Parse(request.ContentType);
                 if (contentType.MediaType == BinarySerializer.MEDIA_TYPE)
                 {
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        await request.Body.CopyToAsync(stream).ConfigureAwait(false);
-                        stream.Position = 0;
-
-                        var obj = Serializer.Value.Deserialize(stream, bindingContext.ModelType);
-                        bindingContext.Result = ModelBindingResult.Success(obj);
-                    }
+                    bindingContext.Result = ModelBindingResult.Success(await DeserializeBinary(request.Body, bindingContext));
                     return;
                 }
                 else if (contentType.MediaType == "multipart/form-data")
@@ -67,18 +71,19 @@ namespace Cybtans.AspNetCore
 
                         if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
                         {
+                            //json body
                             if (contentType?.MediaType == "application/json")
                             {
-                                //json body
-                                var json = await section.ReadAsStringAsync();                              
+                                var json = await section.ReadAsStringAsync();
                                 obj = JsonConvert.DeserializeObject(json, bindingContext.ModelType);
+                            }
+                            else if (contentType?.MediaType == BinarySerializer.MEDIA_TYPE)
+                            {
+                                obj = await DeserializeBinary(section.Body, bindingContext);
                             }
                             else
                             {
-                                if (obj == null)
-                                {
-                                    obj = Activator.CreateInstance(bindingContext.ModelType);
-                                }
+                                obj ??= Activator.CreateInstance(bindingContext.ModelType);
 
                                 //form value
                                 var formData = await section.AsFormDataSection().GetValueAsync();
@@ -96,26 +101,29 @@ namespace Cybtans.AspNetCore
                                     {
                                         prop.PropertySetter(obj, value.Value.ToString());
                                     }
-                                }                               
+                                }
                             }
                         }
-                        else if(MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                        else if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                         {
-                            var stream =new MemoryStream();
+                            var stream = new MemoryStream();
                             await section.AsFileSection().FileStream.CopyToAsync(stream);
-
-                            if (obj == null)
+                            if (bindingContext.ModelType == typeof(Stream))
                             {
-                                obj = Activator.CreateInstance(bindingContext.ModelType);
-                            }
-
-                            if(obj is IReflectorMetadataProvider reflectorMetadata)
-                            {                                
-                                reflectorMetadata.SetValue(contentDisposition.Name.Value, stream);
+                                obj = stream;
                             }
                             else
                             {
-                                bindingContext.ModelMetadata.Properties[contentDisposition.Name.Value].PropertySetter(obj, stream);
+                                obj ??= Activator.CreateInstance(bindingContext.ModelType);
+
+                                if (obj is IReflectorMetadataProvider reflectorMetadata)
+                                {
+                                    reflectorMetadata.SetValue(contentDisposition.Name.Value, stream);
+                                }
+                                else
+                                {
+                                    bindingContext.ModelMetadata.Properties[contentDisposition.Name.Value].PropertySetter(obj, stream);
+                                }
                             }
                         }
 
@@ -125,10 +133,19 @@ namespace Cybtans.AspNetCore
                     bindingContext.Result = ModelBindingResult.Success(obj);
                     return;
                 }
+                else
+                {
+                    bindingContext.Result = ModelBindingResult.Failed();
+                    return;
+                }
+            }
+            else if (bindingContext.ModelType == typeof(Stream))
+            {                                
+                bindingContext.Result = ModelBindingResult.Success(request.BodyReader.AsStream());
+                return;
             }
 
-            throw new NotImplementedException();
-
+            bindingContext.Result = ModelBindingResult.Failed();
         }
     }
 }

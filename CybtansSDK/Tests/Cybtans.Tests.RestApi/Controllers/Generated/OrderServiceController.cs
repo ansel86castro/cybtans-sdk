@@ -46,9 +46,24 @@ namespace Cybtans.Tests.RestApi.Controllers
 		
 		[HttpPost("upload")]
 		[DisableFormValueModelBinding]
-		public Task<UploadImageResponse> UploadImage([ModelBinder(BinderType = typeof(CybtansModelBinder))]UploadImageRequest __request)
+		public Task<UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]UploadImageRequest __request)
 		{
 			return _service.UploadImage(__request);
+		}
+		
+		[HttpPost("{id}/upload")]
+		[DisableFormValueModelBinding]
+		public Task<UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]UploadStreamByIdRequest __request)
+		{
+			__request.Id = id;
+			return _service.UploadStreamById(__request);
+		}
+		
+		[HttpPost("stream")]
+		[DisableFormValueModelBinding]
+		public Task<UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream __request)
+		{
+			return _service.UploadStream(__request);
 		}
 		
 		[HttpGet]

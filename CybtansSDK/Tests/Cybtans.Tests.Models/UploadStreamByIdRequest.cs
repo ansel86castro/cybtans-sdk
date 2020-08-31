@@ -3,13 +3,13 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class UpdateSoftDeleteOrderRequest : IReflectorMetadataProvider
+	public partial class UploadStreamByIdRequest : IReflectorMetadataProvider
 	{
-		private static readonly UpdateSoftDeleteOrderRequestAccesor __accesor = new UpdateSoftDeleteOrderRequestAccesor();
+		private static readonly UploadStreamByIdRequestAccesor __accesor = new UploadStreamByIdRequestAccesor();
 		
-		public Guid Id {get; set;}
+		public string Id {get; set;}
 		
-		public SoftDeleteOrderDto Value {get; set;}
+		public System.IO.Stream Data {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -18,13 +18,13 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class UpdateSoftDeleteOrderRequestAccesor : IReflectorMetadata
+	public sealed class UploadStreamByIdRequestAccesor : IReflectorMetadata
 	{
 		public const int Id = 1;
-		public const int Value = 2;
+		public const int Data = 2;
 		private readonly int[] _props = new []
 		{
-			Id,Value
+			Id,Data
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -34,7 +34,7 @@ namespace Cybtans.Tests.Models
 		    return propertyCode switch
 		    {
 		       Id => "Id",
-		       Value => "Value",
+		       Data => "Data",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -45,7 +45,7 @@ namespace Cybtans.Tests.Models
 		    return propertyName switch
 		    {
 		        "Id" => Id,
-		        "Value" => Value,
+		        "Data" => Data,
 		
 		        _ => -1,
 		    };
@@ -55,8 +55,8 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		        Id => typeof(Guid),
-		        Value => typeof(SoftDeleteOrderDto),
+		        Id => typeof(string),
+		        Data => typeof(System.IO.Stream),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -64,11 +64,11 @@ namespace Cybtans.Tests.Models
 		       
 		public object GetValue(object target, int propertyCode)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    UploadStreamByIdRequest obj = (UploadStreamByIdRequest)target;
 		    return propertyCode switch
 		    {
 		        Id => obj.Id,
-		        Value => obj.Value,
+		        Data => obj.Data,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -76,11 +76,11 @@ namespace Cybtans.Tests.Models
 		
 		public void SetValue(object target, int propertyCode, object value)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    UploadStreamByIdRequest obj = (UploadStreamByIdRequest)target;
 		    switch (propertyCode)
 		    {
-		        case Id:  obj.Id = (Guid)value;break;
-		        case Value:  obj.Value = (SoftDeleteOrderDto)value;break;
+		        case Id:  obj.Id = (string)value;break;
+		        case Data:  obj.Data = (System.IO.Stream)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }
