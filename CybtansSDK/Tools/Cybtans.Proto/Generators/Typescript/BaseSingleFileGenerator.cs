@@ -23,7 +23,7 @@ namespace Cybtans.Proto.Generators.Typescript
 
         public void GenerateCode()
         {
-            Directory.CreateDirectory(_option.OutputDirectory);
+            Directory.CreateDirectory(_option.OutputPath);
 
             var writer = CreateWriter();
             OnGenerationBegin(writer);
@@ -48,7 +48,7 @@ namespace Cybtans.Proto.Generators.Typescript
 
         public TsFileWriter CreateWriter()
         {
-            return new TsFileWriter(_option.OutputDirectory ?? Environment.CurrentDirectory);
+            return new TsFileWriter(_option.OutputPath ?? Environment.CurrentDirectory);
         }
 
         protected abstract void GenerateCode(ProtoFile proto);
