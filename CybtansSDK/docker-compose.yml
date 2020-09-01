@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  cybtans.tests.restapi:
+    image: ${DOCKER_REGISTRY-}cybtanstestsrestapi
+    build:
+      context: .
+      dockerfile: Tests/Cybtans.Tests.RestApi/Dockerfile
+
+  cybtans.tests.gateway:
+    image: ${DOCKER_REGISTRY-}cybtanstestsgateway
+    build:
+      context: .
+      dockerfile: Tests/Cybtans.Tests.Gateway/Dockerfile

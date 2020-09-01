@@ -10,7 +10,8 @@
     {
       "Type": "proto",
       "Output": ".",
-      "ProtoFile": "./Proto/Test.proto"
+      "ProtoFile": "./Proto/Test.proto",
+      "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests"
     }
   ]
 }

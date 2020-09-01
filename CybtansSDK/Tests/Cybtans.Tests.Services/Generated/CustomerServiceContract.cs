@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Services
 {
-	public interface ICustomerService 
+	public partial interface ICustomerService 
 	{
 		
 		Task<GetAllCustomerResponse> GetAll(GetAllRequest request);

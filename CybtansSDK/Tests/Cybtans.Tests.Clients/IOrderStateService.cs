@@ -21,11 +21,11 @@ namespace Cybtans.Tests.Clients
 		
 		[Headers("Authorization: Bearer")]
 		[Post("/api/OrderState")]
-		Task<OrderStateDto> Create([Body(buffered: true)]OrderStateDto request);
+		Task<OrderStateDto> Create([Body]OrderStateDto request);
 		
 		[Headers("Authorization: Bearer")]
 		[Put("/api/OrderState/{request.Id}")]
-		Task<OrderStateDto> Update([Body(buffered: true)]UpdateOrderStateRequest request);
+		Task<OrderStateDto> Update([Body]UpdateOrderStateRequest request);
 		
 		[Headers("Authorization: Bearer")]
 		[Delete("/api/OrderState/{request.Id}")]

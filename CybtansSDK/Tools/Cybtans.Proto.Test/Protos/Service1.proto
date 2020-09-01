@@ -38,11 +38,23 @@ message GetUserRequest{
 	RequestType type = 3;
 }
 
+message StreamRequest {
+	string id = 1;
+	string name = 2;
+	stream data = 3;
+}
+
+
 enum RequestType {
 	VALUE1  = 0;
 	VALUE2  = 1;
 	VALUE3  = 2;
 }
+
+message DownloadImageRequest{
+	string name = 1;
+}
+
 
 service UserService{
 	option (prefix) ="api/service1";
@@ -69,5 +81,25 @@ service UserService{
 	rpc UpdateUser(User) returns (User){
 		option template = "{id}";
 		option method = "PUT";
+	};
+
+	rpc Upload(StreamRequest) returns (void){		
+		option method = "POST";
+		option template = "{id}/upload";
+	};
+
+	rpc DownloadImage(DownloadImageRequest) returns (stream) {
+		option template ="download";
+		option method = "GET";
+
+		option file = {contentType: "image/jpg" name: "Image.jpg"};
+	};
+
+	rpc DownloadImage2(DownloadImageRequest) returns (stream) {
+		option template ="download";
+		option method = "GET";
+
+		option (file).contentType = "application/octet-stream";
+		option (file).name= "Image2.jpg";
 	};
 }

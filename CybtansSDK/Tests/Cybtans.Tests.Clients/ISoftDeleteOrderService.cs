@@ -18,10 +18,10 @@ namespace Cybtans.Tests.Clients
 		Task<SoftDeleteOrderDto> Get(GetSoftDeleteOrderRequest request);
 		
 		[Post("/api/SoftDeleteOrder")]
-		Task<SoftDeleteOrderDto> Create([Body(buffered: true)]SoftDeleteOrderDto request);
+		Task<SoftDeleteOrderDto> Create([Body]SoftDeleteOrderDto request);
 		
 		[Put("/api/SoftDeleteOrder/{request.Id}")]
-		Task<SoftDeleteOrderDto> Update([Body(buffered: true)]UpdateSoftDeleteOrderRequest request);
+		Task<SoftDeleteOrderDto> Update([Body]UpdateSoftDeleteOrderRequest request);
 		
 		[Delete("/api/SoftDeleteOrder/{request.Id}")]
 		Task Delete(DeleteSoftDeleteOrderRequest request);

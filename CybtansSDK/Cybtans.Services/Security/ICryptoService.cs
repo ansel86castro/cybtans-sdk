@@ -1,7 +1,10 @@
-﻿namespace Cybtans.Services.Security
+﻿using System.IO;
+
+namespace Cybtans.Services.Security
 {
     public interface ICryptoService
     {
+        byte[] ComputeHash(Stream data);
         byte[] ComputeHash(byte[] data);
         string ComputeHash(string input);
         byte[] Decrypt(byte[] source);

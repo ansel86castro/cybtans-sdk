@@ -152,7 +152,7 @@ service returns[ServiceDeclaration node]
     ;
 
 rpc returns[RpcDeclaration node]
-    :   'rpc' Ident '(' 'stream'? req=fullIdent ')' 'returns' '(' 'stream'? resp=fullIdent ')' {
+    :   'rpc' Ident '(' req=fullIdent ')' 'returns' '(' resp=fullIdent ')' {
             $node = new RpcDeclaration($Ident.text, $req.node, $resp.node, $start);            
         } 
         ('{' (option{ $node.Options.Add($option.node);})* '}')? ';'
@@ -369,15 +369,12 @@ BoolLit
 
 StrLit
     :   '\'' CharValue* '\''
-    |   '"' CharValue* '"'
+    |   '"' (HexEscape|OctEscape|CharEscape|~["\u0000\n\\])* '"'
     ;
 
 fragment
 CharValue
-    :   HexEscape
-    |   OctEscape
-    |   CharEscape
-    |   ~[\u0000\n\\]
+    :   HexEscape|OctEscape|CharEscape|~[\u0000\n\\]
     ;
 
 fragment

@@ -18,10 +18,10 @@ namespace Cybtans.Tests.Clients
 		Task<CustomerEventDto> Get(GetCustomerEventRequest request);
 		
 		[Post("/api/CustomerEvent")]
-		Task<CustomerEventDto> Create([Body(buffered: true)]CustomerEventDto request);
+		Task<CustomerEventDto> Create([Body]CustomerEventDto request);
 		
 		[Put("/api/CustomerEvent/{request.Id}")]
-		Task<CustomerEventDto> Update([Body(buffered: true)]UpdateCustomerEventRequest request);
+		Task<CustomerEventDto> Update([Body]UpdateCustomerEventRequest request);
 		
 		[Delete("/api/CustomerEvent/{request.Id}")]
 		Task Delete(DeleteCustomerEventRequest request);

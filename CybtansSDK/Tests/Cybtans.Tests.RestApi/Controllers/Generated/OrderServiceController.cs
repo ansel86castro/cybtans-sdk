@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Cybtans.AspNetCore;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/Order")]
 	[ApiController]
-	public class OrderServiceController : ControllerBase
+	public partial class OrderServiceController : ControllerBase
 	{
 		private readonly IOrderService _service;
 		
@@ -41,6 +42,35 @@ namespace Cybtans.Tests.RestApi.Controllers
 		public Task Argument()
 		{
 			return _service.Argument();
+		}
+		
+		[HttpPost("upload")]
+		[DisableFormValueModelBinding]
+		public Task<UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]UploadImageRequest __request)
+		{
+			return _service.UploadImage(__request);
+		}
+		
+		[HttpPost("{id}/upload")]
+		[DisableFormValueModelBinding]
+		public Task<UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]UploadStreamByIdRequest __request)
+		{
+			__request.Id = id;
+			return _service.UploadStreamById(__request);
+		}
+		
+		[HttpPost("stream")]
+		[DisableFormValueModelBinding]
+		public Task<UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream __request)
+		{
+			return _service.UploadStream(__request);
+		}
+		
+		[HttpGet("download")]
+		public async Task<IActionResult> DownloadImage([FromQuery]DownloadImageRequest __request)
+		{
+			var stream = await _service.DownloadImage(__request);
+			return new FileStreamResult(stream, "image/jpg") { FileDownloadName = "Image.jpg" };
 		}
 		
 		[HttpGet]

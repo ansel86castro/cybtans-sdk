@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class GetSoftDeleteOrderRequest : IReflectorMetadataProvider
+	public partial class GetSoftDeleteOrderRequest : IReflectorMetadataProvider
 	{
 		private static readonly GetSoftDeleteOrderRequestAccesor __accesor = new GetSoftDeleteOrderRequestAccesor();
 		

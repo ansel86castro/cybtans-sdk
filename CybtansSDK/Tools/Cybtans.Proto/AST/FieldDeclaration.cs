@@ -25,7 +25,9 @@ namespace Cybtans.Proto.AST
             }
         }
        
-        public TypeIdentifier Type { get; set; }              
+        public TypeIdentifier Type { get; set; }
+
+        public ITypeDeclaration FieldType => Type?.TypeDeclaration;
 
         public int Number { get; set; }
 
@@ -37,10 +39,10 @@ namespace Cybtans.Proto.AST
 
             Type.CheckSemantic(scope, logger);
 
-            if (Type.TypeDeclaration != null && Type.TypeDeclaration == PrimitiveType.Void)
+            if (FieldType == PrimitiveType.Void)
             {
                 logger.AddError($"Type void is not supported as a field type in {Line},{Column}");
-            }
+            }            
 
         }
 
