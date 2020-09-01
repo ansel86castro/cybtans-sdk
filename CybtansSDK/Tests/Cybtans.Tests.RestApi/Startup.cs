@@ -95,7 +95,9 @@ namespace Cybtans.Test.RestApi
 
              });
 
-            services.AddDbContextEventPublisher<AdventureContext>();          
+            services.AddDbContextEventPublisher<AdventureContext>();
+
+            services.AddTransient<AdventureContextSeed>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -104,10 +106,12 @@ namespace Cybtans.Test.RestApi
 
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                
+                app.UseDeveloperExceptionPage();
             }
-            app.UseExceptionHandlingMiddleware();
+            else
+            {
+                app.UseExceptionHandlingMiddleware();
+            }
 
             app.UseCors();
 

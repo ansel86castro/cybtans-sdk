@@ -1,6 +1,8 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Cybtans.AspNetCore
 {
@@ -27,8 +29,31 @@ namespace Cybtans.AspNetCore
                     {
                         schema.Properties.Remove(item);
                     }
+                    
                 }
-            }
+            }            
         }
     }
+
+    public class SwachBuckleSchemaFilters : ISchemaFilter
+    {           
+
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            if (schema.Properties.Count == 0 || context.MemberInfo != null)
+            {               
+                return;
+            }
+
+            var props = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var p in props.Where(x => x.PropertyType == typeof(Stream)))
+            {
+                var prop = schema.Properties.FirstOrDefault(x => x.Key.ToLowerInvariant() == p.Name.ToLowerInvariant()).Key;
+                if (prop != null)
+                    schema.Properties.Remove(prop);
+            }                       
+        }        
+    }
+
+   
 }

@@ -93,6 +93,7 @@ namespace Cybtans.Tests.Gateway
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cybtans.Test", Version = "v1" });
                 c.OperationFilter<SwachBuckleOperationFilters>();
+                c.SchemaFilter<SwachBuckleSchemaFilters>();
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

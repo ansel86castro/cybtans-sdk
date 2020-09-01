@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Cybtans.AspNetCore.Migrations;
+using Cybtans.Tests.Domain.EF;
 
 namespace Cybtans.Test.RestApi
 {
@@ -23,7 +25,8 @@ namespace Cybtans.Test.RestApi
             try
             {               
                 Log.Information("Configuring web host ({ApplicationContext})...", AppName);
-                var host = CreateHostBuilder(args).Build();               
+                var host = CreateHostBuilder(args).Build();
+                host.Seed<AdventureContext, AdventureContextSeed>();
 
                 Log.Information("Starting web host ({ApplicationContext})...", AppName);
                 host.Run();
