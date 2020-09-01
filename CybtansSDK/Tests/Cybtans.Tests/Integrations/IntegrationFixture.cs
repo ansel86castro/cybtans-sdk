@@ -1,5 +1,4 @@
-﻿using Cybtans.Test.Domain.EF;
-using Cybtans.Test.RestApi;
+﻿using Cybtans.Test.RestApi;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using Cybtans.Tests.Services;
 using System.Linq;
+using Cybtans.Tests.Domain.EF;
 
 namespace Cybtans.Tests.Integrations
 {

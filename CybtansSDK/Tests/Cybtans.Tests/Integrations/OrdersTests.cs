@@ -2,7 +2,6 @@
 using Cybtans.Entities;
 using Cybtans.Refit;
 using Cybtans.Services;
-using Cybtans.Test.Domain.EF;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using Cybtans.Tests.Models;
 using Cybtans.Tests.Services;
@@ -23,6 +22,7 @@ using System.Text;
 using Cybtans.Serialization;
 using System.Net.Http.Headers;
 using Cybtans.Services.Security;
+using Cybtans.Tests.Domain.EF;
 
 namespace Cybtans.Tests.Integrations
 {

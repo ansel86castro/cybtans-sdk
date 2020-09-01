@@ -2,10 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>c44be5dc-568c-4e61-ba16-231a16732f84</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
      
   <ItemGroup>
   <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
+  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
   <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.5.1" />
   <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
@@ -28,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Controllers\Generated\" />
   </ItemGroup>
 
   <ItemGroup>
