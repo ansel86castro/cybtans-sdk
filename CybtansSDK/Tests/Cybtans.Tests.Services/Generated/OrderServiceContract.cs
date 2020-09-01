@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Services
 {
-	public interface IOrderService 
+	public partial interface IOrderService 
 	{
 		
 		Task Foo();
@@ -18,6 +18,18 @@ namespace Cybtans.Tests.Services
 		
 		
 		Task Argument();
+		
+		
+		Task<UploadImageResponse> UploadImage(UploadImageRequest request);
+		
+		
+		Task<UploadStreamResponse> UploadStreamById(UploadStreamByIdRequest request);
+		
+		
+		Task<UploadStreamResponse> UploadStream(System.IO.Stream request);
+		
+		
+		Task<System.IO.Stream> DownloadImage(DownloadImageRequest request);
 		
 		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);

@@ -10,7 +10,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup>   
+    <ProjectReference Include="..\..\Cybtans.AspNetCore.Migrations\Cybtans.AspNetCore.Migrations.csproj" />   
     <ProjectReference Include="..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Domain\Cybtans.Tests.Domain.csproj" />
   </ItemGroup>

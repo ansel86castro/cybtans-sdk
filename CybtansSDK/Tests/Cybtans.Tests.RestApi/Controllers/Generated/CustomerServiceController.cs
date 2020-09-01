@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Cybtans.AspNetCore;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/Customer")]
 	[ApiController]
-	public class CustomerServiceController : ControllerBase
+	public partial class CustomerServiceController : ControllerBase
 	{
 		private readonly ICustomerService _service;
 		

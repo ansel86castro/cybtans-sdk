@@ -17,5 +17,21 @@ namespace Cybtans.Proto.Options
         [Field("method")]
         public string? Method { get; set; }        
 
+        [Field("file")]
+        public StreamOptions? StreamOptions { get; set; }
+
+    }
+
+    public class StreamOptions: ProtobufOption
+    {
+        public StreamOptions() : base(OptionsType.Rpc)
+        {
+        }
+
+        [Field("contentType")]
+        public string? ContentType { get; set; }
+
+        [Field("name")]
+        public string? Name { get; set; }
     }
 }

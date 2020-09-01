@@ -57,6 +57,7 @@ namespace Cybtans.Proto.Options
                     throw new InvalidOperationException($"Type not found {p.PropertyType}");
 
                 init.Initialize(instance);
+                p.SetValue(this, instance);
             }
             else
             {

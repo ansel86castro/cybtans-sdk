@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class DeleteCustomerEventRequest : IReflectorMetadataProvider
+	public partial class DeleteCustomerEventRequest : IReflectorMetadataProvider
 	{
 		private static readonly DeleteCustomerEventRequestAccesor __accesor = new DeleteCustomerEventRequestAccesor();
 		

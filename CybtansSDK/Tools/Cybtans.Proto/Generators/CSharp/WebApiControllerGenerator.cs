@@ -45,12 +45,11 @@ namespace Cybtans.Proto.Generators.CSharp
         protected void GenerateControllerInternal(ServiceGenInfo srvInfo, CsFileWriter writer)
         {
             var srv = srvInfo.Service;
-            writer.Usings.Append($"using System.Collections.Generic;").AppendLine();
-            writer.Usings.Append($"using System.Threading.Tasks;").AppendLine();
-
-            writer.Usings.Append($"using Microsoft.AspNetCore.Http;").AppendLine();
-            writer.Usings.Append($"using Microsoft.AspNetCore.Mvc;").AppendLine();
-
+            writer.Usings.Append("using System.Collections.Generic;").AppendLine();
+            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();
+            writer.Usings.Append("using Microsoft.AspNetCore.Http;").AppendLine();
+            writer.Usings.Append("using Microsoft.AspNetCore.Mvc;").AppendLine();
+            writer.Usings.Append("using Cybtans.AspNetCore;").AppendLine();
             var clsWriter = writer.Class;
 
             if (srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous ||
@@ -63,7 +62,7 @@ namespace Cybtans.Proto.Generators.CSharp
             
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
             clsWriter.Append("[ApiController]").AppendLine();
-            clsWriter.Append($"public class {srvInfo.Name}Controller : ControllerBase").AppendLine();
+            clsWriter.Append($"public partial class {srvInfo.Name}Controller : ControllerBase").AppendLine();
 
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);
@@ -93,24 +92,16 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 AddAutorizationAttribute(options, bodyWriter);
 
-                switch (options.Method)
-                {
-                    case "GET":
-                        bodyWriter.Append($"[HttpGet{template}]");
-                        break;
-                    case "POST":
-                        bodyWriter.Append($"[HttpPost{template}]");
-                        break;
-                    case "PUT":
-                        bodyWriter.Append($"[HttpPut{template}]");
-                        break;
-                    case "DELETE":
-                        bodyWriter.Append($"[HttpDelete{template}]");
-                        break;
-                }
+                AddRequestMethod(bodyWriter, options, template);
 
                 bodyWriter.AppendLine();
-                bodyWriter.Append($"public {response.GetReturnTypeName()} {rpcName}").Append("(");
+                
+                if (request.HasStreams())
+                {
+                    bodyWriter.Append("[DisableFormValueModelBinding]").AppendLine();
+                }
+
+                bodyWriter.Append($"public {response.GetControllerReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
                 bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
@@ -124,7 +115,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 {
                     var path = request is MessageDeclaration ? _typeGenerator.GetMessageInfo(request).GetPathBinding(options.Template) : null;
                     if (path != null)
-                    {
+                    {                        
                         foreach (var field in path)
                         {
                             parametersWriter.Append($"{field.Type} {field.Field.Name}, ");
@@ -132,21 +123,43 @@ namespace Cybtans.Proto.Generators.CSharp
                         }
                     }
                 }
-              
-                methodWriter.Append($"return _service.{rpcName}");
 
-                if (request != PrimitiveType.Void)
+                if (response.HasStreams())
                 {
-                    methodWriter.Append("(__request);");
+                    var contentType = options.StreamOptions?.ContentType ?? "application/octet-stream";
+                    var fileName = options.StreamOptions?.Name;
+                    fileName = fileName != null ? $"\"{fileName}\"" : "Guid.NewGuid().ToString()";
+
+                    methodWriter.Append($"var stream = await _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});").AppendLine();
+                    methodWriter.Append($"return new FileStreamResult(stream, \"{contentType}\") {{ FileDownloadName = {fileName} }};");
                 }
                 else
                 {
-                    methodWriter.Append("();");
+                    methodWriter.Append($"return _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});");
                 }
             }
 
             clsWriter.Append("}").AppendLine();
             writer.Save($"{srvInfo.Name}Controller");
+        }
+
+        private static void AddRequestMethod(CodeWriter bodyWriter, RpcOptions options, string template)
+        {
+            switch (options.Method)
+            {
+                case "GET":
+                    bodyWriter.Append($"[HttpGet{template}]");
+                    break;
+                case "POST":
+                    bodyWriter.Append($"[HttpPost{template}]");
+                    break;
+                case "PUT":
+                    bodyWriter.Append($"[HttpPut{template}]");
+                    break;
+                case "DELETE":
+                    bodyWriter.Append($"[HttpDelete{template}]");
+                    break;
+            }
         }
 
         private static void AddAutorizationAttribute(SecurityOptions option, CodeWriter clsWriter)
@@ -175,14 +188,18 @@ namespace Cybtans.Proto.Generators.CSharp
             if (request == PrimitiveType.Void)
                 return "";
 
-            return method switch
+            switch (method)
             {
-                "GET" => "[FromQuery]",
-                "POST" => "[FromBody]",
-                "PUT" => "[FromBody]",
-                "DELETE" => "[FromQuery]",
-                _ => throw new NotImplementedException()
-            };
+                case "DELETE":
+                case "GET":
+                    return "[FromQuery]";
+                case "PATCH":
+                case "PUT":
+                case "POST":
+                    return request.HasStreams() ? "[ModelBinder(typeof(CybtansModelBinder))]" : "[FromBody]";
+                default:
+                    throw new NotImplementedException("Http verb is not valid or not supported");
+            }
         }
             
     }
