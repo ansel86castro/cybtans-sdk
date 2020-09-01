@@ -24,6 +24,10 @@ message UploadStreamResponse{
 	string m5Checksum = 1;
 }
 
+message DownloadImageRequest{
+	string name = 1;
+}
+
 service OrderService {
 	
 	rpc Foo(void) returns (void){	
@@ -59,5 +63,13 @@ service OrderService {
 	rpc UploadStream(stream) returns (UploadStreamResponse) {
 		option template = "stream";
 		option method = "POST";
+	};
+
+	rpc DownloadImage(DownloadImageRequest) returns (stream) {
+		option template ="download";
+		option method = "GET";
+
+		option (file).contentType = "image/jpg";
+		option (file).name= "Image.jpg";
 	};
 }

@@ -78,6 +78,23 @@ namespace Cybtans.Proto.Generators.CSharp
             }
         }
 
+        public static string GetControllerReturnTypeName(this ITypeDeclaration type)
+        {
+            if (type == PrimitiveType.Void)
+            {
+                return "Task";
+            }
+            else if (type.HasStreams())
+            {
+                return "async Task<IActionResult>";
+            }
+            else
+            {
+                return $"Task<{type.GetTypeName()}>";
+            }
+        }
+
+
         public static string GetRequestTypeName(this ITypeDeclaration type, string name)
         {
             if (type == PrimitiveType.Void)

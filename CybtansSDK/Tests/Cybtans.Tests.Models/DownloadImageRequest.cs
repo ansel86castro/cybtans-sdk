@@ -3,28 +3,30 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class UploadImageResponse : IReflectorMetadataProvider
+	public partial class DownloadImageRequest : IReflectorMetadataProvider
 	{
-		private static readonly UploadImageResponseAccesor __accesor = new UploadImageResponseAccesor();
+		private static readonly DownloadImageRequestAccesor __accesor = new DownloadImageRequestAccesor();
 		
-		public string Url {get; set;}
-		
-		public string M5checksum {get; set;}
+		public string Name {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
 		}
+		
+		public static implicit operator DownloadImageRequest(string name)
+		{
+			return new DownloadImageRequest { Name = name };
+		}
 	}
 	
 	
-	public sealed class UploadImageResponseAccesor : IReflectorMetadata
+	public sealed class DownloadImageRequestAccesor : IReflectorMetadata
 	{
-		public const int Url = 1;
-		public const int M5checksum = 2;
+		public const int Name = 1;
 		private readonly int[] _props = new []
 		{
-			Url,M5checksum
+			Name
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -33,8 +35,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		       Url => "Url",
-		       M5checksum => "M5checksum",
+		       Name => "Name",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -44,8 +45,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyName switch
 		    {
-		        "Url" => Url,
-		        "M5checksum" => M5checksum,
+		        "Name" => Name,
 		
 		        _ => -1,
 		    };
@@ -55,8 +55,7 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		        Url => typeof(string),
-		        M5checksum => typeof(string),
+		        Name => typeof(string),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -64,11 +63,10 @@ namespace Cybtans.Tests.Models
 		       
 		public object GetValue(object target, int propertyCode)
 		{
-		    UploadImageResponse obj = (UploadImageResponse)target;
+		    DownloadImageRequest obj = (DownloadImageRequest)target;
 		    return propertyCode switch
 		    {
-		        Url => obj.Url,
-		        M5checksum => obj.M5checksum,
+		        Name => obj.Name,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -76,11 +74,10 @@ namespace Cybtans.Tests.Models
 		
 		public void SetValue(object target, int propertyCode, object value)
 		{
-		    UploadImageResponse obj = (UploadImageResponse)target;
+		    DownloadImageRequest obj = (DownloadImageRequest)target;
 		    switch (propertyCode)
 		    {
-		        case Url:  obj.Url = (string)value;break;
-		        case M5checksum:  obj.M5checksum = (string)value;break;
+		        case Name:  obj.Name = (string)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

@@ -51,6 +51,11 @@ enum RequestType {
 	VALUE3  = 2;
 }
 
+message DownloadImageRequest{
+	string name = 1;
+}
+
+
 service UserService{
 	option (prefix) ="api/service1";
 
@@ -81,5 +86,20 @@ service UserService{
 	rpc Upload(StreamRequest) returns (void){		
 		option method = "POST";
 		option template = "{id}/upload";
+	};
+
+	rpc DownloadImage(DownloadImageRequest) returns (stream) {
+		option template ="download";
+		option method = "GET";
+
+		option file = {contentType: "image/jpg" name: "Image.jpg"};
+	};
+
+	rpc DownloadImage2(DownloadImageRequest) returns (stream) {
+		option template ="download";
+		option method = "GET";
+
+		option (file).contentType = "application/octet-stream";
+		option (file).name= "Image2.jpg";
 	};
 }

@@ -140,8 +140,8 @@ namespace Cybtans.AspNetCore
                 }
             }
             else if (bindingContext.ModelType == typeof(Stream))
-            {                                
-                bindingContext.Result = ModelBindingResult.Success(request.BodyReader.AsStream());
+            {                
+                bindingContext.Result = ModelBindingResult.Success(request.Body);
                 return;
             }
 

@@ -369,15 +369,12 @@ BoolLit
 
 StrLit
     :   '\'' CharValue* '\''
-    |   '"' CharValue* '"'
+    |   '"' (HexEscape|OctEscape|CharEscape|~["\u0000\n\\])* '"'
     ;
 
 fragment
 CharValue
-    :   HexEscape
-    |   OctEscape
-    |   CharEscape
-    |   ~[\u0000\n\\]
+    :   HexEscape|OctEscape|CharEscape|~[\u0000\n\\]
     ;
 
 fragment

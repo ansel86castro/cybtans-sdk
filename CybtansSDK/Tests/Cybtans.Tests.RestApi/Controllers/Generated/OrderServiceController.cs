@@ -66,6 +66,13 @@ namespace Cybtans.Tests.RestApi.Controllers
 			return _service.UploadStream(__request);
 		}
 		
+		[HttpGet("download")]
+		public async Task<IActionResult> DownloadImage([FromQuery]DownloadImageRequest __request)
+		{
+			var stream = await _service.DownloadImage(__request);
+			return new FileStreamResult(stream, "image/jpg") { FileDownloadName = "Image.jpg" };
+		}
+		
 		[HttpGet]
 		public Task<GetAllOrderResponse> GetAll([FromQuery]GetAllRequest __request)
 		{

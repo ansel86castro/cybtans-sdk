@@ -101,7 +101,7 @@ namespace Cybtans.Proto.Generators.CSharp
                     bodyWriter.Append("[DisableFormValueModelBinding]").AppendLine();
                 }
 
-                bodyWriter.Append($"public {response.GetReturnTypeName()} {rpcName}").Append("(");
+                bodyWriter.Append($"public {response.GetControllerReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
                 bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
@@ -124,7 +124,19 @@ namespace Cybtans.Proto.Generators.CSharp
                     }
                 }
 
-                methodWriter.Append($"return _service.{rpcName}({( request != PrimitiveType.Void ? "__request" : "")});");                
+                if (response.HasStreams())
+                {
+                    var contentType = options.StreamOptions?.ContentType ?? "application/octet-stream";
+                    var fileName = options.StreamOptions?.Name;
+                    fileName = fileName != null ? $"\"{fileName}\"" : "Guid.NewGuid().ToString()";
+
+                    methodWriter.Append($"var stream = await _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});").AppendLine();
+                    methodWriter.Append($"return new FileStreamResult(stream, \"{contentType}\") {{ FileDownloadName = {fileName} }};");
+                }
+                else
+                {
+                    methodWriter.Append($"return _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});");
+                }
             }
 
             clsWriter.Append("}").AppendLine();

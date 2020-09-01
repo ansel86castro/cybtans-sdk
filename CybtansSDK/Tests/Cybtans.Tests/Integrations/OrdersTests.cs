@@ -373,7 +373,7 @@ namespace Cybtans.Tests.Integrations
 
             using var fs = File.OpenRead("cybtan.png");
 
-            var result = await _service.UploadImage(new UploadImageRequest
+            UploadImageResponse result = await _service.UploadImage(new UploadImageRequest
             {
                 Size = (int)fs.Length,
                 Name = "Image.png",
@@ -383,6 +383,11 @@ namespace Cybtans.Tests.Integrations
             Assert.NotNull(result);
             Assert.NotNull(result.Url);
             Assert.True(File.Exists("Image.png"));
+
+            fs.Seek(0, SeekOrigin.Begin);
+            var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
+
+            Assert.Equal(hash, result.M5checksum);
         }
 
         [Fact]
@@ -407,7 +412,14 @@ namespace Cybtans.Tests.Integrations
             var response = await client.PostAsync("/api/order/upload", content);
 
             Assert.NotNull(response);
-            Assert.True(response.IsSuccessStatusCode);            
+            Assert.True(response.IsSuccessStatusCode);
+
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            UploadImageResponse obj = BinaryConvert.Deserialize<UploadImageResponse>(bytes);
+            fs.Seek(0, SeekOrigin.Begin);
+            var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
+
+            Assert.Equal(hash, obj.M5checksum);
         }
 
         [Fact]
@@ -467,8 +479,7 @@ namespace Cybtans.Tests.Integrations
 
         [Fact]
         public async Task ShouldUploadStreamById()
-        {
-        
+        {        
             using var fs = File.OpenRead("cybtan.png");
             var result = await _service.UploadStreamById(new UploadStreamByIdRequest
             {
@@ -485,6 +496,21 @@ namespace Cybtans.Tests.Integrations
             Assert.Equal(hash, result.M5checksum);
         }
 
+        [Fact]
+        public async Task ShouldDownloadImage()
+        {                     
+            var result = await _service.DownloadImage("Image.png");
+
+            Assert.NotNull(result);
+        
+            using var fs = File.OpenRead("moon.jpg");
+            var targetHash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
+            var destHash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(result));
+
+            Assert.Equal(targetHash, destHash);
+        }
+
+
         //[Fact]
         //public async Task ShouldUploadStream()
         //{
@@ -492,16 +518,16 @@ namespace Cybtans.Tests.Integrations
         //    try
         //    {
         //        fs = File.OpenRead("cybtan.png");
-        //        var result = await _service.UploadStream(fs);                
+        //        var result = await _service.UploadStream(fs);
 
         //        Assert.NotNull(result);
 
         //        if (!fs.CanRead)
         //        {
         //            fs = File.OpenRead("cybtan.png");
-        //        }                
+        //        }
         //        var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
-        //
+
         //        Assert.NotNull(result.M5checksum);
         //        Assert.Equal(hash, result.M5checksum);
         //    }
