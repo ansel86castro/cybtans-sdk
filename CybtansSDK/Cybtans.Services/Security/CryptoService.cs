@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,6 +16,18 @@ namespace Cybtans.Services.Security
             }
             return result;
         }
+
+        public virtual byte[] ComputeHash(Stream data)
+        {
+            byte[] result = null;
+            using (SHA1 sha = new SHA1Managed()) //new SHA1CryptoServiceProvider();
+            {
+                result = sha.ComputeHash(data);
+            }
+            return result;
+        }
+
+
 
         public virtual string ComputeHash(string input)
         {

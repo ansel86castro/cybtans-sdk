@@ -1,30 +1,13 @@
-﻿using Cybtans.Refit;
-using Cybtans.Serialization;
-using Cybtans.Test.Domain.EF;
-using Cybtans.Test.RestApi;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Refit;
+﻿using Cybtans.Test.RestApi;
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading;
-using Xunit;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-using Cybtans.AspNetCore;
 using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
-using SQLitePCL;
-using Microsoft.AspNetCore.TestHost;
 using Cybtans.Tests.Services;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Security.Cryptography;
+using Cybtans.Tests.Domain.EF;
 
 namespace Cybtans.Tests.Integrations
 {

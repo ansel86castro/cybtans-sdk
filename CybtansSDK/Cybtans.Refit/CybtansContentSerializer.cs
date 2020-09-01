@@ -1,6 +1,7 @@
 ﻿using Cybtans.Serialization;
 using Refit;
 using System;
+using System.Buffers;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,17 +13,19 @@ namespace Cybtans.Refit
 {
     public class CybtansContentSerializer : IContentSerializer
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        
+        const int MaxBufferSize = 256 * 1024;
 
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        
         private readonly Encoding _encoding;
         private readonly string _mediaType;
         private readonly IContentSerializer _defaultSerializer;
-
+        private readonly ArrayPool<byte> _arrayPool;
         public CybtansContentSerializer(Encoding encoding, IContentSerializer defaultSerializer)
-        {
+        {                       
             _encoding = encoding;
             _mediaType = $"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}";
             _defaultSerializer = defaultSerializer;
+            _arrayPool = ArrayPool<byte>.Shared;
         }
 
         public CybtansContentSerializer(IContentSerializer defaultSerializer) : this(BinarySerializer.DefaultEncoding, defaultSerializer) { }
@@ -51,20 +54,35 @@ namespace Cybtans.Refit
                 serializer = new BinarySerializer(encoding);
             }
 
-            using MemoryStream stream = content.Headers?.ContentLength != null ?
-                new MemoryStream((int)content.Headers.ContentLength) :
+            var buffer = content.Headers?.ContentLength != null && content.Headers?.ContentLength <= MaxBufferSize ?
+                _arrayPool.Rent((int)content.Headers?.ContentLength) : 
+                null;
+
+            MemoryStream stream = buffer != null ? new MemoryStream(buffer,0, buffer.Length, true):
+                content.Headers?.ContentLength != null ? new MemoryStream((int)content.Headers.ContentLength) :
                 new MemoryStream();
+            try
+            {
+                await content.CopyToAsync(stream);
+                stream.Position = 0;
 
-            await content.CopyToAsync(stream);
-            stream.Position = 0;
-
-            return serializer.Deserialize<T>(stream);
+                return serializer.Deserialize<T>(stream);
+            }
+            finally
+            {
+                if (buffer != null)
+                    _arrayPool.Return(buffer);
+                else
+                {
+                    stream?.Dispose();
+                }
+            }
         }
 
         public Task<HttpContent> SerializeAsync<T>(T item)
         {
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
-
+            
             using var stream = new MemoryStream();
             serializer.Serialize(stream, item);
             var bytes = stream.ToArray();

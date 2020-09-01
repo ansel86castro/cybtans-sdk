@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Services
 {
-	public interface ISoftDeleteOrderService 
+	public partial interface ISoftDeleteOrderService 
 	{
 		
 		Task<GetAllSoftDeleteOrderResponse> GetAll(GetAllRequest request);

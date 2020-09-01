@@ -18,12 +18,20 @@ namespace Cybtans.Proto.Generators.CSharp
         }
 
         public void GenerateCode(ProtoFile proto, Scope? scope =null)
-        {            
+        {
+            new EnumGenerator(proto, _options.ModelOptions)
+                .GenerateCode();
+
+            GenerateCodeRecursive(proto);
+        }     
+
+        private void GenerateCodeRecursive(ProtoFile proto)
+        {
             foreach (var item in proto.ImportedFiles)
-            {               
-                GenerateCode(item, null);
+            {
+                GenerateCodeRecursive(item);
             }
-            
+
             var typeGenerator = new TypeGenerator(proto, _options.ModelOptions);
             typeGenerator.GenerateCode();
 
@@ -37,7 +45,7 @@ namespace Cybtans.Proto.Generators.CSharp
                     var controlller = new WebApiControllerGenerator(proto, _options.ControllerOptions, serviceGenerator, typeGenerator);
                     controlller.GenerateCode();
 
-                    if(_options.ClientOptions != null)
+                    if (_options.ClientOptions != null)
                     {
                         var client = new ClientGenerator(proto, _options.ClientOptions, serviceGenerator, typeGenerator);
                         client.GenerateCode();
@@ -47,9 +55,9 @@ namespace Cybtans.Proto.Generators.CSharp
                             new ApiGatewayGenerator(proto, _options.ApiGatewayOptions, serviceGenerator, typeGenerator, client)
                             .GenerateCode();
                         }
-                    }                    
+                    }
                 }
-            }                        
-        }     
+            }
+        }
     }
 }

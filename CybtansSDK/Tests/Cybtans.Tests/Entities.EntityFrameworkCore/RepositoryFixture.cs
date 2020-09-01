@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Cybtans.Test.Domain;
-using Cybtans.Test.Domain.EF;
 using Cybtans.Testing;
+using Cybtans.Tests.Domain.EF;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

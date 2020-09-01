@@ -37,19 +37,19 @@ namespace Cybtans.Proto.Test
             {
                 ModelOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                 },
                 ServiceOptions = new TypeGeneratorOption
                 {
-                    OutputDirectory = output
+                    OutputPath = output
                 },
                 ControllerOptions = new WebApiControllerGeneratorOption
                 {
-                    OutputDirectory = output
+                    OutputPath = output
                 },
                 ClientOptions = new TypeGeneratorOption
                 {
-                     OutputDirectory = output
+                     OutputPath = output
                 }
             });
 
@@ -62,10 +62,10 @@ namespace Cybtans.Proto.Test
             Assert.NotNull(ast);
             Assert.NotNull(ast.Option.Namespace);
             Assert.NotNull(ast.Declarations);
-            Assert.Equal(6, ast.Declarations.Count);
+            Assert.Equal(8, ast.Declarations.Count);
             Assert.NotNull(ast.Package);
             Assert.Equal("Service1", ast.Package.ToString());
-            Assert.Equal(4, ast.Declarations.Where(x => x is MessageDeclaration).Count());
+            Assert.Equal(6, ast.Declarations.Where(x => x is MessageDeclaration).Count());
             Assert.Single(ast.Declarations.Where(x => x is ServiceDeclaration));
 
             foreach (var msg in ast.Declarations.Where(x => x is MessageDeclaration).Select(x => (MessageDeclaration)x))

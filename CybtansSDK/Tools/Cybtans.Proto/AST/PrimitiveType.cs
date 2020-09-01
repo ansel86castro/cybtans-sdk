@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Cybtans.Proto.AST
 {
@@ -23,6 +24,7 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Void = new PrimitiveType("void", typeof(void));
         public static readonly PrimitiveType Guid = new PrimitiveType("guid", typeof(Guid));
         public static readonly PrimitiveType Decimal = new PrimitiveType("decimal", typeof(decimal));
+        public static readonly PrimitiveType Stream = new PrimitiveType("stream", typeof(Stream));
 
         public PrimitiveType(string name, Type clrType)
         {
@@ -64,6 +66,7 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(void)) return Void;
             else if (type == typeof(Dictionary<,>)) return Map;
             else if (type == typeof(decimal)) return Decimal;
+            else if (type == typeof(Stream)) return Stream;
             else return null;
         }
     }

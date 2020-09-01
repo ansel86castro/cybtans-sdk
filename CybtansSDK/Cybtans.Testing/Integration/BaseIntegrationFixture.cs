@@ -12,6 +12,7 @@ using Xunit;
 using System.Threading.Tasks;
 using IdentityModel;
 using Cybtans.Testing.Integration;
+using Microsoft.AspNetCore.TestHost;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -37,8 +38,7 @@ namespace Cybtans.Tests.Integrations
             builder.ConfigureServices(services =>
             {                               
                 ConfigureServices(services);              
-            });
-            
+            });                       
         }
 
         public virtual void ConfigureServices(IServiceCollection services)

@@ -2,6 +2,6 @@
 {
     public class CodeGenerationOption
     {
-        public string OutputDirectory { get; set; }
+        public string OutputPath { get; set; }
     }
 }

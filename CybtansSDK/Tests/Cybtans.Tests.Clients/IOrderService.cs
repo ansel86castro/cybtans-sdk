@@ -23,6 +23,18 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/arg")]
 		Task Argument();
 		
+		[Post("/api/Order/upload")]
+		Task<UploadImageResponse> UploadImage([Body]UploadImageRequest request);
+		
+		[Post("/api/Order/{request.Id}/upload")]
+		Task<UploadStreamResponse> UploadStreamById([Body]UploadStreamByIdRequest request);
+		
+		[Post("/api/Order/stream")]
+		Task<UploadStreamResponse> UploadStream([Body]System.IO.Stream request);
+		
+		[Get("/api/Order/download")]
+		Task<System.IO.Stream> DownloadImage(DownloadImageRequest request = null);
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		
@@ -30,10 +42,10 @@ namespace Cybtans.Tests.Clients
 		Task<OrderDto> Get(GetOrderRequest request);
 		
 		[Post("/api/Order")]
-		Task<OrderDto> Create([Body(buffered: true)]OrderDto request);
+		Task<OrderDto> Create([Body]OrderDto request);
 		
 		[Put("/api/Order/{request.Id}")]
-		Task<OrderDto> Update([Body(buffered: true)]UpdateOrderRequest request);
+		Task<OrderDto> Update([Body]UpdateOrderRequest request);
 		
 		[Delete("/api/Order/{request.Id}")]
 		Task Delete(DeleteOrderRequest request);

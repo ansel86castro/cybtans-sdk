@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Cybtans.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/OrderState")]
 	[ApiController]
-	public class OrderStateServiceController : ControllerBase
+	public partial class OrderStateServiceController : ControllerBase
 	{
 		private readonly IOrderStateService _service;
 		

@@ -2,6 +2,7 @@
 using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cybtans.Proto.Generators.CSharp
@@ -59,6 +60,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 case "void": return "void";
                 case "guid": return "Guid";
                 case "decimal": return "decimal";
+                case "stream": return "System.IO.Stream";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");
@@ -76,6 +78,23 @@ namespace Cybtans.Proto.Generators.CSharp
             }
         }
 
+        public static string GetControllerReturnTypeName(this ITypeDeclaration type)
+        {
+            if (type == PrimitiveType.Void)
+            {
+                return "Task";
+            }
+            else if (type.HasStreams())
+            {
+                return "async Task<IActionResult>";
+            }
+            else
+            {
+                return $"Task<{type.GetTypeName()}>";
+            }
+        }
+
+
         public static string GetRequestTypeName(this ITypeDeclaration type, string name)
         {
             if (type == PrimitiveType.Void)
@@ -86,6 +105,27 @@ namespace Cybtans.Proto.Generators.CSharp
             {
                 return $"{type.GetTypeName()} {name}";
             }
+        }
+
+        public static bool HasStreams(this ITypeDeclaration type)
+        {
+            if (type == PrimitiveType.Stream)
+                return true;
+
+            var msg = type as MessageDeclaration;
+            if (msg == null)
+                return false;
+
+            foreach (var field in msg.Fields)
+            {
+                if (field.FieldType == PrimitiveType.Stream)
+                    return true;
+            }
+
+            if (msg.Fields.Any(x => x.FieldType is MessageDeclaration && x.FieldType.HasStreams()))
+                throw new InvalidOperationException($"Streams are only allowed a the root message in  {msg.Name}");
+
+            return false;
         }
     }
 }

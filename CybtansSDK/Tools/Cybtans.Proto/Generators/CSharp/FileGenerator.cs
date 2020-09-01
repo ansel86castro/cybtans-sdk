@@ -6,32 +6,44 @@ using System.IO;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
-    public abstract class FileGenerator
+    public abstract class FileGenerator<T> 
+        where T: CodeGenerationOption
     {
-        protected TypeGeneratorOption _option;
-        protected ProtoFile _proto;
+        protected T _option;
+        private ProtoFile _proto;
 
-        protected FileGenerator(ProtoFile proto, TypeGeneratorOption option)
+        protected FileGenerator(ProtoFile proto, T option)
         {
             _option = option;
             _proto = proto;
         }
 
-        public abstract void GenerateCode();
+        public ProtoFile Proto => _proto;
+
+        public virtual void GenerateCode()
+        {
+            Directory.CreateDirectory(_option.OutputPath);
+
+            foreach (var item in _proto.ImportedFiles)
+            {
+                GenerateCode(item);
+            }
+
+            GenerateCode(_proto);
+        }
+
+        protected virtual void GenerateCode(ProtoFile item) { }
 
         public CsFileWriter CreateWriter(string ns)
         {
-            return new CsFileWriter(ns, _option.OutputDirectory ?? Environment.CurrentDirectory);
+            return new CsFileWriter(ns, _option.OutputPath ?? Environment.CurrentDirectory);
         }
 
         protected void CreateFile(string filename, CodeWriter code)
         {
             File.WriteAllText(filename, code.ToString());
         }
-
     }
 
-   
 
-    
 }

@@ -1,10 +1,11 @@
 ﻿using Cybtans.Entities;
 using Cybtans.Entities.EntityFrameworkCore;
+using Cybtans.Test.Domain;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
-namespace Cybtans.Test.Domain.EF
+namespace Cybtans.Tests.Domain.EF
 {
     public partial class AdventureContext : DbContext, IEntityEventLogContext
     {
@@ -15,8 +16,8 @@ namespace Cybtans.Test.Domain.EF
         public AdventureContext(DbContextOptions<AdventureContext> options)
             : base(options)
         {
-        }         
-        
+        }
+
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -53,7 +54,7 @@ namespace Cybtans.Test.Domain.EF
         public static DbConnection CreateInMemoryDatabase(string database = "AdventureWorks")
         {
             //var connection = new SqliteConnection($"Data Source={database};Mode=Memory;Cache=Shared");
-            var connection = new SqliteConnection($"Data Source =:memory:"); 
+            var connection = new SqliteConnection($"Data Source =:memory:");
             connection.Open();
 
             return connection;

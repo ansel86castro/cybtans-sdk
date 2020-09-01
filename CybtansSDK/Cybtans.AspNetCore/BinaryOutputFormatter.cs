@@ -43,7 +43,7 @@ namespace Cybtans.AspNetCore
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
 
             var stream = new MemoryStream();
-            serializer.Serialize(stream,context.Object);
+            serializer.Serialize(stream, context.Object);
             stream.Position = 0;
 
             response.ContentType = _mediaType;
