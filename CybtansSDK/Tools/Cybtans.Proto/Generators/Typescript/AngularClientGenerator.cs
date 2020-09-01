@@ -73,7 +73,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 if (!response.IsBuildIn)
                     _types.Add(response.Name.Pascal());
 
-                string url = $"{srv.Option.Prefix}";
+                string url = srv.Option.Prefix != null ? $"/{srv.Option.Prefix}" : "";
                 List<FieldDeclaration> path = null;
 
                 if (options.Template != null)
@@ -192,20 +192,20 @@ export class @{NAME} {
 function getQueryString(data:any): string|undefined {
   if(!data) return '';
   let args = [];
-  for (const key in data) {
+  for (let key in data) {
       if (data.hasOwnProperty(key)) {                
-          const element = data[key];
-          if(element){
+          let element = data[key];
+          if(element !== undefined && element !== null && element !== ''){
               if(element instanceof Array){
-                  element.forEach(e=>args.push(key+'='+ encodeURIComponent(e)) );
+                  element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
               }else{
-                  args.push(key+'='+ encodeURIComponent(element));
+                  args.push(key + '=' + encodeURIComponent(element));
               }
           }
       }
   }
 
-  return args.length > 0 ? '?' + args.join('&') : '';   
+  return args.length > 0 ? '?' + args.join('&') : '';
 }
 ";
     }

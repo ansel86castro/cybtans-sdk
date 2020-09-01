@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
-    public class ServiceGenerator : FileGenerator
+    public class ServiceGenerator : FileGenerator<TypeGeneratorOption>
     {
         private TypeGenerator _typeGenerator;
 
@@ -15,11 +15,11 @@ namespace Cybtans.Proto.Generators.CSharp
             this._typeGenerator = typeGenerator;
             Namespace = $"{proto.Option.Namespace}.{option.Namespace ?? "Services"}";
 
-            foreach (var item in _proto.Declarations)
+            foreach (var item in Proto.Declarations)
             {
                 if (item is ServiceDeclaration srv)
                 {
-                    var info = new ServiceGenInfo(srv, _option, _proto);             
+                    var info = new ServiceGenInfo(srv, _option, Proto);             
 
                     Services.Add(srv, info);
                 }
@@ -32,7 +32,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public override void GenerateCode()
         {
-            Directory.CreateDirectory(_option.OutputDirectory);
+            Directory.CreateDirectory(_option.OutputPath);
 
             foreach (var item in Services)
             {               

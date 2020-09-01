@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Buffers;
 using System.IO;
 using System.Net.Mime;
 using System.Text;
@@ -14,15 +15,21 @@ namespace Cybtans.AspNetCore
 {
     public class BinaryInputFormatter : InputFormatter
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
+        //64Kb
+        const int MaxBufferLength = 256 * 1024;
 
-        private readonly Encoding _encoding;        
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        
+
+        private readonly Encoding _encoding;
+        private ArrayPool<byte> _pool;
 
         public BinaryInputFormatter() : this(BinarySerializer.DefaultEncoding) { }
 
         public BinaryInputFormatter(Encoding encoding)
         {
-            _encoding = encoding;            
+            _encoding = encoding;
+            _pool = ArrayPool<byte>.Shared;            
+
             SupportedMediaTypes.Add($"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}");
             SupportedMediaTypes.Add(BinarySerializer.MEDIA_TYPE);
         }
@@ -39,14 +46,44 @@ namespace Cybtans.AspNetCore
             var type = context.ModelType;
             var request = context.HttpContext.Request;
 
-            using MemoryStream stream = new MemoryStream();
-            await request.Body.CopyToAsync(stream).ConfigureAwait(false);
-            stream.Position = 0;
+            var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value! : new BinarySerializer(_encoding);
             
-            var serializer = _encoding ==BinarySerializer.DefaultEncoding ? Serializer.Value! : new BinarySerializer(_encoding);
+            byte[]? buffer = null;
+            Stream? stream = null;
+            object? result;
 
-            var result = serializer.Deserialize(stream, type);
+            try
+            {
+                if (request.ContentLength != null && request.ContentLength < MaxBufferLength)
+                {
+                    buffer = _pool.Rent((int)request.ContentLength);
+                    stream = new MemoryStream(buffer, 0, buffer.Length, true);
+                }
+                else
+                {
+                    stream = new MemoryStream();
+                }
+
+                await request.Body.CopyToAsync(stream).ConfigureAwait(false);
+                stream.Position = 0;                
+
+                result = serializer.Deserialize(stream, type);                
+            }
+            finally
+            {
+                if (buffer != null)
+                {
+                    _pool.Return(buffer);
+                }
+                else
+                {
+                    stream?.Dispose();
+                }
+            }
+
             return await InputFormatterResult.SuccessAsync(result).ConfigureAwait(false);
         }
+
+        
     }
 }

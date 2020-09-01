@@ -17,9 +17,10 @@ using Cybtans.AspNetCore;
 using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Services.Extensions;
 using Cybtans.Test.Domain;
-using Cybtans.Test.Domain.EF;
 using Cybtans.Tests.Services;
 using System.Data.Common;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Cybtans.Tests.Domain.EF;
 
 namespace Cybtans.Test.RestApi
 {
@@ -33,7 +34,7 @@ namespace Cybtans.Test.RestApi
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-        {
+        {         
             services.AddHttpContextAccessor();
 
             AddSwagger(services);
@@ -76,7 +77,9 @@ namespace Cybtans.Test.RestApi
                 options.Filters.Add<HttpResponseExceptionFilter>();
             })
             .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
-            .AddCybtansFormatter();  
+            .AddCybtansFormatter();
+
+            services.AddOptions<JwtOptions>().Bind(Configuration.GetSection("Jwt"));
 
             services.AddCybtansServices(typeof(TestStub).Assembly);
 
@@ -93,6 +96,8 @@ namespace Cybtans.Test.RestApi
              });
 
             services.AddDbContextEventPublisher<AdventureContext>();
+
+            services.AddTransient<AdventureContextSeed>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -101,10 +106,12 @@ namespace Cybtans.Test.RestApi
 
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                
+                app.UseDeveloperExceptionPage();
             }
-            app.UseExceptionHandlingMiddleware();
+            else
+            {
+                app.UseExceptionHandlingMiddleware();
+            }
 
             app.UseCors();
 
@@ -128,9 +135,7 @@ namespace Cybtans.Test.RestApi
                 c.SpecUrl("/swagger/v1/swagger.json");
                 c.DocumentTitle = "Cybtans.Test API";
             });
-
-
-            app.UseHttpsRedirection();
+         
 
             app.UseRouting();
 
@@ -160,40 +165,10 @@ namespace Cybtans.Test.RestApi
                 });
 
 
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        Implicit = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri($"{Configuration.GetValue<string>("Identity:Swagger")}/connect/authorize"),
-                            TokenUrl = new Uri($"{Configuration.GetValue<string>("Identity:Swagger")}/connect/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { "api", "Cybtans.Test API" }
-                            }
-                        }
-                    }
-                });
+             
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                             Reference = new OpenApiReference
-                             {
-                                  Type = ReferenceType.SecurityScheme,
-                                  Id = "oauth2"
-                             }
-                        },
-                        new string[0]
-                    },
+                {                  
                     {
                         new OpenApiSecurityScheme
                         {
@@ -238,21 +213,21 @@ namespace Cybtans.Test.RestApi
                     }
                 };
 
-                options.Authority = Configuration.GetValue<string>("Identity:Authority");
-                options.Audience = $"{options.Authority}/resources";                 
-                options.RequireHttpsMetadata = false;                    
+                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidAudience = options.Audience,
-                    ValidIssuer = options.Authority,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Identity:Secret")))
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = Configuration.GetValue<string>("Jwt:Audience"),
+                    ValidIssuer = Configuration.GetValue<string>("Jwt:Issuer"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),
+                    ClockSkew = TimeSpan.Zero
                 };
                 options.Validate();
             });
-
             services.AddAuthorization();
 		}
     }

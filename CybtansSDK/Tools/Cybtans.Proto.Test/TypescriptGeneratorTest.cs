@@ -24,11 +24,11 @@ namespace Cybtans.Proto.Test
             {
                 ModelOptions = new TsOutputOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                 },
                 ClientOptions = new TsOutputOption
                 {
-                    OutputDirectory = output
+                    OutputPath = output
                 }
             });
 
@@ -51,11 +51,11 @@ namespace Cybtans.Proto.Test
             {
                 ModelOptions = new TsOutputOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                 },
                 ClientOptions = new TsOutputOption
                 {
-                    OutputDirectory = output,
+                    OutputPath = output,
                     Framework = TsOutputOption.FRAMEWORK_ANGULAR
                 }
             });

@@ -264,9 +264,8 @@ namespace Cybtans.Proto.Generator
         }
 
         private void GenerateEnum(Type type, CodeWriter codeWriter, HashSet<Type> generated)
-        {
-            var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
-            if (attr == null || generated.Contains(type))
+        {           
+            if (generated.Contains(type))
                 return;         
 
             generated.Add(type);
@@ -349,7 +348,7 @@ namespace Cybtans.Proto.Generator
                 codeWriter.Append(";");
                 codeWriter.AppendLine();
 
-                if (!isPrimitive && !generated.Contains(propertyType) && propertyTypeAttr != null)
+                if (!isPrimitive && !generated.Contains(propertyType) && (propertyTypeAttr != null || propertyType.IsEnum))
                 {
                     types.Add(propertyType);
                 }

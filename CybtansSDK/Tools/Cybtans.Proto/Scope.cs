@@ -115,8 +115,10 @@ namespace Cybtans.Proto
             foreach (var item in scope._declarations)
             {
                 if (!this._declarations.TryAdd(item.Key, item.Value))
-                {                   
-                    throw new InvalidOperationException($"There is already a declaration with the same name {item.Key}");
+                {
+                    _declarations[item.Key] = item.Value;
+                    //throw new InvalidOperationException($"There is already a declaration with the same name {item.Key}");
+
                 }
             }
             foreach (var item in scope._packages)
@@ -154,7 +156,8 @@ namespace Cybtans.Proto
                 PrimitiveType.Object,
                 PrimitiveType.Void,
                 PrimitiveType.Guid,
-                PrimitiveType.Decimal
+                PrimitiveType.Decimal,
+                PrimitiveType.Stream
             });
         }
     }

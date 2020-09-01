@@ -12,13 +12,13 @@ using Xunit.Abstractions;
 
 namespace Cybtans.Serialization.Tests.Serialization
 {
-    public class BinarySerializerTest
+    public class SerializationBinaryTest
     {
         BinarySerializer _binarySerializer;
         private ITestOutputHelper _testOutput;
         private ModelA modelA;
 
-        public BinarySerializerTest(ITestOutputHelper testOutput)
+        public SerializationBinaryTest(ITestOutputHelper testOutput)
         {
             _binarySerializer = new BinarySerializer();
             _testOutput = testOutput;

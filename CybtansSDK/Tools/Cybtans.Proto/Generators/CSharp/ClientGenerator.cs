@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
-    public class ClientGenerator : FileGenerator
+    public class ClientGenerator : FileGenerator<TypeGeneratorOption>
     {
         private readonly ServiceGenerator _serviceGenerator;
         private readonly TypeGenerator _typeGenerator;
@@ -25,7 +25,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public override void GenerateCode()
         {
-            Directory.CreateDirectory(_option.OutputDirectory);
+            Directory.CreateDirectory(_option.OutputPath);
 
             foreach (var item in _serviceGenerator.Services)
             {
@@ -136,7 +136,7 @@ namespace Cybtans.Proto.Generators.CSharp
             {              
                 namedSb.Append(TemplateProcessor.Process(namedRegister, new
                 {
-                    PACKAGE = _proto.Package.ToString(),
+                    PACKAGE = Proto.Package.ToString(),
                     NAME = item.Value.Name
                 }));
 
@@ -148,24 +148,29 @@ namespace Cybtans.Proto.Generators.CSharp
 
             writer.Class.AppendTemplate(setupExtension, new Dictionary<string, object>
             {
-                ["NAME"] = _proto.Package.ToString(),
+                ["NAME"] = Proto.Package.ToString(),
                 ["NAMED_REGISTER"] = namedSb.ToString(),
                 ["GENERIC_REGISTER"] = genericSb.ToString()
             });
 
-            writer.Save($"{_proto.Package}ServiceCollectionExtensions");
+            writer.Save($"{Proto.Package}ServiceCollectionExtensions");
         }
 
         private object GetRequestBinding(string method)
         {
-            return method switch
+            switch (method)
             {
-                "GET" => "",
-                "POST" => "[Body(buffered: true)]",
-                "PUT" => "[Body(buffered: true)]",
-                "DELETE" => "",
-                _ => throw new NotImplementedException()
-            };
+                case "GET":
+                case "DELETE":
+                    return "";
+
+                case "POST":
+                case "PUT":
+                case "PATCH":
+                    return "[Body]";
+                default:
+                    throw new NotImplementedException();
+            }            
         }
 
         string setupExtension = @"
