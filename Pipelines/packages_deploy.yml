@@ -35,7 +35,7 @@ steps:
 - task: CmdLine@2
   displayName: 'Package Nuget Packages'
   inputs:
-    script: 'dotnet pack ./CybtansSDK/CybtansSDK.sln --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
+    script: 'dotnet pack ./**/*.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg'
 
 - task: NuGetCommand@2
   inputs:
