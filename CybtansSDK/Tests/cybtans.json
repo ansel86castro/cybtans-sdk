@@ -11,7 +11,11 @@
       "Type": "proto",
       "Output": ".",
       "ProtoFile": "./Proto/Test.proto",
-      "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests"
+      "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests",
+      "Typecript": {
+        "Output": "./Cybtans.Tests.SpaReact/ClientApp/src/services",
+        "Framework": ""
+      }
     }
   ]
 }
