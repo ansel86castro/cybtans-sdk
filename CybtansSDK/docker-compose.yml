@@ -13,9 +13,3 @@ services:
       context: .
       dockerfile: Tests/Cybtans.Tests.Gateway/Dockerfile
 
-  cybtans.tests.spareact:
-    image: ${DOCKER_REGISTRY-}cybtanstestsspareact
-    build:
-      context: .
-      dockerfile: Tests/Cybtans.Tests.SpaReact/Dockerfile
-
