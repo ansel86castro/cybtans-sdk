@@ -72,8 +72,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Gateway", "Te
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B701E5B2-5361-457B-B927-DEB715AE656C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Tests.SpaReact", "Tests\Cybtans.Tests.SpaReact\Cybtans.Tests.SpaReact.csproj", "{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -188,10 +186,6 @@ Global
 		{B701E5B2-5361-457B-B927-DEB715AE656C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B701E5B2-5361-457B-B927-DEB715AE656C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B701E5B2-5361-457B-B927-DEB715AE656C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,7 +205,6 @@ Global
 		{4CCD678F-E9B7-4149-B732-8DE9F953E92F} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{50F6C3ED-7C33-4D02-A13D-6786758FB593} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{B701E5B2-5361-457B-B927-DEB715AE656C} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
-		{2F2DD2D0-3DE5-4FCC-BE52-F1B7C7DCFBF2} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {412220C1-F0EB-4AB9-8FCA-DFBAB8477745}
