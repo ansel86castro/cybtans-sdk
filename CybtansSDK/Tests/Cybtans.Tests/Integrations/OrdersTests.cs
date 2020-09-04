@@ -502,10 +502,13 @@ namespace Cybtans.Tests.Integrations
             var result = await _service.DownloadImage("Image.png");
 
             Assert.NotNull(result);
+            Assert.NotNull(result.Image);
+            Assert.Equal("moon.jpg", result.FileName);
+            Assert.Equal("image/jpg", result.ContentType);
         
             using var fs = File.OpenRead("moon.jpg");
             var targetHash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
-            var destHash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(result));
+            var destHash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(result.Image));
 
             Assert.Equal(targetHash, destHash);
         }

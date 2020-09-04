@@ -29,7 +29,7 @@ namespace Cybtans.Tests.Services
 		Task<UploadStreamResponse> UploadStream(System.IO.Stream request);
 		
 		
-		Task<System.IO.Stream> DownloadImage(DownloadImageRequest request);
+		Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request);
 		
 		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);

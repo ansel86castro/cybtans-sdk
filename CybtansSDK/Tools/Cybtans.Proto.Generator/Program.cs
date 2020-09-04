@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Cybtans.Proto.Generator
@@ -30,36 +31,52 @@ namespace Cybtans.Proto.Generator
             else if (args.Length == 1)
             {
                 configs = CybtansConfig.SearchConfigs(args[0]).ToList();
-                if(configs.Count == 0)
+                if (configs.Count == 0)
                 {
-                    Console.WriteLine("No \"cybtans.json\" config files were found");                    
+                    Console.WriteLine("No \"cybtans.json\" config files were found");
                     return;
                 }
             }
 
-            if (configs != null && configs.Any())
+            try
             {
-                foreach (var config in configs)
+                if (configs != null && configs.Any())
                 {
-                    foreach (var step in config.Steps)
+                    foreach (var config in configs)
                     {
-                        foreach (var item in generators)
+                        foreach (var step in config.Steps)
                         {
-                            if (item.Generate(config, step))
-                                break;
+                            foreach (var item in generators)
+                            {
+                                if (item.Generate(config, step))
+                                    break;
+                            }
                         }
                     }
-                }
 
-                return;
-            }
-
-            foreach (var item in generators)
-            {
-                if (item.CanGenerate(args[0]) && item.Generate(args))
-                {
                     return;
                 }
+
+
+                foreach (var item in generators)
+                {
+                    if (item.CanGenerate(args[0]) && item.Generate(args))
+                    {
+                        return;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                var ex = e;
+                while (ex != null)
+                {
+                    Console.WriteLine(ex.Message);
+                    ex = ex.InnerException;
+                }
+                Console.ResetColor();
             }
 
         }

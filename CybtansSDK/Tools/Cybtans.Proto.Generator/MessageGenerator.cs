@@ -133,6 +133,8 @@ namespace Cybtans.Proto.Generator
                 loadAssemblyPath = Environment.CurrentDirectory;
             }
 
+            Console.WriteLine($"Generating proto from {options.AssemblyFilename}");
+
             var assembly = Assembly.Load(File.ReadAllBytes(options.AssemblyFilename));
             AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs args)
             {
@@ -146,6 +148,10 @@ namespace Cybtans.Proto.Generator
             };
 
             var types = GenerateMessages(options, assembly.ExportedTypes);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Proto generated at {options.ProtoOutputFilename}");
+            Console.ResetColor();
 
             if (types.Any() && options.GenerateCode && options.ServiceName != null && options.ServiceDirectory != null)
             {
