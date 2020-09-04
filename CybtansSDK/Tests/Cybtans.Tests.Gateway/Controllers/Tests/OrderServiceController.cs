@@ -69,8 +69,14 @@ namespace Gateway.Controllers.Cybtans.Tests
 		[HttpGet("download")]
 		public async Task<IActionResult> DownloadImage([FromQuery]DownloadImageRequest __request)
 		{
-			var stream = await _service.DownloadImage(__request);
-			return new FileStreamResult(stream, "image/jpg") { FileDownloadName = "Image.jpg" };
+			var result = await _service.DownloadImage(__request);
+			
+			 if(Request.Headers.ContainsKey("Accept")
+				&& System.Net.Http.Headers.MediaTypeHeaderValue.TryParse(Request.Headers["Accept"], out var mimeType) && mimeType?.MediaType == "application/x-cybtans")
+			{				
+				return new ObjectResult(result);
+			}
+			return new FileStreamResult(result.Image, result.ContentType) { FileDownloadName = result.FileName };
 		}
 		
 		[HttpGet]

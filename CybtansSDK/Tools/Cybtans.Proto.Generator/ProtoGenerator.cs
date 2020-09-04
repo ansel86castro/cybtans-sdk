@@ -78,21 +78,27 @@ namespace Cybtans.Proto.Generator
             Proto3Generator generator = new Proto3Generator(fileResolverFactory);
             var (ast, scope) = generator.LoadFromFile(protoFile);
 
-            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);
+            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);            
 
-            Console.WriteLine($"Generating csharp code from {protoFile}");
-
-            microserviceGenerator.GenerateCode(ast, scope);
-
-            Console.WriteLine("Csharp code generated succesfully");
-
-            if(step.Typecript != null)
+            microserviceGenerator.GenerateCode(ast, scope);            
+            try
             {
-                Console.WriteLine($"Generating typescript code from {protoFile}");
+                Console.ForegroundColor = ConsoleColor.Green;
 
-                GenerateTypecriptCode(ast, Path.Combine(config.Path, step.Typecript.Output), step.Typecript.Framework);
+                Console.WriteLine("CSharp generated succesfully");
 
-                Console.WriteLine($"Typescript code generated succesfully in {step.Typecript.Output}");
+                if (step.Typecript != null)
+                {
+
+                    GenerateTypecriptCode(ast, Path.Combine(config.Path, step.Typecript.Output), step.Typecript.Framework);
+
+                    Console.WriteLine($"Typescript generated succesfully");
+                }
+            }
+
+            finally
+            {
+                Console.ResetColor();
             }
 
             return true;

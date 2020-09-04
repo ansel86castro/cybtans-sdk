@@ -9,6 +9,11 @@ namespace Cybtans.Proto.Generators.CSharp
 {
     public static class ProtoAstExtensions
     {
+        public static string GetFieldName(this FieldDeclaration d)
+        {
+            return d.Name.Pascal();
+        }
+
         public static string GetTypeName(this TypeIdentifier type)
         {
             string name = type.TypeDeclaration.Name.Pascal();
