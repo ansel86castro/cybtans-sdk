@@ -28,6 +28,13 @@ message DownloadImageRequest{
 	string name = 1;
 }
 
+message DowndloadImageResponse{
+	string fileName = 1;
+	string contentType = 2;
+	stream image = 3;
+}
+
+
 service OrderService {
 	
 	rpc Foo(void) returns (void){	
@@ -65,12 +72,9 @@ service OrderService {
 		option method = "POST";
 	};
 
-	rpc DownloadImage(DownloadImageRequest) returns (stream) {
+	rpc DownloadImage(DownloadImageRequest) returns (DowndloadImageResponse) {
 		option template ="download";
-		option method = "GET";
-
-		option (file).contentType = "image/jpg";
-		option (file).name= "Image.jpg";
+		option method = "GET";		
 	};
 }
 

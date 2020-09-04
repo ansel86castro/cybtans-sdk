@@ -55,6 +55,11 @@ message DownloadImageRequest{
 	string name = 1;
 }
 
+message DowndloadFileResponse{
+	string fileName = 1;
+	string contentType = 2;
+	stream file = 3;
+}
 
 service UserService{
 	option (prefix) ="api/service1";
@@ -96,10 +101,16 @@ service UserService{
 	};
 
 	rpc DownloadImage2(DownloadImageRequest) returns (stream) {
-		option template ="download";
+		option template ="download2";
 		option method = "GET";
 
 		option (file).contentType = "application/octet-stream";
 		option (file).name= "Image2.jpg";
 	};
+
+	rpc DownloadFile(DownloadImageRequest) returns (DowndloadFileResponse) {
+		option template ="download3";
+		option method = "GET";		
+	};
+
 }
