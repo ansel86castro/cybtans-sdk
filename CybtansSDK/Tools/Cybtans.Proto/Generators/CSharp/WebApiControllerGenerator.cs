@@ -126,12 +126,34 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 if (response.HasStreams())
                 {
-                    var contentType = options.StreamOptions?.ContentType ?? "application/octet-stream";
+                    methodWriter.Append($"var result = await _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});").AppendLine();
+
+                    var result = "result";
+                    var contentType = $"\"{options.StreamOptions?.ContentType ?? "application/octet-stream"}\"";
+                    
                     var fileName = options.StreamOptions?.Name;
                     fileName = fileName != null ? $"\"{fileName}\"" : "Guid.NewGuid().ToString()";
 
-                    methodWriter.Append($"var stream = await _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});").AppendLine();
-                    methodWriter.Append($"return new FileStreamResult(stream, \"{contentType}\") {{ FileDownloadName = {fileName} }};");
+                    if (response is MessageDeclaration responseMsg)
+                    {
+                        var name = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.EndsWith("Name"));
+                        var type = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.EndsWith("Type"));
+                        if(name!= null)                        
+                            fileName = $"result.{name.GetFieldName()}";                            
+                        if(type!= null)
+                            contentType = $"result.{type.GetFieldName()}";
+
+                        methodWriter.AppendTemplate(streamReturnTemplate, new Dictionary<string, object>())
+                            .AppendLine();
+
+                        var stream = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.Stream);
+                        if(stream != null)
+                        {
+                            result = $"result.{stream.GetFieldName()}";
+                        }
+                    }
+
+                    methodWriter.Append($"return new FileStreamResult({result}, {contentType}) {{ FileDownloadName = {fileName} }};");
                 }
                 else
                 {
@@ -201,6 +223,13 @@ namespace Cybtans.Proto.Generators.CSharp
                     throw new NotImplementedException("Http verb is not valid or not supported");
             }
         }
-            
+
+
+        string streamReturnTemplate = @"
+ if(Request.Headers.ContainsKey(""Accept"")
+	&& System.Net.Http.Headers.MediaTypeHeaderValue.TryParse(Request.Headers[""Accept""], out var mimeType) && mimeType?.MediaType == ""application/x-cybtans"")
+{				
+	return new ObjectResult(result);
+}";
     }
 }

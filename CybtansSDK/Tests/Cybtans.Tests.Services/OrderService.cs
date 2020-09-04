@@ -83,10 +83,15 @@ namespace Cybtans.Tests.Services
             return CryptoService.ToStringX2(hash);
         }
 
-        public Task<Stream> DownloadImage(DownloadImageRequest request)
+        public Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request)
         {
             Stream stream = File.OpenRead("moon.jpg");
-            return Task.FromResult(stream);
+            return Task.FromResult(new DowndloadImageResponse
+            {
+                FileName = "moon.jpg",
+                ContentType = "image/jpg",
+                Image = stream
+            });
         }
 
         private async Task ValidateTest()

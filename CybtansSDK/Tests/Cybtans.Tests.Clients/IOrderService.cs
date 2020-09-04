@@ -33,7 +33,7 @@ namespace Cybtans.Tests.Clients
 		Task<UploadStreamResponse> UploadStream([Body]System.IO.Stream request);
 		
 		[Get("/api/Order/download")]
-		Task<System.IO.Stream> DownloadImage(DownloadImageRequest request = null);
+		Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request = null);
 		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
