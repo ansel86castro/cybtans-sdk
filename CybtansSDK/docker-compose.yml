@@ -12,3 +12,4 @@ services:
     build:
       context: .
       dockerfile: Tests/Cybtans.Tests.Gateway/Dockerfile
+
