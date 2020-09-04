@@ -14,9 +14,9 @@ variables:
 
 trigger:
   batch: true
-  branches:
+  branches:  
     include:
-    - master
+    - master        
   paths:
     include:
       - CybtansSDK/Tools/*
@@ -27,11 +27,13 @@ pool:
 steps:
 - task: CmdLine@2
   displayName: "Publish Code Generator"
+  condition: ne(variables['Build.Reason'], 'PullRequest') 
   inputs:
     script: 'dotnet publish CybtansSDK/Tools/Cybtans.Proto.Generator/Cybtans.Proto.Generator.csproj -p:PublishProfile=FolderProfile -o Release'    
 
 - task: ArchiveFiles@2
   displayName: "Zip File"
+  condition: ne(variables['Build.Reason'], 'PullRequest') 
   inputs:
     rootFolderOrFile: 'Release/cybtans-cli.exe'
     includeRootFolder: false
@@ -41,6 +43,7 @@ steps:
     verbose: true
 
 - task: PublishBuildArtifacts@1
+  condition: ne(variables['Build.Reason'], 'PullRequest') 
   displayName: 'Publish Artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
@@ -49,6 +52,7 @@ steps:
 
 - task: AzureFileCopy@4
   displayName: 'Upload to Blob Storage'
+  condition: ne(variables['Build.Reason'], 'PullRequest') 
   inputs:
     SourcePath: '$(Build.ArtifactStagingDirectory)/cybtans-cli-x64.zip'
     azureSubscription: 'Evaluación gratuita(e5d99fb9-0a00-4157-8a2f-e79ac9337a57)'
