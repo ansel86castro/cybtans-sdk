@@ -1,5 +1,6 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Example;
+using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
@@ -96,27 +97,47 @@ namespace Cybtans.Proto.Generators.Typescript
                     methods.Append($"(request:{request.GetTypeName()})");
                 }
 
-                var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "ErrorInfo|void";
+                var responseType =
+                    response.HasStreams() ? "Blob" :
+                    response == PrimitiveType.Void ? "ErrorInfo|void" :
+                    response.GetTypeName();
+
                 methods.Append($" : Promise<{responseType}>");
 
                 methods.Append(" {").AppendLine();
 
                 var body = methods.Append('\t', 1).Block(rpc.Name);
 
-                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                var headers = new Dictionary<string, string>();
+
+                if (!response.HasStreams())
                 {
-                    body.Append($"let options:RequestInit = {{ method: '{options.Method}', headers: {{ ...this._headers, 'Authorization': 'Bearer'}}}};");
-                }
-                else
-                {
-                    body.Append($"let options:RequestInit = {{ method: '{options.Method}', headers: this._headers}};");
+                    headers["Accept"] = "application/json";
                 }
 
+                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                {
+                    headers["Authorization"] = "Bearer";
+                }
+                if (!request.HasStreams() && (options.Method == "POST" || options.Method == "PUT"))
+                {
+                    headers["'Content-Type'"] = "application/json";
+                }
+
+                var headersString =string.Join(", ",headers.Select(x => $"{x.Key}: '{x.Value}'"));
+                body.Append($"let options:RequestInit = {{ method: '{options.Method}', headers: {{ {headersString} }}}};");
                 body.AppendLine();
 
                 if (options.Method == "POST" || options.Method == "PUT")
                 {
-                    body.Append("options.body = JSON.stringify(request);").AppendLine();
+                    if (request.HasStreams())
+                    {
+                        body.Append("options.body = this.getFormData(request);").AppendLine();
+                    }
+                    else
+                    {
+                        body.Append("options.body = JSON.stringify(request);").AppendLine();
+                    }
                 }
 
                 if (path != null)
@@ -146,14 +167,18 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 body.Append(";").AppendLine();
-
-                if (response != PrimitiveType.Void)
+                
+                if(response.HasStreams())
                 {
-                    body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));");
+                    body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));");
+                }
+                else if(response == PrimitiveType.Void)
+                {
+                    body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));");
                 }
                 else
                 {
-                    body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));");
+                    body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));");
                 }
 
                 body.AppendLine();
@@ -174,24 +199,23 @@ namespace Cybtans.Proto.Generators.Typescript
         }     
 
         string baseClientTemplate =
-@"type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
-type ErrorInfo = {status:number, statusText:string, text: string };
+@"export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
+export type ErrorInfo = {status:number, statusText:string, text: string };
 
-interface @{SERVICE}Options{
+export interface @{SERVICE}Options{
     baseUrl:string;
 }
 
-export class Base@{SERVICE}Service {
+class Base@{SERVICE}Service {
     protected _options:@{SERVICE}Options;
-    protected _fetch:Fetch;
-    protected _headers =  { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+    protected _fetch:Fetch;    
 
     constructor(fetch:Fetch, options:@{SERVICE}Options){
         this._fetch = fetch;
         this._options = options;
     }
 
-    protected getQueryString(data:any):string|undefined {
+    protected getQueryString(data:any): string|undefined {
         if(!data)
             return '';
         let args = [];
@@ -211,12 +235,48 @@ export class Base@{SERVICE}Service {
        return args.length > 0 ? '?' + args.join('&') : '';    
     }
 
-    protected getObject<T>(response:Response) : Promise<T>{
+    protected getFormData(data:any): FormData {
+        let form = new FormData();
+        if(!data)
+            return form;
+        
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {                
+                let value = data[key];
+                if(value !== undefined && value !== null && value !== ''){
+                    if (value instanceof Date){
+                        form.append(key, value.toJSON());
+                    }else if(typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean'){
+                        form.append(key, value.toString());
+                    }else if(value instanceof File){
+                        form.append(key, value, value.name);
+                    }else if(value instanceof Blob){
+                        form.append(key, value, 'blob');
+                    }else if(typeof value ==='string'){
+                        form.append(key, value);
+                    }else{
+                        throw new Error(`value of ${key} is not supported for multipart/form-data upload`);
+                    }
+                }
+            }
+        }
+        return form;
+    }
+
+    protected getObject<T>(response:Response): Promise<T>{
         let status = response.status;
         if(status >= 200 && status < 300 ){            
             return response.json();
         }     
         return response.text().then((text) => Promise.reject<T>({  status, statusText:response.statusText, text }));        
+    }
+
+     protected getBlob(response:Response): Promise<Blob>{
+        let status = response.status;
+        if(status >= 200 && status < 300 ){             
+            return response.blob();
+        }     
+        return response.text().then((text) => Promise.reject<Blob>({  status, statusText:response.statusText, text }));
     }
 
     protected ensureSuccess(response:Response): Promise<ErrorInfo|void>{

@@ -120,16 +120,12 @@ namespace Cybtans.Proto.Generators.Typescript
                         {
                             var queryObj = string.Join(", ", queryFields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
                             body.Append($"${{ getQueryString({{ {queryObj} }}) }}");
-
-                            //body.Append(",").AppendLine();
-                            //body.Append(' ', 4).Append($"params: {{ {queryObj} }},");
+                            
                         }
                     }
                     else
                     {
-                        body.Append($"${{ getQueryString(request) }}");
-                        //var queryObj = string.Join(", ", msg.Fields.Select(x => $"{x.Name.Camel()}: request.{x.Name.Camel()}"));
-                        //body.Append(' ', 4).Append($"params: {{ {queryObj} }},");
+                        body.Append($"${{ getQueryString(request) }}");                        
                     }
                 }
 
