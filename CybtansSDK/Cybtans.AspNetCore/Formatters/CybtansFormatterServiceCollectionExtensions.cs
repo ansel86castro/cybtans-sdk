@@ -20,11 +20,6 @@ namespace Microsoft.Extensions.DependencyInjection
             options.InputFormatters.Add(new BinaryInputFormatter(encoding ?? BinarySerializer.DefaultEncoding));
             options.OutputFormatters.Add(new BinaryOutputFormatter(encoding ?? BinarySerializer.DefaultEncoding));
             options.FormatterMappings.SetMediaTypeMappingForFormat("cybtans", MediaTypeHeaderValue.Parse(BinarySerializer.MEDIA_TYPE));
-        }
-
-        public static void AddAuthenticatedHttpHandler(this IServiceCollection services)
-        {
-            services.AddTransient<HttpClientAuthorizationHandler>();
-        }
+        }    
     }
 }
