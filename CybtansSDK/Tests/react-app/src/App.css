@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+<<<<<<< HEAD
+
+.search-box{
+  display: flex;  
+  align-items: baseline;
+  width: 20rem;
+}
+
+.search-box label{
+  margin-right: 1em;
+  font-weight: 500;
+}
+
+.action-bar{
+  display: flex;
+  justify-content: space-between;
+}
+=======
+>>>>>>> master

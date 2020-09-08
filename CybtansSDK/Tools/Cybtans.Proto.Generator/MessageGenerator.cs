@@ -347,7 +347,7 @@ namespace Cybtans.Proto.Generator
                 }
 
                 codeWriter.Append($"{GetTypeName(propertyType)} {p.Name.Camel()} = {counter++}");
-                if (optional)
+                if (optional || propertyType == typeof(string))
                 {
                     codeWriter.Append(" [optional = true]");
                 }
