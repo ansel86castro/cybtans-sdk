@@ -13,7 +13,7 @@
 	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />		
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
 	<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.5.1" />
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />		
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />		
   </ItemGroup>
 	
   <ItemGroup>

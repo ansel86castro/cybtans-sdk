@@ -6,7 +6,7 @@ import {
 } from '../services/models';
 
 interface State {
-    items: OrderStateDto[]|null;
+    items?: OrderStateDto[]|null;
     invalidated:boolean;
 }
 

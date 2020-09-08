@@ -1,16 +1,9 @@
 ﻿using Cybtans.Serialization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,20 +79,22 @@ namespace Cybtans.AspNetCore
                                 obj ??= Activator.CreateInstance(bindingContext.ModelType);
 
                                 //form value
-                                var formData = await section.AsFormDataSection().GetValueAsync();
-                                var formReader = new FormReader(formData);
+                                var sectionValue = await section.AsFormDataSection().GetValueAsync();                                
+                                var formReader = new FormReader(sectionValue);
+                                var form = formReader.ReadForm();
 
-                                foreach (var value in formReader.ReadForm())
+                                if (form.Count == 0)
                                 {
-                                    var prop = bindingContext.ModelMetadata.Properties[value.Key];
-                                    if (prop.ModelType != typeof(string))
+                                    if(contentDisposition.Name != null)
                                     {
-                                        var v = Convert.ChangeType(value.Value.ToString(), prop.UnderlyingOrModelType);
-                                        prop.PropertySetter(obj, v);
+                                        SetValue(bindingContext, obj, sectionValue, contentDisposition.Name.Value);                                        
                                     }
-                                    else
+                                }
+                                else
+                                {
+                                    foreach (var value in form)
                                     {
-                                        prop.PropertySetter(obj, value.Value.ToString());
+                                        SetValue(bindingContext, obj, value.Value.ToString(), value.Key);                                        
                                     }
                                 }
                             }
@@ -115,15 +110,7 @@ namespace Cybtans.AspNetCore
                             else
                             {
                                 obj ??= Activator.CreateInstance(bindingContext.ModelType);
-
-                                if (obj is IReflectorMetadataProvider reflectorMetadata)
-                                {
-                                    reflectorMetadata.SetValue(contentDisposition.Name.Value, stream);
-                                }
-                                else
-                                {
-                                    bindingContext.ModelMetadata.Properties[contentDisposition.Name.Value].PropertySetter(obj, stream);
-                                }
+                                SetValue(bindingContext, obj, stream, contentDisposition.Name.Value);
                             }
                         }
 
@@ -146,6 +133,83 @@ namespace Cybtans.AspNetCore
             }
 
             bindingContext.Result = ModelBindingResult.Failed();
+        }
+
+        public static string Pascal(string s)
+        {
+            var sections = s.Split('_');
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in sections)
+            {
+
+                for (int i = 0; i < part.Length; i++)
+                {
+                    var c = part[i];
+                    if (i == 0)
+                    {
+                        sb.Append(char.ToUpperInvariant(c));
+                    }
+                    else if (i < part.Length - 1 && char.IsLower(part[i - 1]) && char.IsUpper(c))
+                    {
+                        sb.Append(c);
+                    }
+                    else
+                    {
+                        sb.Append(char.ToLowerInvariant(c));
+                    }
+
+                }
+            }
+
+            var result = sb.ToString();
+            if (result.All(x => char.IsDigit(x)))
+            {
+                result = "_" + result;
+            }
+
+            return result;
+        }
+    
+        private static void SetValue(ModelBindingContext bindingContext, object obj, string value, string property)
+        {
+            if (obj is IReflectorMetadataProvider reflectorMetadata)
+            {
+                var accesor = reflectorMetadata.GetAccesor();
+                var propCode = accesor.GetPropertyCode(Pascal(property));
+                var propType = accesor.GetPropertyType(propCode);
+                propType = Nullable.GetUnderlyingType(propType) ?? propType;
+
+                reflectorMetadata.SetValue(Pascal(property),
+                    propType != typeof(string) ?
+                    Convert.ChangeType(value, propType) :
+                    value);
+            }
+            else
+            {
+                var prop = bindingContext.ModelMetadata.Properties.FirstOrDefault(x => x.Name.ToUpperInvariant() == property.ToUpperInvariant());
+                prop?.PropertySetter(obj,
+                   prop.ModelType != typeof(string) ?
+                   Convert.ChangeType(value, prop.UnderlyingOrModelType) :
+                   value);
+            }
+        }
+
+        private static void SetValue(ModelBindingContext bindingContext, object obj, object value, string property)
+        {
+            if (obj is IReflectorMetadataProvider reflectorMetadata)
+            {
+                var accesor = reflectorMetadata.GetAccesor();
+                var propCode = accesor.GetPropertyCode(Pascal(property));
+                var propType = accesor.GetPropertyType(propCode);
+                propType = Nullable.GetUnderlyingType(propType) ?? propType;
+
+                reflectorMetadata.SetValue(Pascal(property), value);
+            }
+            else
+            {
+                var prop = bindingContext.ModelMetadata.Properties.FirstOrDefault(x => x.Name.ToUpperInvariant() == property.ToUpperInvariant());
+                prop?.PropertySetter(obj, value);
+            }
         }
     }
 }

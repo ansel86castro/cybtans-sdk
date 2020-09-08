@@ -14,6 +14,7 @@ namespace Cybtans.Tests.Domain.EF
         {
             context.Database.EnsureCreated();
 
+            Random rand = new Random();
             if (!context.OrderStates.Any())
             {
                 context.OrderStates.AddRange(
@@ -23,36 +24,47 @@ namespace Cybtans.Tests.Domain.EF
                     new OrderState { Id = 4, Name = "Shipped" },
                     new OrderState { Id = 5, Name = "Delivered" });
 
-                context.Customers.Add(new Customer
+                context.Customers.AddRange(new Customer
                 {                    
-                    Name = "Test",
-                    FirstLastName = "Test",
-                    SecondLastName = "Test",
+                    Name = "John",
+                    FirstLastName = "Doe",                    
                     CustomerProfile = new CustomerProfile
                     {                 
-                        Name = "Test Profile"
+                        Name = "John Doe Profile"
+                    }
+                },
+                new Customer
+                {
+                    Name = "Jane",
+                    FirstLastName = "Doe",                    
+                    CustomerProfile = new CustomerProfile
+                    {
+                        Name = "Jane Doe Profile"
                     }
                 });
 
                 await context.SaveChangesAsync();
 
-                context.Orders.Add(new Order
+                context.Orders.AddRange(
+                Enumerable.Range(1, 10)
+                .Select(i=>
+                new Order
                 {
-                    OrderStateId = 1,
-                    CustomerId = context.Customers.FirstOrDefault(x=>x.Name == "Test").Id,
-                    Description = "Order 1",
+                    OrderStateId = (i % 5) + 1,
+                    CustomerId = context.Customers.FirstOrDefault(x=>x.Name == (i % 2 == 0? "John": "Jane")).Id,
+                    Description = $"Order Number {i}",
                     OrderType = OrderTypeEnum.Normal,
                     CreateDate = DateTime.Now,
                     Items = new List<OrderItem>
                     {
                         new OrderItem
                         {
-                                ProductName = "Product 1",
+                                ProductName = $"Order {i} Product 1",
                                 Discount = 0,
-                                Price = 10
+                                Price = rand.Next(100)
                         }
                     }
-                });
+                }));
 
                 await context.SaveChangesAsync();
             }
