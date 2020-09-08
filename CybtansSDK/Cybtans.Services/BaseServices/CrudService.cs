@@ -11,12 +11,30 @@ namespace Cybtans.Services
 {
 
     public class CrudService<TEntity, TKey, TEntityDto, TGetRequest, TGetAllRequest, TGetAllResponse, TUpdateRequest, TDeleteRequest>
+        : CrudService<TEntity, TKey, TEntityDto, TGetRequest, TGetAllRequest, TGetAllResponse, TUpdateRequest, TEntityDto, TDeleteRequest>
+      where TEntity : IEntity<TKey>
+      where TEntityDto : IReflectorMetadataProvider, new()
+      where TGetRequest : IReflectorMetadataProvider, new()
+      where TGetAllRequest : IReflectorMetadataProvider, new()
+      where TGetAllResponse : IReflectorMetadataProvider, new()
+      where TUpdateRequest : IReflectorMetadataProvider, new()
+      where TDeleteRequest : IReflectorMetadataProvider, new()
+    {
+        public CrudService(IRepository<TEntity, TKey> repository, IUnitOfWork uow, IMapper mapper, ILogger logger) : base(repository, uow, mapper, logger)
+        {
+        }
+    }
+
+
+    public class CrudService<TEntity, TKey, TEntityDto, TGetRequest, TGetAllRequest, TGetAllResponse, TUpdateRequest, TCreateRequest, TDeleteRequest>
         where TEntity : IEntity<TKey>
+        where TEntityDto : IReflectorMetadataProvider, new()
         where TGetRequest : IReflectorMetadataProvider, new()
         where TGetAllRequest : IReflectorMetadataProvider, new()
         where TGetAllResponse : IReflectorMetadataProvider, new()
         where TUpdateRequest : IReflectorMetadataProvider, new()
         where TDeleteRequest : IReflectorMetadataProvider, new()
+        where TCreateRequest : IReflectorMetadataProvider, new()
     {
         readonly IRepository<TEntity, TKey> _repository;
         readonly IUnitOfWork _uow;
@@ -35,7 +53,12 @@ namespace Cybtans.Services
             _logger = logger;
         }
 
-        public virtual async Task<TEntityDto> Create(TEntityDto request)
+        protected ILogger Logger => _logger;
+        protected IMapper Mapper => _mapper;
+        protected IRepository<TEntity, TKey> Repository => _repository;
+        protected IUnitOfWork UoW => _uow;
+
+        public virtual async Task<TEntityDto> Create(TCreateRequest request)
         {            
             var entity = _mapper.Map<TEntity>(request);
             _repository.Add(entity);
