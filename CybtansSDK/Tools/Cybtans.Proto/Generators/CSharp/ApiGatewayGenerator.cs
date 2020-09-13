@@ -21,7 +21,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         protected override void GenerateController(ServiceGenInfo srvInfo)
         {
-            var writer = CreateWriter($"{_option.Namespace ?? "Gateway.Controllers"}");
+            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace}.Controllers");
 
             writer.Usings.Append($"using {_clientGenerator.Namespace};").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();

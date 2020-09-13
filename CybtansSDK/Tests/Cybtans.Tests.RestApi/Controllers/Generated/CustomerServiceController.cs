@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
-namespace Cybtans.Tests.RestApi.Controllers
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/Customer")]
 	[ApiController]

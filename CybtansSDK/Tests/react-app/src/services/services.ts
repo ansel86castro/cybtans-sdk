@@ -30,15 +30,11 @@ import {
   UploadStreamByIdRequest,
   UploadStreamResponse,
   DownloadImageRequest,
-<<<<<<< HEAD
   DowndloadImageResponse,
-=======
->>>>>>> master
   LoginRequest,
   LoginResponse,
  } from './models';
 
-<<<<<<< HEAD
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
 export type ErrorInfo = {status:number, statusText:string, text: string };
 
@@ -49,30 +45,13 @@ export interface TestsOptions{
 class BaseTestsService {
     protected _options:TestsOptions;
     protected _fetch:Fetch;    
-=======
-type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
-type ErrorInfo = {status:number, statusText:string, text: string };
-
-interface TestsOptions{
-    baseUrl:string;
-}
-
-export class BaseTestsService {
-    protected _options:TestsOptions;
-    protected _fetch:Fetch;
-    protected _headers =  { 'Content-Type': 'application/json', 'Accept': 'application/json' };
->>>>>>> master
 
     constructor(fetch:Fetch, options:TestsOptions){
         this._fetch = fetch;
         this._options = options;
     }
 
-<<<<<<< HEAD
     protected getQueryString(data:any): string|undefined {
-=======
-    protected getQueryString(data:any):string|undefined {
->>>>>>> master
         if(!data)
             return '';
         let args = [];
@@ -81,7 +60,9 @@ export class BaseTestsService {
                 let element = data[key];
                 if(element !== undefined && element !== null && element !== ''){
                     if(element instanceof Array){
-                        element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
+                        element.forEach(e=> args.push(key + '=' + encodeURIComponent(e instanceof Date ? e.toJSON(): e)));
+                    }else if(element instanceof Date){
+                        args.push(key + '=' + encodeURIComponent(element.toJSON()));
                     }else{
                         args.push(key + '=' + encodeURIComponent(element));
                     }
@@ -92,7 +73,6 @@ export class BaseTestsService {
        return args.length > 0 ? '?' + args.join('&') : '';    
     }
 
-<<<<<<< HEAD
     protected getFormData(data:any): FormData {
         let form = new FormData();
         if(!data)
@@ -122,9 +102,6 @@ export class BaseTestsService {
     }
 
     protected getObject<T>(response:Response): Promise<T>{
-=======
-    protected getObject<T>(response:Response) : Promise<T>{
->>>>>>> master
         let status = response.status;
         if(status >= 200 && status < 300 ){            
             return response.json();
@@ -132,7 +109,6 @@ export class BaseTestsService {
         return response.text().then((text) => Promise.reject<T>({  status, statusText:response.statusText, text }));        
     }
 
-<<<<<<< HEAD
      protected getBlob(response:Response): Promise<Blob>{
         let status = response.status;
         if(status >= 200 && status < 300 ){             
@@ -141,8 +117,6 @@ export class BaseTestsService {
         return response.text().then((text) => Promise.reject<Blob>({  status, statusText:response.statusText, text }));
     }
 
-=======
->>>>>>> master
     protected ensureSuccess(response:Response): Promise<ErrorInfo|void>{
         let status = response.status;
         if(status < 200 || status >= 300){
@@ -160,53 +134,33 @@ export class CustomerService extends BaseTestsService {
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllCustomerResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Customer`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetCustomerRequest) : Promise<CustomerDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:CustomerDto) : Promise<CustomerDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Customer`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateCustomerRequest) : Promise<CustomerDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'PUT', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteCustomerRequest) : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'DELETE', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -221,53 +175,33 @@ export class CustomerEventService extends BaseTestsService {
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllCustomerEventResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetCustomerEventRequest) : Promise<CustomerEventDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:CustomerEventDto) : Promise<CustomerEventDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateCustomerEventRequest) : Promise<CustomerEventDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'PUT', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteCustomerEventRequest) : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'DELETE', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -282,83 +216,51 @@ export class OrderService extends BaseTestsService {
     }
     
     foo() : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/foo`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     baar() : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/baar`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     test() : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/test`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     argument() : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/arg`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     uploadImage(request:UploadImageRequest) : Promise<UploadImageResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
-    	options.body = JSON.stringify(request);
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/upload`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     uploadStreamById(request:UploadStreamByIdRequest) : Promise<UploadStreamResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
-    	options.body = JSON.stringify(request);
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}/upload`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     uploadStream(request:Blob) : Promise<UploadStreamResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
-    	options.body = JSON.stringify(request);
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/stream`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     downloadImage(request:DownloadImageRequest) : Promise<Blob> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: {  }};
     	let endpoint = this._options.baseUrl+`/api/Order/download`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));
@@ -366,57 +268,32 @@ export class OrderService extends BaseTestsService {
     
     getAll(request:GetAllRequest) : Promise<GetAllOrderResponse> {
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
-    	let endpoint = this._options.baseUrl+`/api/Order/download`+this.getQueryString(request);
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    getAll(request:GetAllRequest) : Promise<GetAllOrderResponse> {
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetOrderRequest) : Promise<OrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:OrderDto) : Promise<OrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateOrderRequest) : Promise<OrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'PUT', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteOrderRequest) : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'DELETE', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -431,53 +308,33 @@ export class OrderStateService extends BaseTestsService {
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllOrderStateResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: { ...this._headers, 'Authorization': 'Bearer'}};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/OrderState`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetOrderStateRequest) : Promise<OrderStateDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: { ...this._headers, 'Authorization': 'Bearer'}};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/OrderState/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:OrderStateDto) : Promise<OrderStateDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: { ...this._headers, 'Authorization': 'Bearer'}};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/OrderState`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateOrderStateRequest) : Promise<OrderStateDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'PUT', headers: { ...this._headers, 'Authorization': 'Bearer'}};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/OrderState/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteOrderStateRequest) : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
-=======
-    	let options:RequestInit = { method: 'DELETE', headers: { ...this._headers, 'Authorization': 'Bearer'}};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/OrderState/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -492,53 +349,33 @@ export class SoftDeleteOrderService extends BaseTestsService {
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllSoftDeleteOrderResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetSoftDeleteOrderRequest) : Promise<SoftDeleteOrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'GET', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:SoftDeleteOrderDto) : Promise<SoftDeleteOrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateSoftDeleteOrderRequest) : Promise<SoftDeleteOrderDto> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'PUT', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteSoftDeleteOrderRequest) : Promise<ErrorInfo|void> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'DELETE', headers: this._headers};
->>>>>>> master
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -553,11 +390,7 @@ export class AuthenticationService extends BaseTestsService {
     }
     
     login(request:LoginRequest) : Promise<LoginResponse> {
-<<<<<<< HEAD
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-=======
-    	let options:RequestInit = { method: 'POST', headers: this._headers};
->>>>>>> master
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/auth/login`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));

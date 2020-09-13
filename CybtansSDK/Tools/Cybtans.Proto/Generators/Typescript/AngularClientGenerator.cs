@@ -193,7 +193,9 @@ function getQueryString(data:any): string|undefined {
           let element = data[key];
           if(element !== undefined && element !== null && element !== ''){
               if(element instanceof Array){
-                  element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
+                  element.forEach(e=>args.push(key + '=' + encodeURIComponent(e instanceof Date ? e.toJSON(): e)) );
+              }else if(element instanceof Date){
+                  args.push(key + '=' + encodeURIComponent(element.toJSON()));
               }else{
                   args.push(key + '=' + encodeURIComponent(element));
               }

@@ -56,7 +56,40 @@ namespace Cybtans.Proto.Test
             microserviceGenerator.GenerateCode(ast);
         }
 
-      
+
+        [Theory]
+        [InlineData("Protos/Main.proto", "CSharp/Main")]
+        public void GenerateMultipleImports(string filename, string output)
+        {
+            var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
+
+            Proto3Generator generator = new Proto3Generator(fileResolverFactory);
+            var (ast, scope) = generator.LoadFromFile(filename);
+            Assert.NotNull(ast);
+
+            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
+            {
+                ModelOptions = new TypeGeneratorOption
+                {
+                    OutputPath = output,
+                },
+                ServiceOptions = new TypeGeneratorOption
+                {
+                    OutputPath = output
+                },
+                ControllerOptions = new WebApiControllerGeneratorOption
+                {
+                    OutputPath = output
+                },
+                ClientOptions = new TypeGeneratorOption
+                {
+                    OutputPath = output,
+                }
+            });
+
+            microserviceGenerator.GenerateCode(ast);
+        }
+
         private static void AssertAST(ProtoFile ast)
         {
             Assert.NotNull(ast);

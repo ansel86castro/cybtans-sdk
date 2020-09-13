@@ -6,6 +6,8 @@ using Cybtans.Proto.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -276,18 +278,45 @@ namespace Cybtans.Proto.Generator
 
             generated.Add(type);
 
-            codeWriter.Append($"enum { type.Name.Pascal() } {{");
+            codeWriter.Append($"enum { type.Name.Pascal() } {{").AppendLine();
+
+            bool hasMessageOptions = false;
+            if (type.GetCustomAttribute<DescriptionAttribute>() != null)
+            {
+                var description = type.GetCustomAttribute<DescriptionAttribute>();
+                codeWriter.Append('\t', 1).Append($"option description = \"{description.Description}\";").AppendLine();
+                hasMessageOptions = true;
+            }
+
+            if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
+            {
+                codeWriter.Append('\t', 1).Append($"option deprecated = true;").AppendLine();
+                hasMessageOptions = true;
+            }
+
+            if (hasMessageOptions)
+            {
+                codeWriter.AppendLine();
+            }
 
             var members = Enum.GetNames(type);
             foreach (var item in members)
-            {
-                codeWriter.AppendLine();
+            {              
                 var value = Convert.ToInt32(Enum.Parse(type, item));
-                codeWriter.Append('\t', 1).Append($"{item} = {value};");
+                codeWriter.Append('\t', 1).Append($"{item} = {value}");
+
+                var member = type.GetField(item);
+                if(member.GetCustomAttribute<DescriptionAttribute>() != null)
+                {
+                    var attr = member.GetCustomAttribute<DescriptionAttribute>();
+                    codeWriter.Append($" [description = \"{attr.Description}\"]");
+                }
+
+                codeWriter.Append(";");
+
+                codeWriter.AppendLine();
             }
-
-
-            codeWriter.AppendLine();
+            
             codeWriter.Append("}");
             codeWriter.AppendLine(2);
         }
@@ -304,12 +333,31 @@ namespace Cybtans.Proto.Generator
             codeWriter.Append($"message { GetTypeName(type) } {{");
             codeWriter.AppendLine();
 
+            bool hasMessageOptions = false;
+            if (type.GetCustomAttribute<DescriptionAttribute>() != null)
+            {
+                var description = type.GetCustomAttribute<DescriptionAttribute>();
+                codeWriter.Append('\t', 1).Append($"option description = \"{description.Description}\";").AppendLine();
+                hasMessageOptions = true;
+            }
+
+            if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
+            {
+                codeWriter.Append('\t', 1).Append($"option deprecated = true;").AppendLine();
+                hasMessageOptions = true;
+            }
+
+            if (hasMessageOptions)
+            {
+                codeWriter.AppendLine();
+            }
+
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             var counter = 1;
             List<Type> types = new List<Type>();
 
             foreach (var p in props)
-            {                
+            {
                 if (p.GetCustomAttribute<MessageExcludedAttribute>() != null)
                     continue;
 
@@ -337,7 +385,7 @@ namespace Cybtans.Proto.Generator
                 var propertyTypeAttr = propertyType.GetCustomAttribute<GenerateMessageAttribute>(true);
 
                 if (visited.Contains(propertyType) || (!isPrimitive && !propertyType.IsEnum && propertyTypeAttr == null))
-                    continue;                                              
+                    continue;
 
                 codeWriter.Append('\t', 1);
 
@@ -347,10 +395,9 @@ namespace Cybtans.Proto.Generator
                 }
 
                 codeWriter.Append($"{GetTypeName(propertyType)} {p.Name.Camel()} = {counter++}");
-                if (optional || propertyType == typeof(string))
-                {
-                    codeWriter.Append(" [optional = true]");
-                }
+
+                AppendOptions(codeWriter, p, optional);
+
                 codeWriter.Append(";");
                 codeWriter.AppendLine();
 
@@ -373,6 +420,37 @@ namespace Cybtans.Proto.Generator
                 {
                     GenerateEnum(t, codeWriter, generated);
                 }
+            }
+        }
+
+        private static void AppendOptions(CodeWriter codeWriter, PropertyInfo p, bool optional)
+        {
+            var options = new List<string>();
+            if (optional)
+            {
+                options.Add("optional = true");
+            }
+            else if (p.GetCustomAttribute<RequiredAttribute>() != null)
+            {
+                options.Add("required = true");
+            }
+            
+            if (p.GetCustomAttribute<DescriptionAttribute>() != null)
+            {
+                var attr = p.GetCustomAttribute<DescriptionAttribute>();
+                options.Add($"description = \"{attr.Description}\"");
+            }
+
+            if (p.GetCustomAttribute<ObsoleteAttribute>() != null)
+            {
+                options.Add("deprecated = true");
+            }
+
+            if (options.Any())
+            {
+                codeWriter.Append(" [");
+                codeWriter.Append(string.Join(", ", options));
+                codeWriter.Append("]");
             }
         }
 

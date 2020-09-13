@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Cybtans.Proto.Generator
@@ -49,13 +50,26 @@ namespace Cybtans.Proto.Generator
         public string Output { get; set; }
 
         #region Proto Generator
+
         public string ProtoFile { get; set; }
 
         public string SearchPath { get; set; }
 
-        public TypescriptGenerationOptions Typecript { get; set; }
+        public StepClientOptions Typecript { get; set; }
 
         public string Gateway { get; set; }
+
+        public CSharpStepOption Models { get; set; }
+
+        public CSharpStepOption Services { get; set; }
+
+        public CSharpStepOption CSharpClients { get; set; }
+
+        public CSharpStepOption Controllers { get; set; }
+
+        public CSharpStepOption GatewayOptions { get; set; }
+
+        public List<StepClientOptions> Clients { get; set; } = new List<StepClientOptions>();
 
         #endregion
 
@@ -65,11 +79,23 @@ namespace Cybtans.Proto.Generator
         #endregion
     }
 
-    public class TypescriptGenerationOptions
-    {
-        public string Output { get; set; }
-
-        public string Framework { get; set; }
-    }
     
+    public class StepOption
+    {
+        public string Output { get; set; }        
+    }
+
+    public class CSharpStepOption : StepOption
+    {
+        public string Namespace { get; set; }
+    }
+
+    public class StepClientOptions : StepOption
+    {        
+        public string Framework { get; set; }
+
+        public Dictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
+    }
+
+
 }

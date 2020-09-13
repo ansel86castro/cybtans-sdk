@@ -12,10 +12,16 @@
       "Output": ".",
       "ProtoFile": "./Proto/Test.proto",
       "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests",
-      "Typecript": {
-        "Output": "./react-app/src/services",
-        "Framework": ""
-      }
+      "Clients": [
+        {
+          "Output": "./react-app/src/services",
+          "Framework": "react"
+        },
+        {
+          "Output": "./angular-app/src/app/services",
+          "Framework": "angular"
+        }
+      ]
     }
   ]
 }

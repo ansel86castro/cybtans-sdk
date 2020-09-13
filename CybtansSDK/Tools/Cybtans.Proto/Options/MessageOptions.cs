@@ -19,5 +19,8 @@ namespace Cybtans.Proto.Options
 
         [Field("deprecated")]
         public bool Deprecated { get; set; }
+
+        [Field("description")]
+        public string? Description { get; set; }
     }
 }
