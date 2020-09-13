@@ -7,13 +7,14 @@ namespace Cybtans.Proto.Generators.CSharp
 {
     public class EnumGenerator: SingleFileGenerator<TypeGeneratorOption>
     {
-        public EnumGenerator(ProtoFile proto, TypeGeneratorOption option) : base(proto, option, 
-            $"{proto.Option.Namespace}.{option.Namespace ?? "Models"}")
+        public EnumGenerator(ProtoFile proto, TypeGeneratorOption option) : base(proto, option,
+            option.Namespace ?? $"{proto.Option.Namespace}.Models")
         {            
         }
 
         public override void OnGenerationBegin(CsFileWriter writer)
         {
+            writer.Usings.Append("using System.ComponentModel;").AppendLine();
             base.OnGenerationBegin(writer);
         }
 
@@ -40,6 +41,19 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private void GenerateEnum(EnumInfo info, CodeWriter clsWriter)
         {
+            if(info.Enum.Option.Description != null)
+            {
+                clsWriter.Append("/// <summary>").AppendLine();
+                clsWriter.Append("/// ").Append(info.Enum.Option.Description).AppendLine();
+                clsWriter.Append("/// </summary>").AppendLine();
+                clsWriter.Append($"[Description(\"{info.Enum.Option.Description}\")]").AppendLine();
+            }
+
+            if (info.Enum.Option.Deprecated)
+            {
+                clsWriter.Append($"[Obsolete]").AppendLine();
+            }
+
             clsWriter.Append("public ");
             clsWriter.Append($"enum {info.Name} ").AppendLine();
 
@@ -50,6 +64,19 @@ namespace Cybtans.Proto.Generators.CSharp
 
             foreach (var item in info.Fields.Values.OrderBy(x => x.Field.Value))
             {
+                if (item.Field.Option.Description != null)
+                {
+                    bodyWriter.Append("/// <summary>").AppendLine();
+                    bodyWriter.Append("/// ").Append(item.Field.Option.Description).AppendLine();
+                    bodyWriter.Append("/// </summary>").AppendLine();
+                    bodyWriter.Append($"[Description(\"{item.Field.Option.Description}\")]").AppendLine();
+                }
+
+                if (item.Field.Option.Deprecated)
+                {
+                    bodyWriter.Append($"[Obsolete]").AppendLine();
+                }
+
                 bodyWriter.Append(item.Name).Append(" = ").Append(item.Field.Value.ToString()).Append(",");
                 bodyWriter.AppendLine();
                 bodyWriter.AppendLine();

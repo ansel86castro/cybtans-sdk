@@ -1,18 +1,42 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Tests.Models
 {
+	/// <summary>
+	/// Customer Entity
+	/// </summary>
+	[Description("Customer Entity")]
 	public partial class CustomerDto : IReflectorMetadataProvider
 	{
 		private static readonly CustomerDtoAccesor __accesor = new CustomerDtoAccesor();
 		
+		/// <summary>
+		/// Customer's Name
+		/// </summary>
+		[Required]
+		[Description("Customer's Name")]
 		public string Name {get; set;}
 		
+		/// <summary>
+		/// Customer's FirstLastName
+		/// </summary>
+		[Description("Customer's FirstLastName")]
 		public string FirstLastName {get; set;}
 		
+		/// <summary>
+		/// Customer's SecondLastName
+		/// </summary>
+		[Obsolete]
+		[Description("Customer's SecondLastName")]
 		public string SecondLastName {get; set;}
 		
+		/// <summary>
+		/// Customer's Profile Id, can be null
+		/// </summary>
+		[Description("Customer's Profile Id, can be null")]
 		public Guid? CustomerProfileId {get; set;}
 		
 		public CustomerProfileDto CustomerProfile {get; set;}

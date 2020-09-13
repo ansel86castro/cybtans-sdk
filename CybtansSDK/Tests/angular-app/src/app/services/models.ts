@@ -1,10 +1,15 @@
 
+/** Customer Entity */
 export interface CustomerDto {
+  /** Customer's Name */
   name: string;
+  /** Customer's FirstLastName */
   firstLastName: string;
+  /** Customer's SecondLastName */
   secondLastName: string;
+  /** Customer's Profile Id, can be null */
   customerProfileId?: string|null;
-  customerProfile: CustomerProfileDto|null;
+  customerProfile?: CustomerProfileDto|null;
   tenantId?: string|null;
   id?: string;
   createDate?: string|Date;
@@ -44,9 +49,9 @@ export interface OrderDto {
   customerId?: string;
   orderStateId?: number;
   orderType?: OrderTypeEnum;
-  orderState: OrderStateDto|null;
-  customer: CustomerDto|null;
-  items: OrderItemDto[]|null;
+  orderState?: OrderStateDto|null;
+  customer?: CustomerDto|null;
+  items?: OrderItemDto[]|null;
   tenantId?: string|null;
   id?: string;
   createDate?: string|Date;
@@ -56,9 +61,13 @@ export interface OrderDto {
 
 
 
+/** Enum Type Description */
 export enum OrderTypeEnum {
+  /** Default */
   default = 0,
+  /** Normal */
   normal = 1,
+  /** Shipping */
   shipping = 2,
 }
 
@@ -73,7 +82,7 @@ export interface OrderStateDto {
 export interface SoftDeleteOrderDto {
   name: string;
   isDeleted?: boolean;
-  items: SoftDeleteOrderItemDto[]|null;
+  items?: SoftDeleteOrderItemDto[]|null;
   tenantId?: string|null;
   id?: string;
   createDate?: string|Date;
@@ -109,7 +118,7 @@ export interface GetCustomerRequest {
 
 export interface UpdateCustomerRequest {
   id?: string;
-  value: CustomerDto|null;
+  value?: CustomerDto|null;
 }
 
 
@@ -119,7 +128,7 @@ export interface DeleteCustomerRequest {
 
 
 export interface GetAllCustomerResponse {
-  items: CustomerDto[]|null;
+  items?: CustomerDto[]|null;
   page?: number;
   totalPages?: number;
   totalCount?: number;
@@ -133,7 +142,7 @@ export interface GetCustomerEventRequest {
 
 export interface UpdateCustomerEventRequest {
   id?: string;
-  value: CustomerEventDto|null;
+  value?: CustomerEventDto|null;
 }
 
 
@@ -143,7 +152,7 @@ export interface DeleteCustomerEventRequest {
 
 
 export interface GetAllCustomerEventResponse {
-  items: CustomerEventDto[]|null;
+  items?: CustomerEventDto[]|null;
   page?: number;
   totalPages?: number;
   totalCount?: number;
@@ -157,7 +166,7 @@ export interface GetOrderRequest {
 
 export interface UpdateOrderRequest {
   id?: string;
-  value: OrderDto|null;
+  value?: OrderDto|null;
 }
 
 
@@ -167,7 +176,7 @@ export interface DeleteOrderRequest {
 
 
 export interface GetAllOrderResponse {
-  items: OrderDto[]|null;
+  items?: OrderDto[]|null;
   page?: number;
   totalPages?: number;
   totalCount?: number;
@@ -181,7 +190,7 @@ export interface GetOrderStateRequest {
 
 export interface UpdateOrderStateRequest {
   id?: number;
-  value: OrderStateDto|null;
+  value?: OrderStateDto|null;
 }
 
 
@@ -191,7 +200,7 @@ export interface DeleteOrderStateRequest {
 
 
 export interface GetAllOrderStateResponse {
-  items: OrderStateDto[]|null;
+  items?: OrderStateDto[]|null;
   page?: number;
   totalPages?: number;
   totalCount?: number;
@@ -205,7 +214,7 @@ export interface GetSoftDeleteOrderRequest {
 
 export interface UpdateSoftDeleteOrderRequest {
   id?: string;
-  value: SoftDeleteOrderDto|null;
+  value?: SoftDeleteOrderDto|null;
 }
 
 
@@ -215,7 +224,7 @@ export interface DeleteSoftDeleteOrderRequest {
 
 
 export interface GetAllSoftDeleteOrderResponse {
-  items: SoftDeleteOrderDto[]|null;
+  items?: SoftDeleteOrderDto[]|null;
   page?: number;
   totalPages?: number;
   totalCount?: number;

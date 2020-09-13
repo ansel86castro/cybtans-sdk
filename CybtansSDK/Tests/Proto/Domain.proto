@@ -3,35 +3,37 @@ syntax = "proto3";
 package Cybtans.Tests;
 
 message CustomerDto {
-	string name = 1 [optional = true];
-	string firstLastName = 2 [optional = true];
-	string secondLastName = 3 [optional = true];
-	guid customerProfileId = 4 [optional = true];
+	option description = "Customer Entity";
+
+	string name = 1 [required = true, description = "Customer's Name"];
+	string firstLastName = 2 [description = "Customer's FirstLastName"];
+	string secondLastName = 3 [description = "Customer's SecondLastName", deprecated = true];
+	guid customerProfileId = 4 [optional = true, description = "Customer's Profile Id, can be null"];
 	CustomerProfileDto customerProfile = 5;
 	guid tenantId = 6 [optional = true];
 	guid id = 7;
 	datetime createDate = 8;
 	datetime updateDate = 9 [optional = true];
-	string creator = 10 [optional = true];
+	string creator = 10;
 }
 
 message CustomerProfileDto {
-	string name = 1 [optional = true];
+	string name = 1;
 	guid tenantId = 2 [optional = true];
 	guid id = 3;
 	datetime createDate = 4;
 	datetime updateDate = 5 [optional = true];
-	string creator = 6 [optional = true];
+	string creator = 6;
 }
 
 message CustomerEventDto {
-	string fullName = 1 [optional = true];
+	string fullName = 1;
 	guid customerProfileId = 2 [optional = true];
 	guid id = 3;
 }
 
 message OrderItemDto {
-	string productName = 1 [optional = true];
+	string productName = 1;
 	float price = 2;
 	float discount = 3;
 	guid orderId = 4;
@@ -39,7 +41,7 @@ message OrderItemDto {
 }
 
 message OrderDto {
-	string description = 1 [optional = true];
+	string description = 1;
 	guid customerId = 2;
 	int32 orderStateId = 3;
 	OrderTypeEnum orderType = 4;
@@ -50,40 +52,42 @@ message OrderDto {
 	guid id = 9;
 	datetime createDate = 10;
 	datetime updateDate = 11 [optional = true];
-	string creator = 12 [optional = true];
+	string creator = 12;
 }
 
 enum OrderTypeEnum {
-	Default = 0;
-	Normal = 1;
-	Shipping = 2;
+	option description = "Enum Type Description";
+
+	Default = 0 [description = "Default"];
+	Normal = 1 [description = "Normal"];
+	Shipping = 2 [description = "Shipping"];
 }
 
 message OrderStateDto {
-	string name = 1 [optional = true];
+	string name = 1;
 	int32 id = 2;
 }
 
 message SoftDeleteOrderDto {
-	string name = 1 [optional = true];
+	string name = 1;
 	bool isDeleted = 2;
 	repeated SoftDeleteOrderItemDto items = 3;
 	guid tenantId = 4 [optional = true];
 	guid id = 5;
 	datetime createDate = 6;
 	datetime updateDate = 7 [optional = true];
-	string creator = 8 [optional = true];
+	string creator = 8;
 }
 
 message SoftDeleteOrderItemDto {
-	string name = 1 [optional = true];
+	string name = 1;
 	bool isDeleted = 2;
 	guid softDeleteOrderId = 3;
 	guid tenantId = 4 [optional = true];
 	guid id = 5;
 	datetime createDate = 6;
 	datetime updateDate = 7 [optional = true];
-	string creator = 8 [optional = true];
+	string creator = 8;
 }
 
 

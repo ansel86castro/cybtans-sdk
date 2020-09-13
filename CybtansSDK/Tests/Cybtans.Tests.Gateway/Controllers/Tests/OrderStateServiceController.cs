@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Gateway.Controllers.Cybtans.Tests
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/OrderState")]
 	[ApiController]

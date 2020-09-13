@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+
+import "./Base/BaseMain.proto";
+
+package Main;
+
+message MainService2Request{
+    int32 id = 1;
+}
+
+message MainService2Response{
+    User user = 1;
+    string data = 2;
+}
+
+service MainService2{
+	option (prefix) ="api/users2";
+
+	rpc Get(GetUserRequest) returns (User){		
+		option template = "{id}";
+		option method = "GET";		
+	};
+
+	rpc Create(User) returns (User){
+		option method = "POST";
+	};
+
+	rpc Update(UpdateUserRequest) returns (User){
+		option template = "{id}";
+		option method = "PUT";
+    };
+    
+    rpc GetMain(MainService2Request) returns (MainService2Response){		
+		option template = "main/{id}";
+		option method = "GET";		
+	};
+}

@@ -3,9 +3,7 @@ using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Generators.Typescript;
 using Cybtans.Proto.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Cybtans.Proto.Generator
 {
@@ -34,29 +32,32 @@ namespace Cybtans.Proto.Generator
             {
                 ModelOptions = new TypeGeneratorOption()
                 {
-                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Models")
+                    OutputPath = Path.Combine(config.Path, step.Models?.Output ?? $"{step.Output}/{config.Service}.Models"),
+                    Namespace = step.Models?.Namespace
                 },
                 ServiceOptions = new TypeGeneratorOption()
                 {
-                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.Services/Generated")
+                    OutputPath = Path.Combine(config.Path, step.Services?.Output ?? $"{step.Output}/{config.Service}.Services/Generated"),
+                    Namespace = step.Services?.Namespace
                 },
                 ControllerOptions = new WebApiControllerGeneratorOption()
                 {
-                    OutputPath = Path.Combine(config.Path, $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
-                    Namespace = "RestApi.Controllers"
+                    OutputPath = Path.Combine(config.Path, step.Controllers?.Output ?? $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
+                    Namespace = step.Controllers?.Namespace
                 },
                 ClientOptions = new TypeGeneratorOption()
                 {
-                    OutputPath =Path.Combine(config.Path, $"{step.Output}/{config.Service}.Clients")
+                    OutputPath =Path.Combine(config.Path, step.CSharpClients?.Output ?? $"{step.Output}/{config.Service}.Clients"),
+                    Namespace = step.CSharpClients?.Namespace
                 }
             };
 
-            if (!string.IsNullOrEmpty(step.Gateway))
+            if (!string.IsNullOrEmpty(step.Gateway) || step.GatewayOptions != null)
             {
                 options.ApiGatewayOptions = new ApiGateWayGeneratorOption
                 {
-                    OutputPath =Path.Combine(config.Path, step.Gateway),
-                    Namespace = $"Gateway.Controllers.{config.Service}"
+                    OutputPath =Path.Combine(config.Path, step.GatewayOptions?.Output ?? step.Gateway),
+                    Namespace = step.GatewayOptions?.Namespace ?? $"{config.Service}.Controllers"
                 };
             }
 
@@ -94,6 +95,15 @@ namespace Cybtans.Proto.Generator
 
                     Console.WriteLine($"Typescript generated succesfully");
                 }
+
+                if (step.Clients != null)
+                {
+                    foreach (var option in step.Clients)
+                    {
+                        GenerateClient(ast, config, step, option);
+                        Console.WriteLine($"{option.Framework} client generated succesfully");
+                    }
+                }
             }
 
             finally
@@ -104,6 +114,7 @@ namespace Cybtans.Proto.Generator
             return true;
         }
 
+       
         public void PrintHelp()
         {
             Console.WriteLine("Proto Generator options:");
@@ -285,6 +296,48 @@ namespace Cybtans.Proto.Generator
 
             tsGenerator.GenerateCode(ast);
         }
-      
+
+        private void GenerateClient(ProtoFile ast, CybtansConfig config, GenerationStep step, StepClientOptions option)
+        {
+            var output = Path.Combine(config.Path, option.Output);
+            switch (option.Framework)
+            {
+                case "ts":
+                case "react":
+                case "typescript":
+                    {
+                        TypescriptGenerator tsGenerator = new TypescriptGenerator(new TypescriptOptions
+                        {
+                            ModelOptions = new TsOutputOption { OutputPath = output },
+                            ClientOptions = new TsOutputOption
+                            {
+                                OutputPath = output,
+                                Framework = ""
+                            }
+                        });
+
+                        tsGenerator.GenerateCode(ast);
+                    }
+                    break;
+
+                case "ng":
+                case "angular":
+                    {
+                        TypescriptGenerator tsGenerator = new TypescriptGenerator(new TypescriptOptions
+                        {
+                            ModelOptions = new TsOutputOption { OutputPath = output },
+                            ClientOptions = new TsOutputOption
+                            {
+                                OutputPath = output,
+                                Framework = TsOutputOption.FRAMEWORK_ANGULAR
+                            }
+                        });
+
+                        tsGenerator.GenerateCode(ast);
+                    }
+                    break;
+            }
+        }
+
     }
 }
