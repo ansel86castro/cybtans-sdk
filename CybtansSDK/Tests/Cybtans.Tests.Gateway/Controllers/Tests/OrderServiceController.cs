@@ -93,7 +93,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost]
-		public Task<OrderDto> Create([FromBody]OrderDto __request)
+		public Task<OrderDto> Create([FromBody]CreateOrderRequest __request)
 		{
 			return _service.Create(__request);
 		}

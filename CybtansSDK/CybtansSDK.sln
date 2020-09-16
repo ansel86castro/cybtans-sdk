@@ -54,7 +54,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Entities.Proto", "C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proto", "Proto", "{6C4CD476-2F29-4248-92D7-985C56855E97}"
 	ProjectSection(SolutionItems) = preProject
+		Tests\Proto\Authentication.proto = Tests\Proto\Authentication.proto
 		Tests\Proto\Domain.proto = Tests\Proto\Domain.proto
+		Tests\Proto\Orders.proto = Tests\Proto\Orders.proto
 		Tests\Proto\Test.proto = Tests\Proto\Test.proto
 	EndProjectSection
 EndProject

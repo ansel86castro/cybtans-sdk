@@ -38,7 +38,7 @@ namespace Cybtans.Tests.Controllers
 		
 		[Authorize(Roles = "admin")]
 		[HttpPost]
-		public Task<OrderStateDto> Create([FromBody]OrderStateDto __request)
+		public Task<OrderStateDto> Create([FromBody]CreateOrderStateRequest __request)
 		{
 			return _service.Create(__request);
 		}

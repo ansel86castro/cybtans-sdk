@@ -3,11 +3,11 @@
 
 <div class="action-bar">
   <div>
-      <button class="btn btn-primary">Create Order</button>
+      <button class="btn btn-primary" (click)="OnCreateOrder()" >Create Order</button>
   </div>
   <div class="search-box">
       <label>Search:</label>
-      <input class="form-control tb-search"/>
+      <input class="form-control tb-search" #search (keyup)="onSearchChange(search.value)"/>
   </div>
 </div>
 
@@ -24,7 +24,7 @@
   </thead>
   <tbody>
       <tr *ngFor="let item of items">
-        <td><a href='void();'> {{item.id}}</a></td>
+        <td><a href='#' (click)="OnEdit(item.id, $event)"> {{item.id}}</a></td>
         <td>{{item.description}}</td>
         <td>{{item.customer?.name}} {{item.customer?.firstLastName}} {{item.customer?.secondLastName}}</td>
         <td>{{item.customer?.customerProfile?.name}}</td>
@@ -33,3 +33,7 @@
       </tr>
   </tbody>
 </table>
+
+<div #editPanel>
+  <app-orders-edit *ngIf="edit === true" [id]="selected" (cancel)="onEditComplete()" ></app-orders-edit>
+</div>

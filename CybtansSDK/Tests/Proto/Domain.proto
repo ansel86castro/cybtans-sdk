@@ -10,14 +10,14 @@ message CustomerDto {
 	string secondLastName = 3 [description = "Customer's SecondLastName", deprecated = true];
 	guid customerProfileId = 4 [optional = true, description = "Customer's Profile Id, can be null"];
 	CustomerProfileDto customerProfile = 5;
-	guid id = 6 [key = true];
+	guid id = 6;
 	datetime createDate = 7 [optional = true];
 	datetime updateDate = 8 [optional = true];
 }
 
 message CustomerProfileDto {
 	string name = 1;
-	guid id = 2 [key = true];
+	guid id = 2;
 	datetime createDate = 3 [optional = true];
 	datetime updateDate = 4 [optional = true];
 }
@@ -25,7 +25,7 @@ message CustomerProfileDto {
 message CustomerEventDto {
 	string fullName = 1;
 	guid customerProfileId = 2 [optional = true];
-	guid id = 3 [key = true];
+	guid id = 3;
 }
 
 message OrderItemDto {
@@ -33,7 +33,7 @@ message OrderItemDto {
 	float price = 2;
 	float discount = 3;
 	guid orderId = 4;
-	guid id = 5 [key = true];
+	guid id = 5;
 }
 
 message OrderDto {
@@ -44,7 +44,7 @@ message OrderDto {
 	OrderStateDto orderState = 5;
 	CustomerDto customer = 6;
 	repeated OrderItemDto items = 7;
-	guid id = 8 [key = true];
+	guid id = 8;
 	datetime createDate = 9 [optional = true];
 	datetime updateDate = 10 [optional = true];
 }
@@ -59,14 +59,14 @@ enum OrderTypeEnum {
 
 message OrderStateDto {
 	string name = 1;
-	int32 id = 2 [key = true];
+	int32 id = 2;
 }
 
 message SoftDeleteOrderDto {
 	string name = 1;
 	bool isDeleted = 2;
 	repeated SoftDeleteOrderItemDto items = 3;
-	guid id = 4 [key = true];
+	guid id = 4;
 	datetime createDate = 5 [optional = true];
 	datetime updateDate = 6 [optional = true];
 }
@@ -75,7 +75,7 @@ message SoftDeleteOrderItemDto {
 	string name = 1;
 	bool isDeleted = 2;
 	guid softDeleteOrderId = 3;
-	guid id = 4 [key = true];
+	guid id = 4;
 	datetime createDate = 5 [optional = true];
 	datetime updateDate = 6 [optional = true];
 }
@@ -98,7 +98,7 @@ message GetCustomerRequest {
 
 message UpdateCustomerRequest {
 	guid id = 1;
-	CustomerDto value = 2;
+	CustomerDto value = 2 [(ts).partial = true];
 }
 
 message DeleteCustomerRequest{
@@ -110,6 +110,10 @@ message GetAllCustomerResponse {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message CreateCustomerRequest {
+	CustomerDto value = 1 [(ts).partial = true];
 }
 
 service CustomerService {
@@ -126,7 +130,7 @@ service CustomerService {
 		
 	};
 
-	rpc Create(CustomerDto) returns (CustomerDto){			
+	rpc Create(CreateCustomerRequest) returns (CustomerDto){			
 		option method = "POST";
 		
 	};
@@ -154,7 +158,7 @@ message GetCustomerEventRequest {
 
 message UpdateCustomerEventRequest {
 	guid id = 1;
-	CustomerEventDto value = 2;
+	CustomerEventDto value = 2 [(ts).partial = true];
 }
 
 message DeleteCustomerEventRequest{
@@ -166,6 +170,10 @@ message GetAllCustomerEventResponse {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message CreateCustomerEventRequest {
+	CustomerEventDto value = 1 [(ts).partial = true];
 }
 
 service CustomerEventService {
@@ -182,7 +190,7 @@ service CustomerEventService {
 		
 	};
 
-	rpc Create(CustomerEventDto) returns (CustomerEventDto){			
+	rpc Create(CreateCustomerEventRequest) returns (CustomerEventDto){			
 		option method = "POST";
 		
 	};
@@ -210,7 +218,7 @@ message GetOrderRequest {
 
 message UpdateOrderRequest {
 	guid id = 1;
-	OrderDto value = 2;
+	OrderDto value = 2 [(ts).partial = true];
 }
 
 message DeleteOrderRequest{
@@ -222,6 +230,10 @@ message GetAllOrderResponse {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message CreateOrderRequest {
+	OrderDto value = 1 [(ts).partial = true];
 }
 
 service OrderService {
@@ -238,7 +250,7 @@ service OrderService {
 		
 	};
 
-	rpc Create(OrderDto) returns (OrderDto){			
+	rpc Create(CreateOrderRequest) returns (OrderDto){			
 		option method = "POST";
 		
 	};
@@ -266,7 +278,7 @@ message GetOrderStateRequest {
 
 message UpdateOrderStateRequest {
 	int32 id = 1;
-	OrderStateDto value = 2;
+	OrderStateDto value = 2 [(ts).partial = true];
 }
 
 message DeleteOrderStateRequest{
@@ -278,6 +290,10 @@ message GetAllOrderStateResponse {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message CreateOrderStateRequest {
+	OrderStateDto value = 1 [(ts).partial = true];
 }
 
 service OrderStateService {
@@ -294,7 +310,7 @@ service OrderStateService {
 		option roles = "admin";
 	};
 
-	rpc Create(OrderStateDto) returns (OrderStateDto){			
+	rpc Create(CreateOrderStateRequest) returns (OrderStateDto){			
 		option method = "POST";
 		option roles = "admin";
 	};
@@ -322,7 +338,7 @@ message GetSoftDeleteOrderRequest {
 
 message UpdateSoftDeleteOrderRequest {
 	guid id = 1;
-	SoftDeleteOrderDto value = 2;
+	SoftDeleteOrderDto value = 2 [(ts).partial = true];
 }
 
 message DeleteSoftDeleteOrderRequest{
@@ -334,6 +350,10 @@ message GetAllSoftDeleteOrderResponse {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message CreateSoftDeleteOrderRequest {
+	SoftDeleteOrderDto value = 1 [(ts).partial = true];
 }
 
 service SoftDeleteOrderService {
@@ -350,7 +370,7 @@ service SoftDeleteOrderService {
 		
 	};
 
-	rpc Create(SoftDeleteOrderDto) returns (SoftDeleteOrderDto){			
+	rpc Create(CreateSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){			
 		option method = "POST";
 		
 	};

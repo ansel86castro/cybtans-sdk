@@ -7,7 +7,7 @@ message Get@{ENTITY}Request {
 
 message Update@{ENTITY}Request {
 	@{ID_TYPE} @{ID} = 1;
-	@{ENTITYDTO} value = 2;
+	@{ENTITYDTO} value = 2 [(ts).partial = true];
 }
 
 message Delete@{ENTITY}Request{
@@ -19,6 +19,10 @@ message GetAll@{ENTITY}Response {
 	int64 page = 2;
 	int64 totalPages = 3;
 	int64 totalCount = 4;
+}
+
+message Create@{ENTITY}Request {
+	@{ENTITYDTO} value = 1 [(ts).partial = true];
 }
 
 service @{ENTITY}Service {
@@ -35,7 +39,7 @@ service @{ENTITY}Service {
 		@{READ_POLICY}
 	};
 
-	rpc Create(@{ENTITYDTO}) returns (@{ENTITYDTO}){			
+	rpc Create(Create@{ENTITY}Request) returns (@{ENTITYDTO}){			
 		option method = "POST";
 		@{WRITE_POLICY}
 	};

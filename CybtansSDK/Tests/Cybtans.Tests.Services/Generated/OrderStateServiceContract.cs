@@ -14,7 +14,7 @@ namespace Cybtans.Tests.Services
 		Task<OrderStateDto> Get(GetOrderStateRequest request);
 		
 		
-		Task<OrderStateDto> Create(OrderStateDto request);
+		Task<OrderStateDto> Create(CreateOrderStateRequest request);
 		
 		
 		Task<OrderStateDto> Update(UpdateOrderStateRequest request);

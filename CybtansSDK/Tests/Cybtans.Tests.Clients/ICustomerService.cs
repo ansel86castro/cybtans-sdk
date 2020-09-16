@@ -18,7 +18,7 @@ namespace Cybtans.Tests.Clients
 		Task<CustomerDto> Get(GetCustomerRequest request);
 		
 		[Post("/api/Customer")]
-		Task<CustomerDto> Create([Body]CustomerDto request);
+		Task<CustomerDto> Create([Body]CreateCustomerRequest request);
 		
 		[Put("/api/Customer/{request.Id}")]
 		Task<CustomerDto> Update([Body]UpdateCustomerRequest request);

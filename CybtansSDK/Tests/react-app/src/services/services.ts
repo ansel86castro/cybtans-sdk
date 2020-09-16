@@ -3,36 +3,41 @@ import {
   GetAllCustomerResponse,
   GetCustomerRequest,
   CustomerDto,
+  CreateCustomerRequest,
   UpdateCustomerRequest,
   DeleteCustomerRequest,
   GetAllCustomerEventResponse,
   GetCustomerEventRequest,
   CustomerEventDto,
+  CreateCustomerEventRequest,
   UpdateCustomerEventRequest,
   DeleteCustomerEventRequest,
   GetAllOrderResponse,
   GetOrderRequest,
   OrderDto,
+  CreateOrderRequest,
   UpdateOrderRequest,
   DeleteOrderRequest,
   GetAllOrderStateResponse,
   GetOrderStateRequest,
   OrderStateDto,
+  CreateOrderStateRequest,
   UpdateOrderStateRequest,
   DeleteOrderStateRequest,
   GetAllSoftDeleteOrderResponse,
   GetSoftDeleteOrderRequest,
   SoftDeleteOrderDto,
+  CreateSoftDeleteOrderRequest,
   UpdateSoftDeleteOrderRequest,
   DeleteSoftDeleteOrderRequest,
+  LoginRequest,
+  LoginResponse,
   UploadImageRequest,
   UploadImageResponse,
   UploadStreamByIdRequest,
   UploadStreamResponse,
   DownloadImageRequest,
   DowndloadImageResponse,
-  LoginRequest,
-  LoginResponse,
  } from './models';
 
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
@@ -146,7 +151,7 @@ export class CustomerService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    create(request:CustomerDto) : Promise<CustomerDto> {
+    create(request:CreateCustomerRequest) : Promise<CustomerDto> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Customer`;
@@ -187,7 +192,7 @@ export class CustomerEventService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    create(request:CustomerEventDto) : Promise<CustomerEventDto> {
+    create(request:CreateCustomerEventRequest) : Promise<CustomerEventDto> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent`;
@@ -279,7 +284,7 @@ export class OrderService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    create(request:OrderDto) : Promise<OrderDto> {
+    create(request:CreateOrderRequest) : Promise<OrderDto> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order`;
@@ -320,7 +325,7 @@ export class OrderStateService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    create(request:OrderStateDto) : Promise<OrderStateDto> {
+    create(request:CreateOrderStateRequest) : Promise<OrderStateDto> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/OrderState`;
@@ -361,7 +366,7 @@ export class SoftDeleteOrderService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    create(request:SoftDeleteOrderDto) : Promise<SoftDeleteOrderDto> {
+    create(request:CreateSoftDeleteOrderRequest) : Promise<SoftDeleteOrderDto> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/SoftDeleteOrder`;

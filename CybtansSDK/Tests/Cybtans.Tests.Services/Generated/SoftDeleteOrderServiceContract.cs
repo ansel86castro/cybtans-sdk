@@ -14,7 +14,7 @@ namespace Cybtans.Tests.Services
 		Task<SoftDeleteOrderDto> Get(GetSoftDeleteOrderRequest request);
 		
 		
-		Task<SoftDeleteOrderDto> Create(SoftDeleteOrderDto request);
+		Task<SoftDeleteOrderDto> Create(CreateSoftDeleteOrderRequest request);
 		
 		
 		Task<SoftDeleteOrderDto> Update(UpdateSoftDeleteOrderRequest request);

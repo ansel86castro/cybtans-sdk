@@ -34,7 +34,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost]
-		public Task<CustomerEventDto> Create([FromBody]CustomerEventDto __request)
+		public Task<CustomerEventDto> Create([FromBody]CreateCustomerEventRequest __request)
 		{
 			return _service.Create(__request);
 		}

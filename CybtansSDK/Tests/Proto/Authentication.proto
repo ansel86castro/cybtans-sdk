@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package Cybtans.Tests;
+
+message LoginRequest {
+	string username = 1;
+	string password = 2;
+}
+
+message LoginResponse{
+	string token = 1;
+}
+
+service AuthenticationService{
+	option (prefix) ="api/auth";
+
+	rpc Login(LoginRequest) returns (LoginResponse) {
+		option template ="login";
+		option method = "POST";
+	};
+}

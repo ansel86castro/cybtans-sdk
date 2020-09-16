@@ -13,13 +13,16 @@ using System.Threading.Tasks;
 using IdentityModel;
 using Cybtans.Testing.Integration;
 using Microsoft.AspNetCore.TestHost;
+using System;
 
 namespace Cybtans.Tests.Integrations
 {
     public class BaseIntegrationFixture<T>: WebApplicationFactory<T>, IAsyncLifetime
         where T:class
     {
-        public IEnumerable<Claim> Claims { get; set; }
+        private Action<IServiceCollection> _configureServices;
+
+        public IEnumerable<Claim> Claims { get; set; }       
 
         public BaseIntegrationFixture()
         {
@@ -37,8 +40,11 @@ namespace Cybtans.Tests.Integrations
         {
             builder.ConfigureServices(services =>
             {                               
-                ConfigureServices(services);              
-            });                       
+                ConfigureServices(services);
+
+                _configureServices?.Invoke(services);
+            });
+          
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -47,9 +53,9 @@ namespace Cybtans.Tests.Integrations
                .AddScheme<TestAuthenticationOptions, TestAuthHandler>(TestAuthHandler.SCHEME, options =>
                {
                    options.ClaimsProvider = () => Claims;
-               });
+               });          
         }
-         
+                 
         
         protected override void ConfigureClient(HttpClient client)
         {           
@@ -68,16 +74,65 @@ namespace Cybtans.Tests.Integrations
         }
             
 
-        public Task InitializeAsync()
+        public virtual Task InitializeAsync()
         {           
             Client = this.CreateHttpClient();
             return Task.CompletedTask;
         }
 
 
-        public Task DisposeAsync()
+        public virtual Task DisposeAsync()
         {
             return Task.CompletedTask;
+        }
+
+      
+        public TestHostPipeline CreatePipeline()        
+        {
+            return new TestHostPipeline((BaseIntegrationFixture<T>)Activator.CreateInstance(GetType()));
+        }
+
+
+        public class TestHostPipeline
+        {
+            BaseIntegrationFixture<T> _fixture;
+
+            public TestHostPipeline(BaseIntegrationFixture<T> fixture)
+            {
+                _fixture = fixture;
+            }
+
+            public TestHostPipeline WithClaims(IEnumerable<Claim> claims)
+            {
+                _fixture.Claims = claims;
+                return this;
+            }
+
+            public TestHostPipeline ConfigureServices(Action<IServiceCollection> configureServices)
+            {
+                _fixture._configureServices = configureServices;
+                return this;
+            }
+
+            public async Task Run(Func<BaseIntegrationFixture<T>, Task> func)
+            {
+                try
+                {
+                    await _fixture.InitializeAsync();
+                    try
+                    {
+                        await func(_fixture);
+                    }
+                    finally
+                    {
+                        await _fixture.DisposeAsync();
+                    }
+                }
+                finally
+                {
+                    _fixture.Dispose();
+                }
+            }
         }
     }
 
@@ -101,5 +156,6 @@ namespace Cybtans.Tests.Integrations
             return RestService.For<TClient>(httpClient, settings);
         }
 
+      
     }
 }

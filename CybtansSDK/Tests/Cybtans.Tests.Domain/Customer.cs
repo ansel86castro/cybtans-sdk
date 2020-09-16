@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Cybtans.Test.Domain
 {
     [Description("Customer Entity")]
-    [GenerateMessage(Service = ServiceType.Interface)]
+    [GenerateMessage(Service = ServiceType.Default)]
     public class Customer: DomainTenantEntity<Guid>
     {
         [Description("Customer's Name")]

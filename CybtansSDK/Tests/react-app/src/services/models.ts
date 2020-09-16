@@ -10,7 +10,7 @@ export interface CustomerDto {
   /** Customer's Profile Id, can be null */
   customerProfileId?: string|null;
   customerProfile?: CustomerProfileDto|null;
-  id?: string;
+  id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
 }
@@ -18,7 +18,7 @@ export interface CustomerDto {
 
 export interface CustomerProfileDto {
   name: string;
-  id?: string;
+  id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
 }
@@ -27,7 +27,7 @@ export interface CustomerProfileDto {
 export interface CustomerEventDto {
   fullName: string;
   customerProfileId?: string|null;
-  id?: string;
+  id: string;
 }
 
 
@@ -36,7 +36,7 @@ export interface OrderItemDto {
   price: number;
   discount: number;
   orderId: string;
-  id?: string;
+  id: string;
 }
 
 
@@ -48,7 +48,7 @@ export interface OrderDto {
   orderState?: OrderStateDto|null;
   customer?: CustomerDto|null;
   items?: OrderItemDto[]|null;
-  id?: string;
+  id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
 }
@@ -69,7 +69,7 @@ export enum OrderTypeEnum {
 
 export interface OrderStateDto {
   name: string;
-  id?: number;
+  id: number;
 }
 
 
@@ -77,7 +77,7 @@ export interface SoftDeleteOrderDto {
   name: string;
   isDeleted: boolean;
   items?: SoftDeleteOrderItemDto[]|null;
-  id?: string;
+  id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
 }
@@ -87,7 +87,7 @@ export interface SoftDeleteOrderItemDto {
   name: string;
   isDeleted: boolean;
   softDeleteOrderId: string;
-  id?: string;
+  id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
 }
@@ -108,7 +108,7 @@ export interface GetCustomerRequest {
 
 export interface UpdateCustomerRequest {
   id: string;
-  value?: CustomerDto|null;
+  value?: Partial<CustomerDto|null>;
 }
 
 
@@ -125,6 +125,11 @@ export interface GetAllCustomerResponse {
 }
 
 
+export interface CreateCustomerRequest {
+  value?: Partial<CustomerDto|null>;
+}
+
+
 export interface GetCustomerEventRequest {
   id: string;
 }
@@ -132,7 +137,7 @@ export interface GetCustomerEventRequest {
 
 export interface UpdateCustomerEventRequest {
   id: string;
-  value?: CustomerEventDto|null;
+  value?: Partial<CustomerEventDto|null>;
 }
 
 
@@ -149,6 +154,11 @@ export interface GetAllCustomerEventResponse {
 }
 
 
+export interface CreateCustomerEventRequest {
+  value?: Partial<CustomerEventDto|null>;
+}
+
+
 export interface GetOrderRequest {
   id: string;
 }
@@ -156,7 +166,7 @@ export interface GetOrderRequest {
 
 export interface UpdateOrderRequest {
   id: string;
-  value?: OrderDto|null;
+  value?: Partial<OrderDto|null>;
 }
 
 
@@ -173,6 +183,11 @@ export interface GetAllOrderResponse {
 }
 
 
+export interface CreateOrderRequest {
+  value?: Partial<OrderDto|null>;
+}
+
+
 export interface GetOrderStateRequest {
   id: number;
 }
@@ -180,7 +195,7 @@ export interface GetOrderStateRequest {
 
 export interface UpdateOrderStateRequest {
   id: number;
-  value?: OrderStateDto|null;
+  value?: Partial<OrderStateDto|null>;
 }
 
 
@@ -197,6 +212,11 @@ export interface GetAllOrderStateResponse {
 }
 
 
+export interface CreateOrderStateRequest {
+  value?: Partial<OrderStateDto|null>;
+}
+
+
 export interface GetSoftDeleteOrderRequest {
   id: string;
 }
@@ -204,7 +224,7 @@ export interface GetSoftDeleteOrderRequest {
 
 export interface UpdateSoftDeleteOrderRequest {
   id: string;
-  value?: SoftDeleteOrderDto|null;
+  value?: Partial<SoftDeleteOrderDto|null>;
 }
 
 
@@ -218,6 +238,22 @@ export interface GetAllSoftDeleteOrderResponse {
   page: number;
   totalPages: number;
   totalCount: number;
+}
+
+
+export interface CreateSoftDeleteOrderRequest {
+  value?: Partial<SoftDeleteOrderDto|null>;
+}
+
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+
+export interface LoginResponse {
+  token: string;
 }
 
 
@@ -254,15 +290,4 @@ export interface DowndloadImageResponse {
   fileName: string;
   contentType: string;
   image: Blob|null;
-}
-
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-
-export interface LoginResponse {
-  token: string;
 }

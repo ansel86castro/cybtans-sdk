@@ -34,7 +34,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost]
-		public Task<SoftDeleteOrderDto> Create([FromBody]SoftDeleteOrderDto __request)
+		public Task<SoftDeleteOrderDto> Create([FromBody]CreateSoftDeleteOrderRequest __request)
 		{
 			return _service.Create(__request);
 		}

@@ -1,12 +1,7 @@
 ﻿using Cybtans.Proto.AST;
-using Cybtans.Proto.Example;
-using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Cybtans.Proto.Generators.Typescript
 {
