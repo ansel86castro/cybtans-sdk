@@ -10,21 +10,17 @@ export interface CustomerDto {
   /** Customer's Profile Id, can be null */
   customerProfileId?: string|null;
   customerProfile?: CustomerProfileDto|null;
-  tenantId?: string|null;
   id?: string;
-  createDate?: string|Date;
+  createDate?: string|Date|null;
   updateDate?: string|Date|null;
-  creator: string;
 }
 
 
 export interface CustomerProfileDto {
   name: string;
-  tenantId?: string|null;
   id?: string;
-  createDate?: string|Date;
+  createDate?: string|Date|null;
   updateDate?: string|Date|null;
-  creator: string;
 }
 
 
@@ -37,26 +33,24 @@ export interface CustomerEventDto {
 
 export interface OrderItemDto {
   productName: string;
-  price?: number;
-  discount?: number;
-  orderId?: string;
+  price: number;
+  discount: number;
+  orderId: string;
   id?: string;
 }
 
 
 export interface OrderDto {
   description: string;
-  customerId?: string;
-  orderStateId?: number;
-  orderType?: OrderTypeEnum;
+  customerId: string;
+  orderStateId: number;
+  orderType: OrderTypeEnum;
   orderState?: OrderStateDto|null;
   customer?: CustomerDto|null;
   items?: OrderItemDto[]|null;
-  tenantId?: string|null;
   id?: string;
-  createDate?: string|Date;
+  createDate?: string|Date|null;
   updateDate?: string|Date|null;
-  creator: string;
 }
 
 
@@ -81,25 +75,21 @@ export interface OrderStateDto {
 
 export interface SoftDeleteOrderDto {
   name: string;
-  isDeleted?: boolean;
+  isDeleted: boolean;
   items?: SoftDeleteOrderItemDto[]|null;
-  tenantId?: string|null;
   id?: string;
-  createDate?: string|Date;
+  createDate?: string|Date|null;
   updateDate?: string|Date|null;
-  creator: string;
 }
 
 
 export interface SoftDeleteOrderItemDto {
   name: string;
-  isDeleted?: boolean;
-  softDeleteOrderId?: string;
-  tenantId?: string|null;
+  isDeleted: boolean;
+  softDeleteOrderId: string;
   id?: string;
-  createDate?: string|Date;
+  createDate?: string|Date|null;
   updateDate?: string|Date|null;
-  creator: string;
 }
 
 
@@ -112,128 +102,128 @@ export interface GetAllRequest {
 
 
 export interface GetCustomerRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface UpdateCustomerRequest {
-  id?: string;
+  id: string;
   value?: CustomerDto|null;
 }
 
 
 export interface DeleteCustomerRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface GetAllCustomerResponse {
   items?: CustomerDto[]|null;
-  page?: number;
-  totalPages?: number;
-  totalCount?: number;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 
 export interface GetCustomerEventRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface UpdateCustomerEventRequest {
-  id?: string;
+  id: string;
   value?: CustomerEventDto|null;
 }
 
 
 export interface DeleteCustomerEventRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface GetAllCustomerEventResponse {
   items?: CustomerEventDto[]|null;
-  page?: number;
-  totalPages?: number;
-  totalCount?: number;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 
 export interface GetOrderRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface UpdateOrderRequest {
-  id?: string;
+  id: string;
   value?: OrderDto|null;
 }
 
 
 export interface DeleteOrderRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface GetAllOrderResponse {
   items?: OrderDto[]|null;
-  page?: number;
-  totalPages?: number;
-  totalCount?: number;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 
 export interface GetOrderStateRequest {
-  id?: number;
+  id: number;
 }
 
 
 export interface UpdateOrderStateRequest {
-  id?: number;
+  id: number;
   value?: OrderStateDto|null;
 }
 
 
 export interface DeleteOrderStateRequest {
-  id?: number;
+  id: number;
 }
 
 
 export interface GetAllOrderStateResponse {
   items?: OrderStateDto[]|null;
-  page?: number;
-  totalPages?: number;
-  totalCount?: number;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 
 export interface GetSoftDeleteOrderRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface UpdateSoftDeleteOrderRequest {
-  id?: string;
+  id: string;
   value?: SoftDeleteOrderDto|null;
 }
 
 
 export interface DeleteSoftDeleteOrderRequest {
-  id?: string;
+  id: string;
 }
 
 
 export interface GetAllSoftDeleteOrderResponse {
   items?: SoftDeleteOrderDto[]|null;
-  page?: number;
-  totalPages?: number;
-  totalCount?: number;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 
 export interface UploadImageRequest {
   name: string;
-  size?: number;
+  size: number;
   image: Blob|null;
 }
 

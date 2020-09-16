@@ -61,11 +61,11 @@ namespace Cybtans.Entities
     }
 
     public class DomainAuditableEntity : DomainEntity, IAuditableEntity
-    {
+    {        
         public DateTime CreateDate { get; set; }
 
         public DateTime? UpdateDate { get; set; }
-
+        
         public string Creator { get; set; }
     }
 

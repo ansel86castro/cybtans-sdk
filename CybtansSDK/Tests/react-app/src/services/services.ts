@@ -109,12 +109,13 @@ class BaseTestsService {
         return response.text().then((text) => Promise.reject<T>({  status, statusText:response.statusText, text }));        
     }
 
-     protected getBlob(response:Response): Promise<Blob>{
-        let status = response.status;
+    protected getBlob(response:Response): Promise<Response>{
+        let status = response.status;        
+
         if(status >= 200 && status < 300 ){             
-            return response.blob();
-        }     
-        return response.text().then((text) => Promise.reject<Blob>({  status, statusText:response.statusText, text }));
+            return Promise.resolve(response);
+        }
+        return response.text().then((text) => Promise.reject<Response>({  status, statusText:response.statusText, text }));
     }
 
     protected ensureSuccess(response:Response): Promise<ErrorInfo|void>{
@@ -255,12 +256,12 @@ export class OrderService extends BaseTestsService {
     
     uploadStream(request:Blob) : Promise<UploadStreamResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
-    	options.body = this.getFormData(request);
+    	options.body = this.getFormData({blob:request});
     	let endpoint = this._options.baseUrl+`/api/Order/stream`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
-    downloadImage(request:DownloadImageRequest) : Promise<Blob> {
+    downloadImage(request:DownloadImageRequest) : Promise<Response> {
     	let options:RequestInit = { method: 'GET', headers: {  }};
     	let endpoint = this._options.baseUrl+`/api/Order/download`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));

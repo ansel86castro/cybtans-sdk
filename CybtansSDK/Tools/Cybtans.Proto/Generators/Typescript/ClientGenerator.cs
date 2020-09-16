@@ -98,7 +98,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 var responseType =
-                    response.HasStreams() ? "Blob" :
+                    response.HasStreams() ? "Response" :
                     response == PrimitiveType.Void ? "ErrorInfo|void" :
                     response.GetTypeName();
 
@@ -132,7 +132,14 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     if (request.HasStreams())
                     {
-                        body.Append("options.body = this.getFormData(request);").AppendLine();
+                        if (request == PrimitiveType.Stream)
+                        {
+                            body.Append("options.body = this.getFormData({blob:request});").AppendLine();
+                        }
+                        else
+                        {
+                            body.Append("options.body = this.getFormData(request);").AppendLine();
+                        }
                     }
                     else
                     {
@@ -273,12 +280,13 @@ class Base@{SERVICE}Service {
         return response.text().then((text) => Promise.reject<T>({  status, statusText:response.statusText, text }));        
     }
 
-     protected getBlob(response:Response): Promise<Blob>{
-        let status = response.status;
+    protected getBlob(response:Response): Promise<Response>{
+        let status = response.status;        
+
         if(status >= 200 && status < 300 ){             
-            return response.blob();
-        }     
-        return response.text().then((text) => Promise.reject<Blob>({  status, statusText:response.statusText, text }));
+            return Promise.resolve(response);
+        }
+        return response.text().then((text) => Promise.reject<Response>({  status, statusText:response.statusText, text }));
     }
 
     protected ensureSuccess(response:Response): Promise<ErrorInfo|void>{

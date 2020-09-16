@@ -28,15 +28,13 @@ namespace Cybtans.Tests.Integrations
             var order = new SoftDeleteOrderDto
             {               
                 Name = "Test Order",
-                CreateDate= DateTime.Now,
-                 Creator="test",
+                CreateDate= DateTime.Now,                 
                 Items = new List<SoftDeleteOrderItemDto>
                     {
                         new SoftDeleteOrderItemDto
                         {
                              Name = "SoftDeleteProduct 1",
-                              CreateDate = DateTime.Now,
-                               Creator = "test",
+                              CreateDate = DateTime.Now,                               
                         }
                     }
             };

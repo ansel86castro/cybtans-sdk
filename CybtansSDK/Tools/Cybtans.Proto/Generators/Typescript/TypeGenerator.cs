@@ -1,5 +1,6 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Utils;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -101,7 +102,7 @@ namespace Cybtans.Proto.Generators.Typescript
     
         public string IsOptional(FieldDeclaration field)
         {
-            if (field.Option.Optional || field.FieldType.Nullable || field.Type.IsArray || field.FieldType is MessageDeclaration)
+            if (field.Option.Optional || field.Option.IsKey || field.Type.IsMap || field.Type.IsArray || field.FieldType is MessageDeclaration)
             {
                 //check ist the type is nullable
                 return "?";

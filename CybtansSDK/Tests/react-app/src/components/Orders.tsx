@@ -79,7 +79,7 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
     }
 
     private editItem(item:OrderDto){
-        this.setState({edit:true, selected: item.id});
+        this.setState({edit:true, selected: item.id!});
     }
 
     private renderTable() {
@@ -92,6 +92,7 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
                         <th>Customer</th>
                         <th>Customer Profile</th>
                         <th>State</th>
+                        <th>Type</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,9 +100,10 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
                         <tr key={item.id}>
                             <td><a href='void();' onClick={e=> { e.preventDefault(); this.editItem(item)}}>{item.id}</a></td>
                             <td>{item.description}</td>
-                    <td>{item.customer?.name} {item.customer?.firstLastName} {item.customer?.secondLastName}</td>
+                            <td>{item.customer?.name} {item.customer?.firstLastName} {item.customer?.secondLastName}</td>
                             <td>{item.customer?.customerProfile?.name}</td>
-                            <td>{item.orderState?.name}</td>                            
+                            <td>{item.orderState?.name}</td>
+                            <td>{item.orderType}</td>
                         </tr>)
                     }
                 </tbody>
@@ -124,7 +126,7 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
         return (
             <div className="action-bar">
                 <div>
-                    <button className="btn btn-primary" onClick={e=> this.setState({edit:true})}>Create Order</button>
+                    <button className="btn btn-primary" onClick={e=> this.setState({edit:true, selected: undefined})}>Create Order</button>
                 </div>
                 <div className="search-box">
                     <label>Search:</label>
@@ -144,7 +146,7 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
        let response = await this.service.create({
             description:' Created Order',
             orderStateId : 1,
-            customerId: customer.items && customer.items[0].id || undefined,
+            customerId: customer.items && customer.items[0].id || '',
             orderType: OrderTypeEnum.normal
         });
 

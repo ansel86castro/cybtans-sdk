@@ -22,15 +22,11 @@ namespace Cybtans.Tests.Models
 		
 		public List<OrderItemDto> Items {get; set;}
 		
-		public Guid? TenantId {get; set;}
-		
 		public Guid Id {get; set;}
 		
-		public DateTime CreateDate {get; set;}
+		public DateTime? CreateDate {get; set;}
 		
 		public DateTime? UpdateDate {get; set;}
-		
-		public string Creator {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -48,14 +44,12 @@ namespace Cybtans.Tests.Models
 		public const int OrderState = 5;
 		public const int Customer = 6;
 		public const int Items = 7;
-		public const int TenantId = 8;
-		public const int Id = 9;
-		public const int CreateDate = 10;
-		public const int UpdateDate = 11;
-		public const int Creator = 12;
+		public const int Id = 8;
+		public const int CreateDate = 9;
+		public const int UpdateDate = 10;
 		private readonly int[] _props = new []
 		{
-			Description,CustomerId,OrderStateId,OrderType,OrderState,Customer,Items,TenantId,Id,CreateDate,UpdateDate,Creator
+			Description,CustomerId,OrderStateId,OrderType,OrderState,Customer,Items,Id,CreateDate,UpdateDate
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -71,11 +65,9 @@ namespace Cybtans.Tests.Models
 		       OrderState => "OrderState",
 		       Customer => "Customer",
 		       Items => "Items",
-		       TenantId => "TenantId",
 		       Id => "Id",
 		       CreateDate => "CreateDate",
 		       UpdateDate => "UpdateDate",
-		       Creator => "Creator",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -92,11 +84,9 @@ namespace Cybtans.Tests.Models
 		        "OrderState" => OrderState,
 		        "Customer" => Customer,
 		        "Items" => Items,
-		        "TenantId" => TenantId,
 		        "Id" => Id,
 		        "CreateDate" => CreateDate,
 		        "UpdateDate" => UpdateDate,
-		        "Creator" => Creator,
 		
 		        _ => -1,
 		    };
@@ -113,11 +103,9 @@ namespace Cybtans.Tests.Models
 		        OrderState => typeof(OrderStateDto),
 		        Customer => typeof(CustomerDto),
 		        Items => typeof(List<OrderItemDto>),
-		        TenantId => typeof(Guid?),
 		        Id => typeof(Guid),
-		        CreateDate => typeof(DateTime),
+		        CreateDate => typeof(DateTime?),
 		        UpdateDate => typeof(DateTime?),
-		        Creator => typeof(string),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -135,11 +123,9 @@ namespace Cybtans.Tests.Models
 		        OrderState => obj.OrderState,
 		        Customer => obj.Customer,
 		        Items => obj.Items,
-		        TenantId => obj.TenantId,
 		        Id => obj.Id,
 		        CreateDate => obj.CreateDate,
 		        UpdateDate => obj.UpdateDate,
-		        Creator => obj.Creator,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -157,11 +143,9 @@ namespace Cybtans.Tests.Models
 		        case OrderState:  obj.OrderState = (OrderStateDto)value;break;
 		        case Customer:  obj.Customer = (CustomerDto)value;break;
 		        case Items:  obj.Items = (List<OrderItemDto>)value;break;
-		        case TenantId:  obj.TenantId = (Guid?)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
-		        case CreateDate:  obj.CreateDate = (DateTime)value;break;
+		        case CreateDate:  obj.CreateDate = (DateTime?)value;break;
 		        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
-		        case Creator:  obj.Creator = (string)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

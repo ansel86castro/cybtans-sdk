@@ -45,6 +45,7 @@ namespace Cybtans.Tests.Gateway
                          .WithOrigins("http://localhost:3000", "https://localhost:6001")
                          .AllowAnyHeader()
                          .AllowAnyMethod()
+                         .WithExposedHeaders("Content-Type", "Content-Disposition")
                          .AllowCredentials();
                     });
             });
