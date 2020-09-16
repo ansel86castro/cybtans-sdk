@@ -62,6 +62,11 @@ namespace Cybtans.Proto.Generators.Typescript
         public static string GetTypeName(this FieldDeclaration field)
         {
             var name = field.Type.GetTypeName();
+            if (field.Option.Typecript.Partial)
+            {
+                name = $"Partial<{name}>";
+            }
+
             if(!name.EndsWith("null") && field.Option.Optional && field.Type.TypeDeclaration.Nullable)
             {
                 name += "|null";

@@ -23,7 +23,16 @@ namespace Cybtans.Proto.Options
         [Field("description")]
         public string? Description { get; set; }
 
-        [Field("key")]
-        public bool IsKey { get; set; }
+        [Field("ts")]
+        public TypecriptOptions Typecript { get; set; } = new TypecriptOptions();
+    }
+
+    public class TypecriptOptions : ProtobufOption
+    {
+        public TypecriptOptions() : base(OptionsType.Field){ }
+
+
+        [Field("partial")]
+        public bool Partial { get; set; }
     }
 }

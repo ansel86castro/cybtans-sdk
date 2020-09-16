@@ -455,13 +455,7 @@ namespace Cybtans.Proto.Generator
             if (p.GetCustomAttribute<ObsoleteAttribute>() != null)
             {
                 options.Add("deprecated = true");
-            }
-
-            if (p.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainEntity") ||
-                p.DeclaringType.FullName.StartsWith("Cybtans.Entities.Entity"))
-            {
-                options.Add("key = true");
-            }
+            }         
 
             if (options.Any())
             {
@@ -676,7 +670,7 @@ using @{ SERVICE }.Models;
 namespace @{ SERVICE }.Services
 {
     [RegisterDependency(typeof(I@{ENTITY}Service))]
-    public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
+    public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
     {
         public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
             : base(repository, uow, mapper, logger) { }                

@@ -10,6 +10,8 @@ import { OrderstatesComponent } from './orderstates/orderstates.component';
 import { UploadComponent } from './upload/upload.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppHttpInterceptor } from './utils/interceptor';
+import { OrdersEditComponent } from './orders-edit/orders-edit.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,13 +19,15 @@ import { AppHttpInterceptor } from './utils/interceptor';
     Header,
     OrdersComponent,
     OrderstatesComponent,
-    UploadComponent
+    UploadComponent,
+    OrdersEditComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     {

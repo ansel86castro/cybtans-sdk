@@ -14,7 +14,7 @@ namespace Cybtans.Tests.Services
 		Task<CustomerDto> Get(GetCustomerRequest request);
 		
 		
-		Task<CustomerDto> Create(CustomerDto request);
+		Task<CustomerDto> Create(CreateCustomerRequest request);
 		
 		
 		Task<CustomerDto> Update(UpdateCustomerRequest request);

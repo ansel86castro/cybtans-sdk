@@ -102,7 +102,7 @@ namespace Cybtans.Proto.Generators.Typescript
     
         public string IsOptional(FieldDeclaration field)
         {
-            if (field.Option.Optional || field.Option.IsKey || field.Type.IsMap || field.Type.IsArray || field.FieldType is MessageDeclaration)
+            if (field.Option.Optional || field.Type.IsMap || field.Type.IsArray || field.FieldType is MessageDeclaration)
             {
                 //check ist the type is nullable
                 return "?";

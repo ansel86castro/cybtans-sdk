@@ -21,7 +21,7 @@ namespace Cybtans.Proto.Generators.Typescript
         {
             writer.Writer.Append("import { Injectable } from '@angular/core';\r\n");
             writer.Writer.Append("import { Observable, of } from 'rxjs';\r\n");
-            writer.Writer.Append("import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';\r\n");
+            writer.Writer.Append("import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';\r\n");
             writer.Writer.Append($"import {{ @{{IMPORT}} }} from \'./{_modelsOptions.Filename}\';");
 
             writer.Writer.AppendLine();
@@ -91,16 +91,29 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     methods.Append($"(request: {request.GetTypeName()})");
                 }
+                
+                var responseType =
+                  response.HasStreams() ? "HttpResponse<Blob>" :
+                  response == PrimitiveType.Void ? "{}" :
+                  response.GetTypeName();
 
-                var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "{}";
                 methods.Append($": Observable<{responseType}>");
 
                 methods.Append(" {").AppendLine();
 
                 var body = methods.Append(' ', 2).Block(rpc.Name);
 
+                body.Append($"return this.http.{options.Method.ToLowerInvariant()}");
 
-                body.Append($"return this.http.{options.Method.ToLowerInvariant()}<{responseType}>(");
+                if (responseType != "HttpResponse<Blob>")
+                {
+                    body.Append($"<{responseType}>(");
+                }
+                else
+                {
+                    body.Append($"(");
+                }
+
                 if (path != null)
                 {
                     body.AppendTemplate($"`{url}", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
@@ -132,35 +145,60 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 if (options.Method == "POST" || options.Method == "PUT")
                 {
-                    body.Append(", request");
-                }
-
-                body.Append(", {").AppendLine();
+                    body.Append(", ");
+                    if (request.HasStreams())
+                    {
+                        if (request == PrimitiveType.Stream)
+                        {
+                            body.Append("getFormData({ blob: request })");
+                        }
+                        else
+                        {
+                            body.Append("getFormData(request)");
+                        }
+                    }
+                    else
+                    {
+                        body.Append("request");
+                    }                
+                }              
 
                 Dictionary<string, string> headers = new Dictionary<string, string>();
                 if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
                 {
                     headers.Add("Authorization", "Bearer");                    
-                }         
-
-                if (headers.Any())
-                {                    
-                    body.Append(' ', 4).Append($"headers: this.headers");
-                    foreach (var item in headers)
-                    {
-                        body.Append($".set('{item.Key}', '{item.Value}')");
-                    }
-                    body.Append(",");
                 }
-                else
+                
+                if (!response.HasStreams())
                 {
-                    body.Append(' ', 4).Append("headers: this.headers,");
+                    headers["Accept"] = "application/json";
                 }
 
+                if (!request.HasStreams() && (options.Method == "POST" || options.Method == "PUT"))
+                {
+                    headers["'Content-Type'"] = "application/json";
+                }                
 
-            
-                body.AppendLine();
-                body.Append("});");
+                if (headers.Any() || responseType == "HttpResponse<Blob>")
+                {
+                    body.Append(", {").AppendLine();
+
+                    if (headers.Any())
+                    {
+                        var headerValues = headers.Select(x => $"{x.Key}: '{x.Value}'").Aggregate((x, y) => $"{x}, {y}");
+                        body.Append(' ', 4).Append($"headers: new HttpHeaders({{ {headerValues} }}),").AppendLine();
+                    }
+
+                    if (responseType == "HttpResponse<Blob>")
+                    {
+                        body.Append(' ', 4).Append("observe: 'response',").AppendLine()
+                            .Append(' ', 4).Append("responseType: 'blob',").AppendLine();
+                    }
+
+                    body.Append("}");
+                }                
+
+                body.Append(");");
 
                 body.AppendLine();
 

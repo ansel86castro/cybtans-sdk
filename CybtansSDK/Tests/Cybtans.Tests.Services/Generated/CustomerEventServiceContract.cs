@@ -14,7 +14,7 @@ namespace Cybtans.Tests.Services
 		Task<CustomerEventDto> Get(GetCustomerEventRequest request);
 		
 		
-		Task<CustomerEventDto> Create(CustomerEventDto request);
+		Task<CustomerEventDto> Create(CreateCustomerEventRequest request);
 		
 		
 		Task<CustomerEventDto> Update(UpdateCustomerEventRequest request);
