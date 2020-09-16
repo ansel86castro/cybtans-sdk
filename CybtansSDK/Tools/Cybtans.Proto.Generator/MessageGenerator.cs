@@ -358,8 +358,17 @@ namespace Cybtans.Proto.Generator
 
             foreach (var p in props)
             {
-                if (p.GetCustomAttribute<MessageExcludedAttribute>() != null)
-                    continue;
+                if (p.GetCustomAttribute<MessageExcludedAttribute>() != null ||
+                    p.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainTenantEntity") ||
+                    p.DeclaringType.FullName.StartsWith("Cybtans.Entities.TenantEntity"))
+                    continue;                
+
+                if (p.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainAuditableEntity") ||
+                    p.DeclaringType.FullName.StartsWith("Cybtans.Entities.AuditableEntity"))
+                {
+                    if (p.Name == "Creator")
+                        continue;
+                }
 
                 Type propertyType = p.PropertyType;
                 bool repeated = false;
@@ -426,7 +435,9 @@ namespace Cybtans.Proto.Generator
         private static void AppendOptions(CodeWriter codeWriter, PropertyInfo p, bool optional)
         {
             var options = new List<string>();
-            if (optional)
+            if (optional ||              
+                p.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainAuditableEntity") ||
+                p.DeclaringType.FullName.StartsWith("Cybtans.Entities.AuditableEntity"))
             {
                 options.Add("optional = true");
             }
@@ -444,6 +455,12 @@ namespace Cybtans.Proto.Generator
             if (p.GetCustomAttribute<ObsoleteAttribute>() != null)
             {
                 options.Add("deprecated = true");
+            }
+
+            if (p.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainEntity") ||
+                p.DeclaringType.FullName.StartsWith("Cybtans.Entities.Entity"))
+            {
+                options.Add("key = true");
             }
 
             if (options.Any())

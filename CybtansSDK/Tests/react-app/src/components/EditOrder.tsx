@@ -42,7 +42,7 @@ export default function EditOrder(props:{
              description: data.description,
              customerId: data.customerId,
              orderStateId: Number.parseInt(data.orderStateId),
-             orderType : Number.parseInt(data.orderStateId)
+             orderType : Number.parseInt(data.orderType)             
         };
 
         if(props.id){
@@ -90,25 +90,25 @@ export default function EditOrder(props:{
                 <label>Select Customer</label>
                 <select className="form-control" name="customerId" ref={register} defaultValue={state.item?.customerId} >
                     {state.customers && state.customers.map(x=>(
-                        <option selected={x.id === state.item?.customerId} key={x.id} value={x.id}>{x.name} {x.firstLastName}</option>
+                        <option selected={x.id === state.item?.customerId} key={x.id} value={x.id!}>{x.name} {x.firstLastName}</option>
                     ))}                  
                 </select>
             </div>
 
             <div className="form-group">
                 <label>Select Order State</label>
-                <select className="form-control" name="orderStateId" ref={register} >
+                <select className="form-control" name="orderStateId" ref={register} defaultValue={state.item?.orderStateId}>
                     {state.orderStates && state.orderStates.map(x=>(
-                        <option selected={x.id === state.item?.orderStateId} key={x.id} value={x.id}>{x.name}</option>
+                        <option selected={x.id === state.item?.orderStateId} key={x.id!} value={x.id!}>{x.name}</option>
                     ))}                  
                 </select>
             </div>
 
             <div className="form-group">
                 <label>Select Order Type</label>
-                <select className="form-control" name="orderType" ref={register} value={state.item?.orderType} >
+                <select className="form-control" name="orderType" ref={register} defaultValue={state.item?.orderType} >
                     {state.orderTypes && state.orderTypes.map(x=>(
-                        <option value={x.value}>{x.label}</option>
+                        <option selected={x.value === state.item?.orderType} key={x.value} value={x.value}>{x.label}</option>
                     ))}                  
                 </select>
             </div>

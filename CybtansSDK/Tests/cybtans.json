@@ -5,7 +5,7 @@
       "Type": "messages",
       "Output": ".",
       "ProtoFile": "./Proto/Domain.proto",
-      "AssemblyFile": "./Cybtans.Tests.RestApi/bin/Debug/netcoreapp3.1/Cybtans.Tests.Domain.dll"
+      "AssemblyFile": "./Cybtans.Tests.Domain/bin/Debug/netcoreapp3.1/Cybtans.Tests.Domain.dll"
     },
     {
       "Type": "proto",

@@ -26,9 +26,8 @@ namespace Cybtans.Proto.Generators.Typescript
 
             writer.Writer.AppendLine();
 
-            writer.Writer.Append(templateQueryFunction);
-
-            writer.Writer.AppendLine();
+            writer.Writer.Append(templateQueryFunction).AppendLine();
+            writer.Writer.Append(templateFormDataFunction).AppendLine();            
         }
 
         public override void OnGenerationEnd(TsFileWriter writer)
@@ -138,14 +137,27 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 body.Append(", {").AppendLine();
 
+                Dictionary<string, string> headers = new Dictionary<string, string>();
                 if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
                 {
-                    body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer'),");
+                    headers.Add("Authorization", "Bearer");                    
+                }         
+
+                if (headers.Any())
+                {                    
+                    body.Append(' ', 4).Append($"headers: this.headers");
+                    foreach (var item in headers)
+                    {
+                        body.Append($".set('{item.Key}', '{item.Value}')");
+                    }
+                    body.Append(",");
                 }
                 else
                 {
                     body.Append(' ', 4).Append("headers: this.headers,");
                 }
+
+
             
                 body.AppendLine();
                 body.Append("});");
@@ -170,9 +182,9 @@ namespace Cybtans.Proto.Generators.Typescript
 @"@Injectable({
   providedIn: 'root',
 })
-export class @{NAME} {  
+export class @{NAME} {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -204,6 +216,37 @@ function getQueryString(data:any): string|undefined {
   }
 
   return args.length > 0 ? '?' + args.join('&') : '';
+}
+";
+
+        string templateFormDataFunction =
+@"
+function getFormData(data:any): FormData {
+    let form = new FormData();
+    if(!data)
+        return form;
+        
+    for (let key in data) {
+        if (data.hasOwnProperty(key)) {                
+            let value = data[key];
+            if(value !== undefined && value !== null && value !== ''){
+                if (value instanceof Date){
+                    form.append(key, value.toJSON());
+                }else if(typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean'){
+                    form.append(key, value.toString());
+                }else if(value instanceof File){
+                    form.append(key, value, value.name);
+                }else if(value instanceof Blob){
+                    form.append(key, value, 'blob');
+                }else if(typeof value ==='string'){
+                    form.append(key, value);
+                }else{
+                    throw new Error(`value of ${key} is not supported for multipart/form-data upload`);
+                }
+            }
+        }
+    }
+    return form;
 }
 ";
     }

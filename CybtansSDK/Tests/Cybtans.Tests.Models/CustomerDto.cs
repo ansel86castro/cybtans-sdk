@@ -41,15 +41,11 @@ namespace Cybtans.Tests.Models
 		
 		public CustomerProfileDto CustomerProfile {get; set;}
 		
-		public Guid? TenantId {get; set;}
-		
 		public Guid Id {get; set;}
 		
-		public DateTime CreateDate {get; set;}
+		public DateTime? CreateDate {get; set;}
 		
 		public DateTime? UpdateDate {get; set;}
-		
-		public string Creator {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -65,14 +61,12 @@ namespace Cybtans.Tests.Models
 		public const int SecondLastName = 3;
 		public const int CustomerProfileId = 4;
 		public const int CustomerProfile = 5;
-		public const int TenantId = 6;
-		public const int Id = 7;
-		public const int CreateDate = 8;
-		public const int UpdateDate = 9;
-		public const int Creator = 10;
+		public const int Id = 6;
+		public const int CreateDate = 7;
+		public const int UpdateDate = 8;
 		private readonly int[] _props = new []
 		{
-			Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,TenantId,Id,CreateDate,UpdateDate,Creator
+			Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,Id,CreateDate,UpdateDate
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -86,11 +80,9 @@ namespace Cybtans.Tests.Models
 		       SecondLastName => "SecondLastName",
 		       CustomerProfileId => "CustomerProfileId",
 		       CustomerProfile => "CustomerProfile",
-		       TenantId => "TenantId",
 		       Id => "Id",
 		       CreateDate => "CreateDate",
 		       UpdateDate => "UpdateDate",
-		       Creator => "Creator",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -105,11 +97,9 @@ namespace Cybtans.Tests.Models
 		        "SecondLastName" => SecondLastName,
 		        "CustomerProfileId" => CustomerProfileId,
 		        "CustomerProfile" => CustomerProfile,
-		        "TenantId" => TenantId,
 		        "Id" => Id,
 		        "CreateDate" => CreateDate,
 		        "UpdateDate" => UpdateDate,
-		        "Creator" => Creator,
 		
 		        _ => -1,
 		    };
@@ -124,11 +114,9 @@ namespace Cybtans.Tests.Models
 		        SecondLastName => typeof(string),
 		        CustomerProfileId => typeof(Guid?),
 		        CustomerProfile => typeof(CustomerProfileDto),
-		        TenantId => typeof(Guid?),
 		        Id => typeof(Guid),
-		        CreateDate => typeof(DateTime),
+		        CreateDate => typeof(DateTime?),
 		        UpdateDate => typeof(DateTime?),
-		        Creator => typeof(string),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -144,11 +132,9 @@ namespace Cybtans.Tests.Models
 		        SecondLastName => obj.SecondLastName,
 		        CustomerProfileId => obj.CustomerProfileId,
 		        CustomerProfile => obj.CustomerProfile,
-		        TenantId => obj.TenantId,
 		        Id => obj.Id,
 		        CreateDate => obj.CreateDate,
 		        UpdateDate => obj.UpdateDate,
-		        Creator => obj.Creator,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -164,11 +150,9 @@ namespace Cybtans.Tests.Models
 		        case SecondLastName:  obj.SecondLastName = (string)value;break;
 		        case CustomerProfileId:  obj.CustomerProfileId = (Guid?)value;break;
 		        case CustomerProfile:  obj.CustomerProfile = (CustomerProfileDto)value;break;
-		        case TenantId:  obj.TenantId = (Guid?)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
-		        case CreateDate:  obj.CreateDate = (DateTime)value;break;
+		        case CreateDate:  obj.CreateDate = (DateTime?)value;break;
 		        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
-		        case Creator:  obj.Creator = (string)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

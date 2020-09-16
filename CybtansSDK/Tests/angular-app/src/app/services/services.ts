@@ -60,12 +60,41 @@ function getQueryString(data:any): string|undefined {
 }
 
 
+function getFormData(data:any): FormData {
+    let form = new FormData();
+    if(!data)
+        return form;
+        
+    for (let key in data) {
+        if (data.hasOwnProperty(key)) {                
+            let value = data[key];
+            if(value !== undefined && value !== null && value !== ''){
+                if (value instanceof Date){
+                    form.append(key, value.toJSON());
+                }else if(typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean'){
+                    form.append(key, value.toString());
+                }else if(value instanceof File){
+                    form.append(key, value, value.name);
+                }else if(value instanceof Blob){
+                    form.append(key, value, 'blob');
+                }else if(typeof value ==='string'){
+                    form.append(key, value);
+                }else{
+                    throw new Error(`value of ${key} is not supported for multipart/form-data upload`);
+                }
+            }
+        }
+    }
+    return form;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
-export class CustomerService {  
+export class CustomerService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -109,9 +138,9 @@ export class CustomerService {
 @Injectable({
   providedIn: 'root',
 })
-export class CustomerEventService {  
+export class CustomerEventService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -155,9 +184,9 @@ export class CustomerEventService {
 @Injectable({
   providedIn: 'root',
 })
-export class OrderService {  
+export class OrderService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -249,9 +278,9 @@ export class OrderService {
 @Injectable({
   providedIn: 'root',
 })
-export class OrderStateService {  
+export class OrderStateService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -295,9 +324,9 @@ export class OrderStateService {
 @Injectable({
   providedIn: 'root',
 })
-export class SoftDeleteOrderService {  
+export class SoftDeleteOrderService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -341,9 +370,9 @@ export class SoftDeleteOrderService {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticationService {  
+export class AuthenticationService {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
