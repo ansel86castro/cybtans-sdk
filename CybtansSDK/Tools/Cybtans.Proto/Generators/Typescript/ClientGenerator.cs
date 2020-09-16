@@ -1,12 +1,7 @@
 ﻿using Cybtans.Proto.AST;
-using Cybtans.Proto.Example;
-using Cybtans.Proto.Generators.CSharp;
 using Cybtans.Proto.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Cybtans.Proto.Generators.Typescript
 {
@@ -98,7 +93,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 var responseType =
-                    response.HasStreams() ? "Blob" :
+                    response.HasStreams() ? "Response" :
                     response == PrimitiveType.Void ? "ErrorInfo|void" :
                     response.GetTypeName();
 
@@ -132,7 +127,14 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     if (request.HasStreams())
                     {
-                        body.Append("options.body = this.getFormData(request);").AppendLine();
+                        if (request == PrimitiveType.Stream)
+                        {
+                            body.Append("options.body = this.getFormData({blob:request});").AppendLine();
+                        }
+                        else
+                        {
+                            body.Append("options.body = this.getFormData(request);").AppendLine();
+                        }
                     }
                     else
                     {
@@ -224,7 +226,9 @@ class Base@{SERVICE}Service {
                 let element = data[key];
                 if(element !== undefined && element !== null && element !== ''){
                     if(element instanceof Array){
-                        element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
+                        element.forEach(e=> args.push(key + '=' + encodeURIComponent(e instanceof Date ? e.toJSON(): e)));
+                    }else if(element instanceof Date){
+                        args.push(key + '=' + encodeURIComponent(element.toJSON()));
                     }else{
                         args.push(key + '=' + encodeURIComponent(element));
                     }
@@ -271,12 +275,13 @@ class Base@{SERVICE}Service {
         return response.text().then((text) => Promise.reject<T>({  status, statusText:response.statusText, text }));        
     }
 
-     protected getBlob(response:Response): Promise<Blob>{
-        let status = response.status;
+    protected getBlob(response:Response): Promise<Response>{
+        let status = response.status;        
+
         if(status >= 200 && status < 300 ){             
-            return response.blob();
-        }     
-        return response.text().then((text) => Promise.reject<Blob>({  status, statusText:response.statusText, text }));
+            return Promise.resolve(response);
+        }
+        return response.text().then((text) => Promise.reject<Response>({  status, statusText:response.statusText, text }));
     }
 
     protected ensureSuccess(response:Response): Promise<ErrorInfo|void>{

@@ -28,7 +28,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public TypeGenerator(ProtoFile proto, TypeGeneratorOption option):base(proto, option)
         {
-            Namespace = $"{proto.Option.Namespace}.{option.Namespace ?? "Models"}";            
+            Namespace = option.Namespace ?? $"{proto.Option.Namespace}.Models";            
         }
 
         public MessageClassInfo GetMessageInfo(ITypeDeclaration declaration)
@@ -66,7 +66,20 @@ namespace Cybtans.Proto.Generators.CSharp
             var usingWriter = writer.Usings;
 
             MessageDeclaration msg = info.Message;
-        
+
+            if (msg.Option.Description != null)
+            {
+                clsWriter.Append("/// <summary>").AppendLine();
+                clsWriter.Append("/// ").Append(msg.Option.Description).AppendLine();
+                clsWriter.Append("/// </summary>").AppendLine();
+                clsWriter.Append($"[Description(\"{msg.Option.Description}\")]").AppendLine();
+            }
+
+            if (msg.Option.Deprecated)
+            {
+                clsWriter.Append($"[Obsolete]").AppendLine();
+            }
+
             clsWriter.Append("public ");
 
             if (_option.PartialClass)
@@ -102,10 +115,16 @@ namespace Cybtans.Proto.Generators.CSharp
                 usingWriter.Append("using System.Collections.Generic;").AppendLine();
             }
 
+            if (msg.Option.Description != null || msg.Fields.Any(x => x.Option.Description != null))
+            {
+                usingWriter.Append("using System.ComponentModel;").AppendLine();
+            }
+
             if (msg.Fields.Any(x => x.Option.Required)) 
             {
                 usingWriter.Append("using System.ComponentModel.DataAnnotations;").AppendLine();
             }
+            
 
             if (_option.GenerateAccesor)
             {
@@ -118,7 +137,14 @@ namespace Cybtans.Proto.Generators.CSharp
             {
                 var field = fieldInfo.Field;
                 
-                if(field.Option.Required)
+                if(field.Option.Description != null)
+                {                    
+                    bodyWriter.Append("/// <summary>").AppendLine();
+                    bodyWriter.Append("/// ").Append(field.Option.Description).AppendLine();
+                    bodyWriter.Append("/// </summary>").AppendLine();
+                }
+
+                if (field.Option.Required)
                 {
                     bodyWriter.Append("[Required]").AppendLine();
                 }
@@ -126,6 +152,11 @@ namespace Cybtans.Proto.Generators.CSharp
                 if (field.Option.Deprecated)
                 {
                     bodyWriter.Append("[Obsolete]").AppendLine();
+                }
+
+                if(field.Option.Description != null)
+                {
+                    bodyWriter.Append($"[Description(\"{field.Option.Description}\")]").AppendLine();                   
                 }
                
                 bodyWriter

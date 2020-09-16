@@ -181,7 +181,7 @@ namespace Cybtans.Proto.Generators
                 return null;
 
             return sb.ToString();
-        }
+        }       
 
         static bool IsSymbol(string template, int i, out bool matchCloseBracket)
         {

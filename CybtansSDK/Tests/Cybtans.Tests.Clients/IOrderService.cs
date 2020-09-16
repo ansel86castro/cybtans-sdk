@@ -42,7 +42,7 @@ namespace Cybtans.Tests.Clients
 		Task<OrderDto> Get(GetOrderRequest request);
 		
 		[Post("/api/Order")]
-		Task<OrderDto> Create([Body]OrderDto request);
+		Task<OrderDto> Create([Body]CreateOrderRequest request);
 		
 		[Put("/api/Order/{request.Id}")]
 		Task<OrderDto> Update([Body]UpdateOrderRequest request);

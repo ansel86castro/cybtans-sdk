@@ -21,7 +21,7 @@ namespace Cybtans.Tests.Clients
 		
 		[Headers("Authorization: Bearer")]
 		[Post("/api/OrderState")]
-		Task<OrderStateDto> Create([Body]OrderStateDto request);
+		Task<OrderStateDto> Create([Body]CreateOrderStateRequest request);
 		
 		[Headers("Authorization: Bearer")]
 		[Put("/api/OrderState/{request.Id}")]

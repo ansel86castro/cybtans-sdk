@@ -20,7 +20,7 @@ namespace Cybtans.Proto.Generators.CSharp
             _serviceGenerator = serviceGenerator;
             _typeGenerator = typeGenerator;
 
-            Namespace = $"{proto.Option.Namespace}.{option.Namespace ?? "Clients"}";           
+            Namespace = option.Namespace ?? $"{proto.Option.Namespace}.Clients";           
         }
 
         public override void GenerateCode()

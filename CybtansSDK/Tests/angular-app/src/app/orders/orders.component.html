@@ -1,0 +1,39 @@
+<h1 id="tabelLabel">Orders</h1>
+<p>This component demonstrates fetching data from the server and working with URL parameters.</p>
+
+<div class="action-bar">
+  <div>
+      <button class="btn btn-primary" (click)="OnCreateOrder()" >Create Order</button>
+  </div>
+  <div class="search-box">
+      <label>Search:</label>
+      <input class="form-control tb-search" #search (keyup)="onSearchChange(search.value)"/>
+  </div>
+</div>
+
+<table class='table table-striped table-hover' aria-labelledby="tabelLabel">
+  <thead>
+      <tr>
+          <th>Id</th>
+          <th>Description</th>
+          <th>Customer</th>
+          <th>Customer Profile</th>
+          <th>State</th>
+          <th>Type</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let item of items">
+        <td><a href='#' (click)="OnEdit(item.id, $event)"> {{item.id}}</a></td>
+        <td>{{item.description}}</td>
+        <td>{{item.customer?.name}} {{item.customer?.firstLastName}} {{item.customer?.secondLastName}}</td>
+        <td>{{item.customer?.customerProfile?.name}}</td>
+        <td>{{item.orderState?.name}}</td>
+        <td>{{item.orderType}}</td>
+      </tr>
+  </tbody>
+</table>
+
+<div #editPanel>
+  <app-orders-edit *ngIf="edit === true" [id]="selected" (cancel)="onEditComplete()" ></app-orders-edit>
+</div>

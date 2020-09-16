@@ -112,25 +112,25 @@ namespace Cybtans.Proto.Generators.CSharp
             }
         }
 
-        public static bool HasStreams(this ITypeDeclaration type)
-        {
-            if (type == PrimitiveType.Stream)
-                return true;
+        //public static bool HasStreams(this ITypeDeclaration type)
+        //{
+        //    if (type == PrimitiveType.Stream)
+        //        return true;
 
-            var msg = type as MessageDeclaration;
-            if (msg == null)
-                return false;
+        //    var msg = type as MessageDeclaration;
+        //    if (msg == null)
+        //        return false;
 
-            foreach (var field in msg.Fields)
-            {
-                if (field.FieldType == PrimitiveType.Stream)
-                    return true;
-            }
+        //    foreach (var field in msg.Fields)
+        //    {
+        //        if (field.FieldType == PrimitiveType.Stream)
+        //            return true;
+        //    }
 
-            if (msg.Fields.Any(x => x.FieldType is MessageDeclaration && x.FieldType.HasStreams()))
-                throw new InvalidOperationException($"Streams are only allowed a the root message in  {msg.Name}");
+        //    if (msg.Fields.Any(x => x.FieldType is MessageDeclaration && x.FieldType.HasStreams()))
+        //        throw new InvalidOperationException($"Streams are only allowed a the root message in  {msg.Name}");
 
-            return false;
-        }
+        //    return false;
+        //}
     }
 }

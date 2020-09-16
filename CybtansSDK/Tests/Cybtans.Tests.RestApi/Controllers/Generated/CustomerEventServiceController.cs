@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
-namespace Cybtans.Tests.RestApi.Controllers
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/CustomerEvent")]
 	[ApiController]
@@ -34,7 +34,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpPost]
-		public Task<CustomerEventDto> Create([FromBody]CustomerEventDto __request)
+		public Task<CustomerEventDto> Create([FromBody]CreateCustomerEventRequest __request)
 		{
 			return _service.Create(__request);
 		}

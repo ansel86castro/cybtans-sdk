@@ -1,5 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Cybtans.Proto.Options;
+using System;
+using System.Linq;
 
 namespace Cybtans.Proto.AST
 {
@@ -14,6 +16,27 @@ namespace Cybtans.Proto.AST
         public bool IsChecked { get; }
 
         public bool Nullable { get; }
+
+        public bool HasStreams()
+        {
+            if (this == PrimitiveType.Stream)
+                return true;
+
+            var msg = this as MessageDeclaration;
+            if (msg == null)
+                return false;
+
+            foreach (var field in msg.Fields)
+            {
+                if (field.FieldType == PrimitiveType.Stream)
+                    return true;
+            }
+
+            if (msg.Fields.Any(x => x.FieldType is MessageDeclaration && x.FieldType.HasStreams()))
+                throw new InvalidOperationException($"Streams are only allowed a the root message in  {msg.Name}");
+
+            return false;
+        }
     }
 
     //public abstract class TypeDeclaration :DeclarationNode, ITypeDeclaration

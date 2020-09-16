@@ -14,11 +14,7 @@ namespace Cybtans.AspNetCore
 {
     public class CybtansModelBinder : IModelBinder
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
-        
-        public CybtansModelBinder()
-        {            
-        }
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());     
 
         private async Task<object> DeserializeBinary(Stream source, ModelBindingContext bindingContext)
         {
@@ -31,6 +27,7 @@ namespace Cybtans.AspNetCore
                 return obj;
             }
         }
+
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var request = bindingContext.HttpContext.Request;
@@ -103,6 +100,8 @@ namespace Cybtans.AspNetCore
                         {
                             var stream = new MemoryStream();
                             await section.AsFileSection().FileStream.CopyToAsync(stream);
+                            stream.Position = 0;
+
                             if (bindingContext.ModelType == typeof(Stream))
                             {
                                 obj = stream;

@@ -16,6 +16,7 @@ namespace Cybtans.Entities
     public interface IRepository<T, TKey> :IQueryable<T>
     {
         IQueryable<T> WithDetails();
+
         IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors);
 
         IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null);

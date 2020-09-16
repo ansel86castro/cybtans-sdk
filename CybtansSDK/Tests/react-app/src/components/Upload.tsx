@@ -54,13 +54,22 @@ export default ()=>{
    }
 
   async function download(){
-     let imageBlob = await service.downloadImage({name : 'react-image'});
+     let response = await service.downloadImage({name : 'react-image'});
+     let imageBlob = await response.blob();       
      if(imageBlob){
         let url = URL.createObjectURL(imageBlob);
         var a = document.createElement('a');
         a.href = url;
         a.target = '_blank';
-        //a.download = "react-image.jpg";
+
+        let contentDiposition = response.headers.get('Content-Disposition');
+        if(contentDiposition){
+            let name = contentDiposition.split(';').map(x=>x.trim()).find(x=>x.startsWith('filename='));
+            if(name){
+                a.download = name?.split('=')[1];            
+            }
+        }        
+
         document.body.appendChild(a);
         a.click();    
         a.remove();

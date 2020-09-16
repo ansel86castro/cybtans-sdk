@@ -15,5 +15,8 @@ namespace Cybtans.Proto.Options
 
         [Field("value")]
         public int Value { get; set; }
+
+        [Field("description")]
+        public string? Description { get; set; }
     }
 }

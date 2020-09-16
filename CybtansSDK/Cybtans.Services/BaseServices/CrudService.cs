@@ -6,6 +6,7 @@ using Cybtans.Entities;
 using Cybtans.Serialization;
 using Cybtans.Expressions;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Cybtans.Services
 {
@@ -59,8 +60,12 @@ namespace Cybtans.Services
         protected IUnitOfWork UoW => _uow;
 
         public virtual async Task<TEntityDto> Create(TCreateRequest request)
-        {            
-            var entity = _mapper.Map<TEntity>(request);
+        {
+            TEntityDto value = typeof(TCreateRequest) == typeof(TEntityDto) ? 
+                (TEntityDto)(object)request : 
+                GetValue(request);
+
+            var entity = _mapper.Map<TEntity>(value);
             _repository.Add(entity);
 
             await _uow.SaveChangesAsync();
@@ -129,7 +134,10 @@ namespace Cybtans.Services
         public virtual async Task<TEntityDto> Update(TUpdateRequest request)
         {
             var id = GetId(request);
-            var value = GetValue(request);
+
+            TEntityDto value = typeof(TUpdateRequest) == typeof(TEntityDto) ?
+               (TEntityDto)(object)request :
+               GetValue(request);
 
             var entity = await _repository.Get(id);
             if (entity == null)
@@ -166,9 +174,16 @@ namespace Cybtans.Services
 
         private static TEntityDto GetValue(IReflectorMetadataProvider request)
         {
-            var code = request.GetAccesor().GetPropertyCode("Value");
-            var value = (TEntityDto)request.GetAccesor().GetValue(request, code);
-            return value;
+            var accesor = request.GetAccesor();
+            foreach (var code in accesor.GetPropertyCodes())
+            {
+                if(accesor.GetPropertyType(code) == typeof(TEntityDto))
+                {
+                    return (TEntityDto)accesor.GetValue(request, code);
+                }
+            }
+            throw new InvalidOperationException($"Property of type {typeof(TEntityDto)} not found");
+            
         }
     }
 }

@@ -9,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Services.Validations
 {
+
+    public class CreateOrderValidator : AbstractValidator<CreateOrderRequest>
+    {
+        public CreateOrderValidator()
+        {
+            RuleFor(x => x.Value).NotNull().SetValidator(new OrderValidator());            
+        }       
+    }
+
     public class OrderValidator : AbstractValidator<OrderDto>
     {
         public OrderValidator()
