@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
-namespace Cybtans.Tests.RestApi.Controllers
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/SoftDeleteOrder")]
 	[ApiController]
@@ -34,7 +34,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpPost]
-		public Task<SoftDeleteOrderDto> Create([FromBody]SoftDeleteOrderDto __request)
+		public Task<SoftDeleteOrderDto> Create([FromBody]CreateSoftDeleteOrderRequest __request)
 		{
 			return _service.Create(__request);
 		}

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
-namespace Gateway.Controllers.Cybtans.Tests
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/Customer")]
 	[ApiController]
@@ -34,7 +34,7 @@ namespace Gateway.Controllers.Cybtans.Tests
 		}
 		
 		[HttpPost]
-		public Task<CustomerDto> Create([FromBody]CustomerDto __request)
+		public Task<CustomerDto> Create([FromBody]CreateCustomerRequest __request)
 		{
 			return _service.Create(__request);
 		}

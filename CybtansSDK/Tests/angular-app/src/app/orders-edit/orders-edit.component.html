@@ -1,0 +1,30 @@
+<form (submit)="onSubmit()">
+  <h2>{{ id && 'Update' || 'Create'}} Order</h2>
+  <div class="form-group">
+      <label>Description</label>
+      <input class="form-control" name="description" [(ngModel)]="item.description" />
+  </div>
+
+  <div class="form-group">
+      <label>Select Customer</label>
+      <select class="form-control" name="customerId" [(ngModel)]="item.customerId" >
+          <option *ngFor="let x of customers" [value]="x.id" >{{x.name}} {{x.firstLastName}}</option>
+      </select>
+  </div>
+
+  <div class="form-group">
+      <label>Select Order State</label>
+      <select class="form-control" name="orderStateId" [(ngModel)]="item.orderStateId" >
+          <option *ngFor="let x of orderStates" [value]="x.id">{{x.name}}</option>
+      </select>
+  </div>
+
+  <div class="form-group">
+      <label>Select Order Type</label>
+      <select class="form-control" name="orderType" [(ngModel)]="item.orderType">
+          <option *ngFor="let x of orderTypes" [value]="x.value">{{x.label}}</option>
+      </select>
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Save</button>
+  <button class="btn btn-secundary mb-2" (click)="OnCancel()">Cancel</button>
+</form>

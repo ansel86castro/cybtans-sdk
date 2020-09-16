@@ -40,7 +40,7 @@ namespace Cybtans.Proto.AST
                 if(!lookup.TryGetValue(rpc.Name, out var target))               
                 {
                     Rpcs.Add(rpc.Clone());
-                }
+                }                
             }
 
             foreach (var option in srv.Options)

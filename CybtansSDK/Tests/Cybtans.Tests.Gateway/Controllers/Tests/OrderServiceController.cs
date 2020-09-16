@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
-namespace Gateway.Controllers.Cybtans.Tests
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/Order")]
 	[ApiController]
@@ -93,7 +93,7 @@ namespace Gateway.Controllers.Cybtans.Tests
 		}
 		
 		[HttpPost]
-		public Task<OrderDto> Create([FromBody]OrderDto __request)
+		public Task<OrderDto> Create([FromBody]CreateOrderRequest __request)
 		{
 			return _service.Create(__request);
 		}

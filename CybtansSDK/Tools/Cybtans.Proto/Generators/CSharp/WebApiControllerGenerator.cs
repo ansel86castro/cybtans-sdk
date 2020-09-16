@@ -35,7 +35,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         protected virtual void GenerateController(ServiceGenInfo srvInfo)
         {           
-            var writer = CreateWriter($"{Proto.Option.Namespace}.{_option.Namespace ?? "Controllers"}");
+            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace}.Controllers");
 
             writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();

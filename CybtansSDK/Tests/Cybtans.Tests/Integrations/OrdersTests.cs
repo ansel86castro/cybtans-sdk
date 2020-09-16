@@ -287,7 +287,7 @@ namespace Cybtans.Tests.Integrations
             Assert.NotNull(result);
             Assert.Equal("One or more validation errors occurred.", result.ErrorMessage);
             Assert.Equal(2, result.Errors.Count);
-            Assert.Equal("Description can not be empty", result.Errors["Description"].First());
+            Assert.Equal("Description can not be empty", result.Errors["Value.Description"].First());
         }
 
         [Fact]

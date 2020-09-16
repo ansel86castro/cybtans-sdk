@@ -21,14 +21,13 @@ namespace Cybtans.Proto.Generators.Typescript
         {
             writer.Writer.Append("import { Injectable } from '@angular/core';\r\n");
             writer.Writer.Append("import { Observable, of } from 'rxjs';\r\n");
-            writer.Writer.Append("import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';\r\n");
+            writer.Writer.Append("import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';\r\n");
             writer.Writer.Append($"import {{ @{{IMPORT}} }} from \'./{_modelsOptions.Filename}\';");
 
             writer.Writer.AppendLine();
 
-            writer.Writer.Append(templateQueryFunction);
-
-            writer.Writer.AppendLine();
+            writer.Writer.Append(templateQueryFunction).AppendLine();
+            writer.Writer.Append(templateFormDataFunction).AppendLine();            
         }
 
         public override void OnGenerationEnd(TsFileWriter writer)
@@ -92,16 +91,29 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     methods.Append($"(request: {request.GetTypeName()})");
                 }
+                
+                var responseType =
+                  response.HasStreams() ? "HttpResponse<Blob>" :
+                  response == PrimitiveType.Void ? "{}" :
+                  response.GetTypeName();
 
-                var responseType = response != PrimitiveType.Void ? response.GetTypeName() : "{}";
                 methods.Append($": Observable<{responseType}>");
 
                 methods.Append(" {").AppendLine();
 
                 var body = methods.Append(' ', 2).Block(rpc.Name);
 
+                body.Append($"return this.http.{options.Method.ToLowerInvariant()}");
 
-                body.Append($"return this.http.{options.Method.ToLowerInvariant()}<{responseType}>(");
+                if (responseType != "HttpResponse<Blob>")
+                {
+                    body.Append($"<{responseType}>(");
+                }
+                else
+                {
+                    body.Append($"(");
+                }
+
                 if (path != null)
                 {
                     body.AppendTemplate($"`{url}", path.ToDictionary(x => x.Name, x => (object)$"${{request.{x.Name.Camel()}}}"));
@@ -133,22 +145,60 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 if (options.Method == "POST" || options.Method == "PUT")
                 {
-                    body.Append(", request");
-                }
+                    body.Append(", ");
+                    if (request.HasStreams())
+                    {
+                        if (request == PrimitiveType.Stream)
+                        {
+                            body.Append("getFormData({ blob: request })");
+                        }
+                        else
+                        {
+                            body.Append("getFormData(request)");
+                        }
+                    }
+                    else
+                    {
+                        body.Append("request");
+                    }                
+                }              
 
-                body.Append(", {").AppendLine();
-
+                Dictionary<string, string> headers = new Dictionary<string, string>();
                 if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
                 {
-                    body.Append(' ', 4).Append("headers: this.headers.set('Authorization', 'Bearer'),");
+                    headers.Add("Authorization", "Bearer");                    
                 }
-                else
+                
+                if (!response.HasStreams())
                 {
-                    body.Append(' ', 4).Append("headers: this.headers,");
+                    headers["Accept"] = "application/json";
                 }
-            
-                body.AppendLine();
-                body.Append("});");
+
+                if (!request.HasStreams() && (options.Method == "POST" || options.Method == "PUT"))
+                {
+                    headers["'Content-Type'"] = "application/json";
+                }                
+
+                if (headers.Any() || responseType == "HttpResponse<Blob>")
+                {
+                    body.Append(", {").AppendLine();
+
+                    if (headers.Any())
+                    {
+                        var headerValues = headers.Select(x => $"{x.Key}: '{x.Value}'").Aggregate((x, y) => $"{x}, {y}");
+                        body.Append(' ', 4).Append($"headers: new HttpHeaders({{ {headerValues} }}),").AppendLine();
+                    }
+
+                    if (responseType == "HttpResponse<Blob>")
+                    {
+                        body.Append(' ', 4).Append("observe: 'response',").AppendLine()
+                            .Append(' ', 4).Append("responseType: 'blob',").AppendLine();
+                    }
+
+                    body.Append("}");
+                }                
+
+                body.Append(");");
 
                 body.AppendLine();
 
@@ -170,9 +220,9 @@ namespace Cybtans.Proto.Generators.Typescript
 @"@Injectable({
   providedIn: 'root',
 })
-export class @{NAME} {  
+export class @{NAME} {
 
-    private headers =  new HttpHeaders({
+    private headers = new HttpHeaders({
       'Content-Type': 'application/json',
        Accept: 'application/json',
     });
@@ -193,7 +243,9 @@ function getQueryString(data:any): string|undefined {
           let element = data[key];
           if(element !== undefined && element !== null && element !== ''){
               if(element instanceof Array){
-                  element.forEach(e=>args.push(key + '=' + encodeURIComponent(e)) );
+                  element.forEach(e=>args.push(key + '=' + encodeURIComponent(e instanceof Date ? e.toJSON(): e)) );
+              }else if(element instanceof Date){
+                  args.push(key + '=' + encodeURIComponent(element.toJSON()));
               }else{
                   args.push(key + '=' + encodeURIComponent(element));
               }
@@ -202,6 +254,37 @@ function getQueryString(data:any): string|undefined {
   }
 
   return args.length > 0 ? '?' + args.join('&') : '';
+}
+";
+
+        string templateFormDataFunction =
+@"
+function getFormData(data:any): FormData {
+    let form = new FormData();
+    if(!data)
+        return form;
+        
+    for (let key in data) {
+        if (data.hasOwnProperty(key)) {                
+            let value = data[key];
+            if(value !== undefined && value !== null && value !== ''){
+                if (value instanceof Date){
+                    form.append(key, value.toJSON());
+                }else if(typeof value === 'number' || typeof value === 'bigint' || typeof value === 'boolean'){
+                    form.append(key, value.toString());
+                }else if(value instanceof File){
+                    form.append(key, value, value.name);
+                }else if(value instanceof Blob){
+                    form.append(key, value, 'blob');
+                }else if(typeof value ==='string'){
+                    form.append(key, value);
+                }else{
+                    throw new Error(`value of ${key} is not supported for multipart/form-data upload`);
+                }
+            }
+        }
+    }
+    return form;
 }
 ";
     }

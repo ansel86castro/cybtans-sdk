@@ -1,11 +1,11 @@
 ﻿using Cybtans.Proto.AST;
 using Cybtans.Proto.Utils;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 
 namespace Cybtans.Proto.Generators.Typescript
 {
-
     public class TypeGenerator: BaseSingleFileGenerator
     {              
         public TypeGenerator(ProtoFile proto, TsOutputOption option)
@@ -36,10 +36,23 @@ namespace Cybtans.Proto.Generators.Typescript
 
             writer.AppendLine(2);
 
+            if(e.Option.Description != null)
+            {
+                writer.Append($"/** {e.Option.Description} */")
+                      .AppendLine();
+            }
+
             writer.Append($"export enum {e.GetTypeName()} {{").AppendLine();
 
             foreach (var field in e.Members)
             {
+                if (field.Option.Description != null)
+                {
+                    writer.Append(' ', 2).
+                        Append($"/** {field.Option.Description} */")
+                        .AppendLine();
+                }
+
                 writer.Append(' ', 2)
                     .Append($"{field.Name.Camel()} = {field.Value},")
                     .AppendLine();
@@ -58,10 +71,22 @@ namespace Cybtans.Proto.Generators.Typescript
 
             writer.AppendLine();
 
+            if (msg.Option.Description != null)
+            {
+                writer.Append($"/** {msg.Option.Description} */")
+                      .AppendLine();
+            }
             writer.Append($"export interface {msg.GetTypeName()} {{").AppendLine();
 
             foreach (var field in msg.Fields)
             {
+                if(field.Option.Description != null)
+                {
+                    writer.Append(' ', 2).
+                        Append($"/** {field.Option.Description} */")
+                        .AppendLine();
+                }
+
                 writer.Append(' ', 2)
                     .Append($"{field.Name.Camel()}{IsOptional(field)}: {field.GetTypeName()};")
                     .AppendLine();
@@ -77,7 +102,7 @@ namespace Cybtans.Proto.Generators.Typescript
     
         public string IsOptional(FieldDeclaration field)
         {
-            if (field.Option.Optional || field.FieldType.Nullable || field.Type.IsArray || field.FieldType is MessageDeclaration)
+            if (field.Option.Optional || field.Type.IsMap || field.Type.IsArray || field.FieldType is MessageDeclaration)
             {
                 //check ist the type is nullable
                 return "?";

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cybtans.Tests.RestApi.Controllers
+namespace Cybtans.Tests.Controllers
 {
 	[Route("api/OrderState")]
 	[ApiController]
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		
 		[Authorize(Roles = "admin")]
 		[HttpPost]
-		public Task<OrderStateDto> Create([FromBody]OrderStateDto __request)
+		public Task<OrderStateDto> Create([FromBody]CreateOrderStateRequest __request)
 		{
 			return _service.Create(__request);
 		}
