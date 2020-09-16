@@ -134,22 +134,5 @@ export default class Orders extends React.PureComponent<{}, OrderState> {
                 </div>
             </div>
         );
-    }    
-
-    private async createNewOrder(){
-
-       let customerService = getService(CustomerService);
-       let customer = await customerService.getAll({
-           filter:"name eq 'Jane'"
-       });
-
-       let response = await this.service.create({
-            description:' Created Order',
-            orderStateId : 1,
-            customerId: customer.items && customer.items[0].id || '',
-            orderType: OrderTypeEnum.normal
-        });
-
-        this.setState({invalidated: true});
-    }
+    }        
 }

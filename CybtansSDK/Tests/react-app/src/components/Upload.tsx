@@ -54,18 +54,13 @@ export default ()=>{
    }
 
   async function download(){
-<<<<<<< HEAD
      let response = await service.downloadImage({name : 'react-image'});
      let imageBlob = await response.blob();       
-=======
-     let imageBlob = await service.downloadImage({name : 'react-image'});
->>>>>>> master
      if(imageBlob){
         let url = URL.createObjectURL(imageBlob);
         var a = document.createElement('a');
         a.href = url;
         a.target = '_blank';
-<<<<<<< HEAD
 
         let contentDiposition = response.headers.get('Content-Disposition');
         if(contentDiposition){
@@ -75,9 +70,6 @@ export default ()=>{
             }
         }        
 
-=======
-        //a.download = "react-image.jpg";
->>>>>>> master
         document.body.appendChild(a);
         a.click();    
         a.remove();
