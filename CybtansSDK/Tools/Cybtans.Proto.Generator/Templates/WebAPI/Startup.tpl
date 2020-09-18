@@ -48,7 +48,7 @@ namespace @{NAMESPACE}
                     builder =>
                     {
                        builder.SetIsOriginAllowedToAllowWildcardSubdomains()
-                        .WithOrigins(Configuration.GetValue<string>("AllowedHosts").Split(','))
+                        .WithOrigins("*")
                         .AllowAnyHeader()
                         .AllowAnyMethod();                        
                     });
@@ -70,17 +70,20 @@ namespace @{NAMESPACE}
             .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(@{SERVICE}Stub)))
             .AddCybtansFormatter();  
 
-            services.AddCybtansServices(typeof(@{SERVICE}Stub).Assembly);
+            services.AddCybtansServices(typeof(@{SERVICE}Stub).Assembly);         
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var asyncQueryExecutioner = new EfAsyncQueryExecutioner();
-            asyncQueryExecutioner.SetCurrent();
+             EfAsyncQueryExecutioner.Setup();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandlingMiddleware();
             }
 
             app.UseCors();
@@ -188,27 +191,13 @@ namespace @{NAMESPACE}
 
         void AddAuthentication(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = Configuration.GetValue<string>("Identity:Authority");
                 options.Audience = $"{options.Authority}/resources";                 
                 options.RequireHttpsMetadata = false;                    
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = options.Audience,
-                    ValidIssuer = options.Authority,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Identity:Secret")))
-                };
-                options.Validate();
+                options.SaveToken = true;               
             });
 
             services.AddAuthorization();
