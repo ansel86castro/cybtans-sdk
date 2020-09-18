@@ -14,7 +14,7 @@ namespace Cybtans.Proto.Generator
     public class ProjectsGenerator : IGenerator
     {
         const string EntityFramework = "ef";
-        const string SDK_VERSION = "1.0.16-beta-7";
+        const string SDK_VERSION = "1.1.14-beta";
 
         public class Options
         {
@@ -209,8 +209,8 @@ namespace Cybtans.Proto.Generator
                                 $"<PackageReference Include=\"Cybtans.Messaging\" Version=\"{SDK_VERSION}\" />",
                                 $"<PackageReference Include=\"Cybtans.Entities.EventLog\" Version=\"{SDK_VERSION}\" />",
                                 "<PackageReference Include=\"AutoMapper\" Version=\"10.0.0\" />",
-                                "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.6\" />",
-                                "<PackageReference Include=\"FluentValidation\" Version=\"9.0.1\" />"
+                                "<PackageReference Include=\"Microsoft.Extensions.Logging.Abstractions\" Version=\"3.1.7\" />",
+                                "<PackageReference Include=\"FluentValidation\" Version=\"9.2.0\" />"
                             });
                     }
                     break;
@@ -218,13 +218,13 @@ namespace Cybtans.Proto.Generator
                     packages.AddRange(new[]
                     {
                             $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
-                            $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"{SDK_VERSION}\" />"
+                            $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"1.0.16-beta-4\" />"
                         });
                     break;
                 case ProjectType.DomainEF:
                     packages.AddRange(new[]
                     {
-                            "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.6\" />",
+                            "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.7\" />",
                             $"<PackageReference Include=\"Cybtans.Entities.EntityFrameworkCore\" Version=\"{SDK_VERSION}\" />",
                         });
                     break;
@@ -233,7 +233,7 @@ namespace Cybtans.Proto.Generator
                     {                        
                         "<PackageReference Include=\"Swashbuckle.AspNetCore\" Version=\"5.5.1\" />",
                         "<PackageReference Include=\"Swashbuckle.AspNetCore.ReDoc\" Version=\"5.5.1\" />",
-                        "<PackageReference Include=\"Microsoft.AspNetCore.Authentication.JwtBearer\" Version=\"3.1.6\" />",
+                        "<PackageReference Include=\"Microsoft.AspNetCore.Authentication.JwtBearer\" Version=\"3.1.7\" />",
                         "<PackageReference Include=\"Serilog.AspNetCore\" Version=\"3.4.0\" />",
                         $"<PackageReference Include=\"Cybtans.AspNetCore\" Version=\"{SDK_VERSION}\" />"
                     });
@@ -246,8 +246,8 @@ namespace Cybtans.Proto.Generator
                                 $"<PackageReference Include=\"Cybtans.Messaging.RabbitMQ\" Version=\"{SDK_VERSION}\" />",
                                 $"<PackageReference Include=\"Cybtans.Services\" Version=\"{SDK_VERSION}\" /> ",
                                 "<PackageReference Include=\"AutoMapper.Extensions.Microsoft.DependencyInjection\" Version=\"8.0.1\" />",
-                                "<PackageReference Include=\"FluentValidation.AspNetCore\" Version=\"9.0.1\" />",
-                                "<PackageReference Include=\"Microsoft.EntityFrameworkCore.SqlServer\" Version=\"3.1.6\" />"
+                                "<PackageReference Include=\"FluentValidation.AspNetCore\" Version=\"9.2.0\" />",
+                                "<PackageReference Include=\"Microsoft.EntityFrameworkCore.SqlServer\" Version=\"3.1.7\" />"
                             });
                     }
                     break;
@@ -270,7 +270,8 @@ namespace Cybtans.Proto.Generator
             content = TemplateProcessor.Process(content, new
             {
                 FERERENCES = references != null ? "<ItemGroup>\r\n" + References(references.Select(x => $"../{x}/{x}.csproj").ToArray()) + "\r\n</ItemGroup >" : "",
-                PACKAGES = packages != null ? "<ItemGroup>\r\n" + string.Join("\r\n", packages) + "\r\n</ItemGroup >" : ""
+                PACKAGES = packages != null ? "<ItemGroup>\r\n" + string.Join("\r\n", packages) + "\r\n</ItemGroup >" : "",
+                SDK_VERSION
             });
 
 
