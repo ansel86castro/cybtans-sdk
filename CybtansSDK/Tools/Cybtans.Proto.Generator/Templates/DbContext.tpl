@@ -1,5 +1,5 @@
-﻿using Cybtans.Entities.EntityFrameworkCore;
-using Cybtans.Entities.EventLog;
+﻿using Cybtans.Entities;
+using Cybtans.Entities.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace @{SERVICE}.Domain.EntityFramework

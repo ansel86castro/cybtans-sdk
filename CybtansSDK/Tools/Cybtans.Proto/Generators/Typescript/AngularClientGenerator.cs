@@ -222,14 +222,8 @@ namespace Cybtans.Proto.Generators.Typescript
 })
 export class @{NAME} {
 
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
-
     constructor(private http: HttpClient) {}
     @{METHODS}
-
 }
 ";
 

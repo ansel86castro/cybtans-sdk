@@ -99,11 +99,6 @@ function getFormData(data:any): FormData {
 })
 export class CustomerService {
 
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
-
     constructor(private http: HttpClient) {}
     
     getAll(request: GetAllRequest): Observable<GetAllCustomerResponse> {
@@ -136,7 +131,6 @@ export class CustomerService {
       });
     }
 
-
 }
 
 
@@ -144,11 +138,6 @@ export class CustomerService {
   providedIn: 'root',
 })
 export class CustomerEventService {
-
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
 
     constructor(private http: HttpClient) {}
     
@@ -182,7 +171,6 @@ export class CustomerEventService {
       });
     }
 
-
 }
 
 
@@ -190,11 +178,6 @@ export class CustomerEventService {
   providedIn: 'root',
 })
 export class OrderService {
-
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
 
     constructor(private http: HttpClient) {}
     
@@ -277,7 +260,6 @@ export class OrderService {
       });
     }
 
-
 }
 
 
@@ -285,11 +267,6 @@ export class OrderService {
   providedIn: 'root',
 })
 export class OrderStateService {
-
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
 
     constructor(private http: HttpClient) {}
     
@@ -323,7 +300,6 @@ export class OrderStateService {
       });
     }
 
-
 }
 
 
@@ -331,11 +307,6 @@ export class OrderStateService {
   providedIn: 'root',
 })
 export class SoftDeleteOrderService {
-
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
 
     constructor(private http: HttpClient) {}
     
@@ -369,7 +340,6 @@ export class SoftDeleteOrderService {
       });
     }
 
-
 }
 
 
@@ -378,11 +348,6 @@ export class SoftDeleteOrderService {
 })
 export class AuthenticationService {
 
-    private headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-       Accept: 'application/json',
-    });
-
     constructor(private http: HttpClient) {}
     
     login(request: LoginRequest): Observable<LoginResponse> {
@@ -390,6 +355,5 @@ export class AuthenticationService {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
-
 
 }
