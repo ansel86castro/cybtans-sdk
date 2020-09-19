@@ -1,6 +1,6 @@
 ﻿using Cybtans.Serialization;
 using Cybtans.Services.Extensions;
-using Cybtans.Test.Domain;
+using Cybtans.Tests.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

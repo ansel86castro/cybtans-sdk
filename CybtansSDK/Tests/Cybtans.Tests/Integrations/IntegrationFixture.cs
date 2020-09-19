@@ -33,7 +33,7 @@ namespace Cybtans.Tests.Integrations
         }
         
 
-        public override void ConfigureServices(IServiceCollection services)
+        protected override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
 

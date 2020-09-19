@@ -14,6 +14,8 @@ using IdentityModel;
 using Cybtans.Testing.Integration;
 using Microsoft.AspNetCore.TestHost;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -44,16 +46,25 @@ namespace Cybtans.Tests.Integrations
 
                 _configureServices?.Invoke(services);
             });
-          
+
+            builder.ConfigureTestServices(services =>
+            {
+                OnPostConfigureService(services);
+            });
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
+        protected virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(TestAuthHandler.SCHEME)
                .AddScheme<TestAuthenticationOptions, TestAuthHandler>(TestAuthHandler.SCHEME, options =>
                {
                    options.ClaimsProvider = () => Claims;
-               });          
+               });            
+        }
+
+        protected virtual void OnPostConfigureService(IServiceCollection services)
+        {
+
         }
                  
         
@@ -87,51 +98,161 @@ namespace Cybtans.Tests.Integrations
         }
 
       
-        public TestHostPipeline CreatePipeline()        
+        public TestHostPipeline CreateTest()        
         {
-            return new TestHostPipeline((BaseIntegrationFixture<T>)Activator.CreateInstance(GetType()));
+            return new TestHostPipeline(GetType());
         }
 
 
         public class TestHostPipeline
         {
-            BaseIntegrationFixture<T> _fixture;
 
-            public TestHostPipeline(BaseIntegrationFixture<T> fixture)
+            Type _fixtureType;
+            List<Action<IServiceCollection>> _setups = new List<Action<IServiceCollection>>();         
+            List<Claim> _claims = new List<Claim>();
+
+            internal TestHostPipeline(Type fixtureType)
             {
-                _fixture = fixture;
+                _fixtureType = fixtureType;                
             }
 
-            public TestHostPipeline WithClaims(IEnumerable<Claim> claims)
+            private void OnConfigureService(IServiceCollection services)
             {
-                _fixture.Claims = claims;
+                _setups.ForEach(x => x(services));
+            }
+
+            private void SetupClaims(BaseIntegrationFixture<T> fixture)
+            {
+                if (fixture.Claims != null)
+                {
+                    var values = fixture.Claims.Where(x => !_claims.Any(y => y.Type == x.Type)).ToList();
+                    values.AddRange(_claims);
+
+                    fixture.Claims = values;
+                }
+                else
+                {
+                    fixture.Claims = _claims;
+                }
+            }
+
+
+            public TestHostPipeline UseClaims(params Claim[] claims)
+            {
+                _claims.AddRange(claims);
                 return this;
+            }
+
+            public TestHostPipeline UseRoles(params string[] roles)
+            {
+                return UseClaims(roles.Select(x => new Claim(ClaimTypes.Role, x)).ToArray());
+            }
+
+            public TestHostPipeline UseUser(string id, string name)
+            {
+                return UseClaims(
+                      new Claim(ClaimTypes.NameIdentifier, id),
+                      new Claim(ClaimTypes.Name, name)
+                    );
             }
 
             public TestHostPipeline ConfigureServices(Action<IServiceCollection> configureServices)
             {
-                _fixture._configureServices = configureServices;
+                _setups.Add(configureServices);
                 return this;
             }
 
-            public async Task Run(Func<BaseIntegrationFixture<T>, Task> func)
+            public TestHostPipeline UseService<TService, TImplementation>()
+                where TService: class
+                where TImplementation : class
             {
+                _setups.Add(services =>
+                {                    
+                    var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(TService));
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);                        
+                    }
+                    services.AddTransient<TImplementation>();
+                });
+                return this;
+            }
+
+            public TestHostPipeline UseService<TService>(TService implementation)
+                where TService : class                
+            {
+                _setups.Add(services =>
+                {
+                    var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(TService));
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);                        
+                    }
+
+                    services.AddSingleton(implementation);
+                });
+                return this;
+            }
+
+            public TestHostPipeline UseService<TService, TImplementation>(Func<IServiceProvider, TImplementation> factory)
+               where TService : class
+               where TImplementation : class
+            {
+                _setups.Add(services =>
+                {
+                    var descriptor = services.FirstOrDefault(x => x.ServiceType == typeof(TService));
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);                        
+                    }
+                    services.AddTransient(factory);
+                });
+                return this;
+            }
+
+            public async Task RunAsync(Func<BaseIntegrationFixture<T>, Task> func)
+            {
+                var fixture = (BaseIntegrationFixture<T>)Activator.CreateInstance(_fixtureType);
+                SetupClaims(fixture);
+                fixture._configureServices = OnConfigureService;
+
                 try
                 {
-                    await _fixture.InitializeAsync();
+                    await fixture.InitializeAsync();
                     try
                     {
-                        await func(_fixture);
+                        await func(fixture);
                     }
                     finally
                     {
-                        await _fixture.DisposeAsync();
+                        await fixture.DisposeAsync();
                     }
                 }
                 finally
                 {
-                    _fixture.Dispose();
+                    fixture.Dispose();                   
                 }
+            }
+
+            public void Run(Func<BaseIntegrationFixture<T>, Task> func)
+            {
+                RunAsync(func).Wait();
+            }
+
+            public Task RunAsync<TClient>(Func<TClient, Task> func)
+                where TClient : class
+            {
+                return RunAsync(test =>
+                {
+                    var client = test.GetClient<TClient>();
+                    return func(client);
+                });
+            }
+
+            public void Run<TClient>(Func<TClient, Task> func)
+                 where TClient : class
+            {
+                RunAsync<TClient>(func).Wait();
             }
         }
     }

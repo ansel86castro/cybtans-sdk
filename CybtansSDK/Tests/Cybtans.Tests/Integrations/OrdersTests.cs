@@ -15,7 +15,6 @@ using Xunit;
 using Xunit.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
-using Cybtans.Test.Domain;
 using System.IO;
 using Newtonsoft.Json;
 using System.Text;
@@ -23,6 +22,7 @@ using Cybtans.Serialization;
 using System.Net.Http.Headers;
 using Cybtans.Services.Security;
 using Cybtans.Tests.Domain.EF;
+using Cybtans.Tests.Domain;
 
 namespace Cybtans.Tests.Integrations
 {

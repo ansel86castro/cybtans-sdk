@@ -3,21 +3,25 @@
     public enum ServiceType
     {
         /// <summary>
-        /// Service interface with full class are generated
+        /// Service contract and implementation
         /// </summary>
         Default,        
         /// <summary>
-        /// Service interface only is generated
+        /// Service contract
         /// </summary>
         Interface,   
         /// <summary>
-        /// Service interface with partiaL class are generated
+        /// Service contract and partial implementation
         /// </summary>
         Partial,
         /// <summary>
-        /// Service is not generated
+        /// No service, generate message only
         /// </summary>
         None,
+        /// <summary>
+        /// Service contract and implementation for read operations
+        /// </summary>
+        ReadOnly,
     }
 
 }

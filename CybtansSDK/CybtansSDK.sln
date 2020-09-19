@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Refit", "Cybtans.Re
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5D6A5BBA-EFB4-46C0-ACEF-FF9166196F1C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{770E421B-7F26-4A8B-9D0B-DCD0E7DBAD0D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto", "Tools\Cybtans.Proto\Cybtans.Proto.csproj", "{06D0DBB0-3488-466B-B3A5-C59F96D761B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto.Test", "Tools\Cybtans.Proto.Test\Cybtans.Proto.Test.csproj", "{6735CF20-A68B-4D75-A20B-DF0986E18DD4}"
@@ -71,6 +69,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Clients", "Tests\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj", "{4CCD678F-E9B7-4149-B732-8DE9F953E92F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Gateway", "Tests\Cybtans.Tests.Gateway\Cybtans.Tests.Gateway.csproj", "{50F6C3ED-7C33-4D02-A13D-6786758FB593}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B701E5B2-5361-457B-B927-DEB715AE656C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -182,6 +182,10 @@ Global
 		{50F6C3ED-7C33-4D02-A13D-6786758FB593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50F6C3ED-7C33-4D02-A13D-6786758FB593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50F6C3ED-7C33-4D02-A13D-6786758FB593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B701E5B2-5361-457B-B927-DEB715AE656C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B701E5B2-5361-457B-B927-DEB715AE656C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B701E5B2-5361-457B-B927-DEB715AE656C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B701E5B2-5361-457B-B927-DEB715AE656C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

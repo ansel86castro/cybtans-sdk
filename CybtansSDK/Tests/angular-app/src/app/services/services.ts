@@ -3,6 +3,9 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { 
   GetAllRequest,
+  GetAllReadOnlyEntityResponse,
+  GetReadOnlyEntityRequest,
+  ReadOnlyEntityDto,
   GetAllCustomerResponse,
   GetCustomerRequest,
   CustomerDto,
@@ -91,6 +94,28 @@ function getFormData(data:any): FormData {
         }
     }
     return form;
+}
+
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ReadOnlyEntityService {
+
+    constructor(private http: HttpClient) {}
+    
+    getAll(request: GetAllRequest): Observable<GetAllReadOnlyEntityResponse> {
+      return this.http.get<GetAllReadOnlyEntityResponse>(`/api/ReadOnlyEntity${ getQueryString(request) }`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+    
+    get(request: GetReadOnlyEntityRequest): Observable<ReadOnlyEntityDto> {
+      return this.http.get<ReadOnlyEntityDto>(`/api/ReadOnlyEntity/${request.id}`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+
 }
 
 

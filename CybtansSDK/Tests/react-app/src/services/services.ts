@@ -1,5 +1,8 @@
 import { 
   GetAllRequest,
+  GetAllReadOnlyEntityResponse,
+  GetReadOnlyEntityRequest,
+  ReadOnlyEntityDto,
   GetAllCustomerResponse,
   GetCustomerRequest,
   CustomerDto,
@@ -130,6 +133,27 @@ class BaseTestsService {
         }
         return Promise.resolve();
     }
+}
+
+
+export class ReadOnlyEntityService extends BaseTestsService {  
+
+    constructor(fetch:Fetch, options:TestsOptions){
+        super(fetch, options);        
+    }
+    
+    getAll(request:GetAllRequest) : Promise<GetAllReadOnlyEntityResponse> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity`+this.getQueryString(request);
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    get(request:GetReadOnlyEntityRequest) : Promise<ReadOnlyEntityDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+
 }
 
 
