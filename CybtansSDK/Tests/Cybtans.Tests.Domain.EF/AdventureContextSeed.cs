@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cybtans.AspNetCore.Migrations;
-using Cybtans.Test.Domain;
 
 namespace Cybtans.Tests.Domain.EF
 {

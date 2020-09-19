@@ -1,16 +1,8 @@
 ﻿using Cybtans.Serialization;
 using Cybtans.Services;
-using Cybtans.Services.Extensions;
-using Cybtans.Test.Domain;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Cybtans.Tests
 {

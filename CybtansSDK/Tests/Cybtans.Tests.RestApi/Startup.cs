@@ -16,11 +16,11 @@ using FluentValidation.AspNetCore;
 using Cybtans.AspNetCore;
 using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Services.Extensions;
-using Cybtans.Test.Domain;
 using Cybtans.Tests.Services;
 using System.Data.Common;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Cybtans.Tests.Domain.EF;
+using Cybtans.Tests.Domain;
 
 namespace Cybtans.Test.RestApi
 {

@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cybtans.Test.Domain
+namespace Cybtans.Tests.Domain
 {
     [GenerateMessage(Service = ServiceType.Interface)]
-    public class Order:DomainTenantEntity<Guid>
+    public class Order : DomainTenantEntity<Guid>
     {
         [EventData]
         public string Description { get; set; }
@@ -19,11 +19,11 @@ namespace Cybtans.Test.Domain
 
         [EventData]
         public OrderTypeEnum OrderType { get; set; }
-       
+
 
         [EventData]
         public virtual OrderState OrderState { get; set; }
-        
+
         public virtual Customer Customer { get; set; }
 
         [EventData]

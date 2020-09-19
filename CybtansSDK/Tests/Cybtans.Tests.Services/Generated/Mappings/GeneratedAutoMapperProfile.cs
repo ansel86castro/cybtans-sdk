@@ -1,7 +1,7 @@
 
 using System;
 using AutoMapper;
-using Cybtans.Test.Domain;
+using Cybtans.Tests.Domain;
 using Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
@@ -10,6 +10,9 @@ namespace Cybtans.Tests.Services
     {
         public GeneratedAutoMapperProfile()
         {
+           
+           CreateMap<ReadOnlyEntity, ReadOnlyEntityDto>();
+           CreateMap<ReadOnlyEntityDto,ReadOnlyEntity>();
            
            CreateMap<Customer, CustomerDto>();
            CreateMap<CustomerDto,Customer>();

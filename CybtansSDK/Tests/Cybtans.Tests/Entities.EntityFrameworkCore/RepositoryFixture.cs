@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Cybtans.Test.Domain;
 using Cybtans.Testing;
+using Cybtans.Tests.Domain;
 using Cybtans.Tests.Domain.EF;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -132,6 +132,12 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                         }
                     }
                 });
+
+                context.ReadOnlyEntities.AddRange(Enumerable.Range(1, 10).
+                    Select(i => new ReadOnlyEntity
+                    {
+                        Name = $"Entity {i}"
+                    }));
 
                 await context.SaveChangesAsync();
             }
