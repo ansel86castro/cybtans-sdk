@@ -1,16 +1,8 @@
-﻿using Cybtans.Entities;
-using Cybtans.Refit;
+﻿using Cybtans.Refit;
 using Cybtans.Tests.Clients;
-using Cybtans.Tests.Models;
-using Moq;
-using NuGet.Frameworks;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Cybtans.Tests.Integrations
 {
