@@ -4,7 +4,6 @@ using AutoMapper;
 using Cybtans.Entities;
 using Cybtans.Services;
 using Microsoft.Extensions.Logging;
-using Cybtans.Test.Domain;
 using Cybtans.Tests.Models;
 using System.Threading.Tasks;
 using System.Net;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics.Contracts;
 using Cybtans.Services.Security;
+using Cybtans.Tests.Domain;
 
 namespace Cybtans.Tests.Services
 {

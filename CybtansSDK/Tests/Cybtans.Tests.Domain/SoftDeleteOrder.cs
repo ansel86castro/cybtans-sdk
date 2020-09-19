@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cybtans.Test.Domain
+namespace Cybtans.Tests.Domain
 {
     [GenerateMessage(Service = ServiceType.Default)]
     public class SoftDeleteOrder : DomainTenantEntity<Guid>, ISoftDelete

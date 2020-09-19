@@ -1,7 +1,7 @@
 
 using System;
 using AutoMapper;
-using Cybtans.Test.Domain;
+using Cybtans.Tests.Domain;
 using Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services

@@ -1,5 +1,4 @@
 ﻿using Cybtans.Entities;
-using Cybtans.Test.Domain;
 using Cybtans.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,6 +8,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using System.Linq.Expressions;
+using Cybtans.Tests.Domain;
 
 namespace Cybtans.Tests.Entities.EntityFrameworkCore
 {

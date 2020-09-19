@@ -1,7 +1,7 @@
 ﻿using Cybtans.Entities;
 using System;
 
-namespace Cybtans.Test.Domain
+namespace Cybtans.Tests.Domain
 {
     [GenerateMessage]
     public class SoftDeleteOrderItem : DomainTenantEntity<Guid>, ISoftDelete

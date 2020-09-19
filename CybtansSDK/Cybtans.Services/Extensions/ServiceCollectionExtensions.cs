@@ -1,5 +1,6 @@
 ﻿using Cybtans.Services.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -22,13 +23,13 @@ namespace Cybtans.Services.Extensions
                 switch (info.LifeType)
                 {
                     case LifeType.Transient:
-                        services.AddTransient(contract, info.Type);
+                        services.TryAddTransient(contract, info.Type);
                         break;
                     case LifeType.Scope:
-                        services.AddScoped(contract, info.Type);
+                        services.TryAddScoped(contract, info.Type);
                         break;
                     case LifeType.Singleton:
-                        services.AddSingleton(contract, info.Type);
+                        services.TryAddSingleton(contract, info.Type);
                         break;
                 }
             }

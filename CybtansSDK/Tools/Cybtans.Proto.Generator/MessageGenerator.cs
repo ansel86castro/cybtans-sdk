@@ -165,8 +165,7 @@ namespace Cybtans.Proto.Generator
                     "-f",  options.ProtoOutputFilename });
 
                 GenerateMappings(types, options);
-                GenerateServicesImplementation(types, options);
-                //GenerateRestApiRegisterExtensor(types, options);
+                GenerateServicesImplementation(types, options);                
             }
         }
 
@@ -468,8 +467,7 @@ namespace Cybtans.Proto.Generator
         private void GenerateServices(CodeWriter codeWriter, HashSet<Type> types, GenerationOptions options)
         {            
             codeWriter.AppendLine();
-
-            var template = GetRawTemplate("ProtoServices.tpl");
+            
             if (types.Any())
             {
                 codeWriter.Append(GetAllTemplate);
@@ -487,15 +485,29 @@ namespace Cybtans.Proto.Generator
                     continue;                                
 
                 codeWriter.AppendLine();
-                codeWriter.Append(TemplateProcessor.Process(template, new
+                if (attr.Service == ServiceType.ReadOnly)
                 {
-                    ENTITY = type.Name.Pascal(),
-                    ID_TYPE = GetTypeName(IdProp.PropertyType),
-                    ID = IdProp.Name.Camel(),
-                    ENTITYDTO = GetTypeName(type),
-                    READ_POLICY = GetSecurity(attr.Security, attr.AllowedRead ?? $"{ type.Name.ToLowerInvariant()}.read"),
-                    WRITE_POLICY = GetSecurity(attr.Security, attr.AllowedWrite ?? $"{ type.Name.ToLowerInvariant()}.write")
-                }));
+                    codeWriter.Append(TemplateProcessor.Process(GetRawTemplate("ReadOnlyProtoServices.tpl"), new
+                    {
+                        ENTITY = type.Name.Pascal(),
+                        ID_TYPE = GetTypeName(IdProp.PropertyType),
+                        ID = IdProp.Name.Camel(),
+                        ENTITYDTO = GetTypeName(type),
+                        READ_POLICY = GetSecurity(attr.Security, attr.AllowedRead ?? $"{ type.Name.ToLowerInvariant()}.read"),                       
+                    }));
+                }
+                else
+                {
+                    codeWriter.Append(TemplateProcessor.Process(GetRawTemplate("ProtoServices.tpl"), new
+                    {
+                        ENTITY = type.Name.Pascal(),
+                        ID_TYPE = GetTypeName(IdProp.PropertyType),
+                        ID = IdProp.Name.Camel(),
+                        ENTITYDTO = GetTypeName(type),
+                        READ_POLICY = GetSecurity(attr.Security, attr.AllowedRead ?? $"{ type.Name.ToLowerInvariant()}.read"),
+                        WRITE_POLICY = GetSecurity(attr.Security, attr.AllowedWrite ?? $"{ type.Name.ToLowerInvariant()}.write")
+                    }));
+                }
 
             }
         }
@@ -604,9 +616,9 @@ message GetAllRequest {
 
                 File.WriteAllText($"{options.GetServiceImplOutputPath()}/{type.Name}Service.cs",
                 TemplateProcessor.Process(
-                    attr.Service == ServiceType.Default ?
-                    ServiceImpTemplate :
-                    ServiceImpPartialTemplate,
+                     attr.Service  == ServiceType.Default ? ServiceImpTemplate :
+                     attr.Service == ServiceType.Partial ? ServiceImpPartialTemplate :
+                     ReadOnlyServiceImpTemplate,
                     new
                     {
                         ENTITIES_NAMESPACE = ns,
@@ -677,6 +689,25 @@ namespace @{ SERVICE }.Services
     }
 }";
 
+        const string ReadOnlyServiceImpTemplate = @"
+using System;
+using AutoMapper;
+using Cybtans.Entities;
+using Cybtans.Services;
+using Microsoft.Extensions.Logging;
+using @{ ENTITIES_NAMESPACE };
+using @{ SERVICE }.Models;
+
+namespace @{ SERVICE }.Services
+{
+    [RegisterDependency(typeof(I@{ENTITY}Service))]
+    public partial class @{ ENTITY }Service : ReadOnlyService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response>, I@{ENTITY}Service
+    {
+        public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
+            : base(repository, uow, mapper, logger) { }                
+    }
+}";
+
 
         const string ServiceImpPartialTemplate = @"
 using System;
@@ -690,7 +721,7 @@ using @{ SERVICE }.Models;
 namespace @{ SERVICE }.Services
 {
     [RegisterDependency(typeof(I@{ENTITY}Service))]
-    public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
+    public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
     {
         
     }
