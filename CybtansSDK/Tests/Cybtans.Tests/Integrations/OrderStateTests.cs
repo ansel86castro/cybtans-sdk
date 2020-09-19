@@ -1,8 +1,12 @@
-﻿using Cybtans.Tests.Clients;
+﻿using Cybtans.Entities;
+using Cybtans.Refit;
+using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
+using Moq;
 using NuGet.Frameworks;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -43,6 +47,47 @@ namespace Cybtans.Tests.Integrations
             Assert.NotEmpty(result.Items);
             Assert.True(result.TotalCount > 0);
             Assert.Equal(result.TotalCount, result.Items.Count);
+        }
+
+        [Fact]
+        public async Task GetOrderStatesWithNoRole()
+        {
+            await _fixture.CreateTest()
+                .UseRoles("no-admin")
+                .RunAsync<IOrderStateService>(async service =>
+                {
+                    var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll());
+                    Assert.NotNull(exception);
+                    Assert.Equal(HttpStatusCode.Forbidden, exception.StatusCode);
+                });
+        }
+
+        [Fact]
+        public async Task GetOrderStatesMockService()
+        {
+            var mockService = new Mock<Services.IOrderStateService>();
+            mockService.Setup(x => x.Get(It.Is<GetOrderStateRequest>(x=>x.Id == 1)))
+            .ReturnsAsync(new OrderStateDto
+            {
+                 Id = 1,
+                 Name = "Mock Test Sample"
+            });
+
+            mockService.Setup(x => x.Get(It.Is<GetOrderStateRequest>(x => x.Id == 2)))
+                .ReturnsAsync((OrderStateDto)null);
+
+            await _fixture.CreateTest()
+                .UseService(mockService.Object)
+                .RunAsync<IOrderStateService>(async service =>
+                {
+                    var result = await service.Get(1);
+                    Assert.NotNull(result);
+                    Assert.Equal("Mock Test Sample", result.Name);
+
+                    result = await service.Get(2);
+                    Assert.Null(result);
+
+                });
         }
     }
 }

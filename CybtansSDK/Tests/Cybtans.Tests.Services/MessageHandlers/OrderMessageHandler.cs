@@ -1,6 +1,6 @@
 ﻿using Cybtans.Entities;
 using Cybtans.Services;
-using Cybtans.Test.Domain;
+using Cybtans.Tests.Domain;
 using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Services

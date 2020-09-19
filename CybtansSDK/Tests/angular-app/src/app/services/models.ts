@@ -1,4 +1,12 @@
 
+export interface ReadOnlyEntityDto {
+  name: string;
+  createDate?: string|Date|null;
+  updateDate?: string|Date|null;
+  id: number;
+}
+
+
 /** Customer Entity */
 export interface CustomerDto {
   /** Customer's Name */
@@ -98,6 +106,19 @@ export interface GetAllRequest {
   sort?: string;
   skip?: number|null;
   take?: number|null;
+}
+
+
+export interface GetReadOnlyEntityRequest {
+  id: number;
+}
+
+
+export interface GetAllReadOnlyEntityResponse {
+  items?: ReadOnlyEntityDto[]|null;
+  page: number;
+  totalPages: number;
+  totalCount: number;
 }
 
 

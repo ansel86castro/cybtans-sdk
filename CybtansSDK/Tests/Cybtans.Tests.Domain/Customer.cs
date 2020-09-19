@@ -3,19 +3,19 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cybtans.Test.Domain
+namespace Cybtans.Tests.Domain
 {
     [Description("Customer Entity")]
     [GenerateMessage(Service = ServiceType.Default)]
-    public class Customer: DomainTenantEntity<Guid>
+    public class Customer : DomainTenantEntity<Guid>
     {
         [Description("Customer's Name")]
         [Required]
         [EventData]
         public string Name { get; set; }
-       
+
         [Description("Customer's FirstLastName")]
-        [EventData]        
+        [EventData]
         public string FirstLastName { get; set; }
 
         [Description("Customer's SecondLastName")]

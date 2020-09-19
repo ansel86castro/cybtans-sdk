@@ -1,6 +1,5 @@
 ﻿using Cybtans.Entities;
 using Cybtans.Entities.EntityFrameworkCore;
-using Cybtans.Test.Domain;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
@@ -35,6 +34,8 @@ namespace Cybtans.Tests.Domain.EF
         public DbSet<SoftDeleteOrder> SoftDeleteOrders { get; set; }
 
         public DbSet<SoftDeleteOrderItem> SoftDeleteOrderItems { get; set; }
+
+        public DbSet<ReadOnlyEntity> ReadOnlyEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

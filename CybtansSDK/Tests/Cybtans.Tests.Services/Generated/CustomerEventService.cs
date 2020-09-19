@@ -4,7 +4,7 @@ using AutoMapper;
 using Cybtans.Entities;
 using Cybtans.Services;
 using Microsoft.Extensions.Logging;
-using Cybtans.Test.Domain;
+using Cybtans.Tests.Domain;
 using Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
