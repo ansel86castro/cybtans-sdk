@@ -19,6 +19,7 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
+  condition: ne(variables['Build.Reason'], 'PullRequest')  
   displayName: 'Restore Cybtans SDK'
   inputs:
     command: 'restore'
@@ -26,6 +27,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Cybtans SDK'
+  condition: ne(variables['Build.Reason'], 'PullRequest')  
   inputs:
     command: 'build'
     projects: '**/CybtansSDK.sln'
@@ -34,6 +36,7 @@ steps:
 
 - task: CmdLine@2
   displayName: 'Package Nuget Packages'
+  condition: ne(variables['Build.Reason'], 'PullRequest')  
   inputs:
     script: |
       dotnet pack ./CybtansSDK/Cybtans.Serialization/Cybtans.Serialization.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
@@ -50,6 +53,8 @@ steps:
       dotnet pack ./CybtansSDK/Cybtans.Testing/Cybtans.Testing.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
 - task: NuGetCommand@2
+  displayName: 'Publish Packages'
+  condition: ne(variables['Build.Reason'], 'PullRequest')  
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg'
