@@ -58,6 +58,14 @@ namespace Cybtans.Proto.Generators.CSharp
                 writer.Usings.Append("using Microsoft.AspNetCore.Authorization;").AppendLine();
             }
 
+            if (srvInfo.Service.Option.Description != null)
+            {
+                clsWriter.Append("/// <summary>").AppendLine();
+                clsWriter.Append("/// ").Append(srvInfo.Service.Option.Description).AppendLine();
+                clsWriter.Append("/// </summary>").AppendLine();
+                clsWriter.Append($"[System.ComponentModel.Description(\"{srvInfo.Service.Option.Description}\")]").AppendLine();
+            }
+
             AddAutorizationAttribute(srv.Option, clsWriter);
             
             clsWriter.Append($"[Route(\"{srv.Option.Prefix}\")]").AppendLine();
@@ -89,6 +97,14 @@ namespace Cybtans.Proto.Generators.CSharp
                 string template = options.Template != null ? $"(\"{options.Template}\")" : "";
 
                 bodyWriter.AppendLine();
+
+                if (rpc.Option.Description != null)
+                {
+                    bodyWriter.Append("/// <summary>").AppendLine();
+                    bodyWriter.Append("/// ").Append(rpc.Option.Description).AppendLine();
+                    bodyWriter.Append("/// </summary>").AppendLine();
+                    bodyWriter.Append($"[System.ComponentModel.Description(\"{rpc.Option.Description}\")]").AppendLine();
+                }
 
                 AddAutorizationAttribute(options, bodyWriter);
 

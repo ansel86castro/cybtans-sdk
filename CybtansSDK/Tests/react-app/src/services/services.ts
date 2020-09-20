@@ -1,8 +1,5 @@
 import { 
   GetAllRequest,
-  GetAllReadOnlyEntityResponse,
-  GetReadOnlyEntityRequest,
-  ReadOnlyEntityDto,
   GetAllCustomerResponse,
   GetCustomerRequest,
   CustomerDto,
@@ -27,6 +24,9 @@ import {
   CreateOrderStateRequest,
   UpdateOrderStateRequest,
   DeleteOrderStateRequest,
+  GetAllReadOnlyEntityResponse,
+  GetReadOnlyEntityRequest,
+  ReadOnlyEntityDto,
   GetAllSoftDeleteOrderResponse,
   GetSoftDeleteOrderRequest,
   SoftDeleteOrderDto,
@@ -136,27 +136,6 @@ class BaseTestsService {
 }
 
 
-export class ReadOnlyEntityService extends BaseTestsService {  
-
-    constructor(fetch:Fetch, options:TestsOptions){
-        super(fetch, options);        
-    }
-    
-    getAll(request:GetAllRequest) : Promise<GetAllReadOnlyEntityResponse> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
-    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity`+this.getQueryString(request);
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    get(request:GetReadOnlyEntityRequest) : Promise<ReadOnlyEntityDto> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
-    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity/${request.id}`;
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-
-}
-
-
 export class CustomerService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -239,6 +218,7 @@ export class CustomerEventService extends BaseTestsService {
 }
 
 
+/** Order's Service */
 export class OrderService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -269,6 +249,7 @@ export class OrderService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
+    /** Upload an image to the server */
     uploadImage(request:UploadImageRequest) : Promise<UploadImageResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
@@ -372,6 +353,27 @@ export class OrderStateService extends BaseTestsService {
 }
 
 
+export class ReadOnlyEntityService extends BaseTestsService {  
+
+    constructor(fetch:Fetch, options:TestsOptions){
+        super(fetch, options);        
+    }
+    
+    getAll(request:GetAllRequest) : Promise<GetAllReadOnlyEntityResponse> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity`+this.getQueryString(request);
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    get(request:GetReadOnlyEntityRequest) : Promise<ReadOnlyEntityDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/ReadOnlyEntity/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+
+}
+
+
 export class SoftDeleteOrderService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -413,12 +415,14 @@ export class SoftDeleteOrderService extends BaseTestsService {
 }
 
 
+/** Jwt Authentication Service */
 export class AuthenticationService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
         super(fetch, options);        
     }
     
+    /** Generates an access token */
     login(request:LoginRequest) : Promise<LoginResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);

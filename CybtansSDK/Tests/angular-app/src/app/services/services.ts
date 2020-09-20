@@ -3,9 +3,6 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { 
   GetAllRequest,
-  GetAllReadOnlyEntityResponse,
-  GetReadOnlyEntityRequest,
-  ReadOnlyEntityDto,
   GetAllCustomerResponse,
   GetCustomerRequest,
   CustomerDto,
@@ -30,6 +27,9 @@ import {
   CreateOrderStateRequest,
   UpdateOrderStateRequest,
   DeleteOrderStateRequest,
+  GetAllReadOnlyEntityResponse,
+  GetReadOnlyEntityRequest,
+  ReadOnlyEntityDto,
   GetAllSoftDeleteOrderResponse,
   GetSoftDeleteOrderRequest,
   SoftDeleteOrderDto,
@@ -94,28 +94,6 @@ function getFormData(data:any): FormData {
         }
     }
     return form;
-}
-
-
-@Injectable({
-  providedIn: 'root',
-})
-export class ReadOnlyEntityService {
-
-    constructor(private http: HttpClient) {}
-    
-    getAll(request: GetAllRequest): Observable<GetAllReadOnlyEntityResponse> {
-      return this.http.get<GetAllReadOnlyEntityResponse>(`/api/ReadOnlyEntity${ getQueryString(request) }`, {
-          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
-      });
-    }
-    
-    get(request: GetReadOnlyEntityRequest): Observable<ReadOnlyEntityDto> {
-      return this.http.get<ReadOnlyEntityDto>(`/api/ReadOnlyEntity/${request.id}`, {
-          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
-      });
-    }
-
 }
 
 
@@ -199,6 +177,7 @@ export class CustomerEventService {
 }
 
 
+/** Order's Service */
 @Injectable({
   providedIn: 'root',
 })
@@ -230,6 +209,7 @@ export class OrderService {
       });
     }
     
+    /** Upload an image to the server */
     uploadImage(request: UploadImageRequest): Observable<UploadImageResponse> {
       return this.http.post<UploadImageResponse>(`/api/Order/upload`, getFormData(request), {
           headers: new HttpHeaders({ Accept: 'application/json' }),
@@ -331,6 +311,28 @@ export class OrderStateService {
 @Injectable({
   providedIn: 'root',
 })
+export class ReadOnlyEntityService {
+
+    constructor(private http: HttpClient) {}
+    
+    getAll(request: GetAllRequest): Observable<GetAllReadOnlyEntityResponse> {
+      return this.http.get<GetAllReadOnlyEntityResponse>(`/api/ReadOnlyEntity${ getQueryString(request) }`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+    
+    get(request: GetReadOnlyEntityRequest): Observable<ReadOnlyEntityDto> {
+      return this.http.get<ReadOnlyEntityDto>(`/api/ReadOnlyEntity/${request.id}`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+
+}
+
+
+@Injectable({
+  providedIn: 'root',
+})
 export class SoftDeleteOrderService {
 
     constructor(private http: HttpClient) {}
@@ -368,6 +370,7 @@ export class SoftDeleteOrderService {
 }
 
 
+/** Jwt Authentication Service */
 @Injectable({
   providedIn: 'root',
 })
@@ -375,6 +378,7 @@ export class AuthenticationService {
 
     constructor(private http: HttpClient) {}
     
+    /** Generates an access token */
     login(request: LoginRequest): Observable<LoginResponse> {
       return this.http.post<LoginResponse>(`/api/auth/login`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),

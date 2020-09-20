@@ -11,9 +11,6 @@ namespace Cybtans.Tests.Services
         public GeneratedAutoMapperProfile()
         {
            
-           CreateMap<ReadOnlyEntity, ReadOnlyEntityDto>();
-           CreateMap<ReadOnlyEntityDto,ReadOnlyEntity>();
-           
            CreateMap<Customer, CustomerDto>();
            CreateMap<CustomerDto,Customer>();
            
@@ -31,6 +28,9 @@ namespace Cybtans.Tests.Services
            
            CreateMap<OrderState, OrderStateDto>();
            CreateMap<OrderStateDto,OrderState>();
+           
+           CreateMap<ReadOnlyEntity, ReadOnlyEntityDto>();
+           CreateMap<ReadOnlyEntityDto,ReadOnlyEntity>();
            
            CreateMap<SoftDeleteOrder, SoftDeleteOrderDto>();
            CreateMap<SoftDeleteOrderDto,SoftDeleteOrder>();

@@ -9,6 +9,10 @@ using Cybtans.AspNetCore;
 
 namespace Cybtans.Tests.Controllers
 {
+	/// <summary>
+	/// Order's Service
+	/// </summary>
+	[System.ComponentModel.Description("Order's Service")]
 	[Route("api/Order")]
 	[ApiController]
 	public partial class OrderServiceController : ControllerBase
@@ -44,6 +48,10 @@ namespace Cybtans.Tests.Controllers
 			return _service.Argument();
 		}
 		
+		/// <summary>
+		/// Upload an image to the server
+		/// </summary>
+		[System.ComponentModel.Description("Upload an image to the server")]
 		[HttpPost("upload")]
 		[DisableFormValueModelBinding]
 		public Task<UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]UploadImageRequest __request)
