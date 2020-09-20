@@ -11,6 +11,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
-  </ItemGroup> 
+  </ItemGroup>
+
+
+    <PropertyGroup>
+	    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	    <NoWarn>$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
 
 </Project>

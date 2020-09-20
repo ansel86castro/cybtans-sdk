@@ -82,6 +82,11 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 url += "`";
 
+                if (rpc.Option.Description != null)
+                {
+                    methods.Append($"/** {rpc.Option.Description} */").AppendLine();
+                }
+
                 methods.Append($"{rpc.Name.Camel()}");
                 if (request == PrimitiveType.Void)
                 {
@@ -188,6 +193,11 @@ namespace Cybtans.Proto.Generators.Typescript
                 methods.Append("}");
 
                 methods.AppendLine();
+            }
+
+            if (srv.Option.Description != null)
+            {
+                writer.Append($"/** {srv.Option.Description} */").AppendLine();
             }
 
             writer.AppendTemplate(serviceTemplate, new Dictionary<string, object>

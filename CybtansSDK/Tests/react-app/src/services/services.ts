@@ -218,6 +218,7 @@ export class CustomerEventService extends BaseTestsService {
 }
 
 
+/** Order's Service */
 export class OrderService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -248,6 +249,7 @@ export class OrderService extends BaseTestsService {
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
+    /** Upload an image to the server */
     uploadImage(request:UploadImageRequest) : Promise<UploadImageResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
@@ -413,12 +415,14 @@ export class SoftDeleteOrderService extends BaseTestsService {
 }
 
 
+/** Jwt Authentication Service */
 export class AuthenticationService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
         super(fetch, options);        
     }
     
+    /** Generates an access token */
     login(request:LoginRequest) : Promise<LoginResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);

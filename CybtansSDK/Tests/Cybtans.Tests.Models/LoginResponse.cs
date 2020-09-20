@@ -1,12 +1,21 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel;
 
 namespace Cybtans.Tests.Models
 {
+	/// <summary>
+	/// Authentication response
+	/// </summary>
+	[Description("Authentication response")]
 	public partial class LoginResponse : IReflectorMetadataProvider
 	{
 		private static readonly LoginResponseAccesor __accesor = new LoginResponseAccesor();
 		
+		/// <summary>
+		/// Jwt Access Token
+		/// </summary>
+		[Description("Jwt Access Token")]
 		public string Token {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

@@ -82,6 +82,11 @@ namespace Cybtans.Proto.Generators.Typescript
                     path = request is MessageDeclaration ? ((MessageDeclaration)request).GetPathBinding(options.Template) : null;
                 }
 
+                if (rpc.Option.Description != null)
+                {
+                    methods.Append($"/** {rpc.Option.Description} */").AppendLine();
+                }
+
                 methods.Append($"{rpc.Name.Camel()}");
                 if (request == PrimitiveType.Void)
                 {
@@ -207,6 +212,10 @@ namespace Cybtans.Proto.Generators.Typescript
                 methods.AppendLine();
             }
 
+            if (srv.Option.Description != null)
+            {
+                writer.Append($"/** {srv.Option.Description} */").AppendLine();
+            }
             writer.AppendTemplate(serviceTemplate, new Dictionary<string, object>
             {
                 ["NAME"] = srv.Name.Pascal(),

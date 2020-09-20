@@ -13,6 +13,9 @@ namespace Cybtans.Proto.Options
         public string? Prefix { get; set; }      
 
         [Field("context")]
-        public string? ContextClass { get; set; }        
+        public string? ContextClass { get; set; }
+
+        [Field("description")]
+        public string? Description { get; set; }
     }
 }

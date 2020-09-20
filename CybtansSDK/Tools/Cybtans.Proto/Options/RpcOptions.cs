@@ -20,6 +20,9 @@ namespace Cybtans.Proto.Options
         [Field("file")]
         public StreamOptions? StreamOptions { get; set; }
 
+        [Field("description")]
+        public string? Description { get; set; }
+
     }
 
     public class StreamOptions: ProtobufOption
