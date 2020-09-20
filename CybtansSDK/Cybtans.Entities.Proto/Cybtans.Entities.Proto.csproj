@@ -11,7 +11,7 @@
           Support library for the protobuff generator
     </Description>
     <VersionPrefix>1.0.16</VersionPrefix>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

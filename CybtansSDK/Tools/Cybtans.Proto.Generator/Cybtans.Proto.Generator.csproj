@@ -70,7 +70,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cybtans.Entities.Proto" Version="1.1.15-beta" />
+    <PackageReference Include="Cybtans.Entities.Proto" Version="1.2.1" />
   </ItemGroup>
 
   <ItemGroup>
