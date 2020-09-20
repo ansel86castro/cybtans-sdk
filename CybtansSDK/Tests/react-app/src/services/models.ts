@@ -273,7 +273,9 @@ export interface LoginRequest {
 }
 
 
+/** Authentication response */
 export interface LoginResponse {
+  /** Jwt Access Token */
   token: string;
 }
 

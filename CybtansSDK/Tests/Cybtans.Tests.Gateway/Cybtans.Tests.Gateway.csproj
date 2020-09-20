@@ -26,5 +26,9 @@
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
 
 </Project>

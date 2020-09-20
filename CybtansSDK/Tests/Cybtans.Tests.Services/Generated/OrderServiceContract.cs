@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Services
 {
+	/// <summary>
+	/// Order's Service
+	/// </summary>
 	public partial interface IOrderService 
 	{
 		
@@ -20,6 +23,9 @@ namespace Cybtans.Tests.Services
 		Task Argument();
 		
 		
+		/// <summary>
+		/// Upload an image to the server
+		/// </summary>
 		Task<UploadImageResponse> UploadImage(UploadImageRequest request);
 		
 		

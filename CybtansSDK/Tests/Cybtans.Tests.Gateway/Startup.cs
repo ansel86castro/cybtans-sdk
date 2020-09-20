@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Cybtans.AspNetCore;
@@ -71,8 +73,18 @@ namespace Cybtans.Tests.Gateway
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cybtans.Test V1");
-                c.EnableFilter();                            
+                c.EnableFilter();
+                c.EnableDeepLinking();
+                c.ShowCommonExtensions();
             });
+
+            app.UseReDoc(c =>
+            {
+                c.RoutePrefix = "docs";
+                c.SpecUrl("/swagger/v1/swagger.json");
+                c.DocumentTitle = "Cybtans.Test API";                
+            });
+
 
             app.UseHttpsRedirection();
 
@@ -119,6 +131,12 @@ namespace Cybtans.Tests.Gateway
                         new string[0]
                     }
                 });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath, true);
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Cybtans.Tests.Models.xml"));
             });
         }
 

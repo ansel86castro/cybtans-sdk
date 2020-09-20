@@ -45,6 +45,13 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var clsWriter = writer.Class;
 
+            if (info.Service.Option.Description != null)
+            {
+                clsWriter.Append("/// <summary>").AppendLine();
+                clsWriter.Append("/// ").Append(info.Service.Option.Description).AppendLine();
+                clsWriter.Append("/// </summary>").AppendLine();
+            }
+
             clsWriter.Append("[ApiClient]").AppendLine();
             clsWriter.Append($"public interface I{info.Name}").AppendLine();
             clsWriter.Append("{").AppendLine();
@@ -77,6 +84,13 @@ namespace Cybtans.Proto.Generators.CSharp
                 }                                
 
                 bodyWriter.AppendLine();
+
+                if (rpc.Option.Description != null)
+                {
+                    bodyWriter.Append("/// <summary>").AppendLine();
+                    bodyWriter.Append("/// ").Append(rpc.Option.Description).AppendLine();
+                    bodyWriter.Append("/// </summary>").AppendLine();
+                }
 
                 if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
                 {

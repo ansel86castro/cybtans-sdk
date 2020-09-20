@@ -50,6 +50,13 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var clsWriter = writer.Class;
 
+            if (info.Service.Option.Description != null)
+            {
+                clsWriter.Append("/// <summary>").AppendLine();
+                clsWriter.Append("/// ").Append(info.Service.Option.Description).AppendLine();
+                clsWriter.Append("/// </summary>").AppendLine();                
+            }
+
             clsWriter.Append("public");
 
             if (_option.PartialClass)
@@ -70,6 +77,13 @@ namespace Cybtans.Proto.Generators.CSharp
                 var requestInfo = rpc.RequestType;               
 
                 bodyWriter.AppendLine();
+                if (rpc.Option.Description != null)
+                {
+                    bodyWriter.Append("/// <summary>").AppendLine();
+                    bodyWriter.Append("/// ").Append(rpc.Option.Description).AppendLine();
+                    bodyWriter.Append("/// </summary>").AppendLine();
+                }
+
                 bodyWriter.Append($"{returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")});");
                 bodyWriter.AppendLine();
                 bodyWriter.AppendLine();

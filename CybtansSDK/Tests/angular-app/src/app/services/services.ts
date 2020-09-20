@@ -177,6 +177,7 @@ export class CustomerEventService {
 }
 
 
+/** Order's Service */
 @Injectable({
   providedIn: 'root',
 })
@@ -208,6 +209,7 @@ export class OrderService {
       });
     }
     
+    /** Upload an image to the server */
     uploadImage(request: UploadImageRequest): Observable<UploadImageResponse> {
       return this.http.post<UploadImageResponse>(`/api/Order/upload`, getFormData(request), {
           headers: new HttpHeaders({ Accept: 'application/json' }),
@@ -368,6 +370,7 @@ export class SoftDeleteOrderService {
 }
 
 
+/** Jwt Authentication Service */
 @Injectable({
   providedIn: 'root',
 })
@@ -375,6 +378,7 @@ export class AuthenticationService {
 
     constructor(private http: HttpClient) {}
     
+    /** Generates an access token */
     login(request: LoginRequest): Observable<LoginResponse> {
       return this.http.post<LoginResponse>(`/api/auth/login`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),

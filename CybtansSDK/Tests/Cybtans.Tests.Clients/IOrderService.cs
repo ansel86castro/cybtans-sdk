@@ -7,6 +7,9 @@ using Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
+	/// <summary>
+	/// Order's Service
+	/// </summary>
 	[ApiClient]
 	public interface IOrderService
 	{
@@ -23,6 +26,9 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/arg")]
 		Task Argument();
 		
+		/// <summary>
+		/// Upload an image to the server
+		/// </summary>
 		[Post("/api/Order/upload")]
 		Task<UploadImageResponse> UploadImage([Body]UploadImageRequest request);
 		
