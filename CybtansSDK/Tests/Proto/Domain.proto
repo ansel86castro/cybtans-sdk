@@ -2,13 +2,6 @@ syntax = "proto3";
 
 package Cybtans.Tests;
 
-message ReadOnlyEntityDto {
-	string name = 1;
-	datetime createDate = 2 [optional = true];
-	datetime updateDate = 3 [optional = true];
-	int32 id = 4;
-}
-
 message CustomerDto {
 	option description = "Customer Entity";
 
@@ -69,6 +62,13 @@ message OrderStateDto {
 	int32 id = 2;
 }
 
+message ReadOnlyEntityDto {
+	string name = 1;
+	datetime createDate = 2 [optional = true];
+	datetime updateDate = 3 [optional = true];
+	int32 id = 4;
+}
+
 message SoftDeleteOrderDto {
 	string name = 1;
 	bool isDeleted = 2;
@@ -96,36 +96,6 @@ message GetAllRequest {
 	int32 take = 4 [optional = true];
 }
 
-
-// **************************** START ReadOnlyEntity **********************************************
-
-message GetReadOnlyEntityRequest {
-	int32 id = 1;
-}
-
-message GetAllReadOnlyEntityResponse {
-	repeated ReadOnlyEntityDto items = 1;
-	int64 page = 2;
-	int64 totalPages = 3;
-	int64 totalCount = 4;
-}
-
-service ReadOnlyEntityService {
-	option (prefix) ="api/ReadOnlyEntity";
-
-	rpc GetAll(GetAllRequest) returns (GetAllReadOnlyEntityResponse){		
-		option method = "GET";
-		option roles = "admin";
-	};
-
-	rpc Get(GetReadOnlyEntityRequest) returns (ReadOnlyEntityDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		option roles = "admin";
-	};	
-}
-
-// **************************** END ReadOnlyEntity **********************************************
 
 // **************************** START Customer **********************************************
 
@@ -366,6 +336,36 @@ service OrderStateService {
 }
 
 // **************************** END OrderState **********************************************
+
+// **************************** START ReadOnlyEntity **********************************************
+
+message GetReadOnlyEntityRequest {
+	int32 id = 1;
+}
+
+message GetAllReadOnlyEntityResponse {
+	repeated ReadOnlyEntityDto items = 1;
+	int64 page = 2;
+	int64 totalPages = 3;
+	int64 totalCount = 4;
+}
+
+service ReadOnlyEntityService {
+	option (prefix) ="api/ReadOnlyEntity";
+
+	rpc GetAll(GetAllRequest) returns (GetAllReadOnlyEntityResponse){		
+		option method = "GET";
+		option roles = "admin";
+	};
+
+	rpc Get(GetReadOnlyEntityRequest) returns (ReadOnlyEntityDto){	
+		option template = "{id}"; 
+		option method = "GET";
+		option roles = "admin";
+	};	
+}
+
+// **************************** END ReadOnlyEntity **********************************************
 
 // **************************** START SoftDeleteOrder **********************************************
 

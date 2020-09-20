@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Tests.Models
 {
@@ -7,8 +8,10 @@ namespace Cybtans.Tests.Models
 	{
 		private static readonly LoginRequestAccesor __accesor = new LoginRequestAccesor();
 		
+		[Required]
 		public string Username {get; set;}
 		
+		[Required]
 		public string Password {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

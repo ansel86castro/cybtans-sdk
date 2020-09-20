@@ -36,7 +36,8 @@ message DowndloadImageResponse{
 
 
 service OrderService {
-	
+	option description = "Order's Service";
+
 	rpc Foo(void) returns (void){	
 		option template = "foo"; 
 		option method = "GET";		
@@ -60,6 +61,7 @@ service OrderService {
 	rpc UploadImage(UploadImageRequest) returns(UploadImageResponse) {
 		option template = "upload";
 		option method = "POST";
+		option description = "Upload an image to the server";
 	};
 
 	rpc UploadStreamById(UploadStreamByIdRequest) returns (UploadStreamResponse) {
