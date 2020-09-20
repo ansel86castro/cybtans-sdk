@@ -8,7 +8,7 @@ name: $(majorMinorVersion).$(buildVersion)
 # pipeline variables
 variables:   
    buildVersion: $[counter(variables['majorMinorVersion'], 1)]
-   packVersion: $(majorMinorVersion).$(buildVersion)-beta
+   packVersion: $(majorMinorVersion).$(buildVersion)$(Prerelease)
 
 
 trigger:
