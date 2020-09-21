@@ -218,7 +218,7 @@ namespace Cybtans.Proto.Generator
                     packages.AddRange(new[]
                     {
                             $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
-                            $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"1.0.16-beta-4\" />"
+                            $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"1.2.1\" />"
                         });
                     break;
                 case ProjectType.DomainEF:
