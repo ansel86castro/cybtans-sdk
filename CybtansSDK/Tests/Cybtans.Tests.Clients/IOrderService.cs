@@ -41,6 +41,9 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/download")]
 		Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request = null);
 		
+		[Get("/api/Order/{request.Param1}multipath/{request.Param2}")]
+		Task GetMultiPath(MultiPathRequest request);
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		

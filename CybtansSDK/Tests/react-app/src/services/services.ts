@@ -41,6 +41,7 @@ import {
   UploadStreamResponse,
   DownloadImageRequest,
   DowndloadImageResponse,
+  MultiPathRequest,
  } from './models';
 
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
@@ -275,6 +276,12 @@ export class OrderService extends BaseTestsService {
     	let options:RequestInit = { method: 'GET', headers: {  }};
     	let endpoint = this._options.baseUrl+`/api/Order/download`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));
+    }
+    
+    getMultiPath(request:MultiPathRequest) : Promise<ErrorInfo|void> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/Order/${request.param1}multipath/${request.param2}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllOrderResponse> {

@@ -87,6 +87,14 @@ namespace Cybtans.Tests.Controllers
 			return new FileStreamResult(result.Image, result.ContentType) { FileDownloadName = result.FileName };
 		}
 		
+		[HttpGet("{param1}multipath/{param2}")]
+		public Task GetMultiPath(string param1, string param2, [FromQuery]MultiPathRequest __request)
+		{
+			__request.Param1 = param1;
+			__request.Param2 = param2;
+			return _service.GetMultiPath(__request);
+		}
+		
 		[HttpGet]
 		public Task<GetAllOrderResponse> GetAll([FromQuery]GetAllRequest __request)
 		{

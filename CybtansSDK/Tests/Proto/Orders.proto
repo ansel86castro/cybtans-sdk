@@ -34,6 +34,10 @@ message DowndloadImageResponse{
 	stream image = 3;
 }
 
+message MultiPathRequest{
+	string param1 = 1;
+	string param2 = 2;
+}
 
 service OrderService {
 	option description = "Order's Service";
@@ -76,6 +80,11 @@ service OrderService {
 
 	rpc DownloadImage(DownloadImageRequest) returns (DowndloadImageResponse) {
 		option template ="download";
+		option method = "GET";		
+	};
+
+	rpc GetMultiPath(MultiPathRequest) returns (void) {
+		option template ="{param1}multipath/{param2}";
 		option method = "GET";		
 	};
 }
