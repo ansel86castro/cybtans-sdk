@@ -513,6 +513,18 @@ namespace Cybtans.Tests.Integrations
             Assert.Equal(targetHash, destHash);
         }
 
+        [Fact]
+        public async Task GetAllFiltered()
+        {
+            var result = await _service.GetAll(new GetAllRequest
+            {
+                Filter = "customer.name = 'Test' and customer.customerProfile.name = 'Test Profile'"
+            });
+
+            Assert.NotNull(result);
+            Assert.True(result.TotalCount > 0);
+            Assert.NotEmpty(result.Items);
+        }
 
         //[Fact]
         //public async Task ShouldUploadStream()

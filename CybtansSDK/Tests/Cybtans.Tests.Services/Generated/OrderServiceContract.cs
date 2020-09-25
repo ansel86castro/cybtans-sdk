@@ -38,6 +38,9 @@ namespace Cybtans.Tests.Services
 		Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request);
 		
 		
+		Task GetMultiPath(MultiPathRequest request);
+		
+		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);
 		
 		

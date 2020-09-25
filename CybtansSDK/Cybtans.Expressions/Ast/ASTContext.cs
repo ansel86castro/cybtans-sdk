@@ -48,7 +48,7 @@ namespace Cybtans.Expressions.Ast
         }
 
         public VariableDeclaration GetVariableDeclaration(string name)
-        {
+        {           
             if (!variables.TryGetValue(name, out VariableDeclaration v))
             {
                 var targetType = ResponseType ?? ModelType;
@@ -56,7 +56,11 @@ namespace Cybtans.Expressions.Ast
                 PropertyInfo modelProperty;
                 System.Linq.Expressions.Expression linqExpression;
 
-                var responseProperty = targetType.GetProperty(name) ?? targetType.GetProperty(name.Pascal());                
+                var responseProperty = targetType.GetProperty(name);
+                if (responseProperty == null)
+                {                    
+                    responseProperty = targetType.GetProperty(name.Pascal());
+                }
 
                 if (responseProperty == null)
                     throw new RecognitionException("Property not found " + name + " in " + targetType.Name);
@@ -84,7 +88,7 @@ namespace Cybtans.Expressions.Ast
                 }
 
                 v = new PropertyVariableDeclaration(linqExpression, modelProperty);
-                variables.Add(v.Name, v);
+                variables.Add(name, v);
             }
 
             return v;

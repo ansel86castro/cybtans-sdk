@@ -10,7 +10,10 @@ namespace Cybtans.AspNetCore
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var pathParameters = operation.Parameters.Where(x => x.In == ParameterLocation.Path).ToDictionary(x => x.Name);
+            var pathParameters = operation
+                .Parameters
+                .Where(x => x.In == ParameterLocation.Path)
+                .ToDictionary(x => x.Name.ToLowerInvariant());
 
             foreach (var item in (from p in operation.Parameters
                                   where p.In != ParameterLocation.Path && pathParameters.ContainsKey(p.Name.ToLowerInvariant())
@@ -25,7 +28,9 @@ namespace Cybtans.AspNetCore
                 if (schemaRef.Reference?.Id != null)
                 {
                     var schema = context.SchemaRepository.Schemas[schemaRef.Reference.Id];
-                    foreach (var item in schema.Properties.Where(x => pathParameters.ContainsKey(x.Key)).Select(x => x.Key).ToList())
+                    foreach (var item in schema.Properties
+                        .Where(x => pathParameters.ContainsKey(x.Key.ToLowerInvariant()))
+                        .Select(x => x.Key).ToList())
                     {
                         schema.Properties.Remove(item);
                     }

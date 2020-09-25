@@ -3,8 +3,10 @@ syntax = "proto3";
 package Cybtans.Tests;
 
 message LoginRequest {
-	string username = 1 [required = true];
-	string password = 2 [required = true];
+	option (description) = "Authentication Request";
+
+	string username = 1 [required = true, description = "The username"];
+	string password = 2 [required = true, description = "The password"];
 }
 
 message LoginResponse{
@@ -15,7 +17,7 @@ message LoginResponse{
 
 service AuthenticationService{
 	option (prefix) ="api/auth";	
-	option description = "Jwt Authentication Service";
+	option (description) = "Jwt Authentication Service";
 
 	rpc Login(LoginRequest) returns (LoginResponse) {
 		option template ="login";
