@@ -267,8 +267,11 @@ export interface CreateSoftDeleteOrderRequest {
 }
 
 
+/** Authentication Request */
 export interface LoginRequest {
+  /** The username */
   username: string;
+  /** The password */
   password: string;
 }
 
@@ -313,4 +316,10 @@ export interface DowndloadImageResponse {
   fileName: string;
   contentType: string;
   image: Blob|null;
+}
+
+
+export interface MultiPathRequest {
+  param1: string;
+  param2: string;
 }

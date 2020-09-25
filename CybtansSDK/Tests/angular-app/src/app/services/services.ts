@@ -44,6 +44,7 @@ import {
   UploadStreamResponse,
   DownloadImageRequest,
   DowndloadImageResponse,
+  MultiPathRequest,
  } from './models';
 
 function getQueryString(data:any): string|undefined {
@@ -232,6 +233,12 @@ export class OrderService {
       return this.http.get(`/api/Order/download${ getQueryString(request) }`, {
           observe: 'response',
           responseType: 'blob',
+      });
+    }
+    
+    getMultiPath(request: MultiPathRequest): Observable<{}> {
+      return this.http.get<{}>(`/api/Order/${request.param1}multipath/${request.param2}`, {
+          headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }
     

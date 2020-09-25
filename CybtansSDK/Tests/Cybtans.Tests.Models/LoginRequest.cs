@@ -1,17 +1,30 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Tests.Models
 {
+	/// <summary>
+	/// Authentication Request
+	/// </summary>
+	[Description("Authentication Request")]
 	public partial class LoginRequest : IReflectorMetadataProvider
 	{
 		private static readonly LoginRequestAccesor __accesor = new LoginRequestAccesor();
 		
+		/// <summary>
+		/// The username
+		/// </summary>
 		[Required]
+		[Description("The username")]
 		public string Username {get; set;}
 		
+		/// <summary>
+		/// The password
+		/// </summary>
 		[Required]
+		[Description("The password")]
 		public string Password {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

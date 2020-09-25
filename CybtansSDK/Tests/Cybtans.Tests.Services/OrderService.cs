@@ -101,5 +101,10 @@ namespace Cybtans.Tests.Services
             throw new ValidationException("Error Test")
                 .AddError("Test", "Tiene que existir algún análisis especificado");
         }
+
+        public Task GetMultiPath(MultiPathRequest request)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
