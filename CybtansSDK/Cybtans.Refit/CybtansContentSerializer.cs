@@ -41,7 +41,7 @@ namespace Cybtans.Refit
             }
 
             BinarySerializer serializer;
-            if (content.Headers.ContentType == null || content.Headers.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
+            if (content.Headers.ContentType == null || content.Headers.ContentType.CharSet == null || content.Headers.ContentType.CharSet == BinarySerializer.DefaultEncoding.WebName)
             {
                 serializer = Serializer.Value;
             }

@@ -18,6 +18,9 @@ namespace Microsoft.Extensions.DependencyInjection
             config.Bind("TokenManagerOptions", options);
             services.TryAddSingleton(options);
 
+            var apiClient = new AccessTokenApiClient(config.GetValue<string>("TokenManagerOptions:TokenEndpoint"));
+            services.TryAddSingleton<IAccessTokenApiClient>(apiClient);
+
             services.TryAddSingleton<IAccessTokenManager, AccessTokenManager>();
             services.TryAddTransient<TokenManagerAuthenticationHandler>();
 
