@@ -1,6 +1,4 @@
-﻿using IdentityModel.Client;
-using System;
-using System.Net.Http;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,12 +9,14 @@ namespace Cybtans.AspNetCore
     {
         private volatile string token;
         private TokenManagerOptions _options;
-        private int _authenticate =0;
+        private int _authenticate = 0;
         private TaskCompletionSource<string> _tcs;
+        IAccessTokenApiClient _client;
 
-        public AccessTokenManager(TokenManagerOptions options)
+        public AccessTokenManager(TokenManagerOptions options, IAccessTokenApiClient client)
         {
             _options = options;
+            _client = client;
         }
 
         public async ValueTask<string> GetToken()
@@ -28,7 +28,7 @@ namespace Cybtans.AspNetCore
                     _tcs = new TaskCompletionSource<string>();
                     try
                     {
-                        token = await FetchToken();
+                        token = await _client.GetClientCredentialsTokenAsync(_options.ClientId, _options.ClientId, _options.Scope);
                         _tcs.SetResult(token);
                     }
                     catch (Exception e)
@@ -55,27 +55,8 @@ namespace Cybtans.AspNetCore
 
         public void ClearToken()
         {
-            token = null;
-        }
-
-
-        private async Task<string> FetchToken()
-        {
-            var client = new HttpClient();
-            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = _options.TokenEndpoint,
-                ClientId = _options.ClientId,
-                ClientSecret = _options.ClientSecret,
-                Scope = _options.Scope
-            });           
-
-            if (tokenResponse.IsError)
-            {
-                throw new InvalidOperationException(tokenResponse.Error);
-            }
-
-            return tokenResponse.AccessToken;
+            Interlocked.Exchange(ref _authenticate, 0);
+            Interlocked.Exchange(ref token, null);          
         }
     }   
 }
