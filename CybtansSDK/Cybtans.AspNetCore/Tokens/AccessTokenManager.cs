@@ -28,7 +28,7 @@ namespace Cybtans.AspNetCore
                     _tcs = new TaskCompletionSource<string>();
                     try
                     {
-                        token = await _client.GetClientCredentialsTokenAsync(_options.ClientId, _options.ClientId, _options.Scope);
+                        token = await _client.GetClientCredentialsTokenAsync(_options.ClientId, _options.ClientSecret, _options.Scope);
                         _tcs.SetResult(token);
                     }
                     catch (Exception e)
