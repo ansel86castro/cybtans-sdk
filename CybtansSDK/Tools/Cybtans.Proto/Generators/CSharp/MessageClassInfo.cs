@@ -70,7 +70,7 @@ namespace Cybtans.Proto.Generators.CSharp
             _field = field;
             Name = field.Name.Pascal();
             Type = field.Type.GetTypeName();
-            if (field.Option.Optional && field.Type.TypeDeclaration.Nullable)
+            if (field.Option.Optional && field.Type.TypeDeclaration.IsValueType)
             {
                 //check ist the type is nullable
                 Type += "?";
