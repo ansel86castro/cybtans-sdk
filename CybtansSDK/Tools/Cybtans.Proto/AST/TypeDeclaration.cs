@@ -15,7 +15,7 @@ namespace Cybtans.Proto.AST
 
         public bool IsChecked { get; }
 
-        public bool Nullable { get; }
+        public bool IsValueType { get; }        
 
         public bool HasStreams()
         {
@@ -82,7 +82,7 @@ namespace Cybtans.Proto.AST
 
         public bool IsChecked { get; private set; }
 
-        public bool Nullable { get; set; }
+        public bool IsValueType { get; set; }
 
         public override void CheckSemantic(Scope scope, IErrorReporter logger)
         {

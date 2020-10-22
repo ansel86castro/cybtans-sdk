@@ -49,9 +49,7 @@ namespace Cybtans.Proto.Generators.Typescript
             {
                 name = $"{name}[]|null";
             }
-            else if (type.IsMap || 
-                type.TypeDeclaration is MessageDeclaration || 
-                type.TypeDeclaration == PrimitiveType.Stream)
+            else if (type.IsMap || !type.TypeDeclaration.IsValueType)
             {
                 name += "|null";
             }            
@@ -67,7 +65,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 name = $"Partial<{name}>";
             }
 
-            if(!name.EndsWith("null") && field.Option.Optional && field.Type.TypeDeclaration.Nullable)
+            if(!name.EndsWith("null") && ((field.Option.Optional && field.Type.TypeDeclaration.IsValueType) || field.IsNullable))
             {
                 name += "|null";
             }

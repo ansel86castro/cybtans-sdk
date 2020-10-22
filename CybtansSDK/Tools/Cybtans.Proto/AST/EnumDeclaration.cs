@@ -11,7 +11,7 @@ namespace Cybtans.Proto.AST
     {
         public EnumDeclaration(string name, IToken start) : base(start, name)
         {
-            Nullable = true;
+            IsValueType = true;
         }      
 
         public List<EnumMemberDeclaration> Members { get; } = new List<EnumMemberDeclaration>();
