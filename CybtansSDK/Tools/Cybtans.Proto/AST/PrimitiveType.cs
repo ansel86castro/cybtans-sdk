@@ -44,7 +44,7 @@ namespace Cybtans.Proto.AST
 
         public bool IsChecked => true;
 
-        public bool Nullable => ClrType?.IsValueType ?? false;
+        public bool IsValueType => ClrType?.IsValueType ?? false;
 
         public static PrimitiveType GetPrimitiveType(Type type)
         {
