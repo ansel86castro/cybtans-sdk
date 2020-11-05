@@ -14,7 +14,7 @@ namespace Cybtans.Proto.AST
 
         void AddWarning(string message);
 
-        void EnsureNoErrors();
+        void EnsureNoErrors(string filename);
     }
 
     public class ErrorReporter : IErrorReporter
@@ -51,11 +51,14 @@ namespace Cybtans.Proto.AST
             Errors.Add(new ErrorInfo(ErrorType.Warning, message));
         }
 
-        public void EnsureNoErrors()
+        public void EnsureNoErrors(string filename)
         {
             if (Errors.Any(x=>x.Type == ErrorType.Error))
             {
-                throw new Proto3RecognitionException(Errors.Select(x => $"{x.Type} {x.Message}").ToList());
+                var errors = new List<string>();
+                errors.Add($"Errors in {filename}");
+                errors.AddRange(Errors.Select(x => $"{x.Type} {x.Message}"));
+                throw new Proto3RecognitionException(errors);
             }
         }
     }

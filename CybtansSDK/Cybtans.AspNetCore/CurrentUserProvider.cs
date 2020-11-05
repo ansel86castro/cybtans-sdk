@@ -18,7 +18,7 @@ namespace Cybtans.Services.BaseServices
 
         public ClaimsPrincipal User => _accesor.HttpContext.User;
 
-        public string UserId => _accesor.HttpContext.User?.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        public string UserId => _accesor.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
         public string UserName => _accesor.HttpContext.User?.FindFirstValue(ClaimTypes.Name);
     }

@@ -33,7 +33,7 @@ namespace Cybtans.Proto
             
             parser.AddErrorListener(_errorListener);
             var context = parser.proto();            
-            _errorListener.EnsureNoErrors();
+            _errorListener.EnsureNoErrors(filename);
 
             var node = context.file;
             var scope = _scope.CreateScope();
@@ -45,7 +45,7 @@ namespace Cybtans.Proto
 
             node.CheckSemantic(scope, _reporter);
 
-            _reporter.EnsureNoErrors();
+            _reporter.EnsureNoErrors(filename);
             return (node, scope);
         }
 
