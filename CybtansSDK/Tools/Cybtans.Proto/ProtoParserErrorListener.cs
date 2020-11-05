@@ -16,11 +16,15 @@ namespace Cybtans.Proto
             Exceptions.AddRange(Exceptions);            
         }
 
-        public void EnsureNoErrors()
+        public void EnsureNoErrors(string filename)
         {
             if (Errors.Any())
             {
-                throw new Proto3RecognitionException(Errors);
+                var errors = new List<string>();
+                errors.Add(filename);
+                errors.AddRange(Errors);
+
+                throw new Proto3RecognitionException(errors);
             }
         }
     }
