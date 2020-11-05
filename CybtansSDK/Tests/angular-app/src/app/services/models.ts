@@ -2,11 +2,11 @@
 /** Customer Entity */
 export interface CustomerDto {
   /** Customer's Name */
-  name: string;
+  name?: string|null;
   /** Customer's FirstLastName */
-  firstLastName: string;
+  firstLastName?: string|null;
   /** Customer's SecondLastName */
-  secondLastName: string;
+  secondLastName?: string|null;
   /** Customer's Profile Id, can be null */
   customerProfileId?: string|null;
   customerProfile?: CustomerProfileDto|null;
@@ -17,7 +17,7 @@ export interface CustomerDto {
 
 
 export interface CustomerProfileDto {
-  name: string;
+  name?: string|null;
   id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
@@ -25,14 +25,14 @@ export interface CustomerProfileDto {
 
 
 export interface CustomerEventDto {
-  fullName: string;
+  fullName?: string|null;
   customerProfileId?: string|null;
   id: string;
 }
 
 
 export interface OrderItemDto {
-  productName: string;
+  productName?: string|null;
   price: number;
   discount: number;
   orderId: string;
@@ -41,7 +41,7 @@ export interface OrderItemDto {
 
 
 export interface OrderDto {
-  description: string;
+  description?: string|null;
   customerId: string;
   orderStateId: number;
   orderType: OrderTypeEnum;
@@ -68,13 +68,13 @@ export enum OrderTypeEnum {
 
 
 export interface OrderStateDto {
-  name: string;
+  name?: string|null;
   id: number;
 }
 
 
 export interface ReadOnlyEntityDto {
-  name: string;
+  name?: string|null;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
   id: number;
@@ -82,7 +82,7 @@ export interface ReadOnlyEntityDto {
 
 
 export interface SoftDeleteOrderDto {
-  name: string;
+  name?: string|null;
   isDeleted: boolean;
   items?: SoftDeleteOrderItemDto[]|null;
   id: string;
@@ -92,7 +92,7 @@ export interface SoftDeleteOrderDto {
 
 
 export interface SoftDeleteOrderItemDto {
-  name: string;
+  name?: string|null;
   isDeleted: boolean;
   softDeleteOrderId: string;
   id: string;
@@ -102,8 +102,8 @@ export interface SoftDeleteOrderItemDto {
 
 
 export interface GetAllRequest {
-  filter?: string;
-  sort?: string;
+  filter?: string|null;
+  sort?: string|null;
   skip?: number|null;
   take?: number|null;
 }
@@ -116,7 +116,7 @@ export interface GetCustomerRequest {
 
 export interface UpdateCustomerRequest {
   id: string;
-  value?: Partial<CustomerDto|null>;
+  value?: Partial<CustomerDto|null>|null;
 }
 
 
@@ -134,7 +134,7 @@ export interface GetAllCustomerResponse {
 
 
 export interface CreateCustomerRequest {
-  value?: Partial<CustomerDto|null>;
+  value?: Partial<CustomerDto|null>|null;
 }
 
 
@@ -145,7 +145,7 @@ export interface GetCustomerEventRequest {
 
 export interface UpdateCustomerEventRequest {
   id: string;
-  value?: Partial<CustomerEventDto|null>;
+  value?: Partial<CustomerEventDto|null>|null;
 }
 
 
@@ -163,7 +163,7 @@ export interface GetAllCustomerEventResponse {
 
 
 export interface CreateCustomerEventRequest {
-  value?: Partial<CustomerEventDto|null>;
+  value?: Partial<CustomerEventDto|null>|null;
 }
 
 
@@ -174,7 +174,7 @@ export interface GetOrderRequest {
 
 export interface UpdateOrderRequest {
   id: string;
-  value?: Partial<OrderDto|null>;
+  value?: Partial<OrderDto|null>|null;
 }
 
 
@@ -192,7 +192,7 @@ export interface GetAllOrderResponse {
 
 
 export interface CreateOrderRequest {
-  value?: Partial<OrderDto|null>;
+  value?: Partial<OrderDto|null>|null;
 }
 
 
@@ -203,7 +203,7 @@ export interface GetOrderStateRequest {
 
 export interface UpdateOrderStateRequest {
   id: number;
-  value?: Partial<OrderStateDto|null>;
+  value?: Partial<OrderStateDto|null>|null;
 }
 
 
@@ -221,7 +221,7 @@ export interface GetAllOrderStateResponse {
 
 
 export interface CreateOrderStateRequest {
-  value?: Partial<OrderStateDto|null>;
+  value?: Partial<OrderStateDto|null>|null;
 }
 
 
@@ -245,7 +245,7 @@ export interface GetSoftDeleteOrderRequest {
 
 export interface UpdateSoftDeleteOrderRequest {
   id: string;
-  value?: Partial<SoftDeleteOrderDto|null>;
+  value?: Partial<SoftDeleteOrderDto|null>|null;
 }
 
 
@@ -263,63 +263,63 @@ export interface GetAllSoftDeleteOrderResponse {
 
 
 export interface CreateSoftDeleteOrderRequest {
-  value?: Partial<SoftDeleteOrderDto|null>;
+  value?: Partial<SoftDeleteOrderDto|null>|null;
 }
 
 
 /** Authentication Request */
 export interface LoginRequest {
   /** The username */
-  username: string;
+  username?: string|null;
   /** The password */
-  password: string;
+  password?: string|null;
 }
 
 
 /** Authentication response */
 export interface LoginResponse {
   /** Jwt Access Token */
-  token: string;
+  token?: string|null;
 }
 
 
 export interface UploadImageRequest {
-  name: string;
+  name?: string|null;
   size: number;
-  image: Blob|null;
+  image?: Blob|null;
 }
 
 
 export interface UploadImageResponse {
-  url: string;
-  m5checksum: string;
+  url?: string|null;
+  m5checksum?: string|null;
 }
 
 
 export interface UploadStreamByIdRequest {
-  id: string;
-  data: Blob|null;
+  id?: string|null;
+  data?: Blob|null;
 }
 
 
 export interface UploadStreamResponse {
-  m5checksum: string;
+  m5checksum?: string|null;
 }
 
 
 export interface DownloadImageRequest {
-  name: string;
+  name?: string|null;
 }
 
 
 export interface DowndloadImageResponse {
-  fileName: string;
-  contentType: string;
-  image: Blob|null;
+  fileName?: string|null;
+  contentType?: string|null;
+  image?: Blob|null;
 }
 
 
 export interface MultiPathRequest {
-  param1: string;
-  param2: string;
+  param1?: string|null;
+  param2?: string|null;
 }

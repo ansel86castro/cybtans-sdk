@@ -50,6 +50,24 @@ namespace Cybtans.Proto.AST
         {
             return Type.ToString() +" "+base.ToString();
         }
+
+        public bool IsNullable
+        {
+            get
+            {
+                return !Option.Required && 
+                (
+                    Option.Optional
+                    || Type.IsMap
+                    || Type.IsArray
+                    || FieldType is MessageDeclaration
+                    || FieldType == PrimitiveType.String
+                    || FieldType == PrimitiveType.Bytes
+                    || FieldType == PrimitiveType.Stream
+                    || FieldType == PrimitiveType.Object
+                );
+            }
+        }
     }
 
     public class TypeIdentifier:ProtoAstNode

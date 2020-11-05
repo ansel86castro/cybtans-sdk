@@ -27,7 +27,9 @@ namespace Cybtans.Refit
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = await _policy.ExecuteAsync(ctx => base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
+            var response = await _policy.ExecuteAsync(ctx => 
+                base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
+
             if (!response.IsSuccessStatusCode)
             {
                 throw await ApiException.Create(request, response).ConfigureAwait(false);

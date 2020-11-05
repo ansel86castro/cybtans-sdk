@@ -14,7 +14,7 @@ namespace Cybtans.Proto.AST
 
         public MessageDeclaration(IToken start, string name) : base(start, name)
         {
-            Nullable = false;
+            IsValueType = false;
         }                
 
         public List<MessageDeclaration> InnerMessages { get; } = new List<MessageDeclaration>();
