@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class DeleteOrderRequest : IReflectorMetadataProvider
+	public class DeleteOrderRequest : IReflectorMetadataProvider
 	{
 		private static readonly DeleteOrderRequestAccesor __accesor = new DeleteOrderRequestAccesor();
 		
@@ -21,7 +21,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class DeleteOrderRequestAccesor : IReflectorMetadata
+	internal sealed class DeleteOrderRequestAccesor : IReflectorMetadata
 	{
 		public const int Id = 1;
 		private readonly int[] _props = new []

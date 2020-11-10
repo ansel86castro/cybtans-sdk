@@ -82,10 +82,10 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.Append("public ");
 
-            if (_option.PartialClass)
-            {
-                clsWriter.Append("partial ");
-            }
+            //if (_option.PartialClass)
+            //{
+            //    clsWriter.Append("partial ");
+            //}
 
             clsWriter.Append($"class {info.Name} ");
 
@@ -198,6 +198,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 clsWriter.AppendLine(2);
                 GenerateAccesor(info, clsWriter);
             }
+          
 
             writer.Save(info.Name);
 
@@ -205,7 +206,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private void GenerateAccesor(MessageClassInfo info, CodeWriter clsWriter)
         {
-            clsWriter.Append($"public sealed class {info.Name}Accesor : IReflectorMetadata").AppendLine();
+            clsWriter.Append($"internal sealed class {info.Name}Accesor : IReflectorMetadata").AppendLine();
             clsWriter.Append("{")
                 .AppendLine().Append('\t', 1);
 
