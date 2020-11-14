@@ -2,7 +2,7 @@
 /** Customer Entity */
 export interface CustomerDto {
   /** Customer's Name */
-  name?: string|null;
+  name: string;
   /** Customer's FirstLastName */
   firstLastName?: string|null;
   /** Customer's SecondLastName */
@@ -116,7 +116,7 @@ export interface GetCustomerRequest {
 
 export interface UpdateCustomerRequest {
   id: string;
-  value?: Partial<CustomerDto|null>|null;
+  value?: Partial<CustomerDto>|null;
 }
 
 
@@ -134,7 +134,7 @@ export interface GetAllCustomerResponse {
 
 
 export interface CreateCustomerRequest {
-  value?: Partial<CustomerDto|null>|null;
+  value?: Partial<CustomerDto>|null;
 }
 
 
@@ -145,7 +145,7 @@ export interface GetCustomerEventRequest {
 
 export interface UpdateCustomerEventRequest {
   id: string;
-  value?: Partial<CustomerEventDto|null>|null;
+  value?: Partial<CustomerEventDto>|null;
 }
 
 
@@ -163,7 +163,7 @@ export interface GetAllCustomerEventResponse {
 
 
 export interface CreateCustomerEventRequest {
-  value?: Partial<CustomerEventDto|null>|null;
+  value?: Partial<CustomerEventDto>|null;
 }
 
 
@@ -174,7 +174,7 @@ export interface GetOrderRequest {
 
 export interface UpdateOrderRequest {
   id: string;
-  value?: Partial<OrderDto|null>|null;
+  value?: Partial<OrderDto>|null;
 }
 
 
@@ -192,7 +192,7 @@ export interface GetAllOrderResponse {
 
 
 export interface CreateOrderRequest {
-  value?: Partial<OrderDto|null>|null;
+  value?: Partial<OrderDto>|null;
 }
 
 
@@ -203,7 +203,7 @@ export interface GetOrderStateRequest {
 
 export interface UpdateOrderStateRequest {
   id: number;
-  value?: Partial<OrderStateDto|null>|null;
+  value?: Partial<OrderStateDto>|null;
 }
 
 
@@ -221,7 +221,7 @@ export interface GetAllOrderStateResponse {
 
 
 export interface CreateOrderStateRequest {
-  value?: Partial<OrderStateDto|null>|null;
+  value?: Partial<OrderStateDto>|null;
 }
 
 
@@ -245,7 +245,7 @@ export interface GetSoftDeleteOrderRequest {
 
 export interface UpdateSoftDeleteOrderRequest {
   id: string;
-  value?: Partial<SoftDeleteOrderDto|null>|null;
+  value?: Partial<SoftDeleteOrderDto>|null;
 }
 
 
@@ -263,16 +263,16 @@ export interface GetAllSoftDeleteOrderResponse {
 
 
 export interface CreateSoftDeleteOrderRequest {
-  value?: Partial<SoftDeleteOrderDto|null>|null;
+  value?: Partial<SoftDeleteOrderDto>|null;
 }
 
 
 /** Authentication Request */
 export interface LoginRequest {
   /** The username */
-  username?: string|null;
+  username: string;
   /** The password */
-  password?: string|null;
+  password: string;
 }
 
 

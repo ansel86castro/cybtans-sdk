@@ -198,6 +198,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 clsWriter.AppendLine(2);
                 GenerateAccesor(info, clsWriter);
             }
+          
 
             writer.Save(info.Name);
 

@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class CustomerEventDto : IReflectorMetadataProvider
+	public class CustomerEventDto : IReflectorMetadataProvider
 	{
 		private static readonly CustomerEventDtoAccesor __accesor = new CustomerEventDtoAccesor();
 		
@@ -20,7 +20,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class CustomerEventDtoAccesor : IReflectorMetadata
+	internal sealed class CustomerEventDtoAccesor : IReflectorMetadata
 	{
 		public const int FullName = 1;
 		public const int CustomerProfileId = 2;
