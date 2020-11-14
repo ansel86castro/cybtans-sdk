@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class GetAllOrderStateResponse : IReflectorMetadataProvider
+	public class GetAllOrderStateResponse : IReflectorMetadataProvider
 	{
 		private static readonly GetAllOrderStateResponseAccesor __accesor = new GetAllOrderStateResponseAccesor();
 		
@@ -23,7 +23,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class GetAllOrderStateResponseAccesor : IReflectorMetadata
+	internal sealed class GetAllOrderStateResponseAccesor : IReflectorMetadata
 	{
 		public const int Items = 1;
 		public const int Page = 2;

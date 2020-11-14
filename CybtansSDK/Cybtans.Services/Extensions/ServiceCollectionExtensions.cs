@@ -1,4 +1,5 @@
 ﻿using Cybtans.Services.DependencyInjection;
+using Cybtans.Services.Locking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -40,6 +41,12 @@ namespace Cybtans.Services.Extensions
         public static IServiceCollection AddCybtansServices(this IServiceCollection services, string assemblyName)
         {            
             return AddCybtansServices(services, Assembly.LoadFrom(assemblyName));           
+        }
+
+        public static IServiceCollection AddMemoryLockProvider(this IServiceCollection services)
+        {
+            services.TryAddSingleton<ILockProvider, MemoryLockProvider>();
+            return services;
         }
     }
 }

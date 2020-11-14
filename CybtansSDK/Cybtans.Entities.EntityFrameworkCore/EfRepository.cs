@@ -133,7 +133,6 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             _dbSet.RemoveRange(items);
         }
      
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetQueryable().GetEnumerator();

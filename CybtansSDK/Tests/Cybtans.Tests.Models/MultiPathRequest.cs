@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class MultiPathRequest : IReflectorMetadataProvider
+	public class MultiPathRequest : IReflectorMetadataProvider
 	{
 		private static readonly MultiPathRequestAccesor __accesor = new MultiPathRequestAccesor();
 		
@@ -18,7 +18,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class MultiPathRequestAccesor : IReflectorMetadata
+	internal sealed class MultiPathRequestAccesor : IReflectorMetadata
 	{
 		public const int Param1 = 1;
 		public const int Param2 = 2;
