@@ -49,10 +49,10 @@ namespace Cybtans.Proto.Generators.Typescript
             {
                 name = $"{name}[]|null";
             }
-            else if (type.IsMap || !type.TypeDeclaration.IsValueType)
-            {
-                name += "|null";
-            }            
+            //else if (type.IsMap || !type.TypeDeclaration.IsValueType)
+            //{
+            //    name += "|null";
+            //}            
 
             return name;
         }

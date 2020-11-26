@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class DowndloadImageResponse : IReflectorMetadataProvider
+	public class DowndloadImageResponse : IReflectorMetadataProvider
 	{
 		private static readonly DowndloadImageResponseAccesor __accesor = new DowndloadImageResponseAccesor();
 		
@@ -20,7 +20,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class DowndloadImageResponseAccesor : IReflectorMetadata
+	internal sealed class DowndloadImageResponseAccesor : IReflectorMetadata
 	{
 		public const int FileName = 1;
 		public const int ContentType = 2;

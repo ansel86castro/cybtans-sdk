@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class UploadStreamResponse : IReflectorMetadataProvider
+	public class UploadStreamResponse : IReflectorMetadataProvider
 	{
 		private static readonly UploadStreamResponseAccesor __accesor = new UploadStreamResponseAccesor();
 		
@@ -21,7 +21,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class UploadStreamResponseAccesor : IReflectorMetadata
+	internal sealed class UploadStreamResponseAccesor : IReflectorMetadata
 	{
 		public const int M5checksum = 1;
 		private readonly int[] _props = new []

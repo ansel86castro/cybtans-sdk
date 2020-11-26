@@ -55,14 +55,17 @@ namespace Cybtans.Proto.AST
         {
             get
             {
-                return Option.Optional
+                return !Option.Required && 
+                (
+                    Option.Optional
                     || Type.IsMap
                     || Type.IsArray
                     || FieldType is MessageDeclaration
                     || FieldType == PrimitiveType.String
                     || FieldType == PrimitiveType.Bytes
                     || FieldType == PrimitiveType.Stream
-                    || FieldType == PrimitiveType.Object;
+                    || FieldType == PrimitiveType.Object
+                );
             }
         }
     }

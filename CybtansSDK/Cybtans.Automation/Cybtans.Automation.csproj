@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <PackageIcon>cybtan.png</PackageIcon>
+	  <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+	  <PackageTags>automation ,selenium</PackageTags>
+	  <Authors>Ansel Castro</Authors>
+	  <Product>Cybtans SDK</Product>
+	  <Description>Selenium Automation Framework</Description>
+  </PropertyGroup>
+
+	<ItemGroup>		
+		<PackageReference Include="Selenium.Support" Version="3.141.0" />
+		<PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+		<PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="85.0.4183.8700" />
+		<PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.27.0" />
+		<PackageReference Include="Selenium.WebDriver.MicrosoftDriver" Version="17.17134.0" />		
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\cybtan.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+	
+</Project>

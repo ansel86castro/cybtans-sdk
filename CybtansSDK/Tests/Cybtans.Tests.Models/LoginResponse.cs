@@ -8,7 +8,7 @@ namespace Cybtans.Tests.Models
 	/// Authentication response
 	/// </summary>
 	[Description("Authentication response")]
-	public partial class LoginResponse : IReflectorMetadataProvider
+	public class LoginResponse : IReflectorMetadataProvider
 	{
 		private static readonly LoginResponseAccesor __accesor = new LoginResponseAccesor();
 		
@@ -30,7 +30,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class LoginResponseAccesor : IReflectorMetadata
+	internal sealed class LoginResponseAccesor : IReflectorMetadata
 	{
 		public const int Token = 1;
 		private readonly int[] _props = new []

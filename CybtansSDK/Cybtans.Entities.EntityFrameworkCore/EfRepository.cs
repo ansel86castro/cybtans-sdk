@@ -41,8 +41,8 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             return GetQueryable();
         }
 
-        public virtual IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors)
-        {            
+        public IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors)
+        {     
             IQueryable<T> query = GetQueryable();
 
             if (propertySelectors != null)
@@ -54,7 +54,6 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             }
             return query;
         }
-
 
         public virtual IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] propertySelectors = null)
         {
@@ -72,38 +71,38 @@ namespace Cybtans.Entities.EntiyFrameworkCore
        
         public virtual void Update(T item)
         {
-            if (item is IAuditableEntity au)
+            if (item is IAuditableEntity au && au.UpdateDate == null)
             {              
                 au.UpdateDate = DateTime.UtcNow;
             }
-            _dbSet.Update(item);         
+            _context.Update(item);         
         }
 
         public virtual void UpdateRange(IEnumerable<T> items)
         {
             foreach (var item in items)
             {
-                if (item is IAuditableEntity au)
+                if (item is IAuditableEntity au && au.UpdateDate == null)
                 {
                     au.UpdateDate = DateTime.UtcNow;
                 }
-            }
-            _dbSet.UpdateRange(items);
+            }            
+            _context.UpdateRange(items);
         }
 
         public virtual void Add(T item)
         {
             if(item is IAuditableEntity au)
             {
-                var principal = Thread.CurrentPrincipal;
-                if(principal?.Identity?.Name != null)
+                if (au.Creator == null)
                 {
+                    var principal = Thread.CurrentPrincipal;
                     au.Creator = principal?.Identity?.Name;
-                }
+                }                
                 au.CreateDate = DateTime.UtcNow;
             }
 
-            _dbSet.Add(item);
+            _context.Add(item);
         }
 
         public virtual void AddRange(IEnumerable<T> items)
@@ -112,28 +111,28 @@ namespace Cybtans.Entities.EntiyFrameworkCore
             {
                 if (item is IAuditableEntity au)
                 {
-                    var principal = Thread.CurrentPrincipal;
-                    if (principal?.Identity?.Name != null)
+                    if (au.Creator == null)
                     {
-                        au.Creator = principal?.Identity?.Name;
+                        var principal = Thread.CurrentPrincipal;                     
+                        au.Creator = principal?.Identity?.Name;                        
                     }
                     au.CreateDate = DateTime.UtcNow;
                 }
             }
-            _dbSet.AddRange(items);
+
+            _context.AddRange(items);
         }
 
         public virtual void Remove(T item)
         {          
-            _dbSet.Remove(item);
+            _context.Remove(item);
         }
 
         public virtual void RemoveRange(IEnumerable<T> items)
         {           
-            _dbSet.RemoveRange(items);
+            _context.RemoveRange(items);
         }
      
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetQueryable().GetEnumerator();
