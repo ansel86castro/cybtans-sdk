@@ -27,10 +27,13 @@ namespace Cybtans.Tests.Services
                 _factory.SetResult<Customer>("test", new Customer { Id = Guid.NewGuid(), Name = "TEST" });
             });
 
+            Assert.True(_factory.HasOperation("test"));
+
             var customer = await op.GetResult();
             Assert.NotNull(customer);
             Assert.Equal("TEST", customer.Name);
             Assert.True(op.IsDisposed);
+            Assert.False(_factory.HasOperation("test"));
         }
 
         [Fact]
@@ -65,6 +68,7 @@ namespace Cybtans.Tests.Services
             }
 
             Assert.True(op.IsDisposed);
+            Assert.False(_factory.HasOperation("test"));
         }
 
         [Fact]
@@ -79,6 +83,8 @@ namespace Cybtans.Tests.Services
             var ex = await Assert.ThrowsAsync<TaskCanceledException>(()=>
                 _factory.GetResult<Customer>("test", TimeSpan.FromMilliseconds(100)));
             Assert.NotNull(ex);
+
+            Assert.False(_factory.HasOperation("test"));
         }     
     }
 }
