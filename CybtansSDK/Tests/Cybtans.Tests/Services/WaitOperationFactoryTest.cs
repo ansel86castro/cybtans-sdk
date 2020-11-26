@@ -1,8 +1,6 @@
-﻿using Cybtans.Services.Utils;
+﻿using Cybtans.Services;
 using Cybtans.Tests.Domain;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;

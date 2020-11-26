@@ -50,7 +50,7 @@ steps:
       dotnet pack ./CybtansSDK/Cybtans.Messaging/Cybtans.Messaging.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
       dotnet pack ./CybtansSDK/Cybtans.Messaging.RabbitMQ/Cybtans.Messaging.RabbitMQ.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
       dotnet pack ./CybtansSDK/Cybtans.Services/Cybtans.Services.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Testing/Cybtans.Testing.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      dotnet pack ./CybtansSDK/Cybtans.Automation/Cybtans.Automation.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
 - task: NuGetCommand@2
   displayName: 'Publish Packages'
