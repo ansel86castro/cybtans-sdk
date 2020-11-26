@@ -5,6 +5,6 @@ namespace Cybtans.Services.Locking
 {
     public interface ILock: IDisposable
     {
-        Task RenewLock(TimeSpan time);
+        Task ExtendLock();
     }
 }

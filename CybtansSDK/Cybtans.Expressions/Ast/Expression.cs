@@ -89,7 +89,7 @@ namespace Cybtans.Expressions.Ast
                     }
                     else
                     {
-                        if (DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                        if (!DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                         {
                             throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
                         }
@@ -120,7 +120,7 @@ namespace Cybtans.Expressions.Ast
                         }
                         else
                         {
-                            if (DateTime.TryParse(literal.Value, out var date))//!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                            if (!DateTime.TryParse(literal.Value, out var date)) //!DateTime.TryParseExact(literal.Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                             {
                                 throw new RecognitionException($"Invalid date format '{literal.Value}'", literal.Col, literal.Row);
                             }

@@ -96,11 +96,9 @@ namespace Cybtans.Test.RestApi
              });
 
             services.AddDbContextEventPublisher<AdventureContext>();
-
             services.AddTransient<AdventureContextSeed>();
-
-
             services.AddAccessTokenManager(Configuration);
+            services.AddLocalCache();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
