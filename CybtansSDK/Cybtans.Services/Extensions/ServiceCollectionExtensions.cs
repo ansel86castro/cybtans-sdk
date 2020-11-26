@@ -1,4 +1,5 @@
-﻿using Cybtans.Services.DependencyInjection;
+﻿using Cybtans.Services.Caching;
+using Cybtans.Services.DependencyInjection;
 using Cybtans.Services.Locking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,6 +47,43 @@ namespace Cybtans.Services.Extensions
         public static IServiceCollection AddMemoryLockProvider(this IServiceCollection services)
         {
             services.TryAddSingleton<ILockProvider, MemoryLockProvider>();
+            return services;
+        }
+
+
+        public static IServiceCollection AddRedisConnectionProvider(this IServiceCollection services, Action<RedisOptions> configure)
+        {
+            services.Configure<RedisOptions>(configure);
+            services.TryAddSingleton<RedisConnectionProvider>();
+            return services;
+        }
+
+
+        public static IServiceCollection AddLocalCache(this IServiceCollection services)
+        {
+            services.TryAddSingleton<ICacheService, LocalCache>();
+            return services;
+        }
+
+        public static IServiceCollection AddRedisCache(this IServiceCollection services, Action<RedisOptions> configure = null)
+        {
+            AddRedisConnectionProvider(services, configure);
+            services.TryAddSingleton<ICacheService, RedisCache>();
+            return services;
+        }
+
+        public static IServiceCollection AddDistributedLockProvider(this IServiceCollection services, Action<RedisOptions> configureRedis, Action<LockOptions> configureLocking)
+        {
+            AddRedisConnectionProvider(services, configureRedis);
+            return AddDistributedLockProvider(services, configureLocking);
+        }
+
+        public static IServiceCollection AddDistributedLockProvider(this IServiceCollection services, Action<LockOptions> configureLocking = null)
+        {
+            if(configureLocking != null)
+                services.Configure(configureLocking);
+
+            services.TryAddSingleton<ILockProvider, DistributedLockProvider>();
             return services;
         }
     }

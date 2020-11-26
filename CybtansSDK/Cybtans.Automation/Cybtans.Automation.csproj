@@ -7,7 +7,7 @@
 	  <PackageTags>automation ,selenium</PackageTags>
 	  <Authors>Ansel Castro</Authors>
 	  <Product>Cybtans SDK</Product>
-	  <Description> Selenium Automation Framework</Description>
+	  <Description>Selenium Automation Framework</Description>
   </PropertyGroup>
 
 	<ItemGroup>		

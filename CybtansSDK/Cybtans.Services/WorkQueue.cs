@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cybtans.Services.Utils
+namespace Cybtans.Services
 {
     public class WorkQueue : IDisposable
     {

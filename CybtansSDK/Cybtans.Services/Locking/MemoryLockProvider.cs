@@ -68,7 +68,7 @@ namespace Cybtans.Services.Locking
                 }                
             }
 
-            public Task RenewLock(TimeSpan time)
+            public Task ExtendLock()
             {
                return Task.CompletedTask;
             }
