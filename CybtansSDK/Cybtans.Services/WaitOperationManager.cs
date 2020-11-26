@@ -31,7 +31,12 @@ namespace Cybtans.Services
 
     public class WaitOperationManager
     {
-        ConcurrentDictionary<string, IAwaitableOperation> _operations = new ConcurrentDictionary<string, IAwaitableOperation>();
+       private readonly ConcurrentDictionary<string, IAwaitableOperation> _operations = new ConcurrentDictionary<string, IAwaitableOperation>();
+
+        public bool HasOperation(string key)
+        {
+            return _operations.ContainsKey(key);
+        }
 
         public IAwaitableOperation<T> GetOperation<T>(string key)
         {
@@ -99,7 +104,7 @@ namespace Cybtans.Services
                 {
                     ct.Register(() =>
                     {
-                        _tcs.SetCanceled();
+                        _tcs.SetCanceled();                      
 
                     });
                 }
