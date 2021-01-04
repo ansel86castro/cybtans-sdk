@@ -8,6 +8,7 @@ import Orders from './components/Orders';
 import './App.css';
 import OrderStates from './components/OrderStates';
 import Upload from './components/Upload';
+import Realtime from './components/Realtime';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route  exact path='/orders' component={Orders} />
       <Route  exact path='/orders/states' component={OrderStates} />
       <Route  exact path='/upload' component={Upload} />
+      <Route  exact path='/realtime' component={Realtime} />
     </Layout>
     </Router>
   );

@@ -102,4 +102,34 @@ namespace Microsoft.Extensions.DependencyInjection
         }
        
     }
+
+    public static class BroadCastServiceCollectionExtensions
+    {
+        public static IServiceCollection AddBroadCastService(
+            this IServiceCollection services, 
+            BroadcastServiceOptions options,  
+            Action<IBroadcastSubscriptionManager>? subcriptionConfig = null,
+            Action<ConnectionFactory>? connectionConfig = null)
+        {
+            services.TryAddSingleton<IBroadcastService>(p =>
+            {
+                var loggerFactory = p.GetService<ILoggerFactory>();
+
+                var manager = new BroadcastSubscriptionManager(options, p, loggerFactory);
+                subcriptionConfig?.Invoke(manager);
+
+                var factory = new ConnectionFactory() { HostName = options.Hostname };
+                connectionConfig?.Invoke(factory);                
+                
+                return new RabbitBroadCastService(options, factory, manager, loggerFactory);
+            });
+            return services;
+        }
+
+        public static void StartBroadCastService(this IServiceProvider provider)
+        {
+            var queue = provider.GetRequiredService<IBroadcastService>();
+            queue.Start();
+        }
+    }
 }

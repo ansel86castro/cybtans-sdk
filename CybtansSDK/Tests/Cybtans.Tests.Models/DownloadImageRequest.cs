@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class DownloadImageRequest : IReflectorMetadataProvider
+	public partial class DownloadImageRequest : IReflectorMetadataProvider
 	{
 		private static readonly DownloadImageRequestAccesor __accesor = new DownloadImageRequestAccesor();
 		
@@ -21,7 +21,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class DownloadImageRequestAccesor : IReflectorMetadata
+	public sealed class DownloadImageRequestAccesor : IReflectorMetadata
 	{
 		public const int Name = 1;
 		private readonly int[] _props = new []
