@@ -12,6 +12,7 @@ using System.IO;
 using System.Diagnostics.Contracts;
 using Cybtans.Services.Security;
 using Cybtans.Tests.Domain;
+using Cybtans.Messaging;
 
 namespace Cybtans.Tests.Services
 {
@@ -19,8 +20,14 @@ namespace Cybtans.Tests.Services
     public class OrderService : CrudService<Order, Guid, OrderDto, GetOrderRequest, GetAllRequest, GetAllOrderResponse, UpdateOrderRequest, CreateOrderRequest, DeleteOrderRequest>, 
         IOrderService
     {
-        public OrderService(IRepository<Order, Guid> repository, IUnitOfWork uow, IMapper mapper, ILogger<OrderService> logger)
-            : base(repository, uow, mapper, logger) { }
+        private IBroadcastService _broadCastService;
+
+        public OrderService(IRepository<Order, Guid> repository, IUnitOfWork uow, IMapper mapper, ILogger<OrderService> logger,
+            IBroadcastService broadCastService)
+            : base(repository, uow, mapper, logger) 
+        {
+            _broadCastService = broadCastService;
+        }
 
         public Task Argument()
         {
@@ -105,6 +112,11 @@ namespace Cybtans.Tests.Services
         public Task GetMultiPath(MultiPathRequest request)
         {
             return Task.CompletedTask;
+        }
+
+        public async Task SendNotification(OrderNotification request)
+        {
+            await _broadCastService.Publish(request, "Orders");
         }
     }
 }

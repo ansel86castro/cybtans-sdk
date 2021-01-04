@@ -41,6 +41,9 @@ namespace Cybtans.Tests.Services
 		Task GetMultiPath(MultiPathRequest request);
 		
 		
+		Task SendNotification(OrderNotification request);
+		
+		
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request);
 		
 		

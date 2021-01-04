@@ -18,8 +18,10 @@ export async function fetchIntercep(input: RequestInfo, options?: RequestInit): 
         if(!token){
             let srv = new AuthenticationService(fetch.bind(window), { baseUrl: process.env.REACT_APP_API_URL })
             let response = await srv.login({ username: 'admin', password: 'admin'});
-            localStorage.setItem('token', response.token);
-            token = response.token;
+            if(response.token){
+                localStorage.setItem('token', response.token);
+                token = response.token;
+            }
         }
         
         (options.headers as any) ['Authorization'] = `Bearer ${token}`;        

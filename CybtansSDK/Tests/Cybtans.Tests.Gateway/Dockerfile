@@ -8,14 +8,15 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Tests/Cybtans.Tests.Gateway/Cybtans.Tests.Gateway.csproj", "Tests/Cybtans.Tests.Gateway/"]
-COPY ["Tests/Cybtans.Tests.Models/Cybtans.Tests.Models.csproj", "Tests/Cybtans.Tests.Models/"]
+COPY ["Cybtans.Messaging.RabbitMQ/Cybtans.Messaging.RabbitMQ.csproj", "Cybtans.Messaging.RabbitMQ/"]
+COPY ["Cybtans.Messaging/Cybtans.Messaging.csproj", "Cybtans.Messaging/"]
 COPY ["Cybtans.Serialization/Cybtans.Serialization.csproj", "Cybtans.Serialization/"]
+COPY ["Tests/Cybtans.Tests.Models/Cybtans.Tests.Models.csproj", "Tests/Cybtans.Tests.Models/"]
 COPY ["Cybtans.AspNetCore/Cybtans.AspNetCore.csproj", "Cybtans.AspNetCore/"]
 COPY ["Cybtans.Refit/Cybtans.Refit.csproj", "Cybtans.Refit/"]
 COPY ["Cybtans.Services/Cybtans.Services.csproj", "Cybtans.Services/"]
 COPY ["Cybtans.Entities.EventLog/Cybtans.Entities.EventLog.csproj", "Cybtans.Entities.EventLog/"]
 COPY ["Cybtans.Entities/Cybtans.Entities.csproj", "Cybtans.Entities/"]
-COPY ["Cybtans.Messaging/Cybtans.Messaging.csproj", "Cybtans.Messaging/"]
 COPY ["Cybtans.Expressions/Cybtans.Expressions.csproj", "Cybtans.Expressions/"]
 COPY ["Tests/Cybtans.Tests.Clients/Cybtans.Tests.Clients.csproj", "Tests/Cybtans.Tests.Clients/"]
 RUN dotnet restore "Tests/Cybtans.Tests.Gateway/Cybtans.Tests.Gateway.csproj"

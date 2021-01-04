@@ -95,6 +95,14 @@ namespace Cybtans.Tests.Controllers
 			return _service.GetMultiPath(__request);
 		}
 		
+		[HttpPost("{orderId}/notify/{userId}")]
+		public Task SendNotification(string orderId, string userId, [FromBody]OrderNotification __request)
+		{
+			__request.OrderId = orderId;
+			__request.UserId = userId;
+			return _service.SendNotification(__request);
+		}
+		
 		[HttpGet]
 		public Task<GetAllOrderResponse> GetAll([FromQuery]GetAllRequest __request)
 		{

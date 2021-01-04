@@ -9,7 +9,7 @@ namespace Cybtans.Tests.Models
 	/// Authentication Request
 	/// </summary>
 	[Description("Authentication Request")]
-	public class LoginRequest : IReflectorMetadataProvider
+	public partial class LoginRequest : IReflectorMetadataProvider
 	{
 		private static readonly LoginRequestAccesor __accesor = new LoginRequestAccesor();
 		
@@ -34,7 +34,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class LoginRequestAccesor : IReflectorMetadata
+	public sealed class LoginRequestAccesor : IReflectorMetadata
 	{
 		public const int Username = 1;
 		public const int Password = 2;

@@ -9,7 +9,7 @@ namespace Cybtans.Tests.Models
 	/// Customer Entity
 	/// </summary>
 	[Description("Customer Entity")]
-	public class CustomerDto : IReflectorMetadataProvider
+	public partial class CustomerDto : IReflectorMetadataProvider
 	{
 		private static readonly CustomerDtoAccesor __accesor = new CustomerDtoAccesor();
 		
@@ -54,7 +54,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class CustomerDtoAccesor : IReflectorMetadata
+	public sealed class CustomerDtoAccesor : IReflectorMetadata
 	{
 		public const int Name = 1;
 		public const int FirstLastName = 2;

@@ -1,15 +1,48 @@
 version: '3.4'
 
 services:
+
+#*** INFRAESTUCTURE
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbit
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+#******************
   cybtans.tests.restapi:
     image: ${DOCKER_REGISTRY-}cybtanstestsrestapi
     build:
       context: .
       dockerfile: Tests/Cybtans.Tests.RestApi/Dockerfile
+    depends_on:
+    - rabbitmq
 
   cybtans.tests.gateway:
     image: ${DOCKER_REGISTRY-}cybtanstestsgateway
     build:
       context: .
       dockerfile: Tests/Cybtans.Tests.Gateway/Dockerfile
+    depends_on:
+    - rabbitmq
+    - cybtans.tests.restapi
+
+  cybtans.tests.gateway2:
+    image: ${DOCKER_REGISTRY-}cybtanstestsgateway2
+    build:
+      context: .
+      dockerfile: Tests/Cybtans.Tests.Gateway/Dockerfile
+    depends_on:
+    - rabbitmq
+    - cybtans.tests.restapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "6002:80"
+      - "6003:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 

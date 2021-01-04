@@ -3,13 +3,15 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public partial class UpdateSoftDeleteOrderRequest : IReflectorMetadataProvider
+	public partial class OrderNotification : IReflectorMetadataProvider
 	{
-		private static readonly UpdateSoftDeleteOrderRequestAccesor __accesor = new UpdateSoftDeleteOrderRequestAccesor();
+		private static readonly OrderNotificationAccesor __accesor = new OrderNotificationAccesor();
 		
-		public Guid Id {get; set;}
+		public string UserId {get; set;}
 		
-		public SoftDeleteOrderDto Value {get; set;}
+		public string OrderId {get; set;}
+		
+		public string Msg {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -18,13 +20,14 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	public sealed class UpdateSoftDeleteOrderRequestAccesor : IReflectorMetadata
+	public sealed class OrderNotificationAccesor : IReflectorMetadata
 	{
-		public const int Id = 1;
-		public const int Value = 2;
+		public const int UserId = 1;
+		public const int OrderId = 2;
+		public const int Msg = 3;
 		private readonly int[] _props = new []
 		{
-			Id,Value
+			UserId,OrderId,Msg
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -33,8 +36,9 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		       Id => "Id",
-		       Value => "Value",
+		       UserId => "UserId",
+		       OrderId => "OrderId",
+		       Msg => "Msg",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -44,8 +48,9 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyName switch
 		    {
-		        "Id" => Id,
-		        "Value" => Value,
+		        "UserId" => UserId,
+		        "OrderId" => OrderId,
+		        "Msg" => Msg,
 		
 		        _ => -1,
 		    };
@@ -55,8 +60,9 @@ namespace Cybtans.Tests.Models
 		{
 		    return propertyCode switch
 		    {
-		        Id => typeof(Guid),
-		        Value => typeof(SoftDeleteOrderDto),
+		        UserId => typeof(string),
+		        OrderId => typeof(string),
+		        Msg => typeof(string),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -64,11 +70,12 @@ namespace Cybtans.Tests.Models
 		       
 		public object GetValue(object target, int propertyCode)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    OrderNotification obj = (OrderNotification)target;
 		    return propertyCode switch
 		    {
-		        Id => obj.Id,
-		        Value => obj.Value,
+		        UserId => obj.UserId,
+		        OrderId => obj.OrderId,
+		        Msg => obj.Msg,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -76,11 +83,12 @@ namespace Cybtans.Tests.Models
 		
 		public void SetValue(object target, int propertyCode, object value)
 		{
-		    UpdateSoftDeleteOrderRequest obj = (UpdateSoftDeleteOrderRequest)target;
+		    OrderNotification obj = (OrderNotification)target;
 		    switch (propertyCode)
 		    {
-		        case Id:  obj.Id = (Guid)value;break;
-		        case Value:  obj.Value = (SoftDeleteOrderDto)value;break;
+		        case UserId:  obj.UserId = (string)value;break;
+		        case OrderId:  obj.OrderId = (string)value;break;
+		        case Msg:  obj.Msg = (string)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

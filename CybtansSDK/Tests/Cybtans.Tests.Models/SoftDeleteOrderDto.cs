@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Cybtans.Tests.Models
 {
-	public class SoftDeleteOrderDto : IReflectorMetadataProvider
+	public partial class SoftDeleteOrderDto : IReflectorMetadataProvider
 	{
 		private static readonly SoftDeleteOrderDtoAccesor __accesor = new SoftDeleteOrderDtoAccesor();
 		
@@ -27,7 +27,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class SoftDeleteOrderDtoAccesor : IReflectorMetadata
+	public sealed class SoftDeleteOrderDtoAccesor : IReflectorMetadata
 	{
 		public const int Name = 1;
 		public const int IsDeleted = 2;

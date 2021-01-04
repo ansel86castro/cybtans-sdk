@@ -45,6 +45,7 @@ import {
   DownloadImageRequest,
   DowndloadImageResponse,
   MultiPathRequest,
+  OrderNotification,
  } from './models';
 
 function getQueryString(data:any): string|undefined {
@@ -239,6 +240,12 @@ export class OrderService {
     getMultiPath(request: MultiPathRequest): Observable<{}> {
       return this.http.get<{}>(`/api/Order/${request.param1}multipath/${request.param2}`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
+      });
+    }
+    
+    sendNotification(request: OrderNotification): Observable<{}> {
+      return this.http.post<{}>(`/api/Order/${request.orderId}/notify/${request.userId}`, request, {
+          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     

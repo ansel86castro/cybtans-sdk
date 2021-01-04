@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class UploadStreamByIdRequest : IReflectorMetadataProvider
+	public partial class UploadStreamByIdRequest : IReflectorMetadataProvider
 	{
 		private static readonly UploadStreamByIdRequestAccesor __accesor = new UploadStreamByIdRequestAccesor();
 		
@@ -18,7 +18,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class UploadStreamByIdRequestAccesor : IReflectorMetadata
+	public sealed class UploadStreamByIdRequestAccesor : IReflectorMetadata
 	{
 		public const int Id = 1;
 		public const int Data = 2;

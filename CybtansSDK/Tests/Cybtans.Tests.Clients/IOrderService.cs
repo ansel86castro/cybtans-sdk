@@ -44,6 +44,9 @@ namespace Cybtans.Tests.Clients
 		[Get("/api/Order/{request.Param1}multipath/{request.Param2}")]
 		Task GetMultiPath(MultiPathRequest request);
 		
+		[Post("/api/Order/{request.OrderId}/notify/{request.UserId}")]
+		Task SendNotification([Body]OrderNotification request);
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		

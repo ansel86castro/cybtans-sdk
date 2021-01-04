@@ -323,3 +323,10 @@ export interface MultiPathRequest {
   param1?: string|null;
   param2?: string|null;
 }
+
+
+export interface OrderNotification {
+  userId?: string|null;
+  orderId?: string|null;
+  msg?: string|null;
+}
