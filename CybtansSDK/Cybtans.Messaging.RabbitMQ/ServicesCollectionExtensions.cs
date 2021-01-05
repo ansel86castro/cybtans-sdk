@@ -126,6 +126,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IServiceCollection AddBroadCastService(this IServiceCollection services,
+            IConfiguration config,
+            Action<IBroadcastSubscriptionManager>? subcriptionConfig = null,
+            Action<ConnectionFactory>? connectionConfig = null)
+        {
+            return AddBroadCastService(services, config.Get<BroadcastServiceOptions>(), subcriptionConfig, connectionConfig);
+        }
+
         public static void StartBroadCastService(this IServiceProvider provider)
         {
             var queue = provider.GetRequiredService<IBroadcastService>();

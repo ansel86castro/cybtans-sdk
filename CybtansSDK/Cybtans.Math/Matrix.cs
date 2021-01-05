@@ -69,7 +69,7 @@ namespace Cybtans.Math
             this.M44 = m44;
         }
 
-        public Matrix(Vector4 x, Vector4 y, Vector4 z, Vector4 t)
+        public Matrix(in Vector4 x, in Vector4 y, in Vector4 z, in Vector4 t)
         {
             M11 = x.X; M12 = x.Y; M13 = x.Z; M14 = x.W;
             M21 = y.X; M22 = y.Y; M23 = y.Z; M24 = y.W;
@@ -77,7 +77,7 @@ namespace Cybtans.Math
             M41 = t.X; M42 = t.Y; M43 = t.Z; M44 = t.W;
         }
 
-        public Matrix(Vector3 x, Vector3 y, Vector3 z, Vector3 t)
+        public Matrix(in Vector3 x, in Vector3 y, in Vector3 z, in Vector3 t)
         {
             M11 = x.X; 
             M12 = x.Y; 
