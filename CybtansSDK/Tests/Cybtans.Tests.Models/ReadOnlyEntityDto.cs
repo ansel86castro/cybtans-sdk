@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class ReadOnlyEntityDto : IReflectorMetadataProvider
+	public partial class ReadOnlyEntityDto : IReflectorMetadataProvider
 	{
 		private static readonly ReadOnlyEntityDtoAccesor __accesor = new ReadOnlyEntityDtoAccesor();
 		
@@ -22,7 +22,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class ReadOnlyEntityDtoAccesor : IReflectorMetadata
+	public sealed class ReadOnlyEntityDtoAccesor : IReflectorMetadata
 	{
 		public const int Name = 1;
 		public const int CreateDate = 2;

@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using FluentValidation.AspNetCore;
@@ -18,9 +16,9 @@ using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Services.Extensions;
 using Cybtans.Tests.Services;
 using System.Data.Common;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Cybtans.Tests.Domain.EF;
 using Cybtans.Tests.Domain;
+using Cybtans.Messaging;
 
 namespace Cybtans.Test.RestApi
 {
@@ -57,6 +55,8 @@ namespace Cybtans.Test.RestApi
 
             #endregion
 
+            #region Data Access Layer
+
             services.AddSingleton(AdventureContext.CreateInMemoryDatabase("RestAPI"));
             services.AddDbContext<AdventureContext>(
                 (srv,builder) =>
@@ -69,8 +69,12 @@ namespace Cybtans.Test.RestApi
             .AddUnitOfWork<AdventureContext>()
             .AddRepositories();
 
-            services.AddAutoMapper(typeof(TestStub));
-         
+            services.AddTransient<AdventureContextSeed>();
+
+            #endregion
+
+            #region WebAPI
+            
             services
             .AddControllers(options =>
             {
@@ -78,14 +82,22 @@ namespace Cybtans.Test.RestApi
             })
             .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
             .AddCybtansFormatter();
+            
+            #endregion
+
+            #region App Services
 
             services.AddOptions<JwtOptions>().Bind(Configuration.GetSection("Jwt"));
-
+            services.AddAutoMapper(typeof(TestStub));
             services.AddCybtansServices(typeof(TestStub).Assembly);
 
             services.AddSingleton<EntityEventDelegateHandler<OrderMessageHandler>>();
             services.AddTransient<OrderMessageHandler>();
             services.AddMessageHandler<CustomerEvent, Customer>();
+
+            #endregion
+
+            #region Messaging
 
             services.AddMessageQueue(Configuration)
              .ConfigureSubscriptions(sm =>
@@ -96,11 +108,19 @@ namespace Cybtans.Test.RestApi
              });
 
             services.AddDbContextEventPublisher<AdventureContext>();
-            services.AddTransient<AdventureContextSeed>();
+
             services.AddAccessTokenManager(Configuration);
+
+            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>());
+            #endregion
+
+            #region Caching 
+
             services.AddLocalCache();
+
+            #endregion
         }
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             EfAsyncQueryExecutioner.Setup();

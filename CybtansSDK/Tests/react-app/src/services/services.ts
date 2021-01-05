@@ -42,6 +42,7 @@ import {
   DownloadImageRequest,
   DowndloadImageResponse,
   MultiPathRequest,
+  OrderNotification,
  } from './models';
 
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
@@ -281,6 +282,13 @@ export class OrderService extends BaseTestsService {
     getMultiPath(request:MultiPathRequest) : Promise<ErrorInfo|void> {
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/${request.param1}multipath/${request.param2}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
+    }
+    
+    sendNotification(request:OrderNotification) : Promise<ErrorInfo|void> {
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	options.body = JSON.stringify(request);
+    	let endpoint = this._options.baseUrl+`/api/Order/${request.orderId}/notify/${request.userId}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     

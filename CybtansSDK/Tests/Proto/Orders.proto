@@ -39,6 +39,12 @@ message MultiPathRequest{
 	string param2 = 2;
 }
 
+message OrderNotification{
+	string userId = 1;
+	string orderId = 2;
+	string msg = 3;
+}
+
 service OrderService {
 	option description = "Order's Service";
 
@@ -86,5 +92,10 @@ service OrderService {
 	rpc GetMultiPath(MultiPathRequest) returns (void) {
 		option template ="{param1}multipath/{param2}";
 		option method = "GET";		
+	};
+
+	rpc SendNotification(OrderNotification) returns (void) {
+		option template = "{orderId}/notify/{userId}";
+		option method = "POST";
 	};
 }

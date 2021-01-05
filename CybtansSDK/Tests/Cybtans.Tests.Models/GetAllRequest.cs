@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class GetAllRequest : IReflectorMetadataProvider
+	public partial class GetAllRequest : IReflectorMetadataProvider
 	{
 		private static readonly GetAllRequestAccesor __accesor = new GetAllRequestAccesor();
 		
@@ -22,7 +22,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class GetAllRequestAccesor : IReflectorMetadata
+	public sealed class GetAllRequestAccesor : IReflectorMetadata
 	{
 		public const int Filter = 1;
 		public const int Sort = 2;

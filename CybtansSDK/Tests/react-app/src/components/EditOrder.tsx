@@ -82,7 +82,7 @@ export default function EditOrder(props:{
             <h2>{ props.id && 'Update' || 'Create'} Order</h2>
             <div className="form-group">
                 <label>Description</label>
-                <input className="form-control" name="description" ref={register({ required: true })} defaultValue={state.item?.description} />
+                <input className="form-control" name="description" ref={register({ required: true })} defaultValue={state.item?.description || ''} />
                 {errors.description && <span>This field is required</span>}
             </div>
 

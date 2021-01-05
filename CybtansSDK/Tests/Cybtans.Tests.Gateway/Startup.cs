@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Cybtans.AspNetCore;
+using Cybtans.Messaging;
 using Cybtans.Tests.Clients;
+using Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SignalRChat.Hubs;
 
 namespace Cybtans.Tests.Gateway
 {
@@ -57,6 +60,22 @@ namespace Cybtans.Tests.Gateway
             services
                 .AddControllers(options => options.Filters.Add(new UpstreamExceptionFilter()))
                 .AddCybtansFormatter();
+
+            #region Messaging
+
+            services.AddScoped<OrderNotificationHandler>();            
+            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>(), sm=>
+            {
+                sm.Subscribe<OrderNotification, OrderNotificationHandler>("Orders");
+            });
+
+            #endregion
+
+            #region SignalR
+            
+            services.AddSignalR();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +115,7 @@ namespace Cybtans.Tests.Gateway
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<OrderNotificationHub>("/ordershub");
             });
         }
 

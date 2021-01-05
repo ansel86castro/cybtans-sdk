@@ -222,6 +222,38 @@ namespace Cybtans.Messaging
             }
         }
 
+        public void Unsubscribe<TMessage>(string? exchange = null, string? topic = null)
+        {
+            bool lockTaken = false;
+            try
+            {
+                _spinLock.Enter(ref lockTaken);
+                var type = typeof(TMessage);
+                if (exchange == null)
+                {
+                    var attr = type.GetCustomAttribute<ExchangeRouteAttribute>();
+                    if (attr == null)
+                        throw new QueueSubscribeException($"Exchange information not found for {type}");
+
+                    exchange = attr.Exchange;
+                    topic = attr.Topic;
+                }
+
+                topic ??= type.Name;
+                var key = BindingInfo.GetKey(exchange, topic);
+                _exchageBidings.Remove(key);
+                _exchages.Remove(type);
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    _spinLock.Exit();
+                }
+            }
+        }
+       
+
         public async Task HandleMessage(string exchange, string topic, byte[] data)
         {
             var key = BindingInfo.GetKey(exchange, topic);

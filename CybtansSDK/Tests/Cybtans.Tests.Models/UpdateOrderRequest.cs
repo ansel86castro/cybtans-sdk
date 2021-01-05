@@ -3,7 +3,7 @@ using Cybtans.Serialization;
 
 namespace Cybtans.Tests.Models
 {
-	public class UpdateOrderRequest : IReflectorMetadataProvider
+	public partial class UpdateOrderRequest : IReflectorMetadataProvider
 	{
 		private static readonly UpdateOrderRequestAccesor __accesor = new UpdateOrderRequestAccesor();
 		
@@ -18,7 +18,7 @@ namespace Cybtans.Tests.Models
 	}
 	
 	
-	internal sealed class UpdateOrderRequestAccesor : IReflectorMetadata
+	public sealed class UpdateOrderRequestAccesor : IReflectorMetadata
 	{
 		public const int Id = 1;
 		public const int Value = 2;
