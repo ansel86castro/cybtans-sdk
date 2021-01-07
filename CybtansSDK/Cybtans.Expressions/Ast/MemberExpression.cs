@@ -67,5 +67,10 @@ namespace Cybtans.Expressions.Ast
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return $"{Left}.{Name}";
+        }
     }
 }

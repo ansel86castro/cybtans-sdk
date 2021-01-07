@@ -141,5 +141,10 @@ namespace Cybtans.Expressions.Ast
                 return false;
             }           
         }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }

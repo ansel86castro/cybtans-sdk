@@ -83,5 +83,10 @@ namespace Cybtans.Expressions.Ast
             //type = Expression.GetExpressionType(responseProperty.PropertyType);
             //NetType = responseProperty.PropertyType;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

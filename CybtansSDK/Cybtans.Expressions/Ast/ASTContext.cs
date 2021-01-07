@@ -44,7 +44,12 @@ namespace Cybtans.Expressions.Ast
 
         public FunctionDeclaration GetFunctionDeclaration(Type netType, string name)
         {
-            throw new NotImplementedException();
+            if(functions.TryGetValue(name , out var f))
+            {
+              
+            }
+
+            return f;
         }
 
         public VariableDeclaration GetVariableDeclaration(string name)
@@ -65,7 +70,7 @@ namespace Cybtans.Expressions.Ast
                 if (responseProperty == null)
                     throw new RecognitionException("Property not found " + name + " in " + targetType.Name);
 
-                if (ResponseType == ModelType)
+                if (ResponseType == null || ResponseType == ModelType)
                 {
                     modelProperty = responseProperty;
                     linqExpression = Parameter;
