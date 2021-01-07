@@ -1,5 +1,7 @@
 ﻿using Cybtans.Entities;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,5 +31,7 @@ namespace Cybtans.Tests.Domain
 
         [EventData]
         public virtual CustomerProfile CustomerProfile { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

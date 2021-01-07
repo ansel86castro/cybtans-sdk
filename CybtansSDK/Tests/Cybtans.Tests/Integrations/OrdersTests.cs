@@ -526,6 +526,20 @@ namespace Cybtans.Tests.Integrations
             Assert.NotEmpty(result.Items);
         }
 
+        [Fact]
+        public async Task GetAllFilteredWithFunction()
+        {
+            var result = await _service.GetAll(new GetAllRequest
+            {
+                Filter = "items.any(price = 10)"
+            });
+
+            Assert.NotNull(result);
+            Assert.True(result.TotalCount > 0);
+            Assert.NotEmpty(result.Items);
+        }
+
+
         //[Fact]
         //public async Task ShouldUploadStream()
         //{

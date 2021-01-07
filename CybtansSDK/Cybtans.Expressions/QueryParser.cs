@@ -230,8 +230,28 @@ namespace Cybtans.Expressions
                         throw new RecognitionException("Expecting ID", t?.Col??0, t?.Row??0);
                     }
 
-                    exp = new MemberExpression(t.Value, exp);
+                    name = t.Value;
                     t = lexicalAnalizer.GetNextToken();
+
+                    if (t == TokenType.LPARENT)
+                    {
+                        Match(TokenType.LPARENT);
+
+                        var exp_list = this.exp_list();
+
+                        Match(TokenType.RPARENT);
+
+                        exp = new FunctionCall(name, exp_list.ToArray(), t.Col, t.Row)
+                        {
+                            Instance = exp
+                        };
+
+                        t = lexicalAnalizer.CurrentToken;
+                    }
+                    else
+                    {
+                        exp = new MemberExpression(name, exp);
+                    }
                 }
 
                 if(t != null && t == TokenType.LPARENT)
@@ -243,7 +263,10 @@ namespace Cybtans.Expressions
 
                     Match(TokenType.RPARENT);
 
-                    exp = new FunctionCall(name, exp_list.ToArray(), t.Col, t.Row);
+                    exp = new FunctionCall(name, exp_list.ToArray(), t.Col, t.Row)
+                    {
+                        Instance = exp
+                    };
 
                 }
                 else if(exp == null)

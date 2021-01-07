@@ -33,6 +33,8 @@ namespace Cybtans.Expressions.Ast
 
         public object Target { get; set; }
 
+        public bool IsQueryMethod => DeclaringType == typeof(Enumerable);
+
         public override void CheckSemantic(IASTContext context)
         {
             throw new NotImplementedException();

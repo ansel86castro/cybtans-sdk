@@ -193,6 +193,11 @@ namespace Cybtans.Expressions.Ast
             {
                 expLeft = LinqExpression.MakeUnary(System.Linq.Expressions.ExpressionType.Convert, expLeft, expRight.Type);
             }
+            else if (expLeft.Type != expRight.Type)
+            {
+                expRight = LinqExpression.MakeUnary(System.Linq.Expressions.ExpressionType.Convert, expRight, expLeft.Type);
+            }
+
 
             switch (op)
             {
@@ -275,6 +280,11 @@ namespace Cybtans.Expressions.Ast
             }
 
             return LinqExpression.Equal(expleft, expright);
+        }
+
+        public override string ToString()
+        {
+            return $"{Left} {op} {Right}";
         }
     }
 }
