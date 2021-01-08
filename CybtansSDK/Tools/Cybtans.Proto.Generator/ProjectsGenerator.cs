@@ -14,7 +14,7 @@ namespace Cybtans.Proto.Generator
     public class ProjectsGenerator : IGenerator
     {
         const string EntityFramework = "ef";
-        const string SDK_VERSION = "1.2.1";
+        const string SDK_VERSION = "1.2.16";
 
         public class Options
         {

@@ -50,12 +50,15 @@ namespace @{NAMESPACE}
                        builder.SetIsOriginAllowedToAllowWildcardSubdomains()
                         .WithOrigins("*")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();                        
+                        .AllowAnyMethod()
+                        .WithExposedHeaders("Content-Type", "Content-Disposition")
+                        .AllowCredentials();
                     });
             });
 
             #endregion
 
+            #region DAL
             services.AddDbContext<@{SERVICE}Context>(
                 builder => builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -63,14 +66,19 @@ namespace @{NAMESPACE}
             .AddUnitOfWork<@{SERVICE}Context>()
             .AddRepositories();
 
-            services.AddAutoMapper(typeof(@{SERVICE}Stub));
+            #endregion            
          
             services
             .AddControllers(options => options.Filters.Add<HttpResponseExceptionFilter>())
             .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(@{SERVICE}Stub)))
             .AddCybtansFormatter();  
 
+            #region AppServices
+
+            services.AddAutoMapper(typeof(@{SERVICE}Stub));
             services.AddCybtansServices(typeof(@{SERVICE}Stub).Assembly);         
+
+            #endregion
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -129,6 +137,7 @@ namespace @{NAMESPACE}
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "@{SERVICE}", Version = "v1" });
                 c.OperationFilter<SwachBuckleOperationFilters>();
+                c.SchemaFilter<SwachBuckleSchemaFilters>();
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -186,6 +195,8 @@ namespace @{NAMESPACE}
                         new string[0]
                     }
                 });
+
+
             });
         }
 
