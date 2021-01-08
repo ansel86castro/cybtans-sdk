@@ -13,7 +13,7 @@ namespace Cybtans.Tests.Domain
         public float Price { get; set; }
 
         [EventData]
-        public float Discount { get; set; }
+        public float? Discount { get; set; }
 
         public Guid OrderId { get; set; }
 

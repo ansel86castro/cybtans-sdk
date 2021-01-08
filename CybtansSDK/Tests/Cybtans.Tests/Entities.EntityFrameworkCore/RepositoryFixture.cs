@@ -115,23 +115,26 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
 
                 await context.SaveChangesAsync();
 
-                context.Orders.Add(new Order
+                context.Orders.AddRange(Enumerable.Range(1,10).Select(x=> new Order
                 {
                     OrderStateId = 1,
                     CustomerId = CustomerId,
-                    Description = "Order 1",
-                    OrderType = OrderTypeEnum.Normal,                    
+                    Description = $"Order {x}",
+                    OrderType = (x % 2 == 0) ? OrderTypeEnum.Normal : OrderTypeEnum.Default,                    
                     CreateDate = DateTime.Now,
                     Items = new List<OrderItem>
                     {
                         new OrderItem
                         {
                                 ProductName = "Product 1",
-                                Discount = 0,
-                                Price = 10
+                                Discount = (x == 1 ) ? new float?():
+                                           (x % 2 == 0) ? 0.5f :
+                                            5,
+                                Price = 10,
+                                
                         }
                     }
-                });
+                }));
 
                 context.ReadOnlyEntities.AddRange(Enumerable.Range(1, 10).
                     Select(i => new ReadOnlyEntity
