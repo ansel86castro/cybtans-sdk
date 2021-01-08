@@ -9,7 +9,8 @@ using MemberExpression = System.Linq.Expressions.MemberExpression;
 
 namespace Cybtans.Expressions
 {
-    public class ExpressionBuilder<T> : ASTContext, IExpressionBuilder<T>
+
+    public class ExpressionBuilder<T> : QueryASTContext, IExpressionBuilder<T>
     {
         protected class ParamExpresionVisitor : ExpressionVisitor
         {
@@ -41,8 +42,7 @@ namespace Cybtans.Expressions
                 Parameter = Expression.Parameter(ModelType, parameter);
                 paramExpresionVisitor.ReplaceParameter = Parameter;
             }
-
-
+          
         }
 
         public ExpressionBuilder(Expression<Func<T, object>> expression)

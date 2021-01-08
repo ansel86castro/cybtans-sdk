@@ -16,13 +16,12 @@ namespace Cybtans.Expressions.Ast
 
         public override void CheckSemantic(IASTContext context)
         {
-            base.CheckSemantic(context);
-
-            if (type == ExpressionType.Null)
-                throw new RecognitionException("Null type not allowed for a relational expression", Col,Row);
-
             type = ExpressionType.Bool;
             NetType = typeof(bool);
+
+            Left.CheckSemantic(context);
+
+            Right.CheckSemantic(context);
         }
 
     }

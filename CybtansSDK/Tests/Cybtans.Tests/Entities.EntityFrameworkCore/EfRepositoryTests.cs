@@ -137,7 +137,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                     new OrderItem
                     {
                          ProductName = "Product 1",
-                         Discount = 0,
+                         Discount = 10,
                          Price = 10
                     }
                 }

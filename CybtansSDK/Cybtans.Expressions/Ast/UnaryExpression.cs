@@ -47,5 +47,10 @@ namespace Cybtans.Expressions.Ast
             var linqExp = expression.GenerateLinqExpression(context);
             return System.Linq.Expressions.Expression.Negate(linqExp);
         }
+
+        public override string ToString()
+        {
+            return $"{op} {expression}";
+        }
     }
 }
