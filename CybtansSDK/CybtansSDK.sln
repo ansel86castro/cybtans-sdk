@@ -78,7 +78,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Redis.Tests", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Math", "Cybtans.Math\Cybtans.Math.csproj", "{5696C81B-A195-42F0-9737-7E5A3F374A09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Math.Tests", "Tests\Cybtans.Math.Tests\Cybtans.Math.Tests.csproj", "{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Math.Tests", "Tests\Cybtans.Math.Tests\Cybtans.Math.Tests.csproj", "{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphics", "Graphics", "{9BB24624-B984-4F16-83C5-57DED80EB606}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics.Models", "Graphics\Cybtans.Graphics.Models\Cybtans.Graphics.Models.csproj", "{CFD441FD-9B18-43CE-9356-D9BD126BFED3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics", "Graphics\Cybtans.Graphics\Cybtans.Graphics.csproj", "{A2FBA870-49C3-45D3-8EE9-66B7649C2972}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics.Tests", "Graphics\Cybtans.Graphics.Tests\Cybtans.Graphics.Tests.csproj", "{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -210,6 +218,18 @@ Global
 		{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFD441FD-9B18-43CE-9356-D9BD126BFED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFD441FD-9B18-43CE-9356-D9BD126BFED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFD441FD-9B18-43CE-9356-D9BD126BFED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFD441FD-9B18-43CE-9356-D9BD126BFED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2FBA870-49C3-45D3-8EE9-66B7649C2972}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2FBA870-49C3-45D3-8EE9-66B7649C2972}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2FBA870-49C3-45D3-8EE9-66B7649C2972}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2FBA870-49C3-45D3-8EE9-66B7649C2972}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -230,6 +250,9 @@ Global
 		{50F6C3ED-7C33-4D02-A13D-6786758FB593} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{F18E9100-1FFB-4502-9FF5-EABFC18C736A} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{CA6ABDC1-C1D6-46DC-A88D-BE876BF677AA} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
+		{CFD441FD-9B18-43CE-9356-D9BD126BFED3} = {9BB24624-B984-4F16-83C5-57DED80EB606}
+		{A2FBA870-49C3-45D3-8EE9-66B7649C2972} = {9BB24624-B984-4F16-83C5-57DED80EB606}
+		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {412220C1-F0EB-4AB9-8FCA-DFBAB8477745}

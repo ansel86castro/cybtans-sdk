@@ -1,0 +1,258 @@
+syntax = "proto3";
+
+package Cybtans.Graphics;
+
+//**************** Camera **********************************************
+enum ProjectionType {
+	Perspective = 1;
+	Orthographic = 2;
+}
+
+message CameraDto {
+	ProjectionType projType = 1;
+	string name =2;
+	float nearPlane = 3;
+	float FarPlane = 4;
+	float fieldOfView = 5;
+	float aspectRatio =6;
+	float width=7;
+	float height=8;
+ 	repeated float localMatrix = 9;
+	repeated float viewMatrix = 10;
+	repeated float projMatrix = 11;
+	guid id = 12;
+}
+
+//**************** Lights **********************************************
+message AmbientLightDto {
+	repeated float ambientColor = 1;
+	repeated float skyColor     = 2;
+	repeated float groundColor  = 3;
+	float intensity             = 4;
+	repeated float northPole    = 5;
+}
+
+enum LightType { 
+	None = 0; 
+	Directional = 1;
+	Point = 2;
+	Spot = 3;
+}
+
+message LightDto {
+	repeated float diffuse     = 1;
+	repeated float specular    = 2;
+	repeated float ambient     = 3;
+	repeated float attenuation = 4;
+	bool enable				   = 5;
+	float intensity = 6;
+	float spotPower = 7;
+	LightType type = 8;
+	float range = 9;
+	guid id = 10;
+}
+
+//**************** Meshes **********************************************
+
+message VertexDefinitionDto {
+	int32 size = 1;
+    repeated VertexElementDto elements = 2;
+}
+
+message VertexElementDto {
+	int16 offset =1;
+	int16 stream =2;
+	string semantic =3;
+	int8 usageIndex =4;
+    VertexElementFormat format =5;
+    int32 size = 6;
+}
+
+enum VertexElementFormat {
+	Unused = 0;
+    Byte = 1;
+    UByte = 2;
+    Short = 3;
+    UShort = 4;
+    Int = 5;
+    UInt = 6;
+    Float =7;
+    Double = 8;
+}
+
+enum MeshPrimitive{
+    PointList = 1;
+    LineList = 2;
+    LineStrip = 3;
+    TriangleList = 4;
+    TriangleStrip = 5;
+    TriangleFan = 6;
+}
+
+message MeshDto {
+    guid id = 1;
+    repeated string materialSlots = 2;
+    repeated int32 adjacency = 3;
+    int32 vertexCount =4;
+    int32 faceCount = 5;
+    VertexDefinitionDto vertexDeclaration = 6 [required = true];
+    string vertexBuffer = 7;
+    string indexBuffer = 8;
+    MeshPrimitive primitive = 9;
+    repeated MeshPartDto layers = 10 [required = true];
+    string name = 11;
+    bool sixteenBitsIndices = 12;
+
+}
+
+message MeshPartDto {
+    int32 materialIndex = 1;
+    int32 layerId = 2;
+    int32 startIndex = 3;
+    int32 primitiveCount = 4;
+    int32 startVertex = 5;
+    int32 vertexCount = 6;
+    int32 indexCount = 7;
+}
+
+
+message MeshSkinDto {
+    guid id = 1;
+    repeated guid bones = 2;
+    guid mesh = 3;
+    repeated float bindShapeMatrix = 4;
+    repeated float boneBindingMatrices = 5;
+    repeated MeshLayerBonesDto layerBones = 6;
+    FrameDto rootBone = 7;
+}
+
+message MeshLayerBonesDto {
+    int32 layerIndex = 1;
+    repeated int32 bones = 2 [required = true];
+}
+//**************** Texture **********************************************
+
+enum TextureType {
+    None = 0;
+    Texture2D = 1;
+    Texture3D = 2;
+    CubeMap = 3;
+}
+
+message TextureDto {    
+    string filename = 1;
+    TextureType type = 2;
+    string format = 3;
+    guid id = 4;
+}
+
+message MaterialDto { 
+    string name = 1;
+    repeated float diffuse = 2 [required = true];
+    repeated float specular = 3 [required = true];
+    repeated float emissive = 4 [required = true];
+    map<string, guid> textures = 5;
+    guid id = 6;
+}
+
+enum UOMType {
+    Meters = 0;
+    Kilometers = 1;
+    Foot = 2;
+    Miles = 3;
+    Centimeters = 4;
+    Milimeters = 5;
+    Inches = 6;
+    Parsec = 7;
+    LightYear = 8;
+}
+
+//**************** Frames **********************************************
+enum FrameType {
+    Frame = 0;
+    Bone = 1;
+    Root = 2;
+}
+
+message FrameDto {
+  guid id = 1;
+  string name = 2;
+
+  //transforms
+  repeated float localTransform = 3 [required = true];
+  repeated float bindParentTransform = 4 [required = true];
+  repeated float bindAffectorTransform = 5 [required = true];
+  repeated float worldTransform = 6 [required = true];
+
+  guid parentId = 7 [optional = true];
+  FrameType type = 8;
+  float range = 9;
+  repeated FrameDto childrens = 10;
+  guid bindTargetId = 11 [optional = true];
+  string tag = 12;
+  FrameComponentDto component = 13;
+}
+
+message FrameComponentDto {
+    guid camera = 1;
+    FrameLightDto light = 2;
+    FrameMeshDto mesh = 3;
+    FrameMeshSkinDto meshSkin = 4;
+}
+
+message FrameLightDto {
+    guid light = 1;
+    repeated float localPosition = 2;
+    repeated float localDirection = 3;
+}
+
+message FrameMeshDto {
+    guid mesh = 1;
+    repeated guid materials = 2;
+}
+
+message FrameMeshSkinDto {
+    guid meshSkin = 1;
+    repeated guid materials = 2;
+}
+
+
+message SceneDto {
+	guid id = 1;
+	string name = 2;
+	float units = 3;
+    repeated MaterialDto materials = 4;
+    repeated CameraDto cameras = 5;
+    repeated LightDto lights = 6;
+    repeated MeshDto meshes = 7;
+    repeated MeshSkinDto skins = 8;
+    repeated TextureDto textures = 9;
+    FrameDto root = 10;
+    UOMType unitOfMeasure = 11;
+    guid currentCamera = 12 [optional = true];
+}
+
+//**************** Shaders **********************************************
+message ShaderDto {
+    map<string,string> inputs = 1;
+    map<string, ShaderParameterDto> parameters = 3;
+    string source = 4;
+}
+
+message ShaderParameterDto {
+    string target = 1;
+    string property = 2;
+    string type = 3;
+    string path = 4;
+}
+
+message ShaderProgramDto{
+    string name = 1;
+    ShaderDto vertexShader = 2;
+    ShaderDto fragmentShader = 3;
+}
+
+message ShaderProgramCollection{
+    repeated ShaderProgramDto programs = 1;
+    string defaultProgram = 2;
+}

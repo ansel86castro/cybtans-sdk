@@ -13,6 +13,8 @@ namespace Cybtans.Math
     {
         public int X;
         public int Y;
+
+        public List<float> ToList() => new List<float> { X, Y};
     }
 
     [Serializable]
@@ -716,6 +718,8 @@ namespace Cybtans.Math
         }
 
         #endregion
+
+        public List<float> ToList() => new List<float> { X, Y};
     }
   
 }

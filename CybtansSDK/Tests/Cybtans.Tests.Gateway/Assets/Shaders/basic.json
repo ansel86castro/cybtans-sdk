@@ -1,0 +1,35 @@
+{
+    "Name":"Basic",
+    "VertexShader":{
+        "Location":"./vs-basic.glsl",
+        "Inputs":{
+            "POSITION":"a_position",
+            "NORMAL": "a_normal",
+            "TANGENT": "a_tangent",
+            "TEXCOORD": "a_texCoord",
+            "OCC_FACTOR":"a_occ"
+        },        
+        "Parameters":{
+            "u_World":{ "Target": "Frame", "Property":"worldTransform", "Type":"mat4" },
+            "u_ViewProj":{ "Target": "Camera", "Property":"viewProjMatrix", "Type":"mat4" }
+        }
+    },
+    "FragmentShader":{
+        "Location":"./fs-basic.glsl",       
+        "Parameters":{
+            "uLight.pos":{ "Target":"Light", "Property":"position", "Type":"float3"},
+            "uLight.dir":{ "Target":"Light", "Property":"direction", "Type":"float3"},
+            "uLight.diffuse":{ "Target":"Light", "Property":"diffuse", "Type":"float3"},
+            "uLight.specular":{ "Target":"Light", "Property":"specular", "Type":"float3"},
+            "uLight.spotPower":{ "Target":"Light", "Property":"spotPower", "Type":"float"},
+
+            "uAmbient":{ "Target":"Light", "Property":"ambient", "Type":"float3"},
+            "uEyePos":{ "Target":"Camera", "Property":"position", "Type":"float3"},
+
+            "uMaterial.diffuse":{ "Target":"Material", "Property":"diffuse", "Type":"float4"},
+            "uMaterial.specular":{ "Target":"Material", "Property":"specular", "Type":"float3"},
+            "uMaterial.specularPower":{ "Target":"Material", "Property":"specularPower", "Type":"float"},
+            "uDiffuseSampler":{ "Target":"Material", "Property":"DIFFUSE_MAP", "Type":"sampler2D", "path":"textures"}
+        }
+    }
+}

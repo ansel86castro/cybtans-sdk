@@ -169,5 +169,7 @@ namespace Cybtans.Math
         {
             return R + ", " + G + ", " + B;
         }
+
+        public List<float> ToList() => new List<float> { R, G, B};
     }
 }

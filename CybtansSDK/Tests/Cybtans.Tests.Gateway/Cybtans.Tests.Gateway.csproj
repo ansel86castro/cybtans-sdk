@@ -9,6 +9,14 @@
 	<IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Assets\Shaders\basic.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Assets\Shaders\basic.json" />
+  </ItemGroup>
+
   <ItemGroup>		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="3.1.7" />		
@@ -22,8 +30,22 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
     <ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\Graphics\Cybtans.Graphics.Models\Cybtans.Graphics.Models.csproj" />
+    <ProjectReference Include="..\..\Graphics\Cybtans.Graphics\Cybtans.Graphics.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Update="Assets\sample1\2k_earth_daymap.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\sample1\earth.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\sample1\sample1.dae">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>
