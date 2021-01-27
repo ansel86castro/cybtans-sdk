@@ -31,6 +31,9 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/realtime">Realtime</NavLink>
+                                </NavItem>                                
+                                <NavItem>
+                                    <NavLink tag={Link} className="text-dark" to="/scene">3D</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>

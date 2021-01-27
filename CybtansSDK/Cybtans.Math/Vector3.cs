@@ -1237,6 +1237,7 @@ namespace Cybtans.Math
 
         #endregion      
 
+        public List<float> ToList() => new List<float> { X, Y, Z};
 
     }
   

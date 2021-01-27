@@ -1,0 +1,16 @@
+{
+  "Service": "Cybtans.Graphics",
+  "Steps": [    
+    {
+      "Type": "proto",
+      "Output": "..",
+      "ProtoFile": "./Proto/Models.proto",    
+      "Clients": [
+        {
+          "Output": "../../Tests/react-app/src/cybtans.graphics",
+          "Framework": "react"
+        }
+      ]
+    }
+  ]
+}
