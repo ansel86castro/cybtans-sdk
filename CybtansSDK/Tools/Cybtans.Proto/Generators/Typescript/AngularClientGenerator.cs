@@ -169,7 +169,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }              
 
                 Dictionary<string, string> headers = new Dictionary<string, string>();
-                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                if (!options.AllowAnonymous && (srv.Option.RequiredAuthorization || options.RequiredAuthorization))
                 {
                     headers.Add("Authorization", "Bearer");                    
                 }
