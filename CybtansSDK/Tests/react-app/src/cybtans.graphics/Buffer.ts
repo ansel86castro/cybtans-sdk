@@ -1,6 +1,7 @@
 import { decode } from "base64-arraybuffer";
 import { VertexDefinitionDto, VertexElementFormat } from "./models";
 import Program from "./Program";
+import { checkError } from "./utils";
 
 
 export class ByteBuffer{
@@ -16,16 +17,46 @@ export class ByteBuffer{
 
     setDataBase64(base64:string){
         this.arr = decode(base64);
+
+        // let floatArray= new Float32Array(this.arr);
+        // let stride = 12;
+        // let pos = [];
+        // for (let i = 0; i < floatArray.length/stride; i++) {
+        //     const element = floatArray[i*stride];
+        //     pos.push(element);
+             
+        // }
+        // console.log("Array Buffer "+pos.join(","));
+
         this.setData(this.arr);
     }
 
+    setDataArray(arr:number[]){
+        let byteArray = new Uint8Array(arr);
+        this.setData(byteArray);
+    }
+
+    setDataString(str:string){
+        var enc = new TextEncoder();
+        let byteArray = enc.encode(str);
+        this.setData(byteArray);
+    }
+
     setData(data:ArrayBuffer){
-        this.glBuffer = this.gl.createBuffer();
-        if (!this.glBuffer) {            
-            throw new Error('Failed to create the buffer object');
+        if(!this.glBuffer){
+            this.glBuffer = this.gl.createBuffer();
+            if (!this.glBuffer) {            
+                throw new Error('Failed to create the buffer object');
+            }
         }
+
+        let bytes = new Int8Array(data);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW);    
+
+        checkError(this.gl);
+
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, bytes, this.gl.STATIC_DRAW);    
+        checkError(this.gl);
     }
 
     dispose(){
@@ -47,20 +78,42 @@ export class VertexBuffer extends ByteBuffer{
         if(!this.glBuffer){           
             throw new Error('Buffer object not created');
         }
-        
-        let glProgram = program.glProgram;
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.glBuffer);
+
+        let gl = this.gl;                    
+        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.glBuffer);
+        checkError(gl);
         
         if(this.vd.elements){
             let stride = this.vd.elements.length > 0 ? this.vd.size : 0;
             for (const e of this.vd.elements) {
                 if(e.semantic == null) 
-                    throw new Error("vertex attribute semantic can not be null");
+                   continue;
 
-                let attr = program.getInput(e.semantic);
-                var attrLoc = this.gl.getAttribLocation( glProgram, attr);
-                this.gl.enableVertexAttribArray( attrLoc );
-                this.gl.vertexAttribPointer( attrLoc, e.size, this.getGlFormat(e.format), false, stride, e.offset);    
+                let attr = program.getInput(e.semantic);              
+                if(attr) {
+                    gl.enableVertexAttribArray( attr.location );
+                    gl.vertexAttribPointer( attr.location, e.size, this.getGlFormat(e.format), false, stride, e.offset);                        
+                    checkError(gl);
+                }
+            }
+        }
+    }
+
+    clearVertexBuffer(program:Program){
+        let gl = this.gl;        
+        this.gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+        checkError(gl);
+
+        if(this.vd.elements){            
+            for (const e of this.vd.elements) {
+                if(e.semantic == null) 
+                   continue
+
+                let attr = program.getInput(e.semantic);               
+                if(attr) {
+                    gl.disableVertexAttribArray( attr.location );                                        
+                }
             }
         }
     }
@@ -81,7 +134,7 @@ export class VertexBuffer extends ByteBuffer{
 }
 
 export class IndexBuffer extends ByteBuffer{
-    constructor(gl:WebGL2RenderingContext){
+    constructor(gl:WebGL2RenderingContext, public sixteenBitsIndices:boolean){
         super(gl);
     }
 
@@ -91,13 +144,32 @@ export class IndexBuffer extends ByteBuffer{
             throw new Error('Failed to create the buffer object');
         }
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glBuffer);
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, data, this.gl.STATIC_DRAW);    
+        checkError(this.gl);
+
+        let arr = this.sixteenBitsIndices === true ? 
+                    new Uint16Array(data) :
+                    new Uint32Array(data);
+
+        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, arr, this.gl.STATIC_DRAW);    
+        checkError(this.gl);
     }
 
     setIndexBuffer(){
         if(!this.glBuffer){            
             throw new Error('Buffer object not created');
         }
+
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.glBuffer);
+        checkError(this.gl);
     }
+
+    clearIndexBuffer(program:Program){
+        if(!this.glBuffer){            
+            throw new Error('Buffer object not created');
+        }
+
+
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+    }
+
 }

@@ -22,9 +22,9 @@ namespace Cybtans.Graphics.Models
 		[Required]
 		public VertexDefinitionDto VertexDeclaration {get; set;}
 		
-		public string VertexBuffer {get; set;}
+		public byte[] VertexBuffer {get; set;}
 		
-		public string IndexBuffer {get; set;}
+		public byte[] IndexBuffer {get; set;}
 		
 		public MeshPrimitive Primitive {get; set;}
 		
@@ -115,8 +115,8 @@ namespace Cybtans.Graphics.Models
 		        VertexCount => typeof(int),
 		        FaceCount => typeof(int),
 		        VertexDeclaration => typeof(VertexDefinitionDto),
-		        VertexBuffer => typeof(string),
-		        IndexBuffer => typeof(string),
+		        VertexBuffer => typeof(byte[]),
+		        IndexBuffer => typeof(byte[]),
 		        Primitive => typeof(MeshPrimitive),
 		        Layers => typeof(List<MeshPartDto>),
 		        Name => typeof(string),
@@ -159,8 +159,8 @@ namespace Cybtans.Graphics.Models
 		        case VertexCount:  obj.VertexCount = (int)value;break;
 		        case FaceCount:  obj.FaceCount = (int)value;break;
 		        case VertexDeclaration:  obj.VertexDeclaration = (VertexDefinitionDto)value;break;
-		        case VertexBuffer:  obj.VertexBuffer = (string)value;break;
-		        case IndexBuffer:  obj.IndexBuffer = (string)value;break;
+		        case VertexBuffer:  obj.VertexBuffer = (byte[])value;break;
+		        case IndexBuffer:  obj.IndexBuffer = (byte[])value;break;
 		        case Primitive:  obj.Primitive = (MeshPrimitive)value;break;
 		        case Layers:  obj.Layers = (List<MeshPartDto>)value;break;
 		        case Name:  obj.Name = (string)value;break;

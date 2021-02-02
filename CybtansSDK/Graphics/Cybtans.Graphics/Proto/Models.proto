@@ -52,6 +52,7 @@ message LightDto {
 	guid id = 10;
 }
 
+
 //**************** Meshes **********************************************
 
 message VertexDefinitionDto {
@@ -96,8 +97,8 @@ message MeshDto {
     int32 vertexCount =4;
     int32 faceCount = 5;
     VertexDefinitionDto vertexDeclaration = 6 [required = true];
-    string vertexBuffer = 7;
-    string indexBuffer = 8;
+    bytes vertexBuffer = 7;
+    bytes indexBuffer = 8;
     MeshPrimitive primitive = 9;
     repeated MeshPartDto layers = 10 [required = true];
     string name = 11;
@@ -151,8 +152,9 @@ message MaterialDto {
     repeated float diffuse = 2 [required = true];
     repeated float specular = 3 [required = true];
     repeated float emissive = 4 [required = true];
-    map<string, guid> textures = 5;
-    guid id = 6;
+    float specularPower = 5;
+    map<string, guid> textures = 6;
+    guid id = 7;
 }
 
 enum UOMType {
@@ -194,10 +196,10 @@ message FrameDto {
 }
 
 message FrameComponentDto {
-    guid camera = 1;
-    FrameLightDto light = 2;
-    FrameMeshDto mesh = 3;
-    FrameMeshSkinDto meshSkin = 4;
+    guid camera = 1 [optional = true];
+    FrameLightDto light = 2 [optional = true];
+    FrameMeshDto mesh = 3 [optional = true];
+    FrameMeshSkinDto meshSkin = 4 [optional = true];
 }
 
 message FrameLightDto {
@@ -230,6 +232,7 @@ message SceneDto {
     FrameDto root = 10;
     UOMType unitOfMeasure = 11;
     guid currentCamera = 12 [optional = true];
+    AmbientLightDto ambient = 13;
 }
 
 //**************** Shaders **********************************************

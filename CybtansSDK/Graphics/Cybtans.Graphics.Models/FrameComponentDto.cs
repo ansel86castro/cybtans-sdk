@@ -7,7 +7,7 @@ namespace Cybtans.Graphics.Models
 	{
 		private static readonly FrameComponentDtoAccesor __accesor = new FrameComponentDtoAccesor();
 		
-		public Guid Camera {get; set;}
+		public Guid? Camera {get; set;}
 		
 		public FrameLightDto Light {get; set;}
 		
@@ -65,7 +65,7 @@ namespace Cybtans.Graphics.Models
 		{
 		    return propertyCode switch
 		    {
-		        Camera => typeof(Guid),
+		        Camera => typeof(Guid?),
 		        Light => typeof(FrameLightDto),
 		        Mesh => typeof(FrameMeshDto),
 		        MeshSkin => typeof(FrameMeshSkinDto),
@@ -93,7 +93,7 @@ namespace Cybtans.Graphics.Models
 		    FrameComponentDto obj = (FrameComponentDto)target;
 		    switch (propertyCode)
 		    {
-		        case Camera:  obj.Camera = (Guid)value;break;
+		        case Camera:  obj.Camera = (Guid?)value;break;
 		        case Light:  obj.Light = (FrameLightDto)value;break;
 		        case Mesh:  obj.Mesh = (FrameMeshDto)value;break;
 		        case MeshSkin:  obj.MeshSkin = (FrameMeshSkinDto)value;break;

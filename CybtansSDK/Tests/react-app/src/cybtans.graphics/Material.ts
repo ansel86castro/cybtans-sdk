@@ -1,4 +1,5 @@
-import { vec4 } from "gl-matrix";
+import { vec3, vec4 } from "gl-matrix";
+import { float3, float4 } from "./MathUtils";
 import { MaterialDto } from "./models";
 import Scene from "./Scene";
 import Texture from "./Textures";
@@ -7,18 +8,20 @@ type TextureMap = {[semantic:string]: Texture};
 
 export default class Material {
     name?: string|null;
-    diffuse?: vec4;
-    specular?: vec4;
-    emissive?: vec4;    
+    diffuse: vec4;
+    specular: vec3;
+    specularPower: number;
+    emissive: vec3;    
     id: string;
     textures:TextureMap = {};
 
     constructor( scene:Scene, data:MaterialDto){
         this.id = data.id;
         this.name = data.name;
-        this.diffuse = data.diffuse as vec4;
-        this.specular = data.specular as vec4;
-        this.emissive = data.emissive as vec4;
+        this.diffuse = float4(data.diffuse);
+        this.specular = float3(data.specular);
+        this.emissive = float3(data.emissive);
+        this.specularPower = data.specularPower;
         
         if(data.textures){            
             for (const key in data.textures) {

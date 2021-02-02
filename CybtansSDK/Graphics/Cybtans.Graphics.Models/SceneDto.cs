@@ -32,6 +32,8 @@ namespace Cybtans.Graphics.Models
 		
 		public Guid? CurrentCamera {get; set;}
 		
+		public AmbientLightDto Ambient {get; set;}
+		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
@@ -53,9 +55,10 @@ namespace Cybtans.Graphics.Models
 		public const int Root = 10;
 		public const int UnitOfMeasure = 11;
 		public const int CurrentCamera = 12;
+		public const int Ambient = 13;
 		private readonly int[] _props = new []
 		{
-			Id,Name,Units,Materials,Cameras,Lights,Meshes,Skins,Textures,Root,UnitOfMeasure,CurrentCamera
+			Id,Name,Units,Materials,Cameras,Lights,Meshes,Skins,Textures,Root,UnitOfMeasure,CurrentCamera,Ambient
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -76,6 +79,7 @@ namespace Cybtans.Graphics.Models
 		       Root => "Root",
 		       UnitOfMeasure => "UnitOfMeasure",
 		       CurrentCamera => "CurrentCamera",
+		       Ambient => "Ambient",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -97,6 +101,7 @@ namespace Cybtans.Graphics.Models
 		        "Root" => Root,
 		        "UnitOfMeasure" => UnitOfMeasure,
 		        "CurrentCamera" => CurrentCamera,
+		        "Ambient" => Ambient,
 		
 		        _ => -1,
 		    };
@@ -118,6 +123,7 @@ namespace Cybtans.Graphics.Models
 		        Root => typeof(FrameDto),
 		        UnitOfMeasure => typeof(Uomtype),
 		        CurrentCamera => typeof(Guid?),
+		        Ambient => typeof(AmbientLightDto),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -140,6 +146,7 @@ namespace Cybtans.Graphics.Models
 		        Root => obj.Root,
 		        UnitOfMeasure => obj.UnitOfMeasure,
 		        CurrentCamera => obj.CurrentCamera,
+		        Ambient => obj.Ambient,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -162,6 +169,7 @@ namespace Cybtans.Graphics.Models
 		        case Root:  obj.Root = (FrameDto)value;break;
 		        case UnitOfMeasure:  obj.UnitOfMeasure = (Uomtype)value;break;
 		        case CurrentCamera:  obj.CurrentCamera = (Guid?)value;break;
+		        case Ambient:  obj.Ambient = (AmbientLightDto)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

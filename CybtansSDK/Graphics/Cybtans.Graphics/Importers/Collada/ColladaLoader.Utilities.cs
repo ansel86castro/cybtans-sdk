@@ -173,17 +173,18 @@ namespace Cybtans.Graphics.Importers.Collada
                             textureFilename = ((Sampler2D)sourceParameter.Value).Texture.ToString();
                     }
                 }
-                try
-                {
-                    if (textureFilename != null)
-                    {
-                        //Uri uri = new Uri(textureFilename);
-                        //textureFilename = uri.LocalPath;
-                        if (!File.Exists(textureFilename)) 
-                            textureFilename = null;
-                    }
-                }
-                catch (UriFormatException) { }
+
+                //try
+                //{
+                //    if (textureFilename != null)
+                //    {
+                //        //Uri uri = new Uri(textureFilename);
+                //        //textureFilename = uri.LocalPath;
+                //        if (!File.Exists(textureFilename)) 
+                //            textureFilename = null;
+                //    }
+                //}
+                //catch (UriFormatException) { }
 
                 callback(color, textureFilename);
             }
@@ -202,18 +203,18 @@ namespace Cybtans.Graphics.Importers.Collada
             string filename;
             if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
-                filename = Path.Combine(_directory, url.Replace("%20", " "));
-                if (!File.Exists(filename))
-                    return null;//throw new FileNotFoundException(filename);
+                filename = url.Replace("%20", " "); //Path.Combine(_directory, url.Replace("%20", " "));
+                //if (!File.Exists(filename))
+                //    return null;
                 return filename;
             }
             else
             {
                 filename = uri.LocalPath;
-                if (!File.Exists(filename))
-                {
-                    filename = Path.Combine(_directory, Path.GetFileName(filename));
-                }
+                //if (!File.Exists(filename))
+                //{
+                //    filename = Path.Combine(_directory, Path.GetFileName(filename));
+                //}
             }
 
             if (filename == null)

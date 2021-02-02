@@ -3,13 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+#nullable enable
+
 namespace Cybtans.Graphics.Components
 {
-    class CameraComponent : IFrameComponent
+    public class CameraComponent : IFrameComponent
     {
+        public CameraComponent(Camera camera)
+        {
+            Camera = camera;
+        }
+
         public Camera Camera { get; set; }
-        public Frame Frame { get; set; }
-        public Boundings Bounding { get; }
+        public Frame? Frame { get; set; }
+        public Boundings? Bounding { get; }
 
         public void Dispose()
         {
@@ -18,7 +25,10 @@ namespace Cybtans.Graphics.Components
 
         public void OnPoseUpdated()
         {
-            Camera.Transform(Frame.GlobalPose);
+            if (Frame != null)
+            {
+                Camera.Transform(Frame.GlobalPose);
+            }
         }
 
         public FrameComponentDto ToDto()

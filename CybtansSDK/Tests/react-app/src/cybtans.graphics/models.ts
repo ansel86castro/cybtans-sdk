@@ -106,8 +106,8 @@ export interface MeshDto {
   vertexCount: number;
   faceCount: number;
   vertexDeclaration: VertexDefinitionDto;
-  vertexBuffer?: string|null;
-  indexBuffer?: string|null;
+  vertexBuffer?: number[]|null;
+  indexBuffer?: number[]|null;
   primitive: MeshPrimitive;
   layers: MeshPartDto[]|null;
   name?: string|null;
@@ -166,6 +166,7 @@ export interface MaterialDto {
   diffuse: number[]|null;
   specular: number[]|null;
   emissive: number[]|null;
+  specularPower: number;
   textures?: { [key:string]: string }|null;
   id: string;
 }
@@ -213,7 +214,7 @@ export interface FrameDto {
 
 
 export interface FrameComponentDto {
-  camera: string;
+  camera?: string|null;
   light?: FrameLightDto|null;
   mesh?: FrameMeshDto|null;
   meshSkin?: FrameMeshSkinDto|null;
@@ -252,6 +253,7 @@ export interface SceneDto {
   root?: FrameDto|null;
   unitOfMeasure: Uomtype;
   currentCamera?: string|null;
+  ambient?: AmbientLightDto|null;
 }
 
 

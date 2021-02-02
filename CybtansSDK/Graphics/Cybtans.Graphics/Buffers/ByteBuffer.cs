@@ -62,12 +62,13 @@ namespace Cybtans.Graphics.Buffers
 
         public unsafe void SetData<T>(Span<T> data)where T : unmanaged
         {
-            Allocate(data.Length * sizeof(T));
+            var bytes = data.Length * sizeof(T);
+            Allocate(bytes);
 
             fixed (T* pter = data)
             {
                 void* dest = (void*)Pin();
-                Buffer.MemoryCopy(pter, dest, Length, data.Length);
+                Buffer.MemoryCopy(pter, dest, bytes, bytes);
                 UnPin();
             }
 
@@ -76,12 +77,13 @@ namespace Cybtans.Graphics.Buffers
 
         public unsafe void SetData<T>(T[] data) where T : unmanaged
         {
-            Allocate(data.Length * sizeof(T));
+            var bytes = data.Length * sizeof(T);
+            Allocate(bytes);
 
             fixed (T* pter = data)
             {
                 void* dest = (void*)Pin();
-                Buffer.MemoryCopy(pter, dest, Length, data.Length);
+                Buffer.MemoryCopy(pter, dest, bytes, bytes);
                 UnPin();
             }
 

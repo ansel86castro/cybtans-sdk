@@ -20,6 +20,8 @@ namespace Cybtans.Graphics.Models
 		[Required]
 		public List<float> Emissive {get; set;}
 		
+		public float SpecularPower {get; set;}
+		
 		public Dictionary<string,Guid> Textures {get; set;}
 		
 		public Guid Id {get; set;}
@@ -37,11 +39,12 @@ namespace Cybtans.Graphics.Models
 		public const int Diffuse = 2;
 		public const int Specular = 3;
 		public const int Emissive = 4;
-		public const int Textures = 5;
-		public const int Id = 6;
+		public const int SpecularPower = 5;
+		public const int Textures = 6;
+		public const int Id = 7;
 		private readonly int[] _props = new []
 		{
-			Name,Diffuse,Specular,Emissive,Textures,Id
+			Name,Diffuse,Specular,Emissive,SpecularPower,Textures,Id
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -54,6 +57,7 @@ namespace Cybtans.Graphics.Models
 		       Diffuse => "Diffuse",
 		       Specular => "Specular",
 		       Emissive => "Emissive",
+		       SpecularPower => "SpecularPower",
 		       Textures => "Textures",
 		       Id => "Id",
 		
@@ -69,6 +73,7 @@ namespace Cybtans.Graphics.Models
 		        "Diffuse" => Diffuse,
 		        "Specular" => Specular,
 		        "Emissive" => Emissive,
+		        "SpecularPower" => SpecularPower,
 		        "Textures" => Textures,
 		        "Id" => Id,
 		
@@ -84,6 +89,7 @@ namespace Cybtans.Graphics.Models
 		        Diffuse => typeof(List<float>),
 		        Specular => typeof(List<float>),
 		        Emissive => typeof(List<float>),
+		        SpecularPower => typeof(float),
 		        Textures => typeof(Dictionary<string,Guid>),
 		        Id => typeof(Guid),
 		
@@ -100,6 +106,7 @@ namespace Cybtans.Graphics.Models
 		        Diffuse => obj.Diffuse,
 		        Specular => obj.Specular,
 		        Emissive => obj.Emissive,
+		        SpecularPower => obj.SpecularPower,
 		        Textures => obj.Textures,
 		        Id => obj.Id,
 		
@@ -116,6 +123,7 @@ namespace Cybtans.Graphics.Models
 		        case Diffuse:  obj.Diffuse = (List<float>)value;break;
 		        case Specular:  obj.Specular = (List<float>)value;break;
 		        case Emissive:  obj.Emissive = (List<float>)value;break;
+		        case SpecularPower:  obj.SpecularPower = (float)value;break;
 		        case Textures:  obj.Textures = (Dictionary<string,Guid>)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		

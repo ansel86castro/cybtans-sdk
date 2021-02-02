@@ -21,11 +21,12 @@ namespace Cybtans.Graphics.Tests
 
             var visualRoot = _scene.Root.Childrens[0];
 
-            Assert.Equal(4, visualRoot.Childrens.Count);
-            Assert.Equal(2, _scene.Meshes.Count);
+            Assert.Equal(3, visualRoot.Childrens.Count);
+            Assert.Equal(1, _scene.Meshes.Count);
             Assert.Equal(1, _scene.Cameras.Count);
             Assert.Equal(1, _scene.Lights.Count);
             Assert.Equal(2, _scene.Materials.Count);
+            Assert.NotEmpty(_scene.Textures);
         }
     }
 }
