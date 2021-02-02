@@ -20,7 +20,7 @@ namespace Cybtans.Graphics
             Name = name;
             AmbientLight = new AmbientLight();
             Id = Guid.NewGuid();
-        }
+        }       
 
         public Guid Id { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿#version 300 es
+precision mediump float;
 
-in vec4 a_position;
+in vec3 a_position;
 in vec3 a_normal;
 in vec3 a_tangent;
 in vec2 a_texCoord;
@@ -16,10 +17,10 @@ out float v_occ;
 out vec4 v_screenCoord;
 
 void main(){
-    v_positionW = vec3(u_World * a_position);
+    v_positionW =  vec3(u_World * vec4(a_position, 1));
 
-    v_normalW = normalize(a_normal * mat3(u_World));    
-    gl_Position = u_ViewProj * u_World * a_position;
+    v_normalW = normalize(mat3(u_World) * a_normal);    
+    gl_Position =  u_ViewProj * vec4(v_positionW ,1) ;
 
     v_screenCoord.x = (gl_Position.x + gl_Position.w) * 0.5f;
     v_screenCoord.x = (gl_Position.w + gl_Position.y) * 0.5f;

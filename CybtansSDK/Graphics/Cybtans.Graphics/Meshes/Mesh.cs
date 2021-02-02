@@ -467,8 +467,8 @@ namespace Cybtans.Graphics.Meshes
                 MaterialSlots = _materialSlotsNames?.ToList(),
                 Layers = _layers.Select(x => x.ToDto()).ToList(),
                 VertexDeclaration = VertexDescriptor?.ToDto(),
-                IndexBuffer = IndexBuffer?.ToBase64(),
-                VertexBuffer = VertexBuffer?.ToBase64(),
+                IndexBuffer = IndexBuffer?.ToArray(),
+                VertexBuffer = VertexBuffer?.ToArray(),
                 SixteenBitsIndices = IndexBuffer?.Is16BitsIndices ?? false
             };
         }

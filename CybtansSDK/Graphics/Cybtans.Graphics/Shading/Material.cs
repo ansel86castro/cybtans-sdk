@@ -89,8 +89,9 @@ namespace Cybtans.Graphics
                 Id = Id,
                 Name = Name,
                 Diffuse = _diffuse.ToList(),
-                Emissive = _emissive.ToList(),
-                Specular = _specular.ToList(),
+                Emissive = ((Color3)_emissive).ToList(),
+                Specular =  ((Color3)_specular).ToList(),
+                SpecularPower = Specular.A,
                 Textures = _textures.ToDictionary(x => x.Key, x => x.Value.Id)
             };
         }

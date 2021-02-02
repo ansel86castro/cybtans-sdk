@@ -1,4 +1,5 @@
 #version 300 es
+precision mediump float;
 
 struct Light {
     vec3 pos;
@@ -20,9 +21,9 @@ struct Material {
     float specularPower;
 };
 
-in highp vec3 v_positionW;
-in highp vec3 v_normalW;
-in highp vec2 v_texCoord;
+in vec3 v_positionW;
+in vec3 v_normalW;
+in vec2 v_texCoord;
 in float v_occ;
 in float v_screenCoord;
 
@@ -72,10 +73,14 @@ vec3 DirectionalLight(vec3 diffuse, vec3 specular, float specularPower)
 
 void main() {
 
-    vec4 diffuse = texture(uDiffuseSampler, v_texCoord);
-    diffuse.rgb *= uMaterial.diffuse.rgb;
-    
-    Color = diffuse;    
-    Color.rgb = DirectionalLight(diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
-    Color.rgb += uAmbient * diffuse.rgb * v_occ;   
+    Color  = texture(uDiffuseSampler, v_texCoord); 
+    Color.a = 1.0;
+
+//    vec4 diffuse = texture(uDiffuseSampler, v_texCoord);
+//
+//    diffuse.rgb *= uMaterial.diffuse.rgb;
+//    
+//    Color = diffuse;    
+//    Color.rgb = DirectionalLight(diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
+//    Color.rgb += uAmbient * diffuse.rgb * v_occ;   
 }

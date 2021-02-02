@@ -87,9 +87,16 @@ namespace Cybtans.Graphics.Importers.Collada
                 var xunit = asset.GetElementByTag("unit");
                 if (xunit != null)
                     _unit = float.Parse(xunit.GetAttribute("meter"));
-                _preserveOrder = asset.GetElementByTag("contributor")?
+
+                var authoring = asset.GetElementByTag("contributor")?
                                    .GetElementByTag("authoring_tool")?
-                                   .Value?.StartsWith("CINEMA4D") ?? false;
+                                   .Value;
+                if(authoring != null)
+                {
+                    _preserveOrder = authoring.StartsWith("CINEMA4D") || authoring.StartsWith("Blender");
+                }
+                
+            
             }
 
             _unit *= _scene.Units;
@@ -126,6 +133,11 @@ namespace Cybtans.Graphics.Importers.Collada
             scene.Meshes.AddRange(_meshes);
             scene.Lights.AddRange(_lights);
             scene.Cameras.AddRange(_cameras);
+            scene.Textures.AddRange(_texturesLookup.Values);
+            scene.Skins.AddRange(_skins);
+
+            scene.CurrentCamera = _cameras.FirstOrDefault();
+
         }
 
         public void ImportAnimation(Scene scene, string filename)
@@ -276,7 +288,7 @@ namespace Cybtans.Graphics.Importers.Collada
                     try
                     {
                         material.DiffuseMap = GetTexture(textureUrl);
-                        SetMaps(material);
+                        //SetMaps(material);
                     }
                     catch (InvalidOperationException)
                     {
@@ -285,7 +297,11 @@ namespace Cybtans.Graphics.Importers.Collada
                 }
             });
 
-            ReadParamenterSurfaceInfo(effect, "normal_map-surface", url => material.NormalMap = new Texture(url, TextureType.Texture2D));
+            ReadParamenterSurfaceInfo(effect, "normal_map-surface", url =>
+            {
+                material.NormalMap = new Texture(url, TextureType.Texture2D);
+                _scene.Textures.Add(material.NormalMap);
+            });
 
             ReadFloatInfo(technique, "shininess", v => material.SpecularPower = v);
             ReadFloatInfo(technique, "reflectivity", v => material.Reflectivity = v);
@@ -472,7 +488,6 @@ namespace Cybtans.Graphics.Importers.Collada
             return new ElementRef { Element = element, Object = node };
         }
 
-
         private Dictionary<string, Material> Parse_BindingMaterial(XElement element, object @param)
         {
             Dictionary<string, Material> materials = new Dictionary<string, Material>();
@@ -584,7 +599,8 @@ namespace Cybtans.Graphics.Importers.Collada
         private ElementRef Parse_CameraNode(XElement element, object @param)
         {
             Camera camera = (Camera)ResolveElementByUrl(_libraryCamera, element.GetAttribute("url"), param).Object;
-            return new ElementRef { Element = element, Object = camera };
+            var instance = new CameraComponent(camera);
+            return new ElementRef { Element = element, Object = instance };
         }
 
         [ParserOf("geometry")]
@@ -816,12 +832,12 @@ namespace Cybtans.Graphics.Importers.Collada
                     //if (profile == DeviceProfile.Direct3D)
                     //{
                     //    //invert texture v coord
-                    //    Vector2* texCoord = (Vector2*)(pBuffer + i * size + texOffset);
-                    //    texCoord->Y = 1 - texCoord->Y;
+                        Vector2* texCoord = (Vector2*)(pBuffer + i * size + texOffset);
+                        texCoord->Y = 1 - texCoord->Y;
                     //}
 
-                    //if (_zUp)
-                    //{
+                    if (_zUp)
+                    {
                         //invert z by y
                         for (int j = 0; j < 2; j++)
                         {
@@ -830,7 +846,7 @@ namespace Cybtans.Graphics.Importers.Collada
                             pv->Y = temp.Z;
                             pv->Z = temp.Y;
                         }
-                    //}
+                    }
 
                 }
             }

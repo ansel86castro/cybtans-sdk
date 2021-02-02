@@ -1,5 +1,7 @@
+import { URL } from "url";
 import { TextureDto, TextureType } from "./models";
 import Scene from "./Scene";
+import { checkError } from "./utils";
 
 export default class Texture {
     url?: string|null;
@@ -17,56 +19,106 @@ export default class Texture {
         this.gl = scene.gl;
     }
 
-    load(){
+    async load(baseUrl:string){
         if(!this.url)
-            return;
+            throw new Error('Url not defined');
 
         if(!this.glTexture){
             this.glTexture = this.gl.createTexture();
+            
             if(!this.glTexture)
                 throw new Error("Failed to create texture");
         }
 
-        return new Promise<boolean>((resolve, reject)=>{
-            let image = new Image();
-            let gl = this.gl;
-            let texture = this.glTexture;
-            image.onload = (e)=>{
-                if(image.width == 0 || image.height == null){
-                    reject('Image failed to load');
-                    return;
-                }
+       
+        let gl = this.gl;
+        let texture = this.glTexture;
 
-                //flip the image y axix
-                gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-                
+        let imageUrl = `${baseUrl}/${this.url}`;
+        //requestCORSIfNotSameOrigin(image, imageUrl);
+        //image.src =imageUrl;
+
+        let response = await fetch(imageUrl);
+        let blob = await response.blob();
+        let objectURL = window.URL.createObjectURL(blob);
+
+        let image = new Image();
+        image.onload = (e)=>{
+            window.URL.revokeObjectURL(objectURL);
+
+            if(image.width == 0 || image.height == null){
+                console.error('Image failed to load');
+                return;
+            }                
+          
+            try {                                       
                 //bind as texture 2d
                 gl.bindTexture(gl.TEXTURE_2D, texture);
+               
+                 //flip the image y axix
+                gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-                //set sampler states
+                checkError(gl);
+
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+                checkError(gl);
+
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
+                if(isPowerOf2(image.width) && isPowerOf2(image.height)){
+                    gl.generateMipmap(gl.TEXTURE_2D);
+                }else{
+                      //set sampler states
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                }
 
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA , gl.RGB, gl.UNSIGNED_BYTE, image);
+                checkError(gl);             
+            }catch(e){
+                console.error(e);
+            }
+        };         
+        
+        image.src = objectURL;
 
-                resolve(true);
-            };
-            
-
-            image.src = this.url!;
-        });
+        // return new Promise<boolean>((resolve, reject)=>{
+                     
+        // });
     }
 
     setTexture(textureSlot:number){
         if(!this.glTexture)
-            throw new Error("Texture not created");           
-        //activate slot
-        this.gl.activeTexture(textureSlot);
-         //bind as texture 2d to the slot number
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
+            throw new Error("Texture not created");     
 
-       // this.gl.uniform1i(sampler, slot);
+        //activate slot
+        this.gl.activeTexture(this.gl.TEXTURE0 + textureSlot);
+
+        switch(this.type){
+            case TextureType.none: 
+                return;
+            case TextureType.texture2d:
+                //bind as texture 2d to the slot number
+                this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
+                break;
+            case TextureType.texture3d:
+                this.gl.bindTexture(this.gl.TEXTURE_3D, this.glTexture);
+                break;
+            case TextureType.cubeMap:
+                this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, this.glTexture);
+                break;
+        }
+       
     }
 }
+
+
+function isPowerOf2(value:number) {
+    return (value & (value - 1)) == 0;
+}
+
+function requestCORSIfNotSameOrigin(img:HTMLImageElement, url:string) {
+    if ((new URL(url, window.location.href)).origin !== window.location.origin) {
+      img.crossOrigin = "";
+    }
+  }

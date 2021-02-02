@@ -1,59 +1,55 @@
+
 import * as React from 'react';
 import { SceneDto } from '../cybtans.graphics/models';
 import ProgramRepository from '../cybtans.graphics/ProgramRepository';
 import Scene from '../cybtans.graphics/Scene';
+import SceneManager from '../cybtans.graphics/SceneManager';
 
 import "./SceneComponent.css";
 
 export default function SceneComponent(){
 
-    let [invalidated, setInvalidated] = React.useState(true);
-    let [scene, setScene] = React.useState<Scene|undefined>();
-    let [repo, setRepo] = React.useState<ProgramRepository|undefined>();
+    let invalidated = React.useRef(true);
 
-    var ref = React.createRef<HTMLCanvasElement>();
-    var glRef = React.useRef<WebGL2RenderingContext>();
+    let ref = React.createRef<HTMLCanvasElement>();    
+    let sceneMgr = React.useRef<SceneManager>();
 
     React.useEffect(()=>{
-        if(ref.current){
-            var canvas = ref.current;
-            let gl = canvas.getContext('webgl2');
-            if(gl){
-                glRef.current = gl;
-                console.log('WebGL enable');
+        if(invalidated.current === true){                        
+            if(ref.current){
+                var canvas = ref.current;
+                let gl = canvas.getContext('webgl2');
+               
+                if(gl){                
+                    console.log('WebGL enable');
+                    sceneMgr.current = new SceneManager(gl, canvas.width, canvas.height);
+                    sceneMgr.current.start();
+                }
+            }
+
+            invalidated.current = false;
+
+            load();        
+        }
+
+        return ()=> {
+            if(!ref.current){
+                sceneMgr.current?.stop();
             }
         }
-        if(invalidated === true){                        
-            setInvalidated(false);
-            
-            loadScene();
+    });
 
-            loadPrograms();
-        }
+    async function load() {
+        if(!sceneMgr.current) return;
         
-    },[invalidated]);
-
-    async function loadScene() {
-        let baseUrl = process.env.REACT_APP_API_URL;
-        let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-        let endpoint = baseUrl+`/api/scene/sample1`;
-        var response =  await  fetch(endpoint, options);
+        await sceneMgr.current?.loadPrograms(`${process.env.REACT_APP_API_URL}/api/scene/programs`);
         
-        let dto = await response.json();
-        scene = new Scene(glRef.current!, dto);    
-        setScene(scene);
-    }
-
-    async function loadPrograms(){
-        let baseUrl = process.env.REACT_APP_API_URL;
-        let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-        let endpoint = baseUrl+`/api/scene/programs`;
-        var response =  await  fetch(endpoint, options);
-        let dto = await response.json();
-        repo = new ProgramRepository(glRef.current!, dto);        
-    }
+        await sceneMgr.current?.loadScene(
+        `${process.env.REACT_APP_API_URL}/api/scene/sample1`, 
+        `${process.env.REACT_APP_API_URL}/api/scene/texture/sample1`);  
+    }  
 
     return (
-         <canvas id="scene" ref={ref} width="1024" height="600"></canvas>
+         <canvas id="scene" ref={ref} width="800" height="600"></canvas>
     );
 }

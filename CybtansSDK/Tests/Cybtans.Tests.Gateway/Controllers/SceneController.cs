@@ -8,12 +8,13 @@ using System.IO;
 using Cybtans.Graphics.Importers;
 using Cybtans.Graphics;
 using Cybtans.Graphics.Shading;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Cybtans.Tests.Gateway.Controllers
 {
     [Route("api/scene")]
     [ApiController]
-    public class SceneController: ControllerBase
+    public class SceneController: Controller
     {
         public SceneController()
         {
@@ -45,5 +46,24 @@ namespace Cybtans.Tests.Gateway.Controllers
 
             return repository.ToDto();
         }
+
+        [HttpGet("texture/{scene}/{name}")]
+        public ActionResult GetTexture(string scene, string name)
+        {
+            var file = $"Assets/{scene}/{name}";
+            if (!System.IO.File.Exists(file))
+                return NotFound();
+
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            if (!provider.TryGetContentType(file, out contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var fi = new FileInfo(file);
+            return File(fi.OpenRead(), contentType);
+        }
+
     }
 }

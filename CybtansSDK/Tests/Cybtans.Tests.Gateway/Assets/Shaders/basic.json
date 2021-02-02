@@ -1,5 +1,5 @@
 {
-    "Name":"Basic",
+    "Name":"basic",
     "VertexShader":{
         "Location":"./vs-basic.glsl",
         "Inputs":{
@@ -10,18 +10,46 @@
             "OCC_FACTOR":"a_occ"
         },        
         "Parameters":{
-            "u_World":{ "Target": "Frame", "Property":"worldTransform", "Type":"mat4" },
-            "u_ViewProj":{ "Target": "Camera", "Property":"viewProjMatrix", "Type":"mat4" }
+          "u_World": {
+            "Target": "Frame",
+            "Property": "worldMtx",
+            "Type": "mat4"
+          },
+          "u_ViewProj": {
+            "Target": "Camera",
+            "Property": "viewProjMtx",
+            "Type": "mat4"
+          }
         }
     },
     "FragmentShader":{
         "Location":"./fs-basic.glsl",       
         "Parameters":{
-            "uLight.pos":{ "Target":"Light", "Property":"position", "Type":"float3"},
-            "uLight.dir":{ "Target":"Light", "Property":"direction", "Type":"float3"},
-            "uLight.diffuse":{ "Target":"Light", "Property":"diffuse", "Type":"float3"},
-            "uLight.specular":{ "Target":"Light", "Property":"specular", "Type":"float3"},
-            "uLight.spotPower":{ "Target":"Light", "Property":"spotPower", "Type":"float"},
+          "uLight.pos": {
+            "Target": "LightComponent",
+            "Property": "worldPosition",
+            "Type": "float3"
+          },
+          "uLight.dir": {
+            "Target": "LightComponent",
+            "Property": "worldDirection",
+            "Type": "float3"
+          },
+          "uLight.diffuse": {
+            "Target": "Light",
+            "Property": "diffuse",
+            "Type": "float3"
+          },
+          "uLight.specular": {
+            "Target": "Light",
+            "Property": "specular",
+            "Type": "float3"
+          },
+          "uLight.spotPower": {
+            "Target": "Light",
+            "Property": "spotPower",
+            "Type": "float"
+          },
 
             "uAmbient":{ "Target":"Light", "Property":"ambient", "Type":"float3"},
             "uEyePos":{ "Target":"Camera", "Property":"position", "Type":"float3"},

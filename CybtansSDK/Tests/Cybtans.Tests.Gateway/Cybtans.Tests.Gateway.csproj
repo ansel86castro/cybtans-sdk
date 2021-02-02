@@ -14,6 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\sample1\2k_earth_daymap.jpg" />
+    <Content Include="Assets\sample1\earth.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Assets\Shaders\basic.json" />
   </ItemGroup>
 
@@ -46,6 +51,10 @@
     <None Update="Assets\sample1\sample1.dae">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <PropertyGroup>

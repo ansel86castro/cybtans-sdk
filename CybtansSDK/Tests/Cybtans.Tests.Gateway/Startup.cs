@@ -107,6 +107,14 @@ namespace Cybtans.Tests.Gateway
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                }
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
