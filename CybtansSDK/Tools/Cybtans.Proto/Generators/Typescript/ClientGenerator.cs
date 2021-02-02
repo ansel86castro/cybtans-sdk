@@ -115,7 +115,7 @@ namespace Cybtans.Proto.Generators.Typescript
                     headers["Accept"] = "application/json";
                 }
 
-                if (srv.Option.RequiredAuthorization || options.RequiredAuthorization)
+                if (!options.AllowAnonymous && (srv.Option.RequiredAuthorization || options.RequiredAuthorization))
                 {
                     headers["Authorization"] = "Bearer";
                 }
