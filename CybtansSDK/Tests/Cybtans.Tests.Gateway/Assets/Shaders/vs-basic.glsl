@@ -17,7 +17,7 @@ out float v_occ;
 out vec4 v_screenCoord;
 
 void main(){
-    v_positionW =  vec3(u_World * vec4(a_position, 1));
+    v_positionW = vec3(u_World * vec4(a_position, 1));
 
     v_normalW = normalize(mat3(u_World) * a_normal);    
     gl_Position =  u_ViewProj * vec4(v_positionW ,1) ;

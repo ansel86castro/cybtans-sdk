@@ -66,6 +66,8 @@ export default class SceneManager {
 
       this.render();
 
+      this.lastTime = timestamp;
+      
       requestAnimationFrame(this.onFrame);
 
     }

@@ -10,11 +10,14 @@ import MeshSkin from "./SkinMesh";
 import { decomposeMatrix } from "./MathUtils";
 import { IRenderable } from "./Interfaces";
 import SceneManager from "./SceneManager";
+import { HashMap } from "./utils";
+
+export type FrameUpdateFunc = (elapsed:number, frame:Frame)=>void;
 
 export default class Frame {
     id:string;
     name?: string|null;
-
+    scene:Scene;
     //transforms
     localScale:mat4;
     localRotation: mat4;
@@ -23,16 +26,20 @@ export default class Frame {
     bindParentMtx: mat4;
     bindAffectorMtx: mat4;
     worldMtx: mat4;
+    //bindWorldMtx:mat4;
 
     parent?: Frame;
     type: FrameType;
     range: number;
     childrens: Frame[]= [];
+    childresMap : HashMap<Frame|null> = {};
     bindTargetId?: string|null;
     tag?: string|null;
     component?: FrameComponent|null;
+
     
     constructor(scene:Scene, data:FrameDto, parent?:Frame){
+        this.scene = scene;
         this.id = data.id;
         this.name = data.name;
         this.localMtx = matrix(data.localTransform);
@@ -56,11 +63,17 @@ export default class Frame {
         // mat4.transpose(this.localScale, this.localScale);
         // mat4.transpose(this.localTranslation, this.localTranslation);
         // mat4.transpose(this.localRotation, this.localRotation);
-        
+        //mat4.invert(this.localMtx, this.localMtx);
+        //mat4.invert(this.bindParentMtx, this.bindParentMtx);
+        //this.bindWorldMtx = matrix();
           
         if(data.childrens){
             for (const item of data.childrens) {
-                this.childrens?.push(new Frame(scene, item, this));   
+                let c = new Frame(scene, item, this);
+                this.childrens?.push(c);
+                if(c.name){
+                    this.childresMap[c.name] = c;
+                }
             }
         }
 
@@ -80,6 +93,43 @@ export default class Frame {
                 this.component = new MeshSkinComponent(skin, materials, this);
             }
         }
+    }
+
+    addNode(node:Frame){
+        node.parent = this;
+        this.childrens.push(node);
+
+        if(node.name)
+            this.childresMap[node.name] = node;
+    }
+
+    removeNode(node:Frame){
+        let i = this.childrens.indexOf(node);
+        if(i < 0 ) return;
+
+        this.childrens.splice(i, 1);
+        node.parent = undefined;
+
+        if(node.name){
+            delete this.childresMap[node.name];
+        }
+    }
+
+    getNodeByName(name:string): Frame|null{
+        if(this.name == name)
+            return this;
+
+        let node = this.childresMap[name];
+        if(node) return node;
+
+        for (const item of this.childrens) {
+            node = item.getNodeByName(name);
+            if(node){
+                return node;
+            }
+        }
+
+        return null;
     }
 
     forEach(action:(frame:Frame)=>any): Frame|null {
@@ -106,12 +156,12 @@ export default class Frame {
     }
 
     updateWorldPose(){
-        // world =  (localMtx * (bindParentMtx * parentMtx))
+        // world =  transpose(localMtx * (bindParentMtx * parentMtx))
         if(!this.parent){
             this.worldMtx = this.localMtx;
         }else{
-            mat4.mul(this.worldMtx, this.bindParentMtx, this.parent.worldMtx);
-            mat4.mul(this.worldMtx, this.localMtx, this.worldMtx);
+            mat4.mul(this.worldMtx, this.parent.worldMtx, this.bindParentMtx);
+            mat4.mul(this.worldMtx, this.worldMtx, this.localMtx);
         }        
 
         if(this.component){
@@ -119,7 +169,11 @@ export default class Frame {
         }
     }
 
-    commitChanges(){
+    commitChanges(updateLocal?:boolean){
+        if(updateLocal === true){
+            this.updateLocalPose();
+        }
+
         this.updateWorldPose();
 
         if(this.childrens){
@@ -137,6 +191,49 @@ export default class Frame {
         for (const item of this.childrens) {
             item.initialize(scene);
         }
+    }
+
+
+    setUpdate(func:FrameUpdateFunc){
+       return this.scene.addUpdate(elapsed=> func(elapsed, this));
+    }
+
+    translate(x:number, y:number, z:number){
+        this.localTranslation[12] +=x;
+        this.localTranslation[13] +=y;
+        this.localTranslation[14] +=z;
+    }
+
+    scale(x:number, y:number, z:number){
+        this.localTranslation[0] +=x;
+        this.localTranslation[5] +=y;
+        this.localTranslation[10] +=z;
+    }
+
+    rotateX(rad:number){
+        let m = mat4.create();
+         mat4.rotateX(m, m, rad);
+         mat4.mul(this.localRotation, m, this.localRotation);
+    }
+
+    
+    rotateY(rad:number){
+        let m = mat4.create();
+         mat4.rotateY(m, m, rad);
+         mat4.mul(this.localRotation, m, this.localRotation);
+    }
+
+    
+    rotateZ(rad:number){
+        let m = mat4.create();
+         mat4.rotateZ(m, m, rad);
+         mat4.mul(this.localRotation, m, this.localRotation);
+    }
+
+    rotate(axis:vec3, rad:number){
+        let m = mat4.create();
+         mat4.fromRotation(m, rad, axis);
+         mat4.mul(this.localRotation, m, this.localRotation);
     }
 }
 
