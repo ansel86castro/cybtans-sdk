@@ -1,7 +1,7 @@
 import { mat4 } from "gl-matrix";
 import { AmbientLight } from "./AmbientLight";
 import Camera from "./Camera";
-import Frame, { LightComponent } from "./Frame";
+import Frame, { FrameUpdateFunc, LightComponent } from "./Frame";
 import { IRenderable } from "./Interfaces";
 import Light from "./Light";
 import Material from "./Material";
@@ -12,6 +12,8 @@ import SceneManager from "./SceneManager";
 import MeshSkin from "./SkinMesh";
 import SkinMesh from "./SkinMesh";
 import Texture from "./Textures";
+
+export type UpdateFunc = (elapsed:number)=>void;
 
 export default class Scene implements IRenderable {  
     manager:SceneManager;
@@ -34,7 +36,7 @@ export default class Scene implements IRenderable {
     materials:Map<string, Material> = new Map();
     meshes:Map<string, Mesh> = new Map();
     skins:Map<string, SkinMesh> = new Map();
-    
+    private updates:UpdateFunc[] = [];    
 
     constructor(manager:SceneManager, id?:string, name?:string){
         this.gl = manager.gl;
@@ -58,9 +60,8 @@ export default class Scene implements IRenderable {
             this.cameras = new Map();
             data.cameras.forEach(dto => 
                 {
-                    let c = new Camera(this.manager.width, this.manager.height, dto);
-                    c.projMtx = mat4.perspective(c.projMtx, dto.fieldOfView, c.width /c. height, c.nearPlane, c.farPlane);
-                    c.viewMtx = mat4.lookAt(c.viewMtx, float3([5, 5, -5]), float3([0,0,0]), float3([0,1,0]));
+                    let c = new Camera({ ...dto, width: this.manager.width, height: this.manager.height});                   
+                    c.viewMtx = mat4.lookAt(c.viewMtx, float3([0, 3, -7]), float3([0,0,0]), float3([0,1,0]));
                     c.onViewUpdated();
                     
                     this.cameras?.set(c.id, c);
@@ -102,14 +103,17 @@ export default class Scene implements IRenderable {
     }
 
     async load(baseUrl:string){
-        let promises:Promise<boolean>[] = [];
+        let promises:Promise<void>[] = [];
         let completed = 0;
         try{
             if(this.textures){
                 for (let [key, value] of this.textures) {
-                await value.load(baseUrl);
+                    promises.push(value.load(baseUrl));
                 }
-            }   
+            }
+
+            await Promise.all(promises);
+
         }catch(e){
             console.error(e);
             throw e;
@@ -117,9 +121,9 @@ export default class Scene implements IRenderable {
     }
 
     update(elapsed:number){
-        if(this.root){
-            this.root.commitChanges();
-        }
+       for (const item of this.updates) {
+           item(elapsed);
+       }
     }
 
     render(ctx:SceneManager){
@@ -139,4 +143,27 @@ export default class Scene implements IRenderable {
         }
     }
 
+    addUpdate(func:UpdateFunc): ()=>void {
+        this.updates.push(func);
+        return ()=> {
+            let idx = this.updates.indexOf(func);
+            if(idx < 0) return;
+
+            this.updates.splice(idx, 1);
+        }
+    }
+
+    getNodeByName(name:string): Frame|null{
+        if(!this.root) return null;
+        return this.root.getNodeByName(name);
+    }
+
+    addNodeUpdate(name:string, func:FrameUpdateFunc){
+        if(this.root){
+            let node = this.root.getNodeByName(name);
+            if(!node) return;
+
+            return this.addUpdate(elapsed=> func(elapsed, node!));
+        }
+     }
 }

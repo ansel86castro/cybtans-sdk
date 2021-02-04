@@ -53,6 +53,7 @@ namespace Cybtans.Graphics.Importers.Collada
         string _directory;       
         Scene _scene;
         private bool _preserveOrder;
+        private string _authoring;
 
         public IProgressReport Report { get { return _report; } set { _report = value; } }
 
@@ -88,12 +89,12 @@ namespace Cybtans.Graphics.Importers.Collada
                 if (xunit != null)
                     _unit = float.Parse(xunit.GetAttribute("meter"));
 
-                var authoring = asset.GetElementByTag("contributor")?
+                 _authoring = asset.GetElementByTag("contributor")?
                                    .GetElementByTag("authoring_tool")?
                                    .Value;
-                if(authoring != null)
+                if(_authoring != null)
                 {
-                    _preserveOrder = authoring.StartsWith("CINEMA4D") || authoring.StartsWith("Blender");
+                    _preserveOrder = _authoring.StartsWith("CINEMA4D") || _authoring.StartsWith("Blender");
                 }
                 
             
@@ -469,15 +470,15 @@ namespace Cybtans.Graphics.Importers.Collada
             {
                 if (components.Count == 1)
                     node.Component = components[0];
-                else
-                {
-                    //var collection = new FrameComponentColletion();
-                    //foreach (var comp in components)
-                    //    collection.Add(comp);
+                //else
+                //{
+                //    var collection = new FrameComponentColletion();
+                //    foreach (var comp in components)
+                //        collection.Add(comp);
 
-                    //collection.Initialize();
-                    //node.Component = collection;
-                }
+                //    collection.Initialize();
+                //    node.Component = collection;
+                //}
             }
 
             //if (node.Component is IGraphicObject)
@@ -834,6 +835,7 @@ namespace Cybtans.Graphics.Importers.Collada
                     //    //invert texture v coord
                         Vector2* texCoord = (Vector2*)(pBuffer + i * size + texOffset);
                         texCoord->Y = 1 - texCoord->Y;
+                        texCoord->X = 1 - texCoord->X;
                     //}
 
                     if (_zUp)

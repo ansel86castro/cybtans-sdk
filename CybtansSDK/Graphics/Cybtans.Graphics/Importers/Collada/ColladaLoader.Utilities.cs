@@ -10,7 +10,7 @@ namespace Cybtans.Graphics.Importers.Collada
 {
     partial class ColladaImporter
     {
-        Regex _numericExp = new Regex(@"(-?\d+(\.\d+)?)");
+        //Regex _numericExp = new Regex(@"(-?\d+(\.\d+)?)");
         Regex _wordExp = new Regex(@"\w+");
 
         Regex _texExp = new Regex(@"(?<R>.+)(-|_)(?<N>\w+)");
@@ -275,53 +275,53 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal Vector4 ParseVector4(string text, bool invert = true)
         {
-            var values = _numericExp.Matches(text);
+            var values = text.Split(' ');// _numericExp.Matches(text);
 
             if (_zUp && invert)
             {
-                return new Vector4(float.Parse(values[0].Value),
-                   float.Parse(values[2].Value),
-                   float.Parse(values[1].Value),
-                   float.Parse(values[3].Value));
+                return new Vector4(float.Parse(values[0]),
+                   float.Parse(values[2]),
+                   float.Parse(values[1]),
+                   float.Parse(values[3]));
             }
             else
             {
-                return new Vector4(float.Parse(values[0].Value),
-                    float.Parse(values[1].Value),
-                    float.Parse(values[2].Value),
-                    float.Parse(values[3].Value));
+                return new Vector4(float.Parse(values[0]),
+                    float.Parse(values[1]),
+                    float.Parse(values[2]),
+                    float.Parse(values[3]));
             }
         }
 
         internal Vector3 ParseVector3(string text, bool invert = true)
         {
-            var m = _numericExp.Matches(text);   
+            var m = text.Split(' '); //_numericExp.Matches(text);   
 
             if (_zUp && invert)
             {
-                return new Vector3(float.Parse(m[0].Value),
-                   float.Parse(m[2].Value),
-                   float.Parse(m[1].Value));
+                return new Vector3(float.Parse(m[0]),
+                   float.Parse(m[2]),
+                   float.Parse(m[1]));
             }
-            else return new Vector3(float.Parse(m[0].Value),
-                   float.Parse(m[1].Value),
-                   float.Parse(m[2].Value));
+            else return new Vector3(float.Parse(m[0]),
+                   float.Parse(m[1]),
+                   float.Parse(m[2]));
         }
 
         internal Vector2 ParseVector2(string text)
         {
-            var m = _numericExp.Matches(text);    
-            return new Vector2(float.Parse(m[0].Value), float.Parse(m[1].Value));
+            var m = text.Split(' ');//_numericExp.Matches(text);    
+            return new Vector2(float.Parse(m[0]), float.Parse(m[1]));
         }
 
         internal float[] ParseFloatArray(string text)
         {
-            var m =  _numericExp.Matches(text);                             
-            float[] floatValues = new float[m.Count];
+            var m = text.Split(' ');// _numericExp.Matches(text);                             
+            float[] floatValues = new float[m.Length];
 
             for (int i = 0; i < floatValues.Length; i++)
             {
-                floatValues[i] = float.Parse(m[i].Value);
+                floatValues[i] = float.Parse(m[i]);
             }
 
             return floatValues;
@@ -329,12 +329,12 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal int[] ParseIntArray(string text)
         {
-            var m = _numericExp.Matches(text);
-            int[] floatValues = new int[m.Count];
+            var m = text.Split(' ');//  _numericExp.Matches(text);
+            int[] floatValues = new int[m.Length];
 
             for (int i = 0; i < floatValues.Length; i++)
             {
-                floatValues[i] = int.Parse(m[i].Value);
+                floatValues[i] = int.Parse(m[i]);
             }
 
             return floatValues;

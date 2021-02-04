@@ -1,10 +1,6 @@
 
 import * as React from 'react';
-import { SceneDto } from '../cybtans.graphics/models';
-import ProgramRepository from '../cybtans.graphics/ProgramRepository';
-import Scene from '../cybtans.graphics/Scene';
 import SceneManager from '../cybtans.graphics/SceneManager';
-
 import "./SceneComponent.css";
 
 export default function SceneComponent(){
@@ -44,9 +40,20 @@ export default function SceneComponent(){
         
         await sceneMgr.current?.loadPrograms(`${process.env.REACT_APP_API_URL}/api/scene/programs`);
         
-        await sceneMgr.current?.loadScene(
-        `${process.env.REACT_APP_API_URL}/api/scene/sample1`, 
-        `${process.env.REACT_APP_API_URL}/api/scene/texture/sample1`);  
+       let scene =  await sceneMgr.current?.loadScene(
+        `${process.env.REACT_APP_API_URL}/api/scene/sample2`, 
+        `${process.env.REACT_APP_API_URL}/api/scene/texture/sample2`);  
+
+        scene.addNodeUpdate('Sphere', (e, node)=>{
+            node.rotateY(Math.PI*0.0001 * e);
+            node.commitChanges(true);
+        });
+        
+        scene.addNodeUpdate('Cube', (e, node)=>{
+            node.rotateY(Math.PI*0.0005 * e);
+            node.commitChanges(true);
+        });
+
     }  
 
     return (

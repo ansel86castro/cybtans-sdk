@@ -19,22 +19,24 @@ export default class Camera {
     id: string;
     position:vec3;
     
-    constructor(width:number, height:number, data:CameraDto){
+    constructor(data:CameraDto){
         this.projType = data.projType;
         this.name = data.name;
         this.nearPlane = data.nearPlane;
         this.farPlane = data.farPlane;
         this.fieldOfView = data.fieldOfView;
         this.aspectRatio = data.aspectRatio;
-        this.width = width;
-        this.height = height;
+        this.width = data.width;
+        this.height = data.height;
         this.id = data.id;
-        this.localMtx = matrix(data.localMatrix);
+        this.localMtx = matrix(); //matrix(data.localMatrix);
         this.viewMtx =  matrix(data.viewMatrix);
         this.projMtx = matrix(data.projMatrix);;
         this.viewProjMtx = matrix();
         this.viewInvertMtx = matrix();
         this.position = float3();
+
+        this.projMtx = mat4.perspective(this.projMtx, this.fieldOfView, this.width /this.height, this.nearPlane, this.farPlane);
     
        this.onViewUpdated();             
 
@@ -50,16 +52,16 @@ export default class Camera {
     }
 
     transform(transform: mat4) {
-       //view = local * transform
+       //view =  transform * local
        
-    //    mat4.mul(this.viewMtx, this.localMtx, transform) ;
-    //     this.position[0] = this.viewMtx[12];
-    //     this.position[1] = this.viewMtx[13];
-    //     this.position[2] = this.viewMtx[14];
+        // mat4.mul(this.viewInvertMtx,  transform, this.localMtx);
+        // this.position[0] = this.viewMtx[12];
+        // this.position[1] = this.viewMtx[13];
+        // this.position[2] = this.viewMtx[14];
 
-    //     mat4.invert(this.viewMtx, this.viewMtx);
+        // mat4.invert(this.viewMtx, this.viewInvertMtx);
 
-    //     mat4.mul(this.viewProjMtx, this.viewMtx,  this.projMtx);
+        mat4.mul(this.viewProjMtx, this.projMtx, this.viewMtx);
 
     }
 
