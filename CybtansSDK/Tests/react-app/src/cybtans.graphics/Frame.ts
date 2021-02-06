@@ -26,7 +26,7 @@ export default class Frame {
     bindParentMtx: mat4;
     bindAffectorMtx: mat4;
     worldMtx: mat4;
-    //bindWorldMtx:mat4;
+    worldTranformNormalMtx:mat4;
 
     parent?: Frame;
     type: FrameType;
@@ -46,10 +46,11 @@ export default class Frame {
         this.bindParentMtx = matrix(data.bindParentTransform);
         this.worldMtx = matrix(data.worldTransform);
         this.bindAffectorMtx = matrix( data.bindAffectorTransform);
+        this.worldTranformNormalMtx = matrix();
         this.type = data.type;
         this.range = data.range;
         this.tag = data.tag;
-        this.parent = parent;
+        this.parent = parent;        
 
         let [scale, translation, rotation] = decomposeMatrix(this.localMtx);
         this.localScale = mat4.create();
@@ -60,12 +61,8 @@ export default class Frame {
 
         this.localRotation = rotation;
 
-        // mat4.transpose(this.localScale, this.localScale);
-        // mat4.transpose(this.localTranslation, this.localTranslation);
-        // mat4.transpose(this.localRotation, this.localRotation);
-        //mat4.invert(this.localMtx, this.localMtx);
-        //mat4.invert(this.bindParentMtx, this.bindParentMtx);
-        //this.bindWorldMtx = matrix();
+       mat4.invert(this.worldTranformNormalMtx, this.worldMtx);
+       mat4.transpose(this.worldTranformNormalMtx, this.worldTranformNormalMtx);
           
         if(data.childrens){
             for (const item of data.childrens) {
@@ -151,8 +148,8 @@ export default class Frame {
     }
 
     updateLocalPose(){
-        mat4.mul(this.localMtx, this.localRotation, this.localScale);
-        mat4.mul(this.localMtx, this.localMtx, this.localTranslation);
+        mat4.mul(this.localMtx, this.localTranslation, this.localScale);
+        mat4.mul(this.localMtx, this.localMtx, this.localRotation);
     }
 
     updateWorldPose(){
@@ -164,6 +161,9 @@ export default class Frame {
             mat4.mul(this.worldMtx, this.worldMtx, this.localMtx);
         }        
 
+        mat4.invert(this.worldTranformNormalMtx, this.worldMtx);
+        mat4.transpose(this.worldTranformNormalMtx, this.worldTranformNormalMtx);
+         
         if(this.component){
             this.component.onFrameUpdate();
         }
@@ -307,7 +307,10 @@ export class LightComponent extends FrameComponent{
     }
 
     initialize(scene:Scene){
-        
+        scene.lightsComponents.push(this);
+        if(!scene.currentLight){
+            scene.currentLight = this;
+        }
     }
 
 

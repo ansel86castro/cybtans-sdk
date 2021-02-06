@@ -9,7 +9,8 @@ namespace Cybtans.Graphics.Lights
     {
         public AmbientLight()
         {
-            AmbientColor = new Color3(0.1f, 0.1f, 0.1f);
+            AmbientColor = new Color3(0.3f, 0.3f, 0.3f);
+
             SkyColor = new Color3(1, 1, 1);
             GroundColor = new Color3(0, 0, 0);
             NorthPole = Vector3.UnitY;

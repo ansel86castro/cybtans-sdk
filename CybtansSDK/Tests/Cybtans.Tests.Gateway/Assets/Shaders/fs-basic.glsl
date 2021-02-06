@@ -10,8 +10,8 @@ struct Light {
 };
 
 struct Hemispherical {
-    vec4 skyColor;
-    vec4 groundColor;
+    vec3 skyColor;
+    vec3 groundColor;
     vec3 northPole;
 };
 
@@ -48,10 +48,10 @@ vec4 lit(float NdotL, float NdotH, float m){
 }
 
 
-vec4 ComputeHemisphere()
+vec3 ComputeHemisphere()
 {
 	float k = 0.5f + 0.5f * dot(v_normalW, uHemisphereLight.northPole);
-	return mix(uHemisphereLight.groundColor ,uHemisphereLight.skyColor , k) * ( 1.0 - v_occ);	
+	return mix(uHemisphereLight.groundColor ,uHemisphereLight.skyColor , k) * ( v_occ);	
 }
 
 
@@ -71,10 +71,15 @@ vec3 DirectionalLight(vec3 diffuse, vec3 specular, float specularPower)
 
 
 
-void main() {
+void main() 
+{
+    vec4 diffuse  = texture(uDiffuseSampler, v_texCoord);
+    diffuse *= uMaterial.diffuse;
 
-    Color  = texture(uDiffuseSampler, v_texCoord); 
-    Color.a = 1.0;
+    Color = diffuse;
+    Color.rgb *= ComputeHemisphere();
+    Color.rgb += DirectionalLight(diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
+
 
 //    vec4 diffuse = texture(uDiffuseSampler, v_texCoord);
 //

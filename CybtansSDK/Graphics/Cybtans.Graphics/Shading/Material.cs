@@ -20,9 +20,9 @@ namespace Cybtans.Graphics
 
         Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
         string _name;
-        Color4 _diffuse;
-        Color4 _specular;
-        Color4 _emissive;
+        Color4 _diffuse = new Color4(1,1,1, 1);
+        Color4 _specular = new Color4(1,1,1,1);
+        Color4 _emissive = new Color4(0,0,0,0);
 
         public Material(string name):this()
         {
