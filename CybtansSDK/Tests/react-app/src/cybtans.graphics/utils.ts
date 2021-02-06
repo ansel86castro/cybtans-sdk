@@ -31,7 +31,7 @@ export function checkError(gl:WebGL2RenderingContext){
         }
 
         console.error(`GL Error ${msg}`);
-        throw new Error(`GL Error r ${msg}`);
+        throw new Error(`GL Error r ${msg}`);        
     }
 
 }

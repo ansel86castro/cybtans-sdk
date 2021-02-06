@@ -273,9 +273,14 @@ namespace Cybtans.Graphics.Importers.Collada
             }
         }
 
+        char[] splits = new char[] { ' ', '\n', '\t', '\r' };
+        string[] Split(string text)
+        {
+            return text.Split(splits, StringSplitOptions.RemoveEmptyEntries);
+        }
         internal Vector4 ParseVector4(string text, bool invert = true)
         {
-            var values = text.Split(' ');// _numericExp.Matches(text);
+            var values = Split(text);// _numericExp.Matches(text);
 
             if (_zUp && invert)
             {
@@ -295,7 +300,7 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal Vector3 ParseVector3(string text, bool invert = true)
         {
-            var m = text.Split(' '); //_numericExp.Matches(text);   
+            var m = Split(text); //_numericExp.Matches(text);   
 
             if (_zUp && invert)
             {
@@ -310,13 +315,13 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal Vector2 ParseVector2(string text)
         {
-            var m = text.Split(' ');//_numericExp.Matches(text);    
+            var m = Split(text);//_numericExp.Matches(text);    
             return new Vector2(float.Parse(m[0]), float.Parse(m[1]));
         }
 
         internal float[] ParseFloatArray(string text)
         {
-            var m = text.Split(' ');// _numericExp.Matches(text);                             
+            var m = Split(text);// _numericExp.Matches(text);                             
             float[] floatValues = new float[m.Length];
 
             for (int i = 0; i < floatValues.Length; i++)
@@ -329,7 +334,7 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal int[] ParseIntArray(string text)
         {
-            var m = text.Split(' ');//  _numericExp.Matches(text);
+            var m = Split(text);//  _numericExp.Matches(text);
             int[] floatValues = new int[m.Length];
 
             for (int i = 0; i < floatValues.Length; i++)
@@ -342,7 +347,7 @@ namespace Cybtans.Graphics.Importers.Collada
 
         internal bool[] ParseBoolArray(string text)
         {
-            string[] values = text.Split(' ');
+            string[] values = Split(text); ;
             bool[] floatValues = new bool[values.Length];
             for (int i = 0; i < values.Length; i++)
             {

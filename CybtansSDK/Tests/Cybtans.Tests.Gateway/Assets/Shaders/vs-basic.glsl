@@ -8,6 +8,7 @@ in vec2 a_texCoord;
 in float a_occ;
 
 uniform mat4 u_World;
+uniform mat4 u_WorldNormal;
 uniform mat4 u_ViewProj;
 
 out highp vec3 v_positionW;
@@ -19,7 +20,7 @@ out vec4 v_screenCoord;
 void main(){
     v_positionW = vec3(u_World * vec4(a_position, 1));
 
-    v_normalW = normalize(mat3(u_World) * a_normal);    
+    v_normalW = normalize(mat3(u_WorldNormal) * a_normal);    
     gl_Position =  u_ViewProj * vec4(v_positionW ,1) ;
 
     v_screenCoord.x = (gl_Position.x + gl_Position.w) * 0.5f;

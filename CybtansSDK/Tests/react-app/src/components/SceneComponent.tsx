@@ -57,6 +57,6 @@ export default function SceneComponent(){
     }  
 
     return (
-         <canvas id="scene" ref={ref} width="800" height="600"></canvas>
+         <canvas id="scene" ref={ref} width="1024" height="768"></canvas>
     );
 }

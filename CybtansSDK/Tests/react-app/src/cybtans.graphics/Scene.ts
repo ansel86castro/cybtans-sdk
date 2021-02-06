@@ -27,11 +27,12 @@ export default class Scene implements IRenderable {
     //program sources
     ambient:AmbientLight;
     currentCamera?:Camera;    
-    currentLight?: LightComponent;
+    currentLight?: LightComponent;   
     renderables:IRenderable[]=[];
     
     cameras: Map<string, Camera> = new Map();
     lights:Light[]= [];
+    lightsComponents: LightComponent[] = [];
     textures:Map<string, Texture> = new Map();
     materials:Map<string, Material> = new Map();
     meshes:Map<string, Mesh> = new Map();
@@ -53,15 +54,18 @@ export default class Scene implements IRenderable {
         this.id = data.id;
         this.name = data.name;
         this.units = data.units;
-        this.unitOfMeasure = data.unitOfMeasure;       
-        this.ambient = new AmbientLight(data.ambient);
+        this.unitOfMeasure = data.unitOfMeasure;    
+        
+        if(data.ambient){
+            this.ambient = new AmbientLight(data.ambient);
+        }
 
         if(data.cameras){
             this.cameras = new Map();
             data.cameras.forEach(dto => 
                 {
                     let c = new Camera({ ...dto, width: this.manager.width, height: this.manager.height});                   
-                    c.viewMtx = mat4.lookAt(c.viewMtx, float3([0, 3, -7]), float3([0,0,0]), float3([0,1,0]));
+                    c.viewMtx = mat4.lookAt(c.viewMtx, float3([0, 3, 7]), float3([0,0.5,0]), float3([0,1,0]));
                     c.onViewUpdated();
                     
                     this.cameras?.set(c.id, c);

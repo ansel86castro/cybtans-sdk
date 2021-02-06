@@ -139,10 +139,10 @@ export default class Program {
                     if(!source){
                         source = { sourceType: value.target, parameters: [] }
                         this.sources[value.target] = source;
+                        this.uniformSlots.push(source);
                     }
 
-                    source.parameters.push(p);
-                    this.uniformSlots.push(source);
+                    source.parameters.push(p);                  
                 }
             }
         }
@@ -281,6 +281,8 @@ export default class Program {
                 let func = setter[p.type];
                 if(!func)continue;
 
+                checkError(gl);
+                
                 func(gl, p, value);
 
                 checkError(gl);
