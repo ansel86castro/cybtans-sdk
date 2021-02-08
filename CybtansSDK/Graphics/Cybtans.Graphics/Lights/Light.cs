@@ -14,7 +14,7 @@ namespace Cybtans.Graphics.Lights
         private bool enable = true;
         private Vector3 attenuation = new Vector3(1, 0, 0);
         private float intensity = 1;
-        private float spotPower = 16;
+        private float spotPower = 1;        
         private LightType type = LightType.Directional;
         private float range = 1000;
 
@@ -34,7 +34,7 @@ namespace Cybtans.Graphics.Lights
 
         public float SpotPower { get => spotPower; set => spotPower = value; }
 
-        public LightType Type { get => type; set => type = value; }
+        public LightType Type { get => type; set => type = value; }        
 
         public float Range { get => range; set => range = value; }
 
@@ -43,12 +43,12 @@ namespace Cybtans.Graphics.Lights
             return new LightDto
             {
                 Id = Id,
-                Ambient = Ambient.ToList(),
-                Attenuation = Attenuation.ToList(),
-                Diffuse = Diffuse.ToList(),
-                Specular = Specular.ToList(),
-                Enable = Enable,
-                Intensity = Intensity,
+                Ambient = ambient.ToList(),
+                Attenuation = attenuation.ToList(),
+                Diffuse = diffuse.ToList(),
+                Specular = specular.ToList(),            
+                Enable = enable,
+                Intensity = intensity,
                 Range = range,
                 SpotPower = spotPower,
                 Type = (Models.LightType)Type

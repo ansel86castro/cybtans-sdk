@@ -9,6 +9,7 @@ using Cybtans.Graphics.Lights;
 using Cybtans.Graphics.Animations;
 using Cybtans.Math;
 using Cybtans.Graphics.Buffers;
+using System.Runtime.InteropServices;
 
 namespace Cybtans.Graphics.Importers.Collada
 {
@@ -251,7 +252,7 @@ namespace Cybtans.Graphics.Importers.Collada
             }
             ReadColorInfo(effect, "emission", (color, textureUrl) =>
             {
-                material.Emissive = color;
+                material.Emissive = (Vector3)color;
                 if (textureUrl != null)
                 {
                     try
@@ -267,7 +268,7 @@ namespace Cybtans.Graphics.Importers.Collada
 
             ReadColorInfo(effect, "specular", (color, textureUrl) =>
             {
-                material.Specular = color;
+                material.Specular = (Vector3)color;
                 if (textureUrl != null)
                 {
                     try
@@ -289,7 +290,7 @@ namespace Cybtans.Graphics.Importers.Collada
                     try
                     {
                         material.DiffuseMap = GetTexture(textureUrl);
-                        //SetMaps(material);
+                        SetMaps(material);
                     }
                     catch (InvalidOperationException)
                     {
@@ -749,22 +750,27 @@ namespace Cybtans.Graphics.Importers.Collada
                                 var normalIdx = normalInput.Source != null ? polyIndices[iStart + normalInput.Offset] : -1;
                                 var texCIdx = texCoordInput.Source != null ? polyIndices[iStart + texCoordInput.Offset] : -1;
 
-                                var index = vertexBuilder.GetVertexIndex(posIdx, normalIdx, texCIdx);
+                                #region Copy Vertex Attributes
 
+                                ByteBuffer.Copy((byte*)positionInput.Source.ArrayPointer + posIdx * 12, pVertexData + posOffset, 12);
+                                if (normalIdx >= 0)
+                                    ByteBuffer.Copy((byte*)normalInput.Source.ArrayPointer + normalIdx * 12, pVertexData + normalOffset, 12);
+                                if (texCIdx >= 0)
+                                    ByteBuffer.Copy((byte*)texCoordInput.Source.ArrayPointer + texCIdx * 8, pVertexData + texOffset, 8);
+
+                                #endregion
+
+                                var vertexTexCoord = *(Vector2*)(pVertexData + texOffset);
+
+                                var index = vertexBuilder.GetVertexIndex(posIdx, vertexTexCoord);
                                 if (index < 0)
-                                {
-                                    #region Copy Vertex Attributes
-
-                                    ByteBuffer.Copy((byte*)positionInput.Source.ArrayPointer + posIdx * 12, pVertexData + posOffset, 12);
-                                    if (normalIdx >= 0)
-                                        ByteBuffer.Copy((byte*)normalInput.Source.ArrayPointer + normalIdx * 12, pVertexData + normalOffset, 12);
-                                    if (texCIdx >= 0)
-                                        ByteBuffer.Copy((byte*)texCoordInput.Source.ArrayPointer + texCIdx * 8, pVertexData + texOffset, 8);
-
-                                    index = vertexBuilder.WriteVertex(vertexData, posIdx, normalIdx, texCIdx);
+                                {                                  
+                                    index = vertexBuilder.WriteVertex(vertexData, posIdx, vertexTexCoord);
                                     vertexCount++;
-
-                                    #endregion
+                                }
+                                else
+                                {
+                                    vertexBuilder.AddNormal(pVertexData, index);
                                 }
 
                                 startVertex = System.Math.Min(startVertex, index);
@@ -1268,8 +1274,7 @@ namespace Cybtans.Graphics.Importers.Collada
                 e.FindElementByTag("color", c =>
                 {
                     Vector3 color = ParseVector3(c.Value);
-                    light.Diffuse = color;
-                    light.Specular = color;
+                    light.Diffuse = color;                  
                 });
 
                 e.FindElementByTag("constant_attenuation", c => light.Attenuation.X = float.Parse(c.Value));
@@ -1285,8 +1290,7 @@ namespace Cybtans.Graphics.Importers.Collada
                 e.FindElementByTag("color", c =>
                 {
                     Vector3 color = ParseVector3(c.Value);
-                    light.Diffuse = color;
-                    light.Specular = color;
+                    light.Diffuse = color;                   
                 });
 
                 e.FindElementByTag("constant_attenuation", c => light.Attenuation.X = float.Parse(c.Value));

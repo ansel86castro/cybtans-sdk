@@ -1,4 +1,4 @@
-#version 300 es
+﻿#version 300 es
 precision mediump float;
 
 struct Light {
@@ -23,6 +23,8 @@ struct Material {
 
 in vec3 v_positionW;
 in vec3 v_normalW;
+in vec3 v_tangentW;
+in vec3 v_binormalW;
 in vec2 v_texCoord;
 in float v_occ;
 in float v_screenCoord;
@@ -35,6 +37,7 @@ uniform vec3 uEyePos;
 uniform Material uMaterial;
 
 uniform sampler2D uDiffuseSampler;
+uniform sampler2D uNormalSampler;
 
 out vec4 Color;
 
@@ -55,13 +58,16 @@ vec3 ComputeHemisphere()
 }
 
 
-vec3 DirectionalLight(vec3 diffuse, vec3 specular, float specularPower)
+vec3 DirectionalLight(vec3 normal, vec3 diffuse, vec3 specular, float specularPower)
 {
 	vec3 toEye = normalize(uEyePos - v_positionW);	
     vec3 lightDir = -uLight.dir;
 
-	vec3 h = normalize(lightDir + toEye);
-	vec4 l = lit(dot(v_normalW, lightDir), dot(v_normalW, h), specularPower);	
+    float nDotL = dot(normal, lightDir);
+    vec3 reflection = (2.0 * normal * nDotL) - lightDir;
+    float rDotV = dot(reflection, toEye);
+
+	vec4 l = lit(nDotL, rDotV , specularPower);	
 	
 	//add diffuse contribution
 	vec3 color = (diffuse * uLight.diffuse) * l.y + (specular * uLight.specular) * l.z;
@@ -70,22 +76,29 @@ vec3 DirectionalLight(vec3 diffuse, vec3 specular, float specularPower)
 }
 
 
+vec3 normalMap(){
+    // Fetch the tangent space normal from normal map
+    vec3 normal = texture( uNormalSampler, v_texCoord).xyz;
+    
+    // Scale and bias from [0, 1] to [−1, 1]
+     normal = (normal * 2.0) - 1.0;
+
+    // Construct a matrix to transform from tangent to
+    // world space
+    mat3 tangentToWorldMat = mat3( v_tangentW, v_binormalW, v_normalW );
+    // Transform normal to world space and normalize
+    normal = normalize( tangentToWorldMat * normal );
+    
+    return normal;
+}
 
 void main() 
 {
+    vec3 normal = normalMap();
     vec4 diffuse  = texture(uDiffuseSampler, v_texCoord);
     diffuse *= uMaterial.diffuse;
 
     Color = diffuse;
     Color.rgb *= ComputeHemisphere();
-    Color.rgb += DirectionalLight(diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
-
-
-//    vec4 diffuse = texture(uDiffuseSampler, v_texCoord);
-//
-//    diffuse.rgb *= uMaterial.diffuse.rgb;
-//    
-//    Color = diffuse;    
-//    Color.rgb = DirectionalLight(diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
-//    Color.rgb += uAmbient * diffuse.rgb * v_occ;   
+    Color.rgb += DirectionalLight(normal, diffuse.rgb, uMaterial.specular, uMaterial.specularPower);
 }

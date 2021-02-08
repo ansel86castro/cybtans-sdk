@@ -1,5 +1,6 @@
 ﻿
 using Cybtans.Graphics.Models;
+using Cybtans.Graphics.Shading;
 using Cybtans.Math;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,12 @@ namespace Cybtans.Graphics
         public const string ALPHA_MAP = "ALPHA_MAP";
         public const string EMISSIVE_MAP = "ALPHA_MAP";
 
-        Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();
+        Dictionary<string, Texture> _textures = new Dictionary<string, Texture>();      
+
         string _name;
         Color4 _diffuse = new Color4(1,1,1, 1);
-        Color4 _specular = new Color4(1,1,1,1);
-        Color4 _emissive = new Color4(0,0,0,0);
+        Color3 _specular = new Color3(1,1,1);
+        Color3 _emissive = new Color3(0,0,0);       
 
         public Material(string name):this()
         {
@@ -30,32 +32,30 @@ namespace Cybtans.Graphics
         }
          
         public Material()
-        {
-            _diffuse = new Color4(1, 1, 1, 1);
-            _specular = new Color4(1, 1, 1, 1);
-            _emissive = new Color4();            
-            Reflectivity = 0;
-            Refractitity = 0;
-            SpecularPower = 4;          
+        {           
+           
         }
 
         public Guid Id { get; set; } = Guid.NewGuid();
 
         public string Name { get => _name; set => _name = value; }
 
+        //Programs for effect
+        public Dictionary<string, ShaderProgram> Programs { get; set; }
+
         public ref Color4 Diffuse => ref _diffuse;
 
-        public ref Color4 Specular => ref _specular;
+        public ref Color3 Specular => ref _specular;
 
-        public ref Color4 Emissive => ref _emissive;
+        public ref Color3 Emissive => ref _emissive;
 
-        public float Alpha { get => _diffuse.A; set => _diffuse.A = value; }                
+        public float Alpha { get => _diffuse.A; set => _diffuse.A = value; }
 
         public float Reflectivity { get; set; }
 
         public float Refractitity { get; set; }
 
-        public float SpecularPower { get; set; }
+        public float SpecularPower { get; set; } = 16;
 
         public Texture DiffuseMap { get => GetTexture(DIFFUSE_MAP); set => SetTexture(DIFFUSE_MAP, value); }
 
@@ -89,9 +89,11 @@ namespace Cybtans.Graphics
                 Id = Id,
                 Name = Name,
                 Diffuse = _diffuse.ToList(),
-                Emissive = ((Color3)_emissive).ToList(),
-                Specular =  ((Color3)_specular).ToList(),
-                SpecularPower = Specular.A,
+                Emissive = _emissive.ToList(),
+                Specular = _specular.ToList(),
+                SpecularPower = SpecularPower,
+                Reflectivity = Reflectivity,
+                Refractivity = Refractitity,
                 Textures = _textures.ToDictionary(x => x.Key, x => x.Value.Id)
             };
         }

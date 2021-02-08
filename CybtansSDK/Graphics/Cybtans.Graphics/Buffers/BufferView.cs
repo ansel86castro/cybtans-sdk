@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 
 #nullable enable
 
@@ -88,14 +91,14 @@ namespace Cybtans.Graphics.Buffers
         readonly byte* pter;
         readonly int stride;
         readonly int count;
-        readonly ByteBuffer? _buffer;
+        readonly ByteBuffer? _buffer;        
 
         public BufferView(ByteBuffer buffer, int count)
         {
             pter = (byte*)buffer.Pin();
             this.count = count;
             stride = sizeof(T);
-            _buffer = buffer;
+            _buffer = buffer;            
         }
 
         public BufferView(ByteBuffer buffer, int offet, int stride, int count)
@@ -107,13 +110,19 @@ namespace Cybtans.Graphics.Buffers
             _buffer = buffer;
         }
 
+        public BufferView(void* pter, VertexDefinition vd, string semantic, int usageIndex, int count)
+            :this(new IntPtr(pter), vd, semantic, usageIndex, count)
+        {
+
+        }
+
         public BufferView(IntPtr pter, VertexDefinition vd, string semantic, int usageIndex, int count)
         {
             this.pter = (byte*)pter + vd.OffsetOf(semantic, usageIndex);
             stride = vd.Size;
             this.count = count;
             _buffer = null;
-        }
+        }      
 
         public BufferView(ByteBuffer buffer, VertexDefinition vd, string semantic, int usageIndex, int count)
         {
@@ -398,4 +407,26 @@ namespace Cybtans.Graphics.Buffers
             #endregion
         }
     }
+
+    public readonly struct ArrayPtr: IDisposable
+    {
+        private readonly GCHandle _handle;
+
+        public readonly IntPtr Pointer;
+
+        public ArrayPtr(Array array)
+        {
+            _handle = GCHandle.Alloc(array, GCHandleType.Pinned);
+            Pointer = Marshal.UnsafeAddrOfPinnedArrayElement(array, 0);
+        }
+
+        public readonly void Dispose()
+        {
+            if (_handle.IsAllocated)
+            {
+                _handle.Free();
+            }
+        }
+    }
 }
+

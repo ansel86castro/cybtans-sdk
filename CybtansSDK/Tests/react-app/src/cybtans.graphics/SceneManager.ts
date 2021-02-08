@@ -39,15 +39,6 @@ export default class SceneManager {
         return this._program;
     }
 
-    start(){
-        this.running = true;
-        requestAnimationFrame(this.onFrame);
-    }
-
-    stop(){
-        this.running = false;    
-    }
-
     private onFrame(timestamp:DOMHighResTimeStamp){
       if(this.running === false) return;
 
@@ -92,6 +83,16 @@ export default class SceneManager {
         if(this.current == null) return;  
 
         this.current.render(this);
+    }
+
+
+    start(){
+        this.running = true;
+        requestAnimationFrame(this.onFrame);
+    }
+
+    stop(){
+        this.running = false;    
     }
 
     programSource(type: Function, value: any) {

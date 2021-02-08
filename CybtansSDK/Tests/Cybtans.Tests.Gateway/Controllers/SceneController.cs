@@ -39,12 +39,12 @@ namespace Cybtans.Tests.Gateway.Controllers
         }
 
         [HttpGet("programs")]
-        public async Task<ActionResult<ShaderProgramCollection>> GetPrograms()
+        public async Task<ActionResult<EffectsManagerDto>> GetPrograms()
         {
-            ShaderProgramRepository repository = new ShaderProgramRepository();
-            await repository.LoadFromDirectory("Assets/Shaders");
+            EffectsManager effectManager = new EffectsManager();
+            await effectManager.LoadEffectsFromDirectory("Assets/Effects");
 
-            return repository.ToDto();
+            return effectManager.ToDto();
         }
 
         [HttpGet("texture/{scene}/{name}")]

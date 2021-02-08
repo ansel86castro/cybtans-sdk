@@ -13,7 +13,8 @@ namespace Cybtans.Graphics.Importers.Collada
         //Regex _numericExp = new Regex(@"(-?\d+(\.\d+)?)");
         Regex _wordExp = new Regex(@"\w+");
 
-        Regex _texExp = new Regex(@"(?<R>.+)(-|_)(?<N>\w+)");
+        //texture-typr\e
+        Regex _texExp = new Regex(@"(?<R>.+)(-)(?<N>\w+)");
 
         string[] _tags = new string[] { "-d", "_d", "-D", "_D" };
         Func<string, string>[] _tagConv = new Func<string, string>[] { x => "-" + x.ToLower(), x => "_" + x.ToLower(), x => "-" + x, x => "_" + x };
@@ -650,26 +651,35 @@ namespace Cybtans.Graphics.Importers.Collada
             if (!match.Success)
                 return;
 
-            diffuseName = match.Groups["R"].Value;
-            string value = match.Groups["N"].Value;
-            if (value[0] != 'D' && value[0] != 'd')
+            var baseName = match.Groups["R"].Value;        
+            var value = match.Groups["N"].Value;
+            if (string.IsNullOrEmpty(value))
                 return;
 
-            string mapsDirectory = Path.GetDirectoryName(diffuseFilename);   
+            string mapsDirectory = Path.GetDirectoryName(diffuseFilename);
+            if (string.IsNullOrEmpty(mapsDirectory))
+            {
+                mapsDirectory = _directory;
+            }
+
             foreach (var file in Directory.EnumerateFiles(mapsDirectory))
-            {              
-                match = _texExp.Match(Path.GetFileNameWithoutExtension(file));
+            {
+                var filename = Path.GetFileNameWithoutExtension(file);
+                if (!filename.StartsWith(baseName) || filename == diffuseName)
+                    continue;
+
+                match = _texExp.Match(filename);
                 if (match.Success)
                 {
                     var name = match.Groups["R"].Value;
-                    if (name == diffuseName)
-                    {
-                        value = match.Groups["N"].Value;
-                        if (value[0] == 'n')
-                            material.NormalMap = GetTexture( file );
-                        else if (value[0] == 's')
-                            material.SpecularMap = GetTexture(file);
-                    }
+                    value = match.Groups["N"].Value;
+
+                    material.SetTexture(value, GetTexture(file));
+
+                    //if (value[0] == 'n')
+                    //    material.NormalMap = GetTexture(file);
+                    //else if (value[0] == 's')
+                    //    material.SpecularMap = GetTexture(file);
                 }
             }
         }
