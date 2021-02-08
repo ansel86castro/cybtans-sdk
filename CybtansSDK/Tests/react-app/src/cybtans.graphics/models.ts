@@ -169,6 +169,9 @@ export interface MaterialDto {
   specularPower: number;
   textures?: { [key:string]: string }|null;
   id: string;
+  reflectivity: number;
+  refractivity: number;
+  perograms?: { [key:string]: string }|null;
 }
 
 
@@ -279,7 +282,34 @@ export interface ShaderProgramDto {
 }
 
 
-export interface ShaderProgramCollection {
-  programs?: ShaderProgramDto[]|null;
-  defaultProgram?: string|null;
+export interface EffectDto {
+  name?: string|null;
+  predicates?: { [key:string]: PredicateProgramList }|null;
+  programs?: { [key:string]: string }|null;
+}
+
+
+export interface PredicateProgramList {
+  items?: PredicateProgramDto[]|null;
+}
+
+
+export interface PredicateProgramDto {
+  andConditions?: ParameterPredicateDto[]|null;
+  orConditions?: ParameterPredicateDto[]|null;
+  condition?: ParameterPredicateDto|null;
+  program?: string|null;
+}
+
+
+export interface ParameterPredicateDto {
+  op: number;
+  parameter?: string|null;
+  value?: any|null;
+}
+
+
+export interface EffectsManagerDto {
+  programs?: { [key:string]: ShaderProgramDto }|null;
+  effects?: { [key:string]: EffectDto }|null;
 }

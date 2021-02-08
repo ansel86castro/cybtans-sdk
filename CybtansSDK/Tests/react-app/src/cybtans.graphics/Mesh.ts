@@ -69,7 +69,6 @@ export default class Mesh {
 
             program.bindSource(Material, ctx);
 
-            //gl.drawArrays(gl.TRIANGLES, 0, layer.vertexCount);
             gl.drawElements(gl.TRIANGLES, layer.indexCount, this.sixteenBitsIndices === true ? gl.UNSIGNED_SHORT: gl.UNSIGNED_INT, layer.startIndex);
           
             checkError(gl);

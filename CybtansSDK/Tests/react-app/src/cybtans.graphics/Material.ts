@@ -13,6 +13,8 @@ export default class Material {
     specularPower: number;
     emissive: vec3;    
     id: string;
+    reflectivity: number;
+    refractivity: number;
     textures:TextureMap = {};
 
     constructor( scene:Scene, data:MaterialDto){
@@ -22,6 +24,8 @@ export default class Material {
         this.specular = float3(data.specular);
         this.emissive = float3(data.emissive);
         this.specularPower = data.specularPower;
+        this.reflectivity=data.reflectivity;
+        this.refractivity = data.refractivity;
         
         if(data.textures){            
             for (const key in data.textures) {

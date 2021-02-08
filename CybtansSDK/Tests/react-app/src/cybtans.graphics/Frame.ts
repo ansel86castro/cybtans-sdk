@@ -317,6 +317,7 @@ export class LightComponent extends FrameComponent{
     onFrameUpdate(){
          transformNormal (this.worldDirection ,this.localDirection, this.frame.worldMtx);
          vec3.transformMat4(this.worldPosition, this.localPosition, this.frame.worldMtx);
+         vec3.normalize(this.worldDirection, this.worldDirection);
     }
 }
 

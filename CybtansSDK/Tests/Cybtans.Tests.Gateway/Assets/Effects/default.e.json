@@ -1,0 +1,20 @@
+{
+  "Name": "Default",
+  "Programs": {
+    "Mesh": "default"
+  },
+
+  "Predicates": {
+    "Mesh": {
+      "Items": [
+        {
+          "Condition": {
+            "Op": 1,
+            "Parameter": "uNormalSampler"
+          },
+          "Program": "normal-map"
+        }
+      ]
+    }
+    }
+}

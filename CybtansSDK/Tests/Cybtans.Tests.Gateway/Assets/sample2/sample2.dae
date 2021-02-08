@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.91.0 commit date:2020-11-25, commit time:08:34, hash:0f45cab862b8</authoring_tool>
     </contributor>
-    <created>2021-02-06T00:37:04</created>
-    <modified>2021-02-06T00:37:04</modified>
+    <created>2021-02-07T16:21:30</created>
+    <modified>2021-02-07T16:21:30</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -35,7 +35,7 @@
     <light id="Light-light" name="Light">
       <technique_common>
         <directional>
-          <color sid="color">0.3 0.3 0.3</color>
+          <color sid="color">1 1 1</color>
         </directional>
       </technique_common>
       <extra>
@@ -102,14 +102,14 @@
     </effect>
     <effect id="earthMaterial-effect">
       <profile_COMMON>
-        <newparam sid="earth_jpg-surface">
+        <newparam sid="_k_earth-DIFFUSE_MAP_jpg-surface">
           <surface type="2D">
-            <init_from>earth_jpg</init_from>
+            <init_from>_k_earth-DIFFUSE_MAP_jpg</init_from>
           </surface>
         </newparam>
-        <newparam sid="earth_jpg-sampler">
+        <newparam sid="_k_earth-DIFFUSE_MAP_jpg-sampler">
           <sampler2D>
-            <source>earth_jpg-surface</source>
+            <source>_k_earth-DIFFUSE_MAP_jpg-surface</source>
           </sampler2D>
         </newparam>
         <technique sid="common">
@@ -118,7 +118,7 @@
               <color sid="emission">0 0 0 1</color>
             </emission>
             <diffuse>
-              <texture texture="earth_jpg-sampler" texcoord="UVMap"/>
+              <texture texture="_k_earth-DIFFUSE_MAP_jpg-sampler" texcoord="UVMap"/>
             </diffuse>
             <index_of_refraction>
               <float sid="ior">1.45</float>
@@ -159,11 +159,11 @@
     <image id="Mountain_rock_dark_texture_jpg" name="Mountain_rock_dark_texture_jpg">
       <init_from>Mountain%20rock%20dark%20texture.jpg</init_from>
     </image>
+    <image id="_k_earth-DIFFUSE_MAP_jpg" name="_k_earth-DIFFUSE_MAP_jpg">
+      <init_from>2k_earth-DIFFUSE_MAP.jpg</init_from>
+    </image>
     <image id="basketball-floor-texture_jpg" name="basketball-floor-texture_jpg">
       <init_from>basketball-floor-texture.jpg</init_from>
-    </image>
-    <image id="earth_jpg" name="earth_jpg">
-      <init_from>earth.jpg</init_from>
     </image>
   </library_images>
   <library_materials>
@@ -306,8 +306,8 @@
     </geometry>
   </library_geometries>
   <library_animations>
-    <animation id="action_container-Sphere" name="Sphere"/>
     <animation id="action_container-Cube" name="Cube"/>
+    <animation id="action_container-Sphere" name="Sphere"/>
   </library_animations>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">

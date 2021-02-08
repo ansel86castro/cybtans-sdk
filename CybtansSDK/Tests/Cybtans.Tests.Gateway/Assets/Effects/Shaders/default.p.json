@@ -1,7 +1,7 @@
 {
-    "Name":"basic",
+    "Name":"default",
     "VertexShader":{
-        "Location":"./vs-basic.glsl",
+        "Location":"./default-vs.glsl",
         "Inputs":{
             "POSITION":"a_position",
             "NORMAL": "a_normal",
@@ -28,7 +28,7 @@
       }
     },
     "FragmentShader":{
-        "Location":"./fs-basic.glsl",
+        "Location":"./default-fs.glsl",
       "Parameters": {
         "uLight.pos": {
           "Target": "LightComponent",

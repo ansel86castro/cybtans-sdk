@@ -11,8 +11,7 @@ namespace Cybtans.Graphics.Shading
 {
     public class ShaderProgram
     {
-        public string Name { get; set; }
-
+        public string Name { get; set; }      
         public string BasePath { get; private set; }
 
         public string DefinitionFile { get; private set; }
@@ -42,7 +41,7 @@ namespace Cybtans.Graphics.Shading
             {
                 Name = Name,
                 VertexShader = VertexShader?.ToDto(this),
-                FragmentShader = FragmentShader?.ToDto(this)
+                FragmentShader = FragmentShader?.ToDto(this)                
             };
         }
     }

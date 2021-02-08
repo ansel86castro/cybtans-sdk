@@ -26,6 +26,12 @@ namespace Cybtans.Graphics.Models
 		
 		public Guid Id {get; set;}
 		
+		public float Reflectivity {get; set;}
+		
+		public float Refractivity {get; set;}
+		
+		public Dictionary<string,string> Perograms {get; set;}
+		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
@@ -42,9 +48,12 @@ namespace Cybtans.Graphics.Models
 		public const int SpecularPower = 5;
 		public const int Textures = 6;
 		public const int Id = 7;
+		public const int Reflectivity = 8;
+		public const int Refractivity = 9;
+		public const int Perograms = 10;
 		private readonly int[] _props = new []
 		{
-			Name,Diffuse,Specular,Emissive,SpecularPower,Textures,Id
+			Name,Diffuse,Specular,Emissive,SpecularPower,Textures,Id,Reflectivity,Refractivity,Perograms
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -60,6 +69,9 @@ namespace Cybtans.Graphics.Models
 		       SpecularPower => "SpecularPower",
 		       Textures => "Textures",
 		       Id => "Id",
+		       Reflectivity => "Reflectivity",
+		       Refractivity => "Refractivity",
+		       Perograms => "Perograms",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -76,6 +88,9 @@ namespace Cybtans.Graphics.Models
 		        "SpecularPower" => SpecularPower,
 		        "Textures" => Textures,
 		        "Id" => Id,
+		        "Reflectivity" => Reflectivity,
+		        "Refractivity" => Refractivity,
+		        "Perograms" => Perograms,
 		
 		        _ => -1,
 		    };
@@ -92,6 +107,9 @@ namespace Cybtans.Graphics.Models
 		        SpecularPower => typeof(float),
 		        Textures => typeof(Dictionary<string,Guid>),
 		        Id => typeof(Guid),
+		        Reflectivity => typeof(float),
+		        Refractivity => typeof(float),
+		        Perograms => typeof(Dictionary<string,string>),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -109,6 +127,9 @@ namespace Cybtans.Graphics.Models
 		        SpecularPower => obj.SpecularPower,
 		        Textures => obj.Textures,
 		        Id => obj.Id,
+		        Reflectivity => obj.Reflectivity,
+		        Refractivity => obj.Refractivity,
+		        Perograms => obj.Perograms,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -126,6 +147,9 @@ namespace Cybtans.Graphics.Models
 		        case SpecularPower:  obj.SpecularPower = (float)value;break;
 		        case Textures:  obj.Textures = (Dictionary<string,Guid>)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
+		        case Reflectivity:  obj.Reflectivity = (float)value;break;
+		        case Refractivity:  obj.Refractivity = (float)value;break;
+		        case Perograms:  obj.Perograms = (Dictionary<string,string>)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

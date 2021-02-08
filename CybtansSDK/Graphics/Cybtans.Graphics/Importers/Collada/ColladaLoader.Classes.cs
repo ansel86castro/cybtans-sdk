@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Cybtans.Graphics.Buffers;
 using Cybtans.Graphics.Meshes;
 using Cybtans.Graphics.Animations;
+using Cybtans.Math;
 
 namespace Cybtans.Graphics.Importers.Collada
 {
@@ -125,12 +126,18 @@ namespace Cybtans.Graphics.Importers.Collada
 
     class VertexBufferBuilder
     {
-        public struct VertexCache
+        public readonly struct VertexCache
         {
-            public int PosIndex;
-            public int NormalIndex;
-            public int TexCoordIndex;
-            public int VertexBufferIndex;
+            public VertexCache(int pos, Vector2 texCoord, int index)
+            {
+                PosIndex = pos;
+                TexCoord = texCoord;
+                VertexBufferIndex = index;
+            }
+
+            public readonly int PosIndex;
+            public readonly Vector2 TexCoord;
+            public readonly int VertexBufferIndex;
         }
 
         bool[] _taken;
@@ -149,14 +156,14 @@ namespace Cybtans.Graphics.Importers.Collada
 
         public int Count { get { return _count; } }
 
-        public int GetVertexIndex(int posIdx, int normalIdx, int texCoordIdx)
+        public int GetVertexIndex(int posIdx, Vector2 texCoord)
         {
             if (_taken[posIdx])
             {
                 var list = _vertices[posIdx];
                 foreach (var item in list)
                 {
-                    if (item.PosIndex == posIdx && item.NormalIndex == normalIdx && item.TexCoordIndex == texCoordIdx)
+                    if (item.PosIndex == posIdx && item.TexCoord == texCoord)
                     {
                         return item.VertexBufferIndex;
                     }
@@ -165,26 +172,36 @@ namespace Cybtans.Graphics.Importers.Collada
             return -1;
         }
 
-        public int WriteVertex(byte[] vertexData, int posIdx, int normalIdx, int texCoordIdx)
+        public int WriteVertex(byte[] vertexData, int posIdx, Vector2 texCoord)
         {
+
             if (_vertices[posIdx] == null)
             {
                 _vertices[posIdx] = new List<VertexCache>();
                 _taken[posIdx] = true;
+
             }
 
-            VertexCache vc = new VertexCache
-            {
-                PosIndex = posIdx,
-                NormalIndex = normalIdx,
-                TexCoordIndex = texCoordIdx,
-                VertexBufferIndex = _count
-            };
+            VertexCache vc = new VertexCache(posIdx, texCoord, _count);
 
             _vertices[posIdx].Add(vc);
             _vertexBufferData.Write(vertexData, 0, vertexData.Length);
             _count++;
             return vc.VertexBufferIndex;
+
+        }
+
+        public unsafe void AddNormal(byte* vertexData, int index)
+        {
+            var buffer = _vertexBufferData.GetBuffer();
+            using ArrayPtr arrayPtr = new ArrayPtr(buffer);
+
+            var source = new BufferView<Vector3>(vertexData, _vd, VertexSemantic.Normal, 0, 1);                       
+            var dest = new BufferView<Vector3>(arrayPtr.Pointer, _vd, VertexSemantic.Normal, 0, _count);
+
+            dest[index] += source[0];
+            dest[index] = Vector3.Normalize(dest[index]);
+
         }
 
         public byte[] GetBuffer()

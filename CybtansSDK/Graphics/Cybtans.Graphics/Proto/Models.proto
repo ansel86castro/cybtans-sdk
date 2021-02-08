@@ -49,7 +49,7 @@ message LightDto {
 	float spotPower = 7;
 	LightType type = 8;
 	float range = 9;
-	guid id = 10;
+	guid id = 10;    
 }
 
 
@@ -155,6 +155,9 @@ message MaterialDto {
     float specularPower = 5;
     map<string, guid> textures = 6;
     guid id = 7;
+    float reflectivity = 8;
+    float refractivity = 9;
+    map<string, string> perograms = 10;
 }
 
 enum UOMType {
@@ -252,10 +255,33 @@ message ShaderParameterDto {
 message ShaderProgramDto{
     string name = 1;
     ShaderDto vertexShader = 2;
-    ShaderDto fragmentShader = 3;
+    ShaderDto fragmentShader = 3;    
 }
 
-message ShaderProgramCollection{
-    repeated ShaderProgramDto programs = 1;
-    string defaultProgram = 2;
+message EffectDto{
+    string name = 1;
+    map<string, PredicateProgramList> predicates = 2;
+    map<string, string> programs = 3;
+}
+
+message PredicateProgramList{
+    repeated PredicateProgramDto items = 1;
+}
+
+message PredicateProgramDto{
+   repeated ParameterPredicateDto andConditions = 1;
+   repeated ParameterPredicateDto orConditions  = 2;
+   ParameterPredicateDto condition = 3;
+   string program = 4;
+}
+
+message ParameterPredicateDto{
+    int32 op         = 1;
+    string parameter = 2;
+    object value     = 3;
+}
+
+message EffectsManagerDto {
+    map<string, ShaderProgramDto>  programs = 1;
+    map<string, EffectDto> effects = 2;
 }

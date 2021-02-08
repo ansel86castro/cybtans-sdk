@@ -11,9 +11,11 @@ uniform mat4 u_World;
 uniform mat4 u_WorldNormal;
 uniform mat4 u_ViewProj;
 
-out highp vec3 v_positionW;
-out highp vec3 v_normalW;
-out highp vec2 v_texCoord;
+out vec3 v_positionW;
+out vec3 v_normalW;
+out vec3 v_tangentW;
+out vec3 v_binormalW;
+out vec2 v_texCoord;
 out float v_occ;
 out vec4 v_screenCoord;
 
@@ -21,6 +23,9 @@ void main(){
     v_positionW = vec3(u_World * vec4(a_position, 1));
 
     v_normalW = normalize(mat3(u_WorldNormal) * a_normal);    
+    v_tangentW = normalize(mat3(u_WorldNormal) * a_tangent);
+    v_binormalW = cross(v_normalW, v_tangentW);
+
     gl_Position =  u_ViewProj * vec4(v_positionW ,1) ;
 
     v_screenCoord.x = (gl_Position.x + gl_Position.w) * 0.5f;
