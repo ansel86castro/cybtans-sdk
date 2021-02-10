@@ -1,6 +1,7 @@
 using System;
 using Cybtans.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Graphics.Models
 {
@@ -12,6 +13,7 @@ namespace Cybtans.Graphics.Models
 		
 		public Dictionary<string,ShaderParameterDto> Parameters {get; set;}
 		
+		[Required]
 		public string Source {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

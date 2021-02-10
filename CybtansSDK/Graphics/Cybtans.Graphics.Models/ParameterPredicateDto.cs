@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Graphics.Models
 {
@@ -9,6 +10,7 @@ namespace Cybtans.Graphics.Models
 		
 		public int Op {get; set;}
 		
+		[Required]
 		public string Parameter {get; set;}
 		
 		public object Value {get; set;}

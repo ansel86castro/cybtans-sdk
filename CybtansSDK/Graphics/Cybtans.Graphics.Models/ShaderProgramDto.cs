@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Graphics.Models
 {
@@ -7,10 +8,13 @@ namespace Cybtans.Graphics.Models
 	{
 		private static readonly ShaderProgramDtoAccesor __accesor = new ShaderProgramDtoAccesor();
 		
+		[Required]
 		public string Name {get; set;}
 		
+		[Required]
 		public ShaderDto VertexShader {get; set;}
 		
+		[Required]
 		public ShaderDto FragmentShader {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

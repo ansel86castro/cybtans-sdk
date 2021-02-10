@@ -1,9 +1,9 @@
 import { vec2, vec4 } from "gl-matrix";
 import Camera from "./Camera";
 import { float4 } from "./MathUtils";
-import { ShaderProgramCollection } from "./models";
+import { EffectsManagerDto } from "./models";
 import Program from "./Program";
-import ProgramRepository from "./ProgramRepository";
+import EffectManager from "./EffectManager";
 import Scene from "./Scene";
 import { HashMap } from "./utils";
 
@@ -13,11 +13,10 @@ interface UpdateHandler {
 
 export default class SceneManager {   
     scenes:Scene[]=[];
-    programs:ProgramRepository;
+    effects:EffectManager;
     current?:Scene;
     updateHandler?: UpdateHandler;
     elapsed:number = 0;
-    private _program?:Program;
     gl:WebGL2RenderingContext;
     backColor:vec4 = float4([0.3,0.3,0.3,1]);
     width:number;
@@ -25,10 +24,9 @@ export default class SceneManager {
 
     private lastTime?:number;
     private running:boolean = false;
-    private sources:HashMap<any> = { };   
 
     constructor(gl:WebGL2RenderingContext, width:number, height:number){
-        this.programs = new ProgramRepository(gl);  
+        this.effects = new EffectManager(gl);  
         this.onFrame  = this.onFrame.bind(this);
         this.gl = gl;
         this.width = width;
@@ -36,8 +34,25 @@ export default class SceneManager {
     }
 
     get program(){
-        return this._program;
+        return this.effects.currentProgram;
     }
+
+    set program(value:Program|undefined){
+        this.effects.currentProgram = value;
+    }
+
+    getProgramByType(type:Function){
+        return this.effects.getProgramByType(type);
+    }
+
+    
+    setSource(type: Function, value: any) {
+       this.effects.setSource(type, value);
+    }
+ 
+     getSource(type:string){
+        return  this.effects.getSource(type);
+     }
 
     private onFrame(timestamp:DOMHighResTimeStamp){
       if(this.running === false) return;
@@ -95,14 +110,6 @@ export default class SceneManager {
         this.running = false;    
     }
 
-    programSource(type: Function, value: any) {
-       this.sources[type.name] = value;
-    }
-
-    getSource(type:string){
-        return this.sources[type];
-    }
-
     setCurrent(sceneName:string){
         let scene = this.scenes.find(x=>x.name === sceneName);
         if(scene){
@@ -138,9 +145,7 @@ export default class SceneManager {
         var response =  await  fetch(url, options);
         
         let dto = await response.json();
-        
-        this.programs.setPrograms(dto);
-        this._program = this.programs.programs[this.programs.defaultProgram];
+        this.effects.setPrograms(dto);       
 
     }
 

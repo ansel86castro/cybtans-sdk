@@ -3,6 +3,7 @@ import { IndexBuffer, VertexBuffer } from "./Buffer";
 import Material from "./Material";
 import { sphericalToCartesian } from "./MathUtils";
 import { MeshDto, MeshPartDto, MeshPrimitive, VertexDefinitionDto } from "./models";
+import Program from "./Program";
 import Scene from "./Scene";
 import SceneManager from "./SceneManager";
 import { checkError } from "./utils";
@@ -49,29 +50,38 @@ export default class Mesh {
     }
 
     render(ctx: SceneManager, materials: Material[]) {
-        if(!ctx.program || !this.vertexBuffer || !this.indexBuffer)
+        if(!this.vertexBuffer || !this.indexBuffer)
             return;
 
-        let program = ctx.program;
-        let gl = program.gl;
-        
-        program.useProgram(ctx);
+        let gl = ctx.gl;
+        let currentProgram:Program|null = null;
 
-        this.vertexBuffer.setVertexBuffer(program);
-        this.indexBuffer.setIndexBuffer();
-
-        checkError(gl);
-        
         for (const layer of this.layers) {
             let material = materials[layer.materialIndex];
 
-            ctx.programSource(Material, material);
+            ctx.setSource(Material, material);
 
-            program.bindSource(Material, ctx);
+            const program = ctx.getProgramByType(Mesh);
 
-            gl.drawElements(gl.TRIANGLES, layer.indexCount, this.sixteenBitsIndices === true ? gl.UNSIGNED_SHORT: gl.UNSIGNED_INT, layer.startIndex);
-          
-            checkError(gl);
+            if( program && program !== currentProgram){
+                ctx.program = program;
+                
+                program.useProgram(ctx);
+
+                this.vertexBuffer.setVertexBuffer(program);
+                this.indexBuffer.setIndexBuffer();
+
+                checkError(gl);
+                currentProgram = program;
+            }else if (currentProgram){
+                currentProgram.bindSource(Material, ctx);
+            }
+
+            if(currentProgram){
+                gl.drawElements(gl.TRIANGLES, layer.indexCount, this.sixteenBitsIndices === true ? gl.UNSIGNED_SHORT: gl.UNSIGNED_INT, layer.startIndex);
+            
+                checkError(gl);
+            }
         }
 
         // this.vertexBuffer.clearVertexBuffer(program);

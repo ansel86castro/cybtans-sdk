@@ -6,7 +6,7 @@ import { checkError, HashMap } from "./utils";
 
 export type UniformTypes = 'float'|'float2'|'float3'|'float4'|'mat4'|'sampler1D'|'sampler2D'|'samplerCUBE';
 
-interface UniformSlot {
+export interface UniformSlot {
     name:string;
     target: string;
     property: string;
@@ -61,6 +61,7 @@ export default class Program {
     inputs: HashMap<AttributeLocation> = {};    
     sources?: HashMap<UniformSource>;
     uniformSlots:UniformSource[] = [];
+    parameters: HashMap<UniformSlot> = {};
 
     vertexShader: WebGLShader | null;
     fragmentShader: WebGLShader | null;
@@ -142,7 +143,8 @@ export default class Program {
                         this.uniformSlots.push(source);
                     }
 
-                    source.parameters.push(p);                  
+                    source.parameters.push(p);  
+                    this.parameters[p.name] = p;                
                 }
             }
         }

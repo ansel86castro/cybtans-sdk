@@ -18,15 +18,6 @@ namespace Cybtans.Graphics.Shading
 
         public Dictionary<string, ShaderProgram> Programs { get; set; } = new Dictionary<string, ShaderProgram>();
 
-        public static Dictionary<string, Type> GetTypes()
-        {
-            return new Dictionary<string, Type>
-            {
-                [nameof(Mesh)] = typeof(Mesh),
-                [nameof(MeshSkin)] = typeof(MeshSkin)
-            };
-        }
-
         public static Effect LoadFromJson(string jsonFileName, EffectsManager manager)
         {
           

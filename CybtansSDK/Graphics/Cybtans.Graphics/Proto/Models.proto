@@ -242,26 +242,26 @@ message SceneDto {
 message ShaderDto {
     map<string,string> inputs = 1;
     map<string, ShaderParameterDto> parameters = 3;
-    string source = 4;
+    string source = 4 [required = true];
 }
 
 message ShaderParameterDto {
-    string target = 1;
-    string property = 2;
-    string type = 3;
+    string target = 1 [required = true];
+    string property = 2 [required = true];
+    string type = 3 [required = true];
     string path = 4;
 }
 
 message ShaderProgramDto{
-    string name = 1;
-    ShaderDto vertexShader = 2;
-    ShaderDto fragmentShader = 3;    
+    string name = 1 [required = true];
+    ShaderDto vertexShader = 2 [required = true];
+    ShaderDto fragmentShader = 3 [required = true];    
 }
 
 message EffectDto{
-    string name = 1;
-    map<string, PredicateProgramList> predicates = 2;
-    map<string, string> programs = 3;
+    string name = 1 [required = true];
+    map<string, PredicateProgramList> predicates = 2 [required = true];
+    map<string, string> programs = 3 [required = true];
 }
 
 message PredicateProgramList{
@@ -272,16 +272,16 @@ message PredicateProgramDto{
    repeated ParameterPredicateDto andConditions = 1;
    repeated ParameterPredicateDto orConditions  = 2;
    ParameterPredicateDto condition = 3;
-   string program = 4;
+   string program = 4 [required = true];
 }
 
 message ParameterPredicateDto{
     int32 op         = 1;
-    string parameter = 2;
+    string parameter = 2 [required = true];
     object value     = 3;
 }
 
 message EffectsManagerDto {
-    map<string, ShaderProgramDto>  programs = 1;
-    map<string, EffectDto> effects = 2;
+    map<string, ShaderProgramDto>  programs = 1 [required = true];
+    map<string, EffectDto> effects = 2 [required = true];
 }
