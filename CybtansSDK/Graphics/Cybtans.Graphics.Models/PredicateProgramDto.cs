@@ -1,6 +1,7 @@
 using System;
 using Cybtans.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Graphics.Models
 {
@@ -14,6 +15,7 @@ namespace Cybtans.Graphics.Models
 		
 		public ParameterPredicateDto Condition {get; set;}
 		
+		[Required]
 		public string Program {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

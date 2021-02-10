@@ -9,7 +9,9 @@ namespace Cybtans.Graphics.Shading
         Equal = 2,
         NotEqual = 3,
         LessThan = 4,
-        GratherThan = 5        
+        GratherThan = 5 ,
+        LessThanEqual = 6,
+        GreaterThanEqual = 7
     }
 
     

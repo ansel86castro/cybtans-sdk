@@ -263,29 +263,29 @@ export interface SceneDto {
 export interface ShaderDto {
   inputs?: { [key:string]: string }|null;
   parameters?: { [key:string]: ShaderParameterDto }|null;
-  source?: string|null;
+  source: string;
 }
 
 
 export interface ShaderParameterDto {
-  target?: string|null;
-  property?: string|null;
-  type?: string|null;
+  target: string;
+  property: string;
+  type: string;
   path?: string|null;
 }
 
 
 export interface ShaderProgramDto {
-  name?: string|null;
-  vertexShader?: ShaderDto|null;
-  fragmentShader?: ShaderDto|null;
+  name: string;
+  vertexShader: ShaderDto;
+  fragmentShader: ShaderDto;
 }
 
 
 export interface EffectDto {
-  name?: string|null;
-  predicates?: { [key:string]: PredicateProgramList }|null;
-  programs?: { [key:string]: string }|null;
+  name: string;
+  predicates: { [key:string]: PredicateProgramList };
+  programs: { [key:string]: string };
 }
 
 
@@ -298,18 +298,18 @@ export interface PredicateProgramDto {
   andConditions?: ParameterPredicateDto[]|null;
   orConditions?: ParameterPredicateDto[]|null;
   condition?: ParameterPredicateDto|null;
-  program?: string|null;
+  program: string;
 }
 
 
 export interface ParameterPredicateDto {
   op: number;
-  parameter?: string|null;
+  parameter: string;
   value?: any|null;
 }
 
 
 export interface EffectsManagerDto {
-  programs?: { [key:string]: ShaderProgramDto }|null;
-  effects?: { [key:string]: EffectDto }|null;
+  programs: { [key:string]: ShaderProgramDto };
+  effects: { [key:string]: EffectDto };
 }

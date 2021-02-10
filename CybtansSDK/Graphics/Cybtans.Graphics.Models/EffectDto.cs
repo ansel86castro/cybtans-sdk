@@ -1,6 +1,7 @@
 using System;
 using Cybtans.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Graphics.Models
 {
@@ -8,10 +9,13 @@ namespace Cybtans.Graphics.Models
 	{
 		private static readonly EffectDtoAccesor __accesor = new EffectDtoAccesor();
 		
+		[Required]
 		public string Name {get; set;}
 		
-		public Dictionary<string, PredicateProgramList> Predicates {get; set;}
+		[Required]
+		public Dictionary<string,PredicateProgramList> Predicates {get; set;}
 		
+		[Required]
 		public Dictionary<string,string> Programs {get; set;}
 		
 		public IReflectorMetadata GetAccesor()

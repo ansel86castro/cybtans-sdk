@@ -132,15 +132,15 @@ export default class Scene implements IRenderable {
 
     render(ctx:SceneManager){
         if(this.currentCamera){
-            ctx.programSource(Camera, this.currentCamera);
+            ctx.setSource(Camera, this.currentCamera);
         }
         
         if(this.currentLight){
-            ctx.programSource(LightComponent, this.currentLight);
-            ctx.programSource(Light, this.currentLight.light);
+            ctx.setSource(LightComponent, this.currentLight);
+            ctx.setSource(Light, this.currentLight.light);
         }
 
-        ctx.programSource(AmbientLight, this.ambient);
+        ctx.setSource(AmbientLight, this.ambient);
         
         for (const item of this.renderables) {
             item.render(ctx);

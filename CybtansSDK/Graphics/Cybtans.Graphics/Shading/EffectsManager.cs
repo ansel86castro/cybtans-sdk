@@ -57,8 +57,6 @@ namespace Cybtans.Graphics.Shading
             }
         }
 
-
-
         public EffectsManagerDto ToDto()
         {
             return new EffectsManagerDto
