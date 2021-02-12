@@ -17,9 +17,7 @@ message CameraDto {
 	float aspectRatio =6;
 	float width=7;
 	float height=8;
- 	repeated float localMatrix = 9;
-	repeated float viewMatrix = 10;
-	repeated float projMatrix = 11;
+ 	repeated float localMatrix = 9;	
 	guid id = 12;
 }
 

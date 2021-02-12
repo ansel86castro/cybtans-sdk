@@ -17,8 +17,6 @@ export interface CameraDto {
   width: number;
   height: number;
   localMatrix?: number[]|null;
-  viewMatrix?: number[]|null;
-  projMatrix?: number[]|null;
   id: string;
 }
 
