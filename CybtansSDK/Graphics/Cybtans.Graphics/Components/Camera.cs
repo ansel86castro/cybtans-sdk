@@ -147,9 +147,7 @@ namespace Cybtans.Graphics.Components
                 Height = Height,
                 Width = Width,
                 ProjType = (Models.ProjectionType)ProjectionType,
-                LocalMatrix = _local.ToList(),
-                ViewMatrix = _view.ToList(),
-                ProjMatrix = _proj.ToList()                
+                LocalMatrix = _local.ToList(),                       
             };
         }
     }
