@@ -51,7 +51,8 @@ namespace Cybtans.Graphics.Importers.Collada
 
         Frame _visualSceneNode;
         float _unit = 1.0f;
-        string _directory;       
+        string _directory;
+        private HashSet<string> _files;
         Scene _scene;
         private bool _preserveOrder;
         private string _authoring;
@@ -77,6 +78,11 @@ namespace Cybtans.Graphics.Importers.Collada
         {
             FileName = filename;
             _directory = Path.GetDirectoryName(filename);
+            if (string.IsNullOrEmpty(_directory))
+                _directory = ".";
+
+            _files = LoadFilenames();
+
             _document = XDocument.Load(filename);
             _rootElement = _document.Root;
 
@@ -422,7 +428,7 @@ namespace Cybtans.Graphics.Importers.Collada
                 else if (item.Name.LocalName == "rotate")
                 {
                     var rotvalue = ParseVector4(item.Value);
-                    poseTransform = Matrix.RotationAxis(rotvalue.ToVector3(), -Numerics.ToRadians(rotvalue.W)) * poseTransform;
+                    poseTransform = Matrix.RotationAxis(rotvalue.ToVector3(), _preserveOrder ? Numerics.ToRadians(rotvalue.W): -Numerics.ToRadians(rotvalue.W)) * poseTransform;
                 }
                 else if (item.Name.LocalName == "scale")
                 {
@@ -1335,7 +1341,16 @@ namespace Cybtans.Graphics.Importers.Collada
                 });
             });
 
-            camera.Local = new Euler(0, Numerics.PIover2, 0).ToMatrix();
+            if (_preserveOrder)
+            {
+                var local = Matrix.RotationX(-Numerics.PIover2);               
+                camera.Local = local;
+            }
+            else
+            {
+                camera.Local = new Euler(0, Numerics.PIover2, 0).ToMatrix();
+            }
+            
             camera.Transform(Matrix.Identity);
 
             _cameras.Add(camera);

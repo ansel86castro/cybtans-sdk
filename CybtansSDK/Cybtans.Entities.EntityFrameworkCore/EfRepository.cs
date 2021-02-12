@@ -1,5 +1,4 @@
-﻿using Cybtans.Entities.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,15 +7,15 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cybtans.Entities.EntiyFrameworkCore
+namespace Cybtans.Entities.EntityFrameworkCore
 {
-    public class EfRepository<T, TKey> : IRepository<T, TKey> where T : class       
+    public class EfRepository<T, TKey> : IRepository<T, TKey> where T : class
     {
         private readonly DbContext _context;
-        private readonly DbSet<T> _dbSet;      
-        
+        private readonly DbSet<T> _dbSet;
+
         public EfRepository(IUnitOfWork unitOfWork)
-        {                        
+        {
             UnitOfWork = unitOfWork;
             _context = ((EfUnitOfWork)unitOfWork).Context;
             _dbSet = _context.Set<T>();
@@ -42,7 +41,7 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         }
 
         public IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors)
-        {     
+        {
             IQueryable<T> query = GetQueryable();
 
             if (propertySelectors != null)
@@ -57,25 +56,25 @@ namespace Cybtans.Entities.EntiyFrameworkCore
 
         public virtual IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] propertySelectors = null)
         {
-            IQueryable<T> query = propertySelectors != null ? 
-                WithDetails(propertySelectors) : 
-                GetQueryable();       
-            
+            IQueryable<T> query = propertySelectors != null ?
+                WithDetails(propertySelectors) :
+                GetQueryable();
+
             return query.AsNoTracking();
         }
 
         public virtual ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default)
-        {                       
+        {
             return _dbSet.FindAsync(key);
         }
-       
+
         public virtual void Update(T item)
         {
             if (item is IAuditableEntity au && au.UpdateDate == null)
-            {              
+            {
                 au.UpdateDate = DateTime.UtcNow;
             }
-            _context.Update(item);         
+            _context.Update(item);
         }
 
         public virtual void UpdateRange(IEnumerable<T> items)
@@ -86,19 +85,19 @@ namespace Cybtans.Entities.EntiyFrameworkCore
                 {
                     au.UpdateDate = DateTime.UtcNow;
                 }
-            }            
+            }
             _context.UpdateRange(items);
         }
 
         public virtual void Add(T item)
         {
-            if(item is IAuditableEntity au)
+            if (item is IAuditableEntity au)
             {
                 if (au.Creator == null)
                 {
                     var principal = Thread.CurrentPrincipal;
                     au.Creator = principal?.Identity?.Name;
-                }                
+                }
                 au.CreateDate = DateTime.UtcNow;
             }
 
@@ -113,8 +112,8 @@ namespace Cybtans.Entities.EntiyFrameworkCore
                 {
                     if (au.Creator == null)
                     {
-                        var principal = Thread.CurrentPrincipal;                     
-                        au.Creator = principal?.Identity?.Name;                        
+                        var principal = Thread.CurrentPrincipal;
+                        au.Creator = principal?.Identity?.Name;
                     }
                     au.CreateDate = DateTime.UtcNow;
                 }
@@ -124,15 +123,15 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         }
 
         public virtual void Remove(T item)
-        {          
+        {
             _context.Remove(item);
         }
 
         public virtual void RemoveRange(IEnumerable<T> items)
-        {           
+        {
             _context.RemoveRange(items);
         }
-     
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetQueryable().GetEnumerator();
@@ -141,7 +140,7 @@ namespace Cybtans.Entities.EntiyFrameworkCore
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetQueryable().GetEnumerator();
-        }      
+        }
     }
 
     public class EfRepository<T> : EfRepository<T, object>, IRepository<T>

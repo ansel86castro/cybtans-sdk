@@ -210,30 +210,26 @@ export default class Frame {
         this.localTranslation[10] +=z;
     }
 
-    rotateX(rad:number){
-        let m = mat4.create();
-         mat4.rotateX(m, m, rad);
-         mat4.mul(this.localRotation, m, this.localRotation);
+    rotateX(rad:number){        
+         mat4.rotateX(this.localRotation, this.localRotation, rad);         
     }
 
     
-    rotateY(rad:number){
-        let m = mat4.create();
-         mat4.rotateY(m, m, rad);
-         mat4.mul(this.localRotation, m, this.localRotation);
+    rotateY(rad:number){       
+         mat4.rotateY(this.localRotation, this.localRotation, rad);         
     }
 
     
-    rotateZ(rad:number){
-        let m = mat4.create();
-         mat4.rotateZ(m, m, rad);
-         mat4.mul(this.localRotation, m, this.localRotation);
+    rotateZ(rad:number){        
+         mat4.rotateZ(this.localRotation,this.localRotation, rad);         
     }
 
-    rotate(axis:vec3, rad:number){
-        let m = mat4.create();
-         mat4.fromRotation(m, rad, axis);
-         mat4.mul(this.localRotation, m, this.localRotation);
+    rotate(axis:vec3, rad:number){        
+         mat4.fromRotation(this.localRotation, rad, axis);         
+    }
+
+    apply(mat:mat4){
+        mat4.mul(this.localMtx, mat,  this.localMtx);
     }
 }
 
@@ -262,7 +258,7 @@ export class CameraComponent extends FrameComponent {
     }
 
     onFrameUpdate(){
-        this.camera.transform(this.frame.worldMtx);        
+        this.camera.transform(this.frame);        
     }
 }
 
@@ -281,7 +277,7 @@ export class MeshComponent extends FrameComponent implements IRenderable{
     }
 
     render(context:SceneManager): void {
-        context.programSource(Frame, this.frame);
+        context.setSource(Frame, this.frame);
         this.mesh.render(context, this.materials);
     }
 

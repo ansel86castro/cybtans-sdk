@@ -1441,7 +1441,7 @@ namespace Cybtans.Math
             return angles;
         }
 
-        public static Matrix RotateXyz(in Vector3 angles)
+        public static Matrix RotateXYZ(in Vector3 angles)
         {
             Matrix m = Matrix.RotationX(angles.X);
             m *= Matrix.RotationY(angles.Y);

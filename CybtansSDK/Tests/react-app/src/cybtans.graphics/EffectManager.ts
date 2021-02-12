@@ -61,7 +61,7 @@ export default class EffectManager {
         this.effectDtos = data.effects || {}; 
         
         if(data.programs){
-            for (const key in Object.keys(data.programs)) {
+            for (const key of Object.keys(data.programs)) {
                 let dto = data.programs[key];
                 if(!dto.name) throw new Error("program name not specified");
 

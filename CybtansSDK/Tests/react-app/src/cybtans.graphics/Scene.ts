@@ -65,8 +65,8 @@ export default class Scene implements IRenderable {
             data.cameras.forEach(dto => 
                 {
                     let c = new Camera({ ...dto, width: this.manager.width, height: this.manager.height});                   
-                    c.viewMtx = mat4.lookAt(c.viewMtx, float3([0, 3, -4]), float3([0,0.8,0]), float3([0,1,0]));
-                    c.onViewUpdated();
+                    //c.viewMtx = mat4.lookAt(c.viewMtx, float3([1, 1, -8]), float3([3,0,0]), float3([0,1,0]));
+                    //c.onViewUpdated();
                     
                     this.cameras?.set(c.id, c);
                 });

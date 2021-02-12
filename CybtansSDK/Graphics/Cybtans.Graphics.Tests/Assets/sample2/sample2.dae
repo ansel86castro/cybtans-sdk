@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.91.0 commit date:2020-11-25, commit time:08:34, hash:0f45cab862b8</authoring_tool>
     </contributor>
-    <created>2021-02-07T16:22:31</created>
-    <modified>2021-02-07T16:22:31</modified>
+    <created>2021-02-12T00:37:26</created>
+    <modified>2021-02-12T00:37:26</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -336,7 +336,7 @@
         </instance_geometry>
       </node>
       <node id="Camera" name="Camera" type="NODE">
-        <matrix sid="transform">0.9993727 -0.004247904 0.03515904 0.03992999 0.03541414 0.1255873 -0.9914503 -7.188061 -2.03944e-4 0.9920735 0.1256589 0.183707 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
         <instance_camera url="#Camera-camera"/>
       </node>
       <node id="Light" name="Light" type="NODE">
