@@ -1,5 +1,7 @@
 
+import { mat4 } from 'gl-matrix';
 import * as React from 'react';
+import { nodeModuleNameResolver } from 'typescript';
 import SceneManager from '../cybtans.graphics/SceneManager';
 import "./SceneComponent.css";
 
@@ -44,15 +46,20 @@ export default function SceneComponent(){
         `${process.env.REACT_APP_API_URL}/api/scene/sample2`, 
         `${process.env.REACT_APP_API_URL}/api/scene/texture/sample2`);  
 
-        scene.addNodeUpdate('Sphere', (e, node)=>{
-            node.rotateY(Math.PI*0.0001 * e);
-            node.commitChanges(true);
-        });
+        // scene.addNodeUpdate('Sphere', (e, node)=>{
+        //     node.rotateY(Math.PI*0.0001 * e);        
+        //     node.commitChanges(true);
+        // });
         
-        scene.addNodeUpdate('Cube', (e, node)=>{
-            node.rotateY(Math.PI*0.0005 * e);
-            node.commitChanges(true);
-        });
+        // let m = mat4.create();
+        // scene.addNodeUpdate('Cube', (e, node)=>{
+        //     node.rotateY(Math.PI*0.0005 * e);
+        //     node.updateLocalPose();
+
+            
+        //     node.apply(mat4.rotateY(m, m, Math.PI * 0.0003 * e));           
+        //     node.commitChanges();
+        // });
 
     }  
 

@@ -154,6 +154,9 @@ export default class Program {
         let s = path.split(".");
         return function(t:any){
             let result = t;
+            if(!result)
+                return undefined;
+                
             for (let i = 0; i < s.length; i++) {
                 const k = s[i];
                 result = result[k];
