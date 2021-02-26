@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
-    public class EfRepository<T, TKey> : IRepository<T, TKey> where T : class
+    public class EfRepository<T, TKey> : IRepository<T, TKey>, IAsyncEnumerable<T> where T : class 
     {
         private readonly DbContext _context;
         private readonly DbSet<T> _dbSet;
@@ -140,6 +140,11 @@ namespace Cybtans.Entities.EntityFrameworkCore
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetQueryable().GetEnumerator();
+        }
+      
+        IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken)
+        {
+            return ((IAsyncEnumerable<T>)_dbSet).GetAsyncEnumerator(cancellationToken);
         }
     }
 
