@@ -1,0 +1,117 @@
+{
+    "Name":"earth",
+    "VertexShader":{
+      "Location": "./default-vs.glsl",
+        "Inputs":{
+            "POSITION":"a_position",
+            "NORMAL": "a_normal",
+            "TANGENT": "a_tangent",
+            "TEXCOORD": "a_texCoord",
+            "OCC_FACTOR":"a_occ"
+        },
+      "Parameters": {
+        "u_World": {
+          "Target": "Frame",
+          "Property": "worldMtx",
+          "Type": "mat4"
+        },
+        "u_WorldNormal": {
+          "Target": "Frame",
+          "Property": "worldTranformNormalMtx",
+          "Type": "mat4"
+        },
+        "u_ViewProj": {
+          "Target": "Camera",
+          "Property": "viewProjMtx",
+          "Type": "mat4"
+        }
+      }
+    },
+    "FragmentShader":{
+      "Location": "./earth-fs.glsl",
+      "Parameters": {
+        "uLight.pos": {
+          "Target": "LightComponent",
+          "Property": "worldPosition",
+          "Type": "float3"
+        },
+        "uLight.dir": {
+          "Target": "LightComponent",
+          "Property": "worldDirection",
+          "Type": "float3"
+        },
+        "uLight.diffuse": {
+          "Target": "Light",
+          "Property": "diffuse",
+          "Type": "float3"
+        },
+        "uLight.specular": {
+          "Target": "Light",
+          "Property": "specular",
+          "Type": "float3"
+        },
+        "uLight.spotPower": {
+          "Target": "Light",
+          "Property": "spotPower",
+          "Type": "float"
+        },
+
+        "uAmbient": {
+          "Target": "AmbientLight",
+          "Property": "ambientColor",
+          "Type": "float3"
+        },
+        "uEyePos": {
+          "Target": "Camera",
+          "Property": "position",
+          "Type": "float3"
+        },
+
+        "uMaterial.diffuse": {
+          "Target": "Material",
+          "Property": "diffuse",
+          "Type": "float4"
+        },
+        "uMaterial.specular": {
+          "Target": "Material",
+          "Property": "specular",
+          "Type": "float3"
+        },
+        "uMaterial.specularPower": {
+          "Target": "Material",
+          "Property": "specularPower",
+          "Type": "float"
+        },
+        "uDiffuseSampler": {
+          "Target": "Material",
+          "Property": "DIFFUSE_MAP",
+          "Type": "sampler2D",
+          "path": "textures"
+        },
+        "uNormalSampler": {
+          "Target": "Material",
+          "Property": "NORMAL_MAP",
+          "Type": "sampler2D",
+          "path": "textures"
+        },
+        "uSpecularSampler": {
+          "Target": "Material",
+          "Property": "SPECULAR_MAP",
+          "Type": "sampler2D",
+          "path": "textures"
+        },
+        "uCloudSampler": {
+          "Target": "Material",
+          "Property": "CLOUDS",
+          "Type": "sampler2D",
+          "path": "textures"
+        },
+        "uNightSampler": {
+          "Target": "Material",
+          "Property": "NIGHT_MAP",
+          "Type": "sampler2D",
+          "path": "textures"
+        }
+      }
+    }
+}

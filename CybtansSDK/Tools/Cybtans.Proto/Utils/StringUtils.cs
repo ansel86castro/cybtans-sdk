@@ -49,7 +49,6 @@ namespace Cybtans.Proto.Utils
             StringBuilder sb = new StringBuilder();
             foreach (var part in sections)
             {
-
                 for (int i = 0; i < part.Length; i++)
                 {
                     var c = part[i];
@@ -57,7 +56,7 @@ namespace Cybtans.Proto.Utils
                     {
                         sb.Append(char.ToUpperInvariant(c));
                     }
-                    else if (i < part.Length - 1 && char.IsLower(part[i - 1]) && char.IsUpper(c))
+                    else if (i <= part.Length - 1 && char.IsLower(part[i - 1]) && char.IsUpper(c))
                     {
                         sb.Append(c);
                     }
@@ -94,7 +93,7 @@ namespace Cybtans.Proto.Utils
                         {
                             sb.Append(char.ToLowerInvariant(c));
                         }
-                        else if (i < part.Length - 1 && char.IsLower(part[i - 1]) && char.IsUpper(c))
+                        else if (i <= part.Length - 1 && char.IsLower(part[i - 1]) && char.IsUpper(c))
                         {
                             sb.Append(c);
                         }

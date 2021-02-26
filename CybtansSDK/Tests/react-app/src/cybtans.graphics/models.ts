@@ -151,11 +151,22 @@ export enum TextureType {
 
 
 
+export interface CubeMapDto {
+  positiveX?: string|null;
+  negativeX?: string|null;
+  positiveY?: string|null;
+  negativeY?: string|null;
+  positiveZ?: string|null;
+  negativeZ?: string|null;
+}
+
+
 export interface TextureDto {
   filename?: string|null;
   type: TextureType;
   format?: string|null;
   id: string;
+  cubeMap?: CubeMapDto|null;
 }
 
 
