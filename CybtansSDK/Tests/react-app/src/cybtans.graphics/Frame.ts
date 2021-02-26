@@ -1,8 +1,8 @@
-import { glMatrix, mat4, vec3, vec4 } from "gl-matrix";
+import { glMatrix, mat3, mat4, quat, vec3, vec4 } from "gl-matrix";
 import Camera from "./Camera";
 import Light from "./Light";
 import Material from "./Material";
-import { float3, matrix, transformNormal } from "./MathUtils";
+import { euler, eulerFromAxis, float3, getRotationAxis, matrix, matRotationYawPitchRoll, matTranslate, transformNormal, UnitY } from "./MathUtils";
 import Mesh from "./Mesh";
 import { FrameDto, FrameLightDto, FrameType } from "./models";
 import Scene from "./Scene";
@@ -22,12 +22,12 @@ export default class Frame {
     localScale:mat4;
     localRotation: mat4;
     localTranslation:mat4;
-    localMtx: mat4;
+    localMtx: mat4;   
     bindParentMtx: mat4;
     bindAffectorMtx: mat4;
     worldMtx: mat4;
     worldTranformNormalMtx:mat4;
-
+    
     parent?: Frame;
     type: FrameType;
     range: number;
@@ -37,7 +37,13 @@ export default class Frame {
     tag?: string|null;
     component?: FrameComponent|null;
 
-    
+    up:vec3;
+    front:vec3;
+    right:vec3;   
+    euler:euler; 
+    worldPosition:vec3;
+    localPosition:vec3;
+
     constructor(scene:Scene, data:FrameDto, parent?:Frame){
         this.scene = scene;
         this.id = data.id;
@@ -47,23 +53,25 @@ export default class Frame {
         this.worldMtx = matrix(data.worldTransform);
         this.bindAffectorMtx = matrix( data.bindAffectorTransform);
         this.worldTranformNormalMtx = matrix();
+        this.up = float3();
+        this.front = float3();
+        this.right = float3();
+        this.euler = float3();
+        this.worldPosition = float3();
+        this.localPosition = float3();
         this.type = data.type;
         this.range = data.range;
         this.tag = data.tag;
         this.parent = parent;        
-
-        let [scale, translation, rotation] = decomposeMatrix(this.localMtx);
         this.localScale = mat4.create();
-        mat4.scale(this.localScale, this.localScale, scale);
-        
         this.localTranslation = mat4.create();
-        mat4.translate(this.localTranslation, this.localTranslation, translation);
-
-        this.localRotation = rotation;
+        this.localRotation = mat4.create();
+        
+        this.updateTransforms();
 
        mat4.invert(this.worldTranformNormalMtx, this.worldMtx);
-       mat4.transpose(this.worldTranformNormalMtx, this.worldTranformNormalMtx);
-          
+       mat4.transpose(this.worldTranformNormalMtx, this.worldTranformNormalMtx);       
+       
         if(data.childrens){
             for (const item of data.childrens) {
                 let c = new Frame(scene, item, this);
@@ -90,6 +98,23 @@ export default class Frame {
                 this.component = new MeshSkinComponent(skin, materials, this);
             }
         }
+    }
+
+    updateTransforms(){
+        let [scale, translation, rotation] = decomposeMatrix(this.localMtx);
+
+        mat4.identity(this.localScale);
+        mat4.scale(this.localScale, this.localScale, scale);
+        
+        mat4.identity( this.localTranslation);
+        mat4.translate(this.localTranslation, this.localTranslation, translation);
+
+        this.localRotation = rotation;
+        getRotationAxis(this.up, this.front, this.right ,this.localRotation);
+
+        eulerFromAxis(this.euler, this.right, this.up, this.front);
+        this.localPosition = translation;
+        this.worldPosition = translation;
     }
 
     addNode(node:Frame){
@@ -147,7 +172,7 @@ export default class Frame {
         return map;
     }
 
-    updateLocalPose(){
+    updateLocalPose(){        
         mat4.mul(this.localMtx, this.localTranslation, this.localScale);
         mat4.mul(this.localMtx, this.localMtx, this.localRotation);
     }
@@ -164,6 +189,10 @@ export default class Frame {
         mat4.invert(this.worldTranformNormalMtx, this.worldMtx);
         mat4.transpose(this.worldTranformNormalMtx, this.worldTranformNormalMtx);
          
+        this.worldPosition[0] = this.worldMtx[12];
+        this.worldPosition[1] = this.worldMtx[13];
+        this.worldPosition[2] = this.worldMtx[14];        
+
         if(this.component){
             this.component.onFrameUpdate();
         }
@@ -199,9 +228,40 @@ export default class Frame {
     }
 
     translate(x:number, y:number, z:number){
-        this.localTranslation[12] +=x;
-        this.localTranslation[13] +=y;
-        this.localTranslation[14] +=z;
+        this.localTranslation[12] =x;
+        this.localTranslation[13] =y;
+        this.localTranslation[14] =z;
+
+        this.localPosition[0] =x;
+        this.localPosition[1] =y;
+        this.localPosition[2] =z;        
+    }
+
+    move(direction:vec3){
+        this.translate(
+            this.localPosition[0]+direction[0],
+            this.localPosition[1]+direction[1], 
+            this.localPosition[2]+direction[2])
+    }
+
+    get position(){
+        return this.localPosition;
+    }
+
+    set position(value:vec3){
+        this.translate(value[0], value[1], value[2]);
+    }
+
+    positionX(x:number){
+        this.translate(x, this.localPosition[1], this.localPosition[2]);
+    }
+    
+    positionY(y:number){
+        this.translate(this.localPosition[0], y, this.localPosition[2]);
+    }
+    
+    positionZ(z:number){
+        this.translate(this.localPosition[0], this.localPosition[1], z);
     }
 
     scale(x:number, y:number, z:number){
@@ -213,12 +273,10 @@ export default class Frame {
     rotateX(rad:number){        
          mat4.rotateX(this.localRotation, this.localRotation, rad);         
     }
-
     
     rotateY(rad:number){       
          mat4.rotateY(this.localRotation, this.localRotation, rad);         
     }
-
     
     rotateZ(rad:number){        
          mat4.rotateZ(this.localRotation,this.localRotation, rad);         
@@ -230,6 +288,59 @@ export default class Frame {
 
     apply(mat:mat4){
         mat4.mul(this.localMtx, mat,  this.localMtx);
+    }
+
+    get yaw(){
+        this.updateAxis();
+        return this.euler[0];  
+    }
+
+    get pitch(){
+        this.updateAxis();
+        return this.euler[1];  
+    }
+
+    get roll(){
+        this.updateAxis();
+        return this.euler[2];  
+    }
+
+    set yaw(rad:number){
+      this.updateAxis();
+      this.euler[0] = rad;
+
+      matRotationYawPitchRoll(this.localRotation, this.euler[0], this.euler[1], this.euler[2]);       
+    }
+
+    set pitch(rad:number){
+      this.updateAxis();
+      
+      this.euler[1] = rad;
+
+      matRotationYawPitchRoll(this.localRotation, this.euler[0], this.euler[1], this.euler[2]);       
+    }
+
+    set roll(rad:number){
+        this.updateAxis();
+
+        this.euler[2] = rad;
+  
+        matRotationYawPitchRoll(this.localRotation, this.euler[0], this.euler[1], this.euler[2]);   
+    }
+
+    lookAt(target:vec3){
+        mat4.lookAt(this.localMtx, this.worldPosition, target, UnitY);
+        mat4.invert(this.localMtx, this.localMtx);
+
+        getRotationAxis(this.up, this.front, this.right, this.localMtx); 
+        eulerFromAxis(this.euler, this.right, this.up, this.front);
+    }
+
+
+    updateAxis(){
+        getRotationAxis(this.up, this.front, this.right, this.localRotation); 
+        eulerFromAxis(this.euler, this.right, this.up, this.front);
+
     }
 }
 

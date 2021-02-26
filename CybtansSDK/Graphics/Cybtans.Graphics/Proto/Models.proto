@@ -138,12 +138,23 @@ enum TextureType {
     CubeMap = 3;
 }
 
+message CubeMapDto {
+    string positiveX = 1;
+    string negativeX = 2;
+    string positiveY = 3;
+    string negativeY = 4;
+    string positiveZ = 5;
+    string negativeZ = 6;
+}
+
 message TextureDto {    
     string filename = 1;
     TextureType type = 2;
     string format = 3;
     guid id = 4;
+    CubeMapDto cubeMap = 5;
 }
+
 
 message MaterialDto { 
     string name = 1;

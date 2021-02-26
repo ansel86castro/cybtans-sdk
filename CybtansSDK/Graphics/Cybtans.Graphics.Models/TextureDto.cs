@@ -15,6 +15,8 @@ namespace Cybtans.Graphics.Models
 		
 		public Guid Id {get; set;}
 		
+		public CubeMapDto CubeMap {get; set;}
+		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
@@ -28,9 +30,10 @@ namespace Cybtans.Graphics.Models
 		public const int Type = 2;
 		public const int Format = 3;
 		public const int Id = 4;
+		public const int CubeMap = 5;
 		private readonly int[] _props = new []
 		{
-			Filename,Type,Format,Id
+			Filename,Type,Format,Id,CubeMap
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -43,6 +46,7 @@ namespace Cybtans.Graphics.Models
 		       Type => "Type",
 		       Format => "Format",
 		       Id => "Id",
+		       CubeMap => "CubeMap",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -56,6 +60,7 @@ namespace Cybtans.Graphics.Models
 		        "Type" => Type,
 		        "Format" => Format,
 		        "Id" => Id,
+		        "CubeMap" => CubeMap,
 		
 		        _ => -1,
 		    };
@@ -69,6 +74,7 @@ namespace Cybtans.Graphics.Models
 		        Type => typeof(TextureType),
 		        Format => typeof(string),
 		        Id => typeof(Guid),
+		        CubeMap => typeof(CubeMapDto),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -83,6 +89,7 @@ namespace Cybtans.Graphics.Models
 		        Type => obj.Type,
 		        Format => obj.Format,
 		        Id => obj.Id,
+		        CubeMap => obj.CubeMap,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
 		    };
@@ -97,6 +104,7 @@ namespace Cybtans.Graphics.Models
 		        case Type:  obj.Type = (TextureType)value;break;
 		        case Format:  obj.Format = (string)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
+		        case CubeMap:  obj.CubeMap = (CubeMapDto)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");
 		    }

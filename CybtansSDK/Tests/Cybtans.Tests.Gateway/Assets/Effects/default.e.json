@@ -8,6 +8,23 @@
     "Mesh": {
       "Items": [
         {
+          "AndConditions": [
+            {
+              "Op": 1,
+              "Parameter": "uCloudSampler"
+            },
+            {
+              "Op": 1,
+              "Parameter": "uNightSampler"
+            },
+            {
+              "Op": 1,
+              "Parameter": "uNormalSampler"
+            }
+          ],
+          "Program": "earth"
+        },
+        {
           "Condition": {
             "Op": 1,
             "Parameter": "uNormalSampler"

@@ -422,7 +422,7 @@ namespace Cybtans.Proto.Generator
             {
                 if (t.IsClass)
                 {
-                    GenerateMessage(t, codeWriter, generated, visited);
+                    GenerateMessage(t, codeWriter, generated, new HashSet<Type>(visited));
                 }
                 else if (t.IsEnum)
                 {
