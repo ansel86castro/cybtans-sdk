@@ -21,7 +21,7 @@ namespace Cybtans.Tests.Expressions
                 {
                     Id = Guid.NewGuid(),
                     CreateDate = DateTime.Now,
-                    Name = $"Customer {i}",
+                    Name = i < 9 ? $"Customer {i}" : $"Customer '{i}",
                     CustomerProfile = new CustomerProfile
                     {
                         Id = Guid.NewGuid(),
@@ -120,6 +120,17 @@ namespace Cybtans.Tests.Expressions
         {
             var result = _customers.Where("name like '%1%' and orders.count(description = '1' or description = '2') = 1").ToList();
             Assert.Single(result);
+        }
+
+        [Fact]
+        public void StringScapeFilter()
+        {
+            var result = _customers.Where("name ='Customer \\'10'").ToList();
+            Assert.Single(result);
+
+            result = _customers.Where("name like '%Customer \\'1%'").ToList();
+            Assert.Single(result);
+            
         }
     }
 }

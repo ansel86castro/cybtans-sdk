@@ -13,13 +13,13 @@ namespace Cybtans.AspNetCore
     {
         ILogger<HttpResponseExceptionFilter> _logger;
         IHostEnvironment _env;
-        bool _useStackTrace;
+        bool _showDetails;
 
         public HttpResponseExceptionFilter(IHostEnvironment env, ILogger<HttpResponseExceptionFilter> logger)
         {
             _logger = logger;
             _env = env;
-            _useStackTrace = !_env.IsProduction();           
+            _showDetails = !_env.IsProduction();           
         }
         
 
@@ -28,7 +28,7 @@ namespace Cybtans.AspNetCore
             switch (context.Exception)
             {
                 case ValidationException ve:
-                    if (_useStackTrace)
+                    if (_showDetails)
                     {
                         ve.ValidationResult.StackTrace = context.Exception.StackTrace;                       
                     }
@@ -42,7 +42,7 @@ namespace Cybtans.AspNetCore
                     context.Result = new ObjectResult(new ValidationResult(en.Message)
                     {
                          ErrorCode = (int)HttpStatusCode.NotFound,
-                         StackTrace = _useStackTrace ?  en.StackTrace: null
+                         StackTrace = _showDetails ?  en.StackTrace: null
                     }) 
                     { 
                         StatusCode = (int)HttpStatusCode.NotFound 
@@ -53,7 +53,7 @@ namespace Cybtans.AspNetCore
                     context.Result = new ObjectResult(new ValidationResult(actionException.Message) 
                     { 
                         ErrorCode = actionException.ErrorCode, 
-                        StackTrace = _useStackTrace ? actionException.StackTrace : null  })
+                        StackTrace = _showDetails ? actionException.StackTrace : null  })
                     {
                         StatusCode = (int)actionException.StatusCode
                     };
@@ -61,21 +61,22 @@ namespace Cybtans.AspNetCore
                     break;
                 case NotImplementedException notImplemented:
                     _logger.LogError(context.Exception, context.Exception.Message);
-                    context.Result = new ObjectResult(new ValidationResult(notImplemented.Message)
+
+                    context.Result = new ObjectResult(new ValidationResult(_showDetails ? notImplemented.Message : "Operation not supported")
                     {
                         ErrorCode = (int)HttpStatusCode.NotImplemented,
-                        StackTrace = _useStackTrace ? notImplemented.StackTrace : null
+                        StackTrace = _showDetails ? notImplemented.StackTrace : null
                     })
                     {
                         StatusCode = (int)HttpStatusCode.NotImplemented
                     };
                     context.ExceptionHandled = true;
                     break;
-                case ArgumentException argumentException:
-                    context.Result = new ObjectResult(new ValidationResult(argumentException.Message)
+                case ArgumentException argumentException:                    
+                    context.Result = new ObjectResult(new ValidationResult(_showDetails? argumentException.Message: "An error has occurred")
                     {
                         ErrorCode = (int)HttpStatusCode.BadRequest,
-                        StackTrace = _useStackTrace ? argumentException.StackTrace : null
+                        StackTrace = _showDetails ? argumentException.StackTrace : null
                     })
                     {
                         StatusCode = (int)HttpStatusCode.BadRequest
@@ -85,10 +86,10 @@ namespace Cybtans.AspNetCore
                 default:
                     _logger.LogError(context.Exception, context.Exception.Message);
 
-                    context.Result = new ObjectResult(new ValidationResult(context.Exception.GetFullErrorMessage())
+                    context.Result = new ObjectResult(new ValidationResult(_showDetails ? context.Exception.GetFullErrorMessage() : "An error has occurred")
                     {
                         ErrorCode = (int)HttpStatusCode.InternalServerError,
-                        StackTrace = _useStackTrace ? context.Exception.StackTrace : null
+                        StackTrace = _showDetails ? context.Exception.StackTrace : null
                     })
                     { StatusCode = (int)HttpStatusCode.InternalServerError };
 
