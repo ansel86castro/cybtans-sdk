@@ -1023,8 +1023,8 @@ namespace Cybtans.Math
             }
         }
 
- 
-        #endregion 
-     
+        #endregion
+
+        public List<float> ToList() => new List<float> { X, Y, Z, W };
     }
 }

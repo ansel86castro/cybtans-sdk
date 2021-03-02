@@ -481,7 +481,7 @@ namespace Cybtans.Expressions
             return -1;
         }
 
-        private String ReadString()
+        private string ReadString()
         {
             StringBuilder sb = new StringBuilder();
             boolean scape = false;

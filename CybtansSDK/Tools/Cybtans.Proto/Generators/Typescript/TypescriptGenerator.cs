@@ -23,13 +23,16 @@ namespace Cybtans.Proto.Generators.Typescript
         public void GenerateCode(ProtoFile proto, Scope? scope = null)
         {           
             new TypeGenerator(proto, _options.ModelOptions).GenerateCode();
-            if (_options.ClientOptions.Framework == TsOutputOption.FRAMEWORK_ANGULAR)
+            if (proto.HaveServices && _options.ClientOptions != null)
             {
-                new AngularClientGenerator(proto, _options.ModelOptions,_options.ClientOptions).GenerateCode();
-            }
-            else
-            {
-                new ClientGenerator(proto, _options.ModelOptions, _options.ClientOptions).GenerateCode();
+                if (_options.ClientOptions.Framework == TsOutputOption.FRAMEWORK_ANGULAR)
+                {
+                    new AngularClientGenerator(proto, _options.ModelOptions, _options.ClientOptions).GenerateCode();
+                }
+                else
+                {
+                    new ClientGenerator(proto, _options.ModelOptions, _options.ClientOptions).GenerateCode();
+                }
             }
         }
     }

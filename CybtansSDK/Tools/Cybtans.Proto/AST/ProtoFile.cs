@@ -87,5 +87,10 @@ namespace Cybtans.Proto.AST
                 }
             }
         }
+
+        public bool HaveMessages => Declarations.Any(x => x is MessageDeclaration || x is EnumDeclaration) || ImportedFiles.Any(x => x.HaveMessages);
+
+        public bool HaveServices => Declarations.Any(x => x is ServiceDeclaration) || ImportedFiles.Any(x => x.HaveServices);
+
     }    
 }

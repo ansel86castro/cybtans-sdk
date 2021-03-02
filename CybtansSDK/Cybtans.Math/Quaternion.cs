@@ -435,7 +435,7 @@ namespace Cybtans.Math
             return quaternion;
         }
 
-        public static Quaternion RotationMatrix(Matrix matrix)
+        public static Quaternion RotationMatrix(in Matrix matrix)
         {
             float num2;
             float num3;
@@ -640,10 +640,7 @@ namespace Cybtans.Math
             return string.Format(currentCulture, "{{X:{0} Y:{1} Z:{2} W:{3}}}", new object[] { this.X.ToString(currentCulture), this.Y.ToString(currentCulture), this.Z.ToString(currentCulture), this.W.ToString(currentCulture) });
         }
 
- 
-
- 
-
+        public List<float> ToList() => new List<float> { X, Y, Z, W };
 
     }
 

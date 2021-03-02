@@ -134,13 +134,13 @@ namespace Cybtans.Math
 
         public Vector3 Right
         {
-            readonly get 
+            get 
             {
                 Vector3 vector;
                 vector.X = this.M11;
                 vector.Y = this.M12;
                 vector.Z = this.M13;
-                return vector;
+                return  vector;
             }
             set
             {
@@ -152,7 +152,7 @@ namespace Cybtans.Math
         
         public Vector3 Up
         {
-            readonly get
+            get
             {
                 Vector3 vector;
                 vector.X = this.M21;
@@ -170,7 +170,7 @@ namespace Cybtans.Math
         
         public Vector3 Front
         {
-            readonly get
+            get
             {
                 Vector3 vector;
                 vector.X = this.M31;
@@ -2077,5 +2077,13 @@ namespace Cybtans.Math
                 }
             }
         }
+
+        public List<float> ToList() => new List<float>
+        {
+            M11, M12, M13, M14,
+            M21, M22, M23, M24,
+            M31, M32, M33, M34,
+            M41, M42, M43, M44,
+        };
     }
 }

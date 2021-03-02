@@ -40,7 +40,11 @@ namespace Cybtans.Proto.Generators.Typescript
         {
             string name = type.TypeDeclaration.Name.Pascal();
 
-            if (type.TypeDeclaration is PrimitiveType p)
+            if (type.IsMap && type.GenericArgs[0].TypeDeclaration == PrimitiveType.String)
+            {
+                name = $"{{ [key:{GetTypeName(type.GenericArgs[0])}]: {GetTypeName(type.GenericArgs[1])} }}";
+            }
+            else if (type.TypeDeclaration is PrimitiveType p)
             {
                 name = GetPrimitiveTypeName(p);
             }

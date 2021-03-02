@@ -26,40 +26,7 @@ namespace Cybtans.Proto.Generator
         public bool Generate(CybtansConfig config, GenerationStep step)
         {
             if (!CanGenerate(step.Type))
-                return false;
-
-            var options = new GenerationOptions()
-            {
-                ModelOptions = new TypeGeneratorOption()
-                {
-                    OutputPath = Path.Combine(config.Path, step.Models?.Output ?? $"{step.Output}/{config.Service}.Models"),
-                    Namespace = step.Models?.Namespace
-                },
-                ServiceOptions = new TypeGeneratorOption()
-                {
-                    OutputPath = Path.Combine(config.Path, step.Services?.Output ?? $"{step.Output}/{config.Service}.Services/Generated"),
-                    Namespace = step.Services?.Namespace
-                },
-                ControllerOptions = new WebApiControllerGeneratorOption()
-                {
-                    OutputPath = Path.Combine(config.Path, step.Controllers?.Output ?? $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
-                    Namespace = step.Controllers?.Namespace
-                },
-                ClientOptions = new TypeGeneratorOption()
-                {
-                    OutputPath =Path.Combine(config.Path, step.CSharpClients?.Output ?? $"{step.Output}/{config.Service}.Clients"),
-                    Namespace = step.CSharpClients?.Namespace
-                }
-            };
-
-            if (!string.IsNullOrEmpty(step.Gateway) || step.GatewayOptions != null)
-            {
-                options.ApiGatewayOptions = new ApiGateWayGeneratorOption
-                {
-                    OutputPath =Path.Combine(config.Path, step.GatewayOptions?.Output ?? step.Gateway),
-                    Namespace = step.GatewayOptions?.Namespace ?? $"{config.Service}.Controllers"
-                };
-            }
+                return false;          
 
             var protoFile = Path.Combine(config.Path, step.ProtoFile);
             if (step.SearchPath == null)
@@ -79,6 +46,42 @@ namespace Cybtans.Proto.Generator
             Proto3Generator generator = new Proto3Generator(fileResolverFactory);
             var (ast, scope) = generator.LoadFromFile(protoFile);
 
+            var options = new GenerationOptions()
+            {
+                ModelOptions =ast.HaveMessages ?  new TypeGeneratorOption()
+                {
+                    OutputPath = Path.Combine(config.Path, step.Models?.Output ?? $"{step.Output}/{config.Service}.Models"),
+                    Namespace = step.Models?.Namespace
+                } : null,
+                ServiceOptions = ast.HaveServices ? new TypeGeneratorOption()
+                {
+                    OutputPath = Path.Combine(config.Path, step.Services?.Output ?? $"{step.Output}/{config.Service}.Services/Generated"),
+                    Namespace = step.Services?.Namespace
+                } : null,                
+            };
+
+            if(options.ServiceOptions != null)
+            {
+                options.ControllerOptions = new WebApiControllerGeneratorOption()
+                {
+                    OutputPath = Path.Combine(config.Path, step.Controllers?.Output ?? $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
+                    Namespace = step.Controllers?.Namespace
+                };
+                options.ClientOptions = new TypeGeneratorOption()
+                {
+                    OutputPath = Path.Combine(config.Path, step.CSharpClients?.Output ?? $"{step.Output}/{config.Service}.Clients"),
+                    Namespace = step.CSharpClients?.Namespace
+                };
+            }
+
+            if (!string.IsNullOrEmpty(step.Gateway) || step.GatewayOptions != null)
+            {
+                options.ApiGatewayOptions = new ApiGateWayGeneratorOption
+                {
+                    OutputPath = Path.Combine(config.Path, step.GatewayOptions?.Output ?? step.Gateway),
+                    Namespace = step.GatewayOptions?.Namespace ?? $"{config.Service}.Controllers"
+                };
+            }
             MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(options);            
 
             microserviceGenerator.GenerateCode(ast, scope);            

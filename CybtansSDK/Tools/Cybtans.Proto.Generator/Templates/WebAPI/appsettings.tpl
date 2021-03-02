@@ -11,6 +11,8 @@
   },
   
   "AllowedHosts": "*",
+
+  "CorsOrigins":"*",
   
   "ConnectionStrings": {
     "DefaultConnection": "Server=(LocalDb)\\MSSQLLocalDB;Database=@{SERVICE};Trusted_Connection=True;MultipleActiveResultSets=true"
