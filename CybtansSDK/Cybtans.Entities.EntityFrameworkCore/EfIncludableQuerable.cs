@@ -8,9 +8,15 @@ using System.Threading;
 
 namespace Cybtans.Entities.EntityFrameworkCore
 {
-    public class EfIncludableQuerable<TEntity, TProperty> : IIncludableQueryable<TEntity, TProperty>, IAsyncEnumerable<TEntity> where TEntity : class
+    public interface IEfIncludableQuerable<out TEntity, out  TProperty> : IIncludableQueryable<TEntity, TProperty>, IAsyncEnumerable<TEntity> where TEntity : class
+    {
+        Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, TProperty> EfQuery { get; }
+    }
+
+    public class EfIncludableQuerable<TEntity, TProperty> : IEfIncludableQuerable<TEntity, TProperty> where TEntity : class
     {
         Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, TProperty> _query;
+
         public EfIncludableQuerable(Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, TProperty> query)
         {
             _query = query;

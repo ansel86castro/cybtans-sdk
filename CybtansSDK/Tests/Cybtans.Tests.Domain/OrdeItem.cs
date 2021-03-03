@@ -17,7 +17,19 @@ namespace Cybtans.Tests.Domain
 
         public Guid OrderId { get; set; }
 
+        public Guid ProductId { get; set; }
+
         [MessageExcluded]
         public virtual Order Order { get; set; }
+
+        public Product Product { get; set; }
+    }
+
+    [GenerateMessage]
+    public class Product :Entity<Guid>
+    {
+        public string Name { get; set; }
+
+        public string Model { get; set; }
     }
 }
