@@ -17,8 +17,8 @@ namespace Cybtans.Entities.EntityFrameworkCore
 
 
         public static void Setup()
-        {
-            IAsyncQueryExecutioner.Executioner = new EfAsyncQueryExecutioner();
+        {            
+            IAsyncQueryExecutioner.Executioner ??= new EfAsyncQueryExecutioner();
         }    
 
         public Task<int> CountAsync<T>(IQueryable<T> query)
@@ -197,7 +197,7 @@ namespace Cybtans.Entities.EntityFrameworkCore
         public IIncludableQueryable<T, TProperty> ThenInclude<T, TPreviusProperty, TProperty>(IIncludableQueryable<T, IEnumerable<TPreviusProperty>> query, Expression<Func<TPreviusProperty, TProperty>> navigationPropertyPath)
           where T : class
         {
-            var efQuery = ((EfIncludableQuerable<T, IEnumerable<TPreviusProperty>>)query).EfQuery;
+            var efQuery = ((IEfIncludableQuerable<T, IEnumerable<TPreviusProperty>>)query).EfQuery;
 
             return new EfIncludableQuerable<T, TProperty>(EntityFrameworkQueryableExtensions.ThenInclude(efQuery, navigationPropertyPath));
         }
