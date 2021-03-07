@@ -17,13 +17,18 @@ namespace Cybtans.Entities.EntityFrameworkCore
 
 
         public static void Setup()
-        {
-            IAsyncQueryExecutioner.Executioner = new EfAsyncQueryExecutioner();
+        {            
+            IAsyncQueryExecutioner.Executioner ??= new EfAsyncQueryExecutioner();
         }    
 
         public Task<int> CountAsync<T>(IQueryable<T> query)
         {
             return EntityFrameworkQueryableExtensions.CountAsync(query);
+        }
+
+        public Task<int> CountAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate)
+        {
+            return EntityFrameworkQueryableExtensions.CountAsync(query, predicate);
         }
 
         public Task<T> FirstAsync<T>(IQueryable<T> query)
@@ -51,6 +56,11 @@ namespace Cybtans.Entities.EntityFrameworkCore
             return EntityFrameworkQueryableExtensions.LongCountAsync(query);
         }
 
+        public Task<long> LongCountAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate)
+        {
+            return EntityFrameworkQueryableExtensions.LongCountAsync(query, predicate);
+        }
+      
         public Task<TResult> MaxAsync<TSource, TResult>(IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
             return EntityFrameworkQueryableExtensions.MaxAsync(source, selector);
@@ -146,5 +156,51 @@ namespace Cybtans.Entities.EntityFrameworkCore
         {
             return EntityFrameworkQueryableExtensions.AverageAsync(source, selector);
         }
+
+        public Task<bool> AnyAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate)
+        {
+            return EntityFrameworkQueryableExtensions.AnyAsync(query, predicate);
+        }
+
+        public Task<bool> AnyAsync<T>(IQueryable<T> query)
+        {
+            return EntityFrameworkQueryableExtensions.AnyAsync(query);
+        }
+
+        public Task<bool> AllAsync<T>(IQueryable<T> query, Expression<Func<T, bool>> predicate)
+        {
+            return EntityFrameworkQueryableExtensions.AllAsync(query, predicate);
+        }
+
+        public Task<Dictionary<TKey, T>> ToDictionaryAsync<T,TKey>(IQueryable<T> query, Func<T,TKey> keySelector)
+        {
+            return EntityFrameworkQueryableExtensions.ToDictionaryAsync(query, keySelector);
+        }
+
+        public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<T, TKey, TElement>(IQueryable<T> query, Func<T, TKey> keySelector, Func<T, TElement> elementSelector)
+        {
+            return EntityFrameworkQueryableExtensions.ToDictionaryAsync(query, keySelector, elementSelector);
+        }
+
+        public IQueryable<T> AsNoTracking<T>(IQueryable<T> query)
+            where T:class
+        {
+            return EntityFrameworkQueryableExtensions.AsNoTracking(query);
+        }
+
+        public IIncludableQueryable<T, TProperty> Include<T, TProperty>(IQueryable<T> query, Expression<Func<T, TProperty>> navigationPropertyPath)
+           where T : class
+        {            
+            return new EfIncludableQuerable<T, TProperty>(EntityFrameworkQueryableExtensions.Include(query, navigationPropertyPath));
+        }
+
+        public IIncludableQueryable<T, TProperty> ThenInclude<T, TPreviusProperty, TProperty>(IIncludableQueryable<T, IEnumerable<TPreviusProperty>> query, Expression<Func<TPreviusProperty, TProperty>> navigationPropertyPath)
+          where T : class
+        {
+            var efQuery = ((IEfIncludableQuerable<T, IEnumerable<TPreviusProperty>>)query).EfQuery;
+
+            return new EfIncludableQuerable<T, TProperty>(EntityFrameworkQueryableExtensions.ThenInclude(efQuery, navigationPropertyPath));
+        }
+
     }
 }
