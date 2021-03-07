@@ -149,5 +149,23 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
 
             return order;
         }
+
+        [Fact]
+        public async Task ToListAsync()
+        {
+            var orders = await _repository.ToListAsync();
+            Assert.NotEmpty(orders);
+        }
+
+        [Fact]
+        public async Task Include()
+        {
+            var orders = await _repository
+                .Include(x => x.Items)
+                .ThenInclude(x=>x.Product)                
+                .ToListAsync();
+
+            Assert.NotEmpty(orders);
+        }
     }
 }

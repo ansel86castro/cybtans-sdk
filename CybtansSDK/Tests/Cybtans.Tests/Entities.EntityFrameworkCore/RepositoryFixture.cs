@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Testing;
 using Cybtans.Tests.Domain;
 using Cybtans.Tests.Domain.EF;
@@ -45,6 +46,8 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
         {
             return Run(async provider =>
             {
+                EfAsyncQueryExecutioner.Setup();
+
                 var context = provider.GetService<AdventureContext>();
                 await context.Database.EnsureCreatedAsync();
                 await Seed(context);
@@ -131,7 +134,8 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
                                            (x % 2 == 0) ? 0.5f :
                                             5,
                                 Price = 10,
-                                
+                                Product = new Product{ Model = "Product 1"}
+
                         }
                     }
                 }));

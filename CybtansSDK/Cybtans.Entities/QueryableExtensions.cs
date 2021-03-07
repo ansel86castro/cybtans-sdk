@@ -212,7 +212,6 @@ namespace Cybtans.Entities
             return IAsyncQueryExecutioner.Executioner.SumAsync(source, selector);
         }
 
-
         public static PagedQuery<T> PageBy<T>(this IQueryable<T> source, int count, int skip = 0, int take = 50)
         {            
             return new PagedQuery<T>(
@@ -220,8 +219,7 @@ namespace Cybtans.Entities
                 page:  skip / take, 
                 totalPages: count / take + (count % take == 0 ? 0 : 1),
                 totalCount: count);
-        }
-      
+        }      
 
         public static async Task<PagedQuery<T>> PageBy<T>(this IQueryable<T> source, Func<IQueryable<T>, IQueryable<T>> filter, int skip = 0, int take = 50)
         {
@@ -230,5 +228,90 @@ namespace Cybtans.Entities
             return PageBy(source, count, skip, take);
             
         }
+
+
+        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(source.Any(predicate));
+
+            return IAsyncQueryExecutioner.Executioner.AnyAsync(source, predicate);
+        }
+
+        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(source.Any());
+
+            return IAsyncQueryExecutioner.Executioner.AnyAsync(source);
+        }
+
+        public static Task<bool> AllAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(source.All(predicate));
+
+            return IAsyncQueryExecutioner.Executioner.AllAsync(source, predicate);
+        }
+
+
+        public static Task<int> CountAsync<T>(this IQueryable<T> query, Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(query.Count(predicate));
+
+            return IAsyncQueryExecutioner.Executioner.CountAsync(query, predicate);
+        }
+
+        public static Task<long> LongCountAsync<T>(this IQueryable<T> query, Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(query.LongCount(predicate));
+
+            return IAsyncQueryExecutioner.Executioner.LongCountAsync(query, predicate);
+        }
+
+        public static Task<Dictionary<TKey, T>> ToDictionaryAsync<T, TKey>(this IQueryable<T> query, Func<T, TKey> keySelector, CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(query.ToDictionary(keySelector));
+
+            return IAsyncQueryExecutioner.Executioner.ToDictionaryAsync(query, keySelector);
+        }
+
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<T, TKey, TElement>(this IQueryable<T> query, Func<T, TKey> keySelector, Func<T, TElement> elementSelector , CancellationToken cancellationToken = default)
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return Task.FromResult(query.ToDictionary(keySelector, elementSelector));
+
+            return IAsyncQueryExecutioner.Executioner.ToDictionaryAsync(query, keySelector, elementSelector);
+        }
+
+        public static IQueryable<T> AsNoTracking<T>(this IQueryable<T> query) where T : class
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                return query;
+
+            return IAsyncQueryExecutioner.Executioner.AsNoTracking(query);
+        }
+
+        public static IIncludableQueryable<T, TProperty> Include<T, TProperty>(this IQueryable<T> query, Expression<Func<T, TProperty>> navigationPropertyPath)
+          where T : class
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                throw new InvalidOperationException("IAsyncQueryExecutioner not found");
+
+            return IAsyncQueryExecutioner.Executioner.Include(query, navigationPropertyPath);
+        }
+
+        public static IIncludableQueryable<T, TProperty> ThenInclude<T, TPreviusProperty, TProperty>(this IIncludableQueryable<T, IEnumerable<TPreviusProperty>> query, Expression<Func<TPreviusProperty, TProperty>> navigationPropertyPath)
+        where T : class
+        {
+            if (IAsyncQueryExecutioner.Executioner == null)
+                throw new InvalidOperationException("IAsyncQueryExecutioner not found");
+
+            return IAsyncQueryExecutioner.Executioner.ThenInclude(query, navigationPropertyPath);
+        }
+
     }
 }
