@@ -9,11 +9,11 @@ namespace Cybtans.Graphics.Models
 		
 		public short Offset {get; set;}
 		
-		public short Stream {get; set;}
+		public short? Stream {get; set;}
 		
 		public string Semantic {get; set;}
 		
-		public byte UsageIndex {get; set;}
+		public byte? UsageIndex {get; set;}
 		
 		public VertexElementFormat Format {get; set;}
 		
@@ -76,9 +76,9 @@ namespace Cybtans.Graphics.Models
 		    return propertyCode switch
 		    {
 		        Offset => typeof(short),
-		        Stream => typeof(short),
+		        Stream => typeof(short?),
 		        Semantic => typeof(string),
-		        UsageIndex => typeof(byte),
+		        UsageIndex => typeof(byte?),
 		        Format => typeof(VertexElementFormat),
 		        Size => typeof(int),
 		
@@ -108,9 +108,9 @@ namespace Cybtans.Graphics.Models
 		    switch (propertyCode)
 		    {
 		        case Offset:  obj.Offset = (short)value;break;
-		        case Stream:  obj.Stream = (short)value;break;
+		        case Stream:  obj.Stream = (short?)value;break;
 		        case Semantic:  obj.Semantic = (string)value;break;
-		        case UsageIndex:  obj.UsageIndex = (byte)value;break;
+		        case UsageIndex:  obj.UsageIndex = (byte?)value;break;
 		        case Format:  obj.Format = (VertexElementFormat)value;break;
 		        case Size:  obj.Size = (int)value;break;
 		

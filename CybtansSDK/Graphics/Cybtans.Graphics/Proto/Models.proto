@@ -60,9 +60,9 @@ message VertexDefinitionDto {
 
 message VertexElementDto {
 	int16 offset =1;
-	int16 stream =2;
+	int16 stream =2 [optional = true];
 	string semantic =3;
-	int8 usageIndex =4;
+	int8 usageIndex =4 [optional = true];
     VertexElementFormat format =5;
     int32 size = 6;
 }
@@ -135,7 +135,7 @@ enum TextureType {
     None = 0;
     Texture2D = 1;
     Texture3D = 2;
-    CubeMap = 3;
+    TextureCube = 3;
 }
 
 message CubeMapDto {

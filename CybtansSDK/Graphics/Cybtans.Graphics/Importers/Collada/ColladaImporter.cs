@@ -417,13 +417,15 @@ namespace Cybtans.Graphics.Importers.Collada
             Matrix poseTransform = Matrix.Identity;
             int i = 0;
 
+            Vector3 scale = new Vector3(1, 1, 1);
             foreach (var item in element.Elements())
             {
                 #region Parse Transforms
 
                 if (item.Name.LocalName == "translate")
                 {
-                    poseTransform = Matrix.Translate(ParseVector3(item.Value)) * poseTransform;
+                    var location = ParseVector3(item.Value) / scale;
+                    poseTransform = Matrix.Translate(location) * poseTransform;
                 }
                 else if (item.Name.LocalName == "rotate")
                 {
@@ -432,7 +434,8 @@ namespace Cybtans.Graphics.Importers.Collada
                 }
                 else if (item.Name.LocalName == "scale")
                 {
-                    poseTransform = Matrix.Scale(ParseVector3(item.Value)) * poseTransform;
+                    scale = ParseVector3(item.Value);
+                    poseTransform = Matrix.Scale(scale) * poseTransform;
                 }
                 else if (item.Name.LocalName == "matrix")
                 {
@@ -599,7 +602,7 @@ namespace Cybtans.Graphics.Importers.Collada
         private ElementRef Parse_LightNode(XElement element, object @param)
         {
             var light = (Light)ResolveElementByUrl(_libraryLights, element.GetAttribute("url"), param).Object;
-            LightComponent instance = new LightComponent(light) { LocalDirection = new Vector3(0, -1, 0) };
+            LightComponent instance = new LightComponent(light) { LocalDirection = new Vector3(0, 1, 0) };
             return new ElementRef { Element = element, Object = instance };
         }
 

@@ -56,7 +56,7 @@ namespace Cybtans.Graphics
 
         public string NegativeZ { get; set; }
 
-        public CubeTexture(CubeMapDto faces) : base(TextureType.CubeMap)
+        public CubeTexture(CubeMapDto faces) : base(TextureType.TextureCube)
         {
             PositiveX = faces.PositiveX;
             NegativeX = faces.NegativeX;
@@ -91,10 +91,10 @@ namespace Cybtans.Graphics
 
     public enum TextureType
     {
-        None,
-        Texture2D,
-        Texture3D,
-        CubeMap
+        None = 0,
+        Texture2D = 1,
+        Texture3D = 2,
+        TextureCube = 3
     }
 
 }
