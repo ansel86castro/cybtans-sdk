@@ -209,7 +209,7 @@ namespace Cybtans.Services.Utils
 
             if (c == '@')
             {
-                var next = i + 1 < template.Length ? template[i + 1] : -1;
+                var next = (i + 1) < template.Length ? template[i + 1] : -1;
 
                 if (next == '@')
                     return true;
