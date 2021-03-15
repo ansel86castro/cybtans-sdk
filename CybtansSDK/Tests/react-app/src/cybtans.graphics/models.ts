@@ -62,9 +62,9 @@ export interface VertexDefinitionDto {
 
 export interface VertexElementDto {
   offset: number;
-  stream: number;
+  stream?: number|null;
   semantic?: string|null;
-  usageIndex: number;
+  usageIndex?: number|null;
   format: VertexElementFormat;
   size: number;
 }
@@ -146,7 +146,7 @@ export enum TextureType {
   none = 0,
   texture2d = 1,
   texture3d = 2,
-  cubeMap = 3,
+  textureCube = 3,
 }
 
 
