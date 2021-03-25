@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SceneConverter": {
+      "commandName": "Project",
+      "commandLineArgs": "-path D:/Projects/CybtansSDK/cybtans-web/api/CybtansWeb.RestApi/Assets -d D:/Projects/CybtansSDK/cybtans-web/web/public/assets"
+    }
+  }
+}
