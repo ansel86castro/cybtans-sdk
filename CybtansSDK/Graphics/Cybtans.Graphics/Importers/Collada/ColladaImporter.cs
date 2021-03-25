@@ -424,23 +424,24 @@ namespace Cybtans.Graphics.Importers.Collada
 
                 if (item.Name.LocalName == "translate")
                 {
-                    var location = ParseVector3(item.Value) / scale;
-                    poseTransform = Matrix.Translate(location) * poseTransform;
+                    //var location = ParseVector3(item.Value) / scale;
+                    var location = ParseVector3(item.Value);
+                    poseTransform = poseTransform * Matrix.Translate(location);
                 }
                 else if (item.Name.LocalName == "rotate")
                 {
                     var rotvalue = ParseVector4(item.Value);
-                    poseTransform = Matrix.RotationAxis(rotvalue.ToVector3(), _preserveOrder ? Numerics.ToRadians(rotvalue.W): -Numerics.ToRadians(rotvalue.W)) * poseTransform;
+                    poseTransform = poseTransform * Matrix.RotationAxis(rotvalue.ToVector3(), _preserveOrder ? Numerics.ToRadians(rotvalue.W): -Numerics.ToRadians(rotvalue.W));
                 }
                 else if (item.Name.LocalName == "scale")
                 {
                     scale = ParseVector3(item.Value);
-                    poseTransform = Matrix.Scale(scale) * poseTransform;
+                    poseTransform = poseTransform * Matrix.Scale(scale);
                 }
                 else if (item.Name.LocalName == "matrix")
                 {
                     var mat = ParseMatrix(item.Value);
-                    poseTransform = mat * poseTransform;
+                    poseTransform = poseTransform * mat;
                 }
                 #endregion
 

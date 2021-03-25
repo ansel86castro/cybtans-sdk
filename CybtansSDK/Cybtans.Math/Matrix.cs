@@ -1205,7 +1205,8 @@ namespace Cybtans.Math
                                       matrix.Up.Length(),
                                       matrix.Front.Length());
 
-                translation = matrix.Translation / scaling;
+                //translation = matrix.Translation / scaling;
+                translation = matrix.Translation;
             }
         }
 
