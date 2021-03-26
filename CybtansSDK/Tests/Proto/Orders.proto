@@ -46,11 +46,12 @@ message OrderNotification{
 }
 
 service OrderService {
-	option description = "Order's Service";
+	option description = "Order's Service";	
 
 	rpc Foo(void) returns (void){	
 		option template = "foo"; 
-		option method = "GET";		
+		option method = "GET";
+		option anonymous = true;
 	};
 
 	rpc Baar(void) returns (void){	

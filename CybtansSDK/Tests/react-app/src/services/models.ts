@@ -10,6 +10,7 @@ export interface CustomerDto {
   /** Customer's Profile Id, can be null */
   customerProfileId?: string|null;
   customerProfile?: CustomerProfileDto|null;
+  orders?: OrderDto[]|null;
   id: string;
   createDate?: string|Date|null;
   updateDate?: string|Date|null;
@@ -24,29 +25,12 @@ export interface CustomerProfileDto {
 }
 
 
-export interface CustomerEventDto {
-  fullName?: string|null;
-  customerProfileId?: string|null;
-  id: string;
-}
-
-
-export interface OrderItemDto {
-  productName?: string|null;
-  price: number;
-  discount: number;
-  orderId: string;
-  id: string;
-}
-
-
 export interface OrderDto {
   description?: string|null;
   customerId: string;
   orderStateId: number;
   orderType: OrderTypeEnum;
   orderState?: OrderStateDto|null;
-  customer?: CustomerDto|null;
   items?: OrderItemDto[]|null;
   id: string;
   createDate?: string|Date|null;
@@ -70,6 +54,31 @@ export enum OrderTypeEnum {
 export interface OrderStateDto {
   name?: string|null;
   id: number;
+}
+
+
+export interface OrderItemDto {
+  productName?: string|null;
+  price: number;
+  discount?: number|null;
+  orderId: string;
+  productId?: string|null;
+  product?: ProductDto|null;
+  id: string;
+}
+
+
+export interface ProductDto {
+  name?: string|null;
+  model?: string|null;
+  id: string;
+}
+
+
+export interface CustomerEventDto {
+  fullName?: string|null;
+  customerProfileId?: string|null;
+  id: string;
 }
 
 
@@ -138,35 +147,6 @@ export interface CreateCustomerRequest {
 }
 
 
-export interface GetCustomerEventRequest {
-  id: string;
-}
-
-
-export interface UpdateCustomerEventRequest {
-  id: string;
-  value?: Partial<CustomerEventDto>|null;
-}
-
-
-export interface DeleteCustomerEventRequest {
-  id: string;
-}
-
-
-export interface GetAllCustomerEventResponse {
-  items?: CustomerEventDto[]|null;
-  page: number;
-  totalPages: number;
-  totalCount: number;
-}
-
-
-export interface CreateCustomerEventRequest {
-  value?: Partial<CustomerEventDto>|null;
-}
-
-
 export interface GetOrderRequest {
   id: string;
 }
@@ -222,6 +202,35 @@ export interface GetAllOrderStateResponse {
 
 export interface CreateOrderStateRequest {
   value?: Partial<OrderStateDto>|null;
+}
+
+
+export interface GetCustomerEventRequest {
+  id: string;
+}
+
+
+export interface UpdateCustomerEventRequest {
+  id: string;
+  value?: Partial<CustomerEventDto>|null;
+}
+
+
+export interface DeleteCustomerEventRequest {
+  id: string;
+}
+
+
+export interface GetAllCustomerEventResponse {
+  items?: CustomerEventDto[]|null;
+  page: number;
+  totalPages: number;
+  totalCount: number;
+}
+
+
+export interface CreateCustomerEventRequest {
+  value?: Partial<CustomerEventDto>|null;
 }
 
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -13,6 +14,7 @@ namespace Cybtans.Tests.Controllers
 	/// Order's Service
 	/// </summary>
 	[System.ComponentModel.Description("Order's Service")]
+	[Authorize]
 	[Route("api/Order")]
 	[ApiController]
 	public partial class OrderServiceController : ControllerBase
@@ -24,6 +26,7 @@ namespace Cybtans.Tests.Controllers
 			_service = service;
 		}
 		
+		[AllowAnonymous]
 		[HttpGet("foo")]
 		public Task Foo()
 		{
