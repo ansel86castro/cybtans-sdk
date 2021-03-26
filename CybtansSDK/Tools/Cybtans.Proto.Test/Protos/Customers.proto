@@ -34,8 +34,8 @@ service CustomerService{
 	option (prefix) ="api/customer";
 
 	rpc GetCustomer(GetCustomerRequest) returns (Customer){		
-		option template = "{id}";
-		option method = "GET";		
+		option (template) = "{id}";
+		option (method) = "GET";		
 	};
 }
 

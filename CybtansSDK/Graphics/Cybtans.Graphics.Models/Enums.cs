@@ -69,7 +69,7 @@ namespace Cybtans.Graphics.Models
 		
 		Texture3d = 2,
 		
-		CubeMap = 3,
+		TextureCube = 3,
 		
 	}
 	

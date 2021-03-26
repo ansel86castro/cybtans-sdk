@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Cybtans.Math;
 using Cybtans.Graphics.Buffers;
+using System.Collections.Generic;
 
 namespace Cybtans.Graphics.Importers.Collada
 {
@@ -378,7 +379,7 @@ namespace Cybtans.Graphics.Importers.Collada
 
             fixed (float* pArray = array)
             {            
-                ByteBuffer.Copy(pArray, &mat, 16 * 4);
+                ByteBuffer.Copy(pArray, &mat, 16 * sizeof(float));
             }
           
             return ConvertMatrix(mat);
@@ -439,23 +440,13 @@ namespace Cybtans.Graphics.Importers.Collada
 
             if (_zUp)
             {
-                //Vector4 column1 = mat.GetColumn(1);
-                //Vector4 column2 = mat.GetColumn(2);
-                //mat.SetColumn(1, column2);
-                //mat.SetColumn(2, column1);
-
-
-                //Vector4 row1 = mat.GetRow(1);
-                //Vector4 row2 = mat.GetRow(2);
-                //mat.SetRow(1, row2);
-                //mat.SetRow(2, row1);
-
                 var x = Swap(mat.Right);
                 var y = Swap(mat.Up);
                 var z = Swap(mat.Front);
                 var t = Swap(mat.Translation);
                 mat = new Matrix(x, z, y, t);
             }
+           
             return mat;
         }
 
@@ -656,13 +647,13 @@ namespace Cybtans.Graphics.Importers.Collada
             if (string.IsNullOrEmpty(value))
                 return;
 
-            string mapsDirectory = Path.GetDirectoryName(diffuseFilename);
-            if (string.IsNullOrEmpty(mapsDirectory))
-            {
-                mapsDirectory = _directory;
-            }
+            //string mapsDirectory = Path.GetDirectoryName(diffuseFilename);
+            //if (string.IsNullOrEmpty(mapsDirectory))
+            //{
+            //    mapsDirectory = _directory;
+            //}
 
-            foreach (var file in Directory.EnumerateFiles(mapsDirectory))
+            foreach (var file in _files)
             {
                 var filename = Path.GetFileNameWithoutExtension(file);
                 if (!filename.StartsWith(baseName) || filename == diffuseName)
@@ -674,14 +665,22 @@ namespace Cybtans.Graphics.Importers.Collada
                     var name = match.Groups["R"].Value;
                     value = match.Groups["N"].Value;
 
-                    material.SetTexture(value, GetTexture(file));
-
-                    //if (value[0] == 'n')
-                    //    material.NormalMap = GetTexture(file);
-                    //else if (value[0] == 's')
-                    //    material.SpecularMap = GetTexture(file);
+                    var location = Path.GetFileName(file);
+                    material.SetTexture(value, GetTexture(location));                
                 }
             }
+        }
+
+        private HashSet<string> LoadFilenames()
+        {
+            var dir = string.IsNullOrEmpty(_directory) ? "." : _directory;
+            var set = new HashSet<string>();
+
+            foreach (var file in Directory.EnumerateFiles(dir))
+            {
+                set.Add(file);
+            }
+            return set;
         }
     }
 }

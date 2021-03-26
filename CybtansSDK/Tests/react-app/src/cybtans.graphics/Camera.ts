@@ -1,4 +1,5 @@
 import { mat4, vec2, vec3 } from "gl-matrix";
+import Frame from "./Frame";
 import { float3, matrix } from "./MathUtils";
 import { CameraDto, ProjectionType } from "./models";
 
@@ -29,9 +30,9 @@ export default class Camera {
         this.width = data.width;
         this.height = data.height;
         this.id = data.id;
-        this.localMtx = matrix(); //matrix(data.localMatrix);
-        this.viewMtx =  matrix(data.viewMatrix);
-        this.projMtx = matrix(data.projMatrix);;
+        this.localMtx = matrix(data.localMatrix);
+        this.viewMtx =  matrix();
+        this.projMtx = matrix();
         this.viewProjMtx = matrix();
         this.viewInvertMtx = matrix();
         this.position = float3();
@@ -51,18 +52,17 @@ export default class Camera {
         this.position[2] = this.viewInvertMtx[14];
     }
 
-    transform(transform: mat4) {
-       //view =  transform * local
-       
-        // mat4.mul(this.viewInvertMtx,  transform, this.localMtx);
-        // this.position[0] = this.viewMtx[12];
-        // this.position[1] = this.viewMtx[13];
-        // this.position[2] = this.viewMtx[14];
+    transform(frame:Frame) {
+       /** view = inverse(transform * local) */        
+        mat4.mul(this.viewInvertMtx, frame.worldMtx, this.localMtx);      
 
-        // mat4.invert(this.viewMtx, this.viewInvertMtx);
+        mat4.invert(this.viewMtx, this.viewInvertMtx);
 
-        mat4.mul(this.viewProjMtx, this.projMtx, this.viewMtx);
-
+        mat4.mul(this.viewProjMtx, this.projMtx, this.viewMtx);      
+    
+        this.position[0] = this.viewInvertMtx[12];
+        this.position[1] = this.viewInvertMtx[13];
+        this.position[2] = this.viewInvertMtx[14];
     }
 
 }

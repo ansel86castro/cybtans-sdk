@@ -162,6 +162,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
         {
             var orders = await _repository
                 .Include(x => x.Items)
+                .ThenInclude(x=>x.Product)                
                 .ToListAsync();
 
             Assert.NotEmpty(orders);

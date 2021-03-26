@@ -51,7 +51,8 @@ namespace Cybtans.Graphics.Importers.Collada
 
         Frame _visualSceneNode;
         float _unit = 1.0f;
-        string _directory;       
+        string _directory;
+        private HashSet<string> _files;
         Scene _scene;
         private bool _preserveOrder;
         private string _authoring;
@@ -77,6 +78,11 @@ namespace Cybtans.Graphics.Importers.Collada
         {
             FileName = filename;
             _directory = Path.GetDirectoryName(filename);
+            if (string.IsNullOrEmpty(_directory))
+                _directory = ".";
+
+            _files = LoadFilenames();
+
             _document = XDocument.Load(filename);
             _rootElement = _document.Root;
 
@@ -411,27 +417,31 @@ namespace Cybtans.Graphics.Importers.Collada
             Matrix poseTransform = Matrix.Identity;
             int i = 0;
 
+            Vector3 scale = new Vector3(1, 1, 1);
             foreach (var item in element.Elements())
             {
                 #region Parse Transforms
 
                 if (item.Name.LocalName == "translate")
                 {
-                    poseTransform = Matrix.Translate(ParseVector3(item.Value)) * poseTransform;
+                    //var location = ParseVector3(item.Value) / scale;
+                    var location = ParseVector3(item.Value);
+                    poseTransform = poseTransform * Matrix.Translate(location);
                 }
                 else if (item.Name.LocalName == "rotate")
                 {
                     var rotvalue = ParseVector4(item.Value);
-                    poseTransform = Matrix.RotationAxis(rotvalue.ToVector3(), -Numerics.ToRadians(rotvalue.W)) * poseTransform;
+                    poseTransform = poseTransform * Matrix.RotationAxis(rotvalue.ToVector3(), _preserveOrder ? Numerics.ToRadians(rotvalue.W): -Numerics.ToRadians(rotvalue.W));
                 }
                 else if (item.Name.LocalName == "scale")
                 {
-                    poseTransform = Matrix.Scale(ParseVector3(item.Value)) * poseTransform;
+                    scale = ParseVector3(item.Value);
+                    poseTransform = poseTransform * Matrix.Scale(scale);
                 }
                 else if (item.Name.LocalName == "matrix")
                 {
                     var mat = ParseMatrix(item.Value);
-                    poseTransform = mat * poseTransform;
+                    poseTransform = poseTransform * mat;
                 }
                 #endregion
 
@@ -593,7 +603,7 @@ namespace Cybtans.Graphics.Importers.Collada
         private ElementRef Parse_LightNode(XElement element, object @param)
         {
             var light = (Light)ResolveElementByUrl(_libraryLights, element.GetAttribute("url"), param).Object;
-            LightComponent instance = new LightComponent(light) { LocalDirection = new Vector3(0, -1, 0) };
+            LightComponent instance = new LightComponent(light) { LocalDirection = new Vector3(0, 1, 0) };
             return new ElementRef { Element = element, Object = instance };
         }
 
@@ -1335,7 +1345,16 @@ namespace Cybtans.Graphics.Importers.Collada
                 });
             });
 
-            camera.Local = new Euler(0, Numerics.PIover2, 0).ToMatrix();
+            if (_preserveOrder)
+            {
+                var local = Matrix.RotationX(-Numerics.PIover2);               
+                camera.Local = local;
+            }
+            else
+            {
+                camera.Local = new Euler(0, Numerics.PIover2, 0).ToMatrix();
+            }
+            
             camera.Transform(Matrix.Identity);
 
             _cameras.Add(camera);

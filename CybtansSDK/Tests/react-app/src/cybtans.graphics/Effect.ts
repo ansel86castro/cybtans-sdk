@@ -31,9 +31,8 @@ export class Effect {
                     return item.program;
                 }
             }
-        }else{
-            return this.programsForTypes[type.name];
         }
+        return this.programsForTypes[type.name];       
     }
 
 }
@@ -105,7 +104,7 @@ export class ParameterPredicate {
         if(!this.parameter.location)
             return false;
 
-        let source = manager.getSource(this.parameter.type);
+        let source = manager.getSource(this.parameter.target);
         let v = this.getValue(source);
 
         switch(this.op){

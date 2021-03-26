@@ -17,8 +17,6 @@ export interface CameraDto {
   width: number;
   height: number;
   localMatrix?: number[]|null;
-  viewMatrix?: number[]|null;
-  projMatrix?: number[]|null;
   id: string;
 }
 
@@ -64,9 +62,9 @@ export interface VertexDefinitionDto {
 
 export interface VertexElementDto {
   offset: number;
-  stream: number;
+  stream?: number|null;
   semantic?: string|null;
-  usageIndex: number;
+  usageIndex?: number|null;
   format: VertexElementFormat;
   size: number;
 }
@@ -148,9 +146,19 @@ export enum TextureType {
   none = 0,
   texture2d = 1,
   texture3d = 2,
-  cubeMap = 3,
+  textureCube = 3,
 }
 
+
+
+export interface CubeMapDto {
+  positiveX?: string|null;
+  negativeX?: string|null;
+  positiveY?: string|null;
+  negativeY?: string|null;
+  positiveZ?: string|null;
+  negativeZ?: string|null;
+}
 
 
 export interface TextureDto {
@@ -158,6 +166,7 @@ export interface TextureDto {
   type: TextureType;
   format?: string|null;
   id: string;
+  cubeMap?: CubeMapDto|null;
 }
 
 

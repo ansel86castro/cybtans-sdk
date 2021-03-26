@@ -10,7 +10,7 @@ export class AmbientLight {
     northPole?: vec3;
 
     constructor(data?:AmbientLightDto|null){
-        this.ambientColor = float3(data?.ambientColor || [0.3,0.3,0.3]);
+        this.ambientColor = float3(data?.ambientColor || [0.1,0.1,0.1]);
         this.skyColor = float3(data?.skyColor || [0.3, 0.3, 0.3]);
         this.groundColor = float3(data?.groundColor || [0.1,0.1,0.1]);
         this.intensity = data?.intensity || 1;

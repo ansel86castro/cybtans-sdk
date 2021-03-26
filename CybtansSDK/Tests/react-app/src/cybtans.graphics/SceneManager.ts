@@ -60,7 +60,7 @@ export default class SceneManager {
       if (this.lastTime === undefined)
         this.lastTime = timestamp;
 
-     this.elapsed = timestamp - this.lastTime;
+     this.elapsed = (timestamp - this.lastTime) / 1000;
 
       if(this.updateHandler){
           this.updateHandler(this.elapsed);
