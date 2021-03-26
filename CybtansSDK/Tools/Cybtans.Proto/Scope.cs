@@ -41,8 +41,13 @@ namespace Cybtans.Proto
         }
 
         public ITypeDeclaration? GetDeclaration(IdentifierExpression path)
-        {            
-            if(path.Left == null)
+        {
+            if (_declarations.TryGetValue(path.ToString(), out var type))
+            {
+                return type;
+            }
+
+            if (path.Left == null)
             {
                 return GetDeclaration(path.Id);
             }
@@ -157,7 +162,17 @@ namespace Cybtans.Proto
                 PrimitiveType.Void,
                 PrimitiveType.Guid,
                 PrimitiveType.Decimal,
-                PrimitiveType.Stream
+                PrimitiveType.Stream,
+                PrimitiveType.TimeStamp,
+                PrimitiveType.Duration,
+                PrimitiveType.BoolValue,
+                PrimitiveType.DoubleValue,
+                PrimitiveType.Int32Value,
+                PrimitiveType.Int64Value,
+                PrimitiveType.UInt32Value,
+                PrimitiveType.UInt64Value,
+                PrimitiveType.StringValue,
+                PrimitiveType.BytesValue,
             });
         }
     }
