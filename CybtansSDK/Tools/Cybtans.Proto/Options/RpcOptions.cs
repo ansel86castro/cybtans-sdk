@@ -23,6 +23,9 @@ namespace Cybtans.Proto.Options
         [Field("description")]
         public string? Description { get; set; }
 
+        [Field("google")]
+        public GoogleHttpOptions? Google { get; set; }
+
     }
 
     public class StreamOptions: ProtobufOption
@@ -36,5 +39,21 @@ namespace Cybtans.Proto.Options
 
         [Field("name")]
         public string? Name { get; set; }
+    }
+
+    public class GoogleHttpOptions: ProtobufOption
+    {
+        public GoogleHttpOptions() : base(OptionsType.Rpc) { }
+
+        [Field("api")]
+        public GoogleApi? Api { get; set; }
+    }
+
+    public class GoogleApi : ProtobufOption
+    {
+        public GoogleApi() : base(OptionsType.Rpc) { }
+
+        [Field("http")]
+        public GoogleApi? Http { get; set; }
     }
 }
