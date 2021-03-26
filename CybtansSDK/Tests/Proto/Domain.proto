@@ -10,9 +10,10 @@ message CustomerDto {
 	string secondLastName = 3 [description = "Customer's SecondLastName", deprecated = true];
 	guid customerProfileId = 4 [optional = true, description = "Customer's Profile Id, can be null"];
 	CustomerProfileDto customerProfile = 5;
-	guid id = 6;
-	datetime createDate = 7 [optional = true];
-	datetime updateDate = 8 [optional = true];
+	repeated OrderDto orders = 6;
+	guid id = 7;
+	datetime createDate = 8 [optional = true];
+	datetime updateDate = 9 [optional = true];
 }
 
 message CustomerProfileDto {
@@ -22,31 +23,16 @@ message CustomerProfileDto {
 	datetime updateDate = 4 [optional = true];
 }
 
-message CustomerEventDto {
-	string fullName = 1;
-	guid customerProfileId = 2 [optional = true];
-	guid id = 3;
-}
-
-message OrderItemDto {
-	string productName = 1;
-	float price = 2;
-	float discount = 3;
-	guid orderId = 4;
-	guid id = 5;
-}
-
 message OrderDto {
 	string description = 1;
 	guid customerId = 2;
 	int32 orderStateId = 3;
 	OrderTypeEnum orderType = 4;
 	OrderStateDto orderState = 5;
-	CustomerDto customer = 6;
-	repeated OrderItemDto items = 7;
-	guid id = 8;
-	datetime createDate = 9 [optional = true];
-	datetime updateDate = 10 [optional = true];
+	repeated OrderItemDto items = 6;
+	guid id = 7;
+	datetime createDate = 8 [optional = true];
+	datetime updateDate = 9 [optional = true];
 }
 
 enum OrderTypeEnum {
@@ -60,6 +46,28 @@ enum OrderTypeEnum {
 message OrderStateDto {
 	string name = 1;
 	int32 id = 2;
+}
+
+message OrderItemDto {
+	string productName = 1;
+	float price = 2;
+	float discount = 3 [optional = true];
+	guid orderId = 4;
+	guid productId = 5 [optional = true];
+	ProductDto product = 6;
+	guid id = 7;
+}
+
+message ProductDto {
+	string name = 1;
+	string model = 2;
+	guid id = 3;
+}
+
+message CustomerEventDto {
+	string fullName = 1;
+	guid customerProfileId = 2 [optional = true];
+	guid id = 3;
 }
 
 message ReadOnlyEntityDto {
@@ -156,66 +164,6 @@ service CustomerService {
 }
 
 // **************************** END Customer **********************************************
-
-// **************************** START CustomerEvent **********************************************
-
-message GetCustomerEventRequest {
-	guid id = 1;
-}
-
-message UpdateCustomerEventRequest {
-	guid id = 1;
-	CustomerEventDto value = 2 [(ts).partial = true];
-}
-
-message DeleteCustomerEventRequest{
-	guid id = 1;
-}
-
-message GetAllCustomerEventResponse {
-	repeated CustomerEventDto items = 1;
-	int64 page = 2;
-	int64 totalPages = 3;
-	int64 totalCount = 4;
-}
-
-message CreateCustomerEventRequest {
-	CustomerEventDto value = 1 [(ts).partial = true];
-}
-
-service CustomerEventService {
-	option (prefix) ="api/CustomerEvent";
-
-	rpc GetAll(GetAllRequest) returns (GetAllCustomerEventResponse){		
-		option method = "GET";
-		
-	};
-
-	rpc Get(GetCustomerEventRequest) returns (CustomerEventDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		
-	};
-
-	rpc Create(CreateCustomerEventRequest) returns (CustomerEventDto){			
-		option method = "POST";
-		
-	};
-
-	rpc Update(UpdateCustomerEventRequest) returns (CustomerEventDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		
-	};
-
-	rpc Delete(DeleteCustomerEventRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		
-	};
-}
-
-// **************************** END CustomerEvent **********************************************
 
 // **************************** START Order **********************************************
 
@@ -336,6 +284,66 @@ service OrderStateService {
 }
 
 // **************************** END OrderState **********************************************
+
+// **************************** START CustomerEvent **********************************************
+
+message GetCustomerEventRequest {
+	guid id = 1;
+}
+
+message UpdateCustomerEventRequest {
+	guid id = 1;
+	CustomerEventDto value = 2 [(ts).partial = true];
+}
+
+message DeleteCustomerEventRequest{
+	guid id = 1;
+}
+
+message GetAllCustomerEventResponse {
+	repeated CustomerEventDto items = 1;
+	int64 page = 2;
+	int64 totalPages = 3;
+	int64 totalCount = 4;
+}
+
+message CreateCustomerEventRequest {
+	CustomerEventDto value = 1 [(ts).partial = true];
+}
+
+service CustomerEventService {
+	option (prefix) ="api/CustomerEvent";
+
+	rpc GetAll(GetAllRequest) returns (GetAllCustomerEventResponse){		
+		option method = "GET";
+		
+	};
+
+	rpc Get(GetCustomerEventRequest) returns (CustomerEventDto){	
+		option template = "{id}"; 
+		option method = "GET";
+		
+	};
+
+	rpc Create(CreateCustomerEventRequest) returns (CustomerEventDto){			
+		option method = "POST";
+		
+	};
+
+	rpc Update(UpdateCustomerEventRequest) returns (CustomerEventDto){			
+		option template = "{id}"; 
+		option method = "PUT";
+		
+	};
+
+	rpc Delete(DeleteCustomerEventRequest) returns (void){
+		option template = "{id}"; 
+		option method = "DELETE";
+		
+	};
+}
+
+// **************************** END CustomerEvent **********************************************
 
 // **************************** START ReadOnlyEntity **********************************************
 

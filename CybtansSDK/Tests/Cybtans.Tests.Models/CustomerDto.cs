@@ -1,5 +1,6 @@
 using System;
 using Cybtans.Serialization;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -41,6 +42,8 @@ namespace Cybtans.Tests.Models
 		
 		public CustomerProfileDto CustomerProfile {get; set;}
 		
+		public List<OrderDto> Orders {get; set;}
+		
 		public Guid Id {get; set;}
 		
 		public DateTime? CreateDate {get; set;}
@@ -61,12 +64,13 @@ namespace Cybtans.Tests.Models
 		public const int SecondLastName = 3;
 		public const int CustomerProfileId = 4;
 		public const int CustomerProfile = 5;
-		public const int Id = 6;
-		public const int CreateDate = 7;
-		public const int UpdateDate = 8;
+		public const int Orders = 6;
+		public const int Id = 7;
+		public const int CreateDate = 8;
+		public const int UpdateDate = 9;
 		private readonly int[] _props = new []
 		{
-			Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,Id,CreateDate,UpdateDate
+			Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,Orders,Id,CreateDate,UpdateDate
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -80,6 +84,7 @@ namespace Cybtans.Tests.Models
 		       SecondLastName => "SecondLastName",
 		       CustomerProfileId => "CustomerProfileId",
 		       CustomerProfile => "CustomerProfile",
+		       Orders => "Orders",
 		       Id => "Id",
 		       CreateDate => "CreateDate",
 		       UpdateDate => "UpdateDate",
@@ -97,6 +102,7 @@ namespace Cybtans.Tests.Models
 		        "SecondLastName" => SecondLastName,
 		        "CustomerProfileId" => CustomerProfileId,
 		        "CustomerProfile" => CustomerProfile,
+		        "Orders" => Orders,
 		        "Id" => Id,
 		        "CreateDate" => CreateDate,
 		        "UpdateDate" => UpdateDate,
@@ -114,6 +120,7 @@ namespace Cybtans.Tests.Models
 		        SecondLastName => typeof(string),
 		        CustomerProfileId => typeof(Guid?),
 		        CustomerProfile => typeof(CustomerProfileDto),
+		        Orders => typeof(List<OrderDto>),
 		        Id => typeof(Guid),
 		        CreateDate => typeof(DateTime?),
 		        UpdateDate => typeof(DateTime?),
@@ -132,6 +139,7 @@ namespace Cybtans.Tests.Models
 		        SecondLastName => obj.SecondLastName,
 		        CustomerProfileId => obj.CustomerProfileId,
 		        CustomerProfile => obj.CustomerProfile,
+		        Orders => obj.Orders,
 		        Id => obj.Id,
 		        CreateDate => obj.CreateDate,
 		        UpdateDate => obj.UpdateDate,
@@ -150,6 +158,7 @@ namespace Cybtans.Tests.Models
 		        case SecondLastName:  obj.SecondLastName = (string)value;break;
 		        case CustomerProfileId:  obj.CustomerProfileId = (Guid?)value;break;
 		        case CustomerProfile:  obj.CustomerProfile = (CustomerProfileDto)value;break;
+		        case Orders:  obj.Orders = (List<OrderDto>)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		        case CreateDate:  obj.CreateDate = (DateTime?)value;break;
 		        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
