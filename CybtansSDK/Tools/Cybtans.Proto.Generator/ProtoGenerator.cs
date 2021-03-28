@@ -48,7 +48,7 @@ namespace Cybtans.Proto.Generator
 
             var options = new GenerationOptions()
             {
-                ModelOptions =ast.HaveMessages ?  new ModelGeneratorOptions()
+                ModelOptions = ast.HaveMessages ?  new ModelGeneratorOptions()
                 {
                     OutputPath = Path.Combine(config.Path, step.Models?.Output ?? $"{step.Output}/{config.Service}.Models"),
                     Namespace = step.Models?.Namespace,

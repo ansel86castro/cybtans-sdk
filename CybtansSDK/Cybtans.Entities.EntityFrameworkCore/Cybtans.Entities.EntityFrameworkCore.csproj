@@ -9,8 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Repository and Unit of Work implementation using Entity Framework Core
-    </Description>
-    <VersionPrefix>1.0.15</VersionPrefix>
+    </Description>    
   </PropertyGroup>
 
   <ItemGroup>

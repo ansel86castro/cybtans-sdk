@@ -27,7 +27,7 @@ namespace Cybtans.Proto.Generator
             public string Template { get; set; }
         }
        
-        enum ProjectType { Models , Clients , Services, WebAPI, Domain, DomainEF }
+        enum ProjectType { Models , Clients , Services, WebAPI, Data, DataEF }
 
         public bool Generate(string[] args)
         {
@@ -118,9 +118,9 @@ namespace Cybtans.Proto.Generator
 
             if(options.Template == EntityFramework)
             {
-                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Domain", GetReferences(ProjectType.Domain, options), GetPackages(ProjectType.Domain, options));
-                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Domain.EntityFramework", GetReferences(ProjectType.DomainEF, options), GetPackages(ProjectType.DomainEF, options));
-                File.WriteAllText($"{options.Output}/{ options.Name }.Domain.EntityFramework/{ options.Name }Context.cs", GetTemplate("DbContext.tpl", new
+                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Data", GetReferences(ProjectType.Data, options), GetPackages(ProjectType.Data, options));
+                GenerateProject("ServicesProject.tpl", options.Output, $"{ options.Name }.Data.EntityFramework", GetReferences(ProjectType.DataEF, options), GetPackages(ProjectType.DataEF, options));
+                File.WriteAllText($"{options.Output}/{ options.Name }.Data.EntityFramework/{ options.Name }Context.cs", GetTemplate("DbContext.tpl", new
                 {
                     SERVICE = options.Name
                 }));
@@ -152,8 +152,8 @@ namespace Cybtans.Proto.Generator
 
                 if (options.Template == EntityFramework)
                 {
-                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Domain/{ options.Name }.Domain.csproj").WaitForExit();
-                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Domain.EntityFramework/{ options.Name }.Domain.EntityFramework.csproj").WaitForExit();
+                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Data/{ options.Name }.Data.csproj").WaitForExit();
+                    Process.Start("dotnet", $"sln {options.Solution} add -s { options.Name } {options.Output}/{ options.Name }.Data.EntityFramework/{ options.Name }.Data.EntityFramework.csproj").WaitForExit();
                 }
             }
 
@@ -170,20 +170,20 @@ namespace Cybtans.Proto.Generator
                     references.Add( $"{ options.Name }.Models" );
                     if (options.Template == EntityFramework)
                     {
-                        references.Add($"{ options.Name }.Domain");
-                        references.Add($"{ options.Name }.Domain.EntityFramework");
+                        references.Add($"{ options.Name }.Data");
+                        references.Add($"{ options.Name }.Data.EntityFramework");
                     }
                     break;
                 case ProjectType.WebAPI:
                     references.AddRange(new[] { $"{ options.Name }.Models", $"{ options.Name }.Services" });
                     if (options.Template == EntityFramework)
                     {
-                        references.Add($"{ options.Name }.Domain");
-                        references.Add($"{ options.Name }.Domain.EntityFramework");
+                        references.Add($"{ options.Name }.Data");
+                        references.Add($"{ options.Name }.Data.EntityFramework");
                     }
                     break;
-                case ProjectType.DomainEF:
-                    references.AddRange(new[] { $"{ options.Name }.Domain"});
+                case ProjectType.DataEF:
+                    references.AddRange(new[] { $"{ options.Name }.Data"});
                     break;
             }
 
@@ -214,14 +214,14 @@ namespace Cybtans.Proto.Generator
                             });
                     }
                     break;
-                case ProjectType.Domain:
+                case ProjectType.Data:
                     packages.AddRange(new[]
                     {
                             $"<PackageReference Include=\"Cybtans.Entities\" Version=\"{SDK_VERSION}\" />",
                             $"<PackageReference Include=\"Cybtans.Entities.Proto\" Version=\"1.2.1\" />"
                         });
                     break;
-                case ProjectType.DomainEF:
+                case ProjectType.DataEF:
                     packages.AddRange(new[]
                     {
                             "<PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"3.1.7\" />",
