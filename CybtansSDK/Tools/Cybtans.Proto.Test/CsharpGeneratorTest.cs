@@ -24,7 +24,7 @@ namespace Cybtans.Proto.Test
         [Theory]
         [InlineData("Protos/Service1.proto", "CSharp/Service1")]
         [InlineData("Protos/Catalog.proto", "CSharp/Catalog")]
-        [InlineData("Protos/Customers.proto", "CSharp/Customer")]
+        [InlineData("Protos/Customers.proto", "CSharp/Customer")]        
         public void GenerateCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
@@ -35,11 +35,11 @@ namespace Cybtans.Proto.Test
 
             MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
             {
-                ModelOptions = new TypeGeneratorOption
+                ModelOptions = new ModelGeneratorOptions
                 {
                     OutputPath = output,
                 },
-                ServiceOptions = new TypeGeneratorOption
+                ServiceOptions = new ServiceGeneratorOptions
                 {
                     OutputPath = output
                 },
@@ -69,11 +69,11 @@ namespace Cybtans.Proto.Test
 
             MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
             {
-                ModelOptions = new TypeGeneratorOption
+                ModelOptions = new ModelGeneratorOptions
                 {
                     OutputPath = output,
                 },
-                ServiceOptions = new TypeGeneratorOption
+                ServiceOptions = new ServiceGeneratorOptions
                 {
                     OutputPath = output
                 },
@@ -89,6 +89,42 @@ namespace Cybtans.Proto.Test
 
             microserviceGenerator.GenerateCode(ast);
         }
+
+        [Theory]     
+        [InlineData("Protos/Compatibility.proto", "CSharp/CompatibilityAccesor", true)]
+        [InlineData("Protos/Compatibility.proto", "CSharp/Compatibility", false)]
+        public void GenerateCodeNoCybtans(string filename, string output, bool accesor)
+        {
+            var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
+
+            Proto3Generator generator = new Proto3Generator(fileResolverFactory);
+            var (ast, scope) = generator.LoadFromFile(filename);
+            Assert.NotNull(ast);
+
+            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
+            {
+                ModelOptions = new ModelGeneratorOptions
+                {
+                    OutputPath = output,
+                    GenerateAccesor = accesor,                     
+                },
+                ServiceOptions = new ServiceGeneratorOptions
+                {
+                    OutputPath = output,                     
+                },
+                ControllerOptions = new WebApiControllerGeneratorOption
+                {
+                    OutputPath = output
+                },
+                ClientOptions = new TypeGeneratorOption
+                {
+                    OutputPath = output
+                }
+            });
+
+            microserviceGenerator.GenerateCode(ast);
+        }
+
 
         private static void AssertAST(ProtoFile ast)
         {

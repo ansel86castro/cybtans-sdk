@@ -18,6 +18,8 @@ namespace Cybtans.Tests.Models
 		
 		public OrderStateDto OrderState {get; set;}
 		
+		public CustomerDto Customer {get; set;}
+		
 		public List<OrderItemDto> Items {get; set;}
 		
 		public Guid Id {get; set;}
@@ -40,13 +42,14 @@ namespace Cybtans.Tests.Models
 		public const int OrderStateId = 3;
 		public const int OrderType = 4;
 		public const int OrderState = 5;
-		public const int Items = 6;
-		public const int Id = 7;
-		public const int CreateDate = 8;
-		public const int UpdateDate = 9;
+		public const int Customer = 6;
+		public const int Items = 7;
+		public const int Id = 8;
+		public const int CreateDate = 9;
+		public const int UpdateDate = 10;
 		private readonly int[] _props = new []
 		{
-			Description,CustomerId,OrderStateId,OrderType,OrderState,Items,Id,CreateDate,UpdateDate
+			Description,CustomerId,OrderStateId,OrderType,OrderState,Customer,Items,Id,CreateDate,UpdateDate
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -60,6 +63,7 @@ namespace Cybtans.Tests.Models
 		       OrderStateId => "OrderStateId",
 		       OrderType => "OrderType",
 		       OrderState => "OrderState",
+		       Customer => "Customer",
 		       Items => "Items",
 		       Id => "Id",
 		       CreateDate => "CreateDate",
@@ -78,6 +82,7 @@ namespace Cybtans.Tests.Models
 		        "OrderStateId" => OrderStateId,
 		        "OrderType" => OrderType,
 		        "OrderState" => OrderState,
+		        "Customer" => Customer,
 		        "Items" => Items,
 		        "Id" => Id,
 		        "CreateDate" => CreateDate,
@@ -96,6 +101,7 @@ namespace Cybtans.Tests.Models
 		        OrderStateId => typeof(int),
 		        OrderType => typeof(OrderTypeEnum),
 		        OrderState => typeof(OrderStateDto),
+		        Customer => typeof(CustomerDto),
 		        Items => typeof(List<OrderItemDto>),
 		        Id => typeof(Guid),
 		        CreateDate => typeof(DateTime?),
@@ -115,6 +121,7 @@ namespace Cybtans.Tests.Models
 		        OrderStateId => obj.OrderStateId,
 		        OrderType => obj.OrderType,
 		        OrderState => obj.OrderState,
+		        Customer => obj.Customer,
 		        Items => obj.Items,
 		        Id => obj.Id,
 		        CreateDate => obj.CreateDate,
@@ -134,6 +141,7 @@ namespace Cybtans.Tests.Models
 		        case OrderStateId:  obj.OrderStateId = (int)value;break;
 		        case OrderType:  obj.OrderType = (OrderTypeEnum)value;break;
 		        case OrderState:  obj.OrderState = (OrderStateDto)value;break;
+		        case Customer:  obj.Customer = (CustomerDto)value;break;
 		        case Items:  obj.Items = (List<OrderItemDto>)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		        case CreateDate:  obj.CreateDate = (DateTime?)value;break;

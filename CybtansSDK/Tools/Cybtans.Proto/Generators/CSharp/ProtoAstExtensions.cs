@@ -65,7 +65,20 @@ namespace Cybtans.Proto.Generators.CSharp
                 case "void": return "void";
                 case "guid": return "Guid";
                 case "decimal": return "decimal";
-                case "stream": return "System.IO.Stream";
+                case "ByteStream": return "System.IO.Stream";
+                case "google.protobuf.Timestamp": return "DateTime";
+                case "google.protobuf.Duration": return "TimeSpan";
+                case "google.protobuf.Empty": return "void";
+                case "google.protobuf.BoolValue": return "bool?";
+                case "google.protobuf.DoubleValue": return "double?";
+                case "google.protobuf.FloatValue": return "float?";
+                case "google.protobuf.Int32Value": return "int?";
+                case "google.protobuf.Int64Value": return "long?";
+                case "google.protobuf.UInt32Value": return "uint?";                
+                case "google.protobuf.UInt64Value": return "ulong?";
+                case "google.protobuf.StringValue": return "string?";
+                case "google.protobuf.BytesValue": return "byte[]?";
+
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");
@@ -73,7 +86,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public static string GetReturnTypeName(this ITypeDeclaration type)
         {
-            if (type == PrimitiveType.Void)
+            if (PrimitiveType.Void.Equals(type))
             {
                 return "Task";
             }
@@ -85,7 +98,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public static string GetControllerReturnTypeName(this ITypeDeclaration type)
         {
-            if (type == PrimitiveType.Void)
+            if (PrimitiveType.Void.Equals(type))
             {
                 return "Task";
             }
@@ -102,7 +115,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public static string GetRequestTypeName(this ITypeDeclaration type, string name)
         {
-            if (type == PrimitiveType.Void)
+            if (PrimitiveType.Void.Equals(type))
             {
                 return "";
             }

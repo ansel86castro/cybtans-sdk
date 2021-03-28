@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "cybtans.proto";
+
+option csharp_namespace = "Test.Compatibility";
+
+service Compatibility {
+	option (prefix) = "v1/compatibility";
+
+  rpc Get(GetRequest) returns (CompatibilityModel) {	
+		option (template) = "{id}";
+		option (method) = "GET";		
+  }
+
+  rpc GetAll(google.protobuf.Empty) returns (GetAllResponse) {
+		option (template) = "example"; 
+		option (method) = "GET";		
+  }
+
+  rpc Delete(GetRequest) returns (google.protobuf.Empty) {		
+		option (method) = "DELETE";
+		option (authorized) = true;
+  }
+}
+
+service CompatibilityFile {
+	option (prefix) = "v1/compatibility/file";
+
+  rpc Upload(UploadRequest) returns (UploadResponse) {		
+		option (method) = "POST";		
+  }
+
+  rpc Download(DownloadRequest) returns (DownloadResponse) {		
+		option (method) = "GET";		
+  }  
+}
+
+
+message GetRequest{
+  int32 id = 1;
+}
+
+message DeleteRequest{
+	int32 id = 1;
+}
+
+message GetAllResponse{
+	repeated CompatibilityModel items = 1;
+}
+
+message CompatibilityModel {
+	int32 id = 1;
+	string name = 2;
+	google.protobuf.Timestamp date = 3;
+    google.protobuf.Duration time = 4;
+	Type type = 5;
+	AddressModel address = 6;
+
+	enum Type {
+		None = 0;
+		Default = 1;
+	}
+
+	message AddressModel {
+		string address = 1;
+		string city = 2;
+		string country = 3;
+		Type type = 4;
+
+		enum Type {
+			Value1 = 1;
+			Value2 = 2;
+		}
+	}
+}
+
+message UploadRequest {	
+	ByteStream bytes = 1;
+	string name = 2;
+}
+
+message UploadResponse {
+	string id = 1;
+}
+
+message DownloadRequest {
+	string id = 1;
+}
+
+message DownloadResponse {
+	ByteStream bytes = 1;
+	string filename = 2;
+	string contentType = 3;
+}

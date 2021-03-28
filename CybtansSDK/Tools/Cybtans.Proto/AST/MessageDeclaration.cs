@@ -52,13 +52,22 @@ namespace Cybtans.Proto.AST
             var childScope = GetScope(scope);
             foreach (var message in InnerMessages)
             {
+                message.ProtoDeclaration = ProtoDeclaration;
                 message.CheckSemantic(childScope, logger);
+
+                message.Name = $"{Name}_{message.Name}";
+                ProtoDeclaration?.Declarations.Add(message);
             }
 
             foreach (var e in Enums)
             {
+                e.ProtoDeclaration = ProtoDeclaration;
                 e.CheckSemantic(childScope, logger);
+
+                e.Name = $"{Name}_{e.Name}";
+                ProtoDeclaration?.Declarations.Add(e);
             }            
+          
 
             foreach (var f in Fields)
             {

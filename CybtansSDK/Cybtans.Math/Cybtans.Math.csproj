@@ -9,8 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Contains math utility classes like vectors, matrices, quaternions, rays, etc.
-    </Description>
-    <VersionPrefix>1.0.15</VersionPrefix>
+    </Description>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

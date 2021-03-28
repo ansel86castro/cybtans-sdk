@@ -22,7 +22,7 @@
     },
     "Cybtans.CodeGeneratorConfigs": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\projects\\Selflessly\\Selflessly\\api\\Selflessly"
+      "commandLineArgs": "../../../../../Tests"
     }
   }
 }

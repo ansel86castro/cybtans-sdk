@@ -18,28 +18,27 @@ namespace Cybtans.Proto.Generators.CSharp
             _options = options;            
         }
 
-        public void GenerateCode(ProtoFile proto, Scope? scope =null)
+        public void GenerateCode(ProtoFile proto, Scope? scope = null)
         {
-            new EnumGenerator(proto, _options.ModelOptions)
+            var protos = TopologicalSort.Sort(new[] { proto }, x => x.ImportedFiles);
+
+            if (_options.ModelOptions == null)
+                return;
+
+            new EnumGenerator(proto, protos, _options.ModelOptions)
                 .GenerateCode();
 
-            var protos = TopologicalSort.Sort(new[] { proto }, x => x.ImportedFiles);
             foreach (var item in protos)
             {
-                GenerateCodeRecursive(item);
+                GenerateCodeInternal(item);
             }
-           
-        }     
 
-        private void GenerateCodeRecursive(ProtoFile proto)
+        }  
+
+        private void GenerateCodeInternal(ProtoFile proto)
         {
-            //foreach (var item in proto.ImportedFiles)
-            //{
-            //    GenerateCodeRecursive(item);
-            //}
-
             var typeGenerator = new TypeGenerator(proto, _options.ModelOptions);
-            typeGenerator.GenerateCode();
+            typeGenerator.GenerateCode();           
 
             if (_options.ServiceOptions != null)
             {

@@ -65,3 +65,7 @@ extend google.protobuf.MessageOptions {
    string description = 64001;
    bool deprecated = 64002;
 }
+
+message ByteStream {
+	// Stream in C#, Blob in javascript
+}

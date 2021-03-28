@@ -32,6 +32,7 @@ namespace Cybtans.Tests.Domain
         [EventData]
         public virtual CustomerProfile CustomerProfile { get; set; }
 
+        [MessageExcluded]
         public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

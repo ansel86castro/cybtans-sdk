@@ -33,6 +33,9 @@
     <None Update="Protos\Base\Models.proto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Protos\Compatibility.proto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Protos\Customers.proto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
