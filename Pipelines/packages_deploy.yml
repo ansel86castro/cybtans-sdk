@@ -6,60 +6,59 @@
 name: $(majorMinorVersion).$(buildVersion)
 
 # pipeline variables
-variables:   
-   buildVersion: $[counter(variables['majorMinorVersion'], 1)]
-   packVersion: $(majorMinorVersion).$(buildVersion)$(Prerelease)
-
+variables:
+  buildVersion: $[counter(variables['majorMinorVersion'], 1)]
+  packVersion: $(majorMinorVersion).$(buildVersion)$(Prerelease)
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: "windows-latest"
 
 steps:
-- task: DotNetCoreCLI@2
-  condition: ne(variables['Build.Reason'], 'PullRequest')  
-  displayName: 'Restore Cybtans SDK'
-  inputs:
-    command: 'restore'
-    projects: '**/CybtansSDK.sln'   
+  - task: DotNetCoreCLI@2
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    displayName: "Restore Cybtans SDK"
+    inputs:
+      command: "restore"
+      projects: "**/CybtansSDK.sln"
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build Cybtans SDK'
-  condition: ne(variables['Build.Reason'], 'PullRequest')  
-  inputs:
-    command: 'build'
-    projects: '**/CybtansSDK.sln'
-    arguments: '--configuration $(configuration)'
-    versioningScheme: 'byBuildNumber' 
+  - task: DotNetCoreCLI@2
+    displayName: "Build Cybtans SDK"
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      command: "build"
+      projects: "**/CybtansSDK.sln"
+      arguments: "--configuration $(configuration) -p:Version=$(packVersion).0"
+      versioningScheme: "byBuildNumber"
 
-- task: CmdLine@2
-  displayName: 'Package Nuget Packages'
-  condition: ne(variables['Build.Reason'], 'PullRequest')  
-  inputs:
-    script: |
-      dotnet pack ./CybtansSDK/Cybtans.Serialization/Cybtans.Serialization.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Entities/Cybtans.Entities.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Refit/Cybtans.Refit.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Expressions/Cybtans.Expressions.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.AspNetCore/Cybtans.AspNetCore.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.AspNetCore.Migrations/Cybtans.AspNetCore.Migrations.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Entities.EntityFrameworkCore/Cybtans.Entities.EntityFrameworkCore.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Entities.EventLog/Cybtans.Entities.EventLog.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Messaging/Cybtans.Messaging.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Messaging.RabbitMQ/Cybtans.Messaging.RabbitMQ.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Services/Cybtans.Services.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Testing/Cybtans.Testing.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Automation/Cybtans.Automation.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-      dotnet pack ./CybtansSDK/Cybtans.Math/Cybtans.Math.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+  - task: CmdLine@2
+    displayName: "Package Nuget Packages"
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      script: |
+        dotnet pack ./CybtansSDK/Cybtans.Serialization/Cybtans.Serialization.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Entities/Cybtans.Entities.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Refit/Cybtans.Refit.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Expressions/Cybtans.Expressions.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.AspNetCore/Cybtans.AspNetCore.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.AspNetCore.Migrations/Cybtans.AspNetCore.Migrations.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Entities.EntityFrameworkCore/Cybtans.Entities.EntityFrameworkCore.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Entities.EventLog/Cybtans.Entities.EventLog.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Messaging/Cybtans.Messaging.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Messaging.RabbitMQ/Cybtans.Messaging.RabbitMQ.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Services/Cybtans.Services.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Testing/Cybtans.Testing.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Automation/Cybtans.Automation.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Math/Cybtans.Math.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
-- task: NuGetCommand@2
-  displayName: 'Publish Packages'
-  condition: ne(variables['Build.Reason'], 'PullRequest')  
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'Cybtans Nuget'
-    arguments: '--skip-duplicate'
+  - task: NuGetCommand@2
+    displayName: "Publish Packages"
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    inputs:
+      command: "push"
+      packagesToPush: "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg"
+      nuGetFeedType: "external"
+      publishFeedCredentials: "Cybtans Nuget"
+      arguments: "--skip-duplicate"
