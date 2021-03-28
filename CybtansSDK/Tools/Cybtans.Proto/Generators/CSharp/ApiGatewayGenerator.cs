@@ -1,4 +1,5 @@
 ﻿using Cybtans.Proto.AST;
+using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,7 +22,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         protected override void GenerateController(ServiceGenInfo srvInfo)
         {
-            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace}.Controllers");
+            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Controllers");
 
             writer.Usings.Append($"using {_clientGenerator.Namespace};").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();

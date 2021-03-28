@@ -20,18 +20,19 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public void GenerateCode(ProtoFile proto, Scope? scope =null)
         {
-            new EnumGenerator(proto, _options.ModelOptions)
-                .GenerateCode();
-
             var protos = TopologicalSort.Sort(new[] { proto }, x => x.ImportedFiles);
+
+            new EnumGenerator(proto, protos, _options.ModelOptions)
+                .GenerateCode();
+            
             foreach (var item in protos)
             {
-                GenerateCodeRecursive(item);
+                GenerateCodeInternal(item);
             }
            
         }     
 
-        private void GenerateCodeRecursive(ProtoFile proto)
+        private void GenerateCodeInternal(ProtoFile proto)
         {
             //foreach (var item in proto.ImportedFiles)
             //{

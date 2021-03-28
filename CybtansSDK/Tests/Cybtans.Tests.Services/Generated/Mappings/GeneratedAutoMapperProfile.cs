@@ -17,11 +17,8 @@ namespace Cybtans.Tests.Services
            CreateMap<CustomerProfile, CustomerProfileDto>();
            CreateMap<CustomerProfileDto,CustomerProfile>();
            
-           CreateMap<Order, OrderDto>();
-           CreateMap<OrderDto,Order>();
-           
-           CreateMap<OrderState, OrderStateDto>();
-           CreateMap<OrderStateDto,OrderState>();
+           CreateMap<CustomerEvent, CustomerEventDto>();
+           CreateMap<CustomerEventDto,CustomerEvent>();
            
            CreateMap<OrderItem, OrderItemDto>();
            CreateMap<OrderItemDto,OrderItem>();
@@ -29,8 +26,11 @@ namespace Cybtans.Tests.Services
            CreateMap<Product, ProductDto>();
            CreateMap<ProductDto,Product>();
            
-           CreateMap<CustomerEvent, CustomerEventDto>();
-           CreateMap<CustomerEventDto,CustomerEvent>();
+           CreateMap<Order, OrderDto>();
+           CreateMap<OrderDto,Order>();
+           
+           CreateMap<OrderState, OrderStateDto>();
+           CreateMap<OrderStateDto,OrderState>();
            
            CreateMap<ReadOnlyEntity, ReadOnlyEntityDto>();
            CreateMap<ReadOnlyEntityDto,ReadOnlyEntity>();

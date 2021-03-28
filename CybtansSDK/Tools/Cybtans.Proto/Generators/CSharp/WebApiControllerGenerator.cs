@@ -13,12 +13,12 @@ namespace Cybtans.Proto.Generators.CSharp
     public class WebApiControllerGenerator : FileGenerator<WebApiControllerGeneratorOption>
     {
         protected ServiceGenerator _serviceGenerator;
-        protected TypeGenerator _typeGenerator;      
+        protected TypeGenerator _typeGenerator;
         public WebApiControllerGenerator(ProtoFile proto, WebApiControllerGeneratorOption option,
          ServiceGenerator serviceGenerator, TypeGenerator typeGenerator) : base(proto, option)
         {
             _serviceGenerator = serviceGenerator;
-            _typeGenerator = typeGenerator;            
+            _typeGenerator = typeGenerator;
         }
 
         public override void GenerateCode()
@@ -26,7 +26,7 @@ namespace Cybtans.Proto.Generators.CSharp
             Directory.CreateDirectory(_option.OutputPath);
 
             foreach (var item in _serviceGenerator.Services)
-            {              
+            {
                 var srvInfo = item.Value;
 
                 GenerateController(srvInfo);
@@ -34,8 +34,8 @@ namespace Cybtans.Proto.Generators.CSharp
         }
 
         protected virtual void GenerateController(ServiceGenInfo srvInfo)
-        {           
-            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace}.Controllers");
+        {
+            var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Controllers");
 
             writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
@@ -49,7 +49,12 @@ namespace Cybtans.Proto.Generators.CSharp
             writer.Usings.Append("using System.Threading.Tasks;").AppendLine();
             writer.Usings.Append("using Microsoft.AspNetCore.Http;").AppendLine();
             writer.Usings.Append("using Microsoft.AspNetCore.Mvc;").AppendLine();
-            writer.Usings.Append("using Cybtans.AspNetCore;").AppendLine();
+
+            if (srvInfo.Service.Rpcs.Any(x => x.RequestType.HasStreams() || x.ResponseType.HasStreams() ))
+            {
+                writer.Usings.Append("using Cybtans.AspNetCore;").AppendLine();
+            }    
+            
             var clsWriter = writer.Class;
 
             if (srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous ||
@@ -142,7 +147,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 if (response.HasStreams())
                 {
-                    methodWriter.Append($"var result = await _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});").AppendLine();
+                    methodWriter.Append($"var result = await _service.{rpcName}({( !PrimitiveType.Void.Equals(request) ? "__request" : "")});").AppendLine();
 
                     var result = "result";
                     var contentType = $"\"{options.StreamOptions?.ContentType ?? "application/octet-stream"}\"";
@@ -152,8 +157,8 @@ namespace Cybtans.Proto.Generators.CSharp
 
                     if (response is MessageDeclaration responseMsg)
                     {
-                        var name = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.EndsWith("Name"));
-                        var type = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.EndsWith("Type"));
+                        var name = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.ToLowerInvariant().EndsWith("name"));
+                        var type = responseMsg.Fields.FirstOrDefault(x => x.FieldType == PrimitiveType.String && x.Name.ToLowerInvariant() == "contenttype" || x.Name.ToLowerInvariant() == "content_type");
                         if(name!= null)                        
                             fileName = $"result.{name.GetFieldName()}";                            
                         if(type!= null)
@@ -173,7 +178,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 }
                 else
                 {
-                    methodWriter.Append($"return _service.{rpcName}({(request != PrimitiveType.Void ? "__request" : "")});");
+                    methodWriter.Append($"return _service.{rpcName}({( !PrimitiveType.Void.Equals(request) ? "__request" : "")});");
                 }
             }
 
@@ -223,7 +228,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private object GetRequestBinding(string method, ITypeDeclaration request)
         {
-            if (request == PrimitiveType.Void)
+            if (PrimitiveType.Void.Equals(request))
                 return "";
 
             switch (method)

@@ -2,15 +2,25 @@
 {
     public class GenerationOptions
     {        
-        public TypeGeneratorOption ModelOptions { get; set; }
+        public ModelGeneratorOptions ModelOptions { get; set; }
 
-        public TypeGeneratorOption ServiceOptions { get; set; }
+        public ServiceGeneratorOptions ServiceOptions { get; set; }
 
         public WebApiControllerGeneratorOption ControllerOptions { get; set; }
 
         public TypeGeneratorOption ClientOptions { get; set; }
 
         public ApiGateWayGeneratorOption ApiGatewayOptions { get; set; }
+    }
+
+    public class ModelGeneratorOptions: TypeGeneratorOption
+    {
+        public bool GenerateAccesor { get; set; } = true;
+    }
+
+    public class ServiceGeneratorOptions: TypeGeneratorOption
+    {
+
     }
 
     public class WebApiControllerGeneratorOption: TypeGeneratorOption

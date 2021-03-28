@@ -41,7 +41,7 @@ message GetUserRequest{
 message StreamRequest {
 	string id = 1;
 	string name = 2;
-	stream data = 3;
+	ByteStream data = 3;
 }
 
 
@@ -58,7 +58,7 @@ message DownloadImageRequest{
 message DowndloadFileResponse{
 	string fileName = 1;
 	string contentType = 2;
-	stream file = 3;
+	ByteStream file = 3;
 }
 
 service UserService{
@@ -93,14 +93,14 @@ service UserService{
 		option template = "{id}/upload";
 	};
 
-	rpc DownloadImage(DownloadImageRequest) returns (stream) {
+	rpc DownloadImage(DownloadImageRequest) returns (ByteStream) {
 		option template ="download";
 		option method = "GET";
 
 		option file = {contentType: "image/jpg" name: "Image.jpg"};
 	};
 
-	rpc DownloadImage2(DownloadImageRequest) returns (stream) {
+	rpc DownloadImage2(DownloadImageRequest) returns (ByteStream) {
 		option template ="download2";
 		option method = "GET";
 

@@ -14,7 +14,6 @@ namespace Cybtans.Tests.Controllers
 	/// Order's Service
 	/// </summary>
 	[System.ComponentModel.Description("Order's Service")]
-	[Authorize]
 	[Route("api/Order")]
 	[ApiController]
 	public partial class OrderServiceController : ControllerBase
@@ -70,7 +69,7 @@ namespace Cybtans.Tests.Controllers
 			return _service.UploadStreamById(__request);
 		}
 		
-		[HttpPost("stream")]
+		[HttpPost("ByteStream")]
 		[DisableFormValueModelBinding]
 		public Task<UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream __request)
 		{

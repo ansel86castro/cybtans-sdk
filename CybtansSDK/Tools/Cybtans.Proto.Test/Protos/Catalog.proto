@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-
 package Catalog;
 
 message Product{
@@ -70,7 +69,7 @@ service CatalogService {
 	};
 
 	rpc GetProductFiltered(GetProductFiltered) returns (GetProductListResponse){		
-	option template = "filtered"; 
+		option template = "filtered"; 
 		option method = "GET";
 		option authorized = true;
 	};

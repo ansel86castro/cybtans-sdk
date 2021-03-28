@@ -6,72 +6,72 @@ import SceneManager from "./SceneManager";
 import { HashMap } from "./utils";
 
 export class Effect {
-    name:string;
-    predicates:HashMap<PredicateProgram[]> = {};
-    programsForTypes: HashMap<Program>={};
-     
-    constructor(dto:EffectDto, manager:EffectManager){
+    name: string;
+    predicates: HashMap<PredicateProgram[]> = {};
+    programsForTypes: HashMap<Program> = {};
+
+    constructor(dto: EffectDto, manager: EffectManager) {
         this.name = dto.name;
-        
-        for (const key of Object.keys(dto.programs)) {            
+
+        for (const key of Object.keys(dto.programs)) {
             this.programsForTypes[key] = manager.getProgramByName(dto.programs[key]);
         }
 
-        for(const key of Object.keys(dto.predicates)){
-            this.predicates[key] = dto.predicates[key].items!.map(x=> new PredicateProgram(x, manager));
-            
+        for (const key of Object.keys(dto.predicates)) {
+            this.predicates[key] = dto.predicates[key].items!.map(x => new PredicateProgram(x, manager));
+
         }
     }
 
-    getProgram(type:Function){
-        let predicates = this.predicates[type.name];
-        if(predicates){
+    getProgram(type: string) {
+        let predicates = this.predicates[type];
+        if (predicates) {
             for (const item of predicates) {
-                if(item.eval()){
+                if (item.eval()) {
                     return item.program;
                 }
             }
         }
-        return this.programsForTypes[type.name];       
+        return this.programsForTypes[type];
     }
 
 }
 
 export class PredicateProgram {
-    andConditions?:ParameterPredicate[];
-    orConditions?:ParameterPredicate[];
-    condition?:ParameterPredicate;
-    program:Program;
-    manager:EffectManager;
+    andConditions?: ParameterPredicate[];
+    orConditions?: ParameterPredicate[];
+    condition?: ParameterPredicate;
+    program: Program;
+    manager: EffectManager;
 
-    constructor(dto:PredicateProgramDto, manager:EffectManager){
+    constructor(dto: PredicateProgramDto, manager: EffectManager) {
         this.program = manager.getProgramByName(dto.program);
         this.manager = manager;
 
-        if(dto.condition){
+        if (dto.condition) {
             this.condition = new ParameterPredicate(dto.condition, this.program);
-        }else{
-            if(dto.andConditions){
-                this.andConditions = dto.andConditions.map(x=> new ParameterPredicate(x, this.program));
+        } else {
+            if (dto.andConditions) {
+                this.andConditions = dto.andConditions.map(x => new ParameterPredicate(x, this.program));
             }
-            if(dto.orConditions){
-                this.orConditions = dto.orConditions.map(x=> new ParameterPredicate(x, this.program));
+            if (dto.orConditions) {
+                this.orConditions = dto.orConditions.map(x => new ParameterPredicate(x, this.program));
             }
-        }        
+        }
     }
 
-    eval(){
-        if(this.condition){
+    eval() {
+        if (this.condition) {
             return this.condition.eval(this.manager);
-        }else if(this.andConditions){
+        } else if (this.andConditions) {
             for (const item of this.andConditions) {
-                if(item.eval(this.manager) === false)
+                if (item.eval(this.manager) === false)
                     return false;
             }
             return true;
-        }else if(this.orConditions){
+        } else if (this.orConditions) {
             for (const item of this.orConditions) {
-                if(item.eval(this.manager) === true)
+                if (item.eval(this.manager) === true)
                     return true;
             }
             return false;
@@ -79,7 +79,7 @@ export class PredicateProgram {
     }
 }
 
-enum PredicateOperator{
+enum PredicateOperator {
     isActive = 1,
     Equal = 2,
     NotEqual = 3,
@@ -90,28 +90,28 @@ enum PredicateOperator{
 }
 
 export class ParameterPredicate {
-    op:PredicateOperator;
+    op: PredicateOperator;
     parameter: UniformSlot;
-    value:any;
+    value: any;
 
-    constructor(dto:ParameterPredicateDto, program:Program){
+    constructor(dto: ParameterPredicateDto, program: Program) {
         this.op = dto.op;
         this.parameter = program.parameters[dto.parameter];
         this.value = dto.value;
     }
 
-    eval(manager:EffectManager):boolean {
-        if(!this.parameter.location)
+    eval(manager: EffectManager): boolean {
+        let source = manager.getSource(this.parameter.target);
+        if (source === undefined || source === null)
             return false;
 
-        let source = manager.getSource(this.parameter.target);
         let v = this.getValue(source);
 
-        switch(this.op){
+        switch (this.op) {
             case PredicateOperator.isActive:
                 return v !== undefined && v !== null
             case PredicateOperator.Equal:
-                return  v === this.value;
+                return v === this.value;
             case PredicateOperator.NotEqual:
                 return v !== this.value;
             case PredicateOperator.GreaterThan:
@@ -121,13 +121,13 @@ export class ParameterPredicate {
             case PredicateOperator.LessThan:
                 return v && v < this.value;
             case PredicateOperator.LessThanEqual:
-                return v && v <= this.value;            
+                return v && v <= this.value;
         }
     }
 
-    getValue(source:any){
-        return  this.parameter.resolver ? this.parameter.resolver(source) 
-        : source[this.parameter.property];
+    getValue(source: any) {
+        return this.parameter.resolver ? this.parameter.resolver(source)
+            : source[this.parameter.property];
     }
 
 }

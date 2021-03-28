@@ -17,18 +17,17 @@ namespace Cybtans.Proto.Generators.CSharp
 {
     public class TypeGeneratorOption : OutputOption
     {
-        public bool PartialClass { get; set; } = true;
-
-        public bool GenerateAccesor { get; set; } = true;
+        public bool PartialClass { get; set; } = true;     
+     
     }
 
-    public class TypeGenerator : FileGenerator<TypeGeneratorOption>
+    public class TypeGenerator : FileGenerator<ModelGeneratorOptions>
     {        
         Dictionary<ITypeDeclaration, MessageClassInfo> _messages = new Dictionary<ITypeDeclaration, MessageClassInfo>();
 
-        public TypeGenerator(ProtoFile proto, TypeGeneratorOption option):base(proto, option)
+        public TypeGenerator(ProtoFile proto, ModelGeneratorOptions option):base(proto, option)
         {
-            Namespace = option.Namespace ?? $"{proto.Option.Namespace}.Models";            
+            Namespace = option.Namespace ?? $"{proto.Option.Namespace ?? proto.Filename.Pascal()}.Models";            
         }
 
         public MessageClassInfo GetMessageInfo(ITypeDeclaration declaration)

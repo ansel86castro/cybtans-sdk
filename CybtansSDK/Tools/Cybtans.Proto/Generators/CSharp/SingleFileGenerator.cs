@@ -11,10 +11,12 @@ namespace Cybtans.Proto.Generators.CSharp
     {       
         protected readonly Dictionary<string, string> _blocks = new Dictionary<string, string>();
         private string _namespace;
+        private IEnumerable<ProtoFile> _protos;
 
-        public SingleFileGenerator(ProtoFile proto, T option, string ns):base(proto, option)
+        public SingleFileGenerator(ProtoFile entryPoint, IEnumerable<ProtoFile> protos, T option, string ns):base(entryPoint, option)
         {
             _namespace = ns;
+            _protos = protos;
         }
      
         public override void GenerateCode()
@@ -24,7 +26,7 @@ namespace Cybtans.Proto.Generators.CSharp
             var writer = CreateWriter(_namespace);
             OnGenerationBegin(writer);
 
-            foreach (var item in Proto.ImportedFiles)
+            foreach (var item in _protos)
             {
                 GenerateCode(item);
             }
@@ -37,6 +39,8 @@ namespace Cybtans.Proto.Generators.CSharp
 
             SaveFile(writer);
         }
+
+        public IEnumerable<ProtoFile> Protos => _protos;
 
         protected abstract void SaveFile(CsFileWriter writer);
 
