@@ -24,13 +24,25 @@ namespace Cybtans.Proto.Generators.Typescript
                 case "double": return "number";
                 case "bool": return "boolean";
                 case "string": return "string";
-                case "bytes": return "number[]";
+                case "bytes": return "string";
                 case "datetime": return "string|Date";
                 case "object": return "any";
                 case "void": return "void";
                 case "guid": return "string";
                 case "map": return "any";
-                case "stream": return "Blob";
+                case "ByteStream": return "Blob";                
+                case "google.protobuf.Timestamp": return "string|Date";
+                case "google.protobuf.Duration": return "string|Date";
+                case "google.protobuf.Empty": return "void";
+                case "google.protobuf.BoolValue": return "boolean|undefined|null";
+                case "google.protobuf.DoubleValue":
+                case "google.protobuf.FloatValue": 
+                case "google.protobuf.Int32Value": 
+                case "google.protobuf.Int64Value": 
+                case "google.protobuf.UInt32Value": 
+                case "google.protobuf.UInt64Value": return "number|undefined|null";
+                case "google.protobuf.StringValue": return "string";
+                case "google.protobuf.BytesValue": return "string|undefined|null";
             }
 
             throw new InvalidOperationException($"Type {type.Name} not supported");

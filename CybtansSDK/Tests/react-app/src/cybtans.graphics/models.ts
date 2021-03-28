@@ -61,7 +61,7 @@ export interface VertexDefinitionDto {
 
 
 export interface VertexElementDto {
-  offset: number;
+  offset?: number;
   stream?: number|null;
   semantic?: string|null;
   usageIndex?: number|null;

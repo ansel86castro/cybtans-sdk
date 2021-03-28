@@ -39,9 +39,9 @@ namespace Cybtans.Proto.AST
 
             Type.CheckSemantic(scope, logger);
 
-            if (FieldType == PrimitiveType.Void)
+            if (PrimitiveType.Void.Equals(FieldType))
             {
-                logger.AddError($"Type void is not supported as a field type in {Line},{Column}");
+                logger.AddError($"Type void or google.protobuf.Empty is not supported as a field type in {Line},{Column}");
             }            
 
         }
@@ -107,7 +107,7 @@ namespace Cybtans.Proto.AST
                 foreach (var genParameter in GenericArgs)
                 {
                     genParameter.CheckSemantic(scope, logger);
-                    if(genParameter.TypeDeclaration  == PrimitiveType.Void)
+                    if(PrimitiveType.Void.Equals(genParameter.TypeDeclaration))
                     {
                         logger.AddError($"Type void is not supported as a generic argument in {genParameter.Line},{genParameter.Column}");
                     }

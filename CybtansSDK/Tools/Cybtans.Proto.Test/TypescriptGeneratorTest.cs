@@ -12,6 +12,7 @@ namespace Cybtans.Proto.Test
         [InlineData("Protos/Service1.proto", "Typecript/Service1")]
         [InlineData("Protos/Catalog.proto", "Typecript/Catalog")]
         [InlineData("Protos/Customers.proto", "Typecript/Customer")]
+        [InlineData("Protos/Compatibility.proto", "Typecript/Compatibility")]
         public void GenerateCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
@@ -39,6 +40,7 @@ namespace Cybtans.Proto.Test
         [InlineData("Protos/Service1.proto", "Angular/Service1")]
         [InlineData("Protos/Catalog.proto", "Angular/Catalog")]
         [InlineData("Protos/Customers.proto", "Angular/Customer")]
+        [InlineData("Protos/Compatibility.proto", "Angular/Compatibility")]
         public void GenerateAngularCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });

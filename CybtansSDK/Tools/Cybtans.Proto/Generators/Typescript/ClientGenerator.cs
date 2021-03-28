@@ -21,6 +21,12 @@ namespace Cybtans.Proto.Generators.Typescript
         {
             writer.Writer.Append($"import {{ @{{IMPORT}} }} from \'./{_modelsOptions.Filename}\';");
             writer.Writer.AppendLine(2);
+
+            string baseClassName = GetBaseServiceName();
+            writer.Writer.AppendTemplate(baseClientTemplate, new Dictionary<string, object>
+            {
+                ["SERVICE"] = baseClassName
+            });                      
         }
 
         public override void OnGenerationEnd(TsFileWriter writer)
@@ -35,14 +41,14 @@ namespace Cybtans.Proto.Generators.Typescript
             }
         }
 
-        protected override void GenerateCode(ProtoFile proto)
+        private string GetBaseServiceName()
         {
-            AddBlock(proto.Package.Name.Pascal(), TemplateProcessor.ProcessDictionary(baseClientTemplate,
-                 new Dictionary<string, object>
-                 {
-                     ["SERVICE"] = proto.Package.Name.Pascal()
-                 }));
+            return Proto.Package?.Name.Pascal() ?? Proto.Filename.Pascal();
+        }
 
+
+        protected override void GenerateCode(ProtoFile proto)
+        {          
             foreach (var srv in proto.Declarations.Where(x => x is ServiceDeclaration).Select(x => (ServiceDeclaration)x))
             {
                 AddBlock(srv.Name, GenerateCode(srv, proto));
@@ -88,7 +94,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 methods.Append($"{rpc.Name.Camel()}");
-                if (request == PrimitiveType.Void)
+                if (PrimitiveType.Void.Equals(request))
                 {
                     methods.Append("()");
                 }
@@ -99,7 +105,7 @@ namespace Cybtans.Proto.Generators.Typescript
 
                 var responseType =
                     response.HasStreams() ? "Response" :
-                    response == PrimitiveType.Void ? "ErrorInfo|void" :
+                    PrimitiveType.Void.Equals(response) ? "ErrorInfo|void" :
                     response.GetTypeName();
 
                 methods.Append($" : Promise<{responseType}>");
@@ -179,7 +185,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));");
                 }
-                else if(response == PrimitiveType.Void)
+                else if(PrimitiveType.Void.Equals(response))
                 {
                     body.Append($"return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));");
                 }
@@ -202,7 +208,7 @@ namespace Cybtans.Proto.Generators.Typescript
 
             writer.AppendTemplate(serviceTemplate, new Dictionary<string, object>
             {
-                ["SERVICE"] = proto.Package.Name.Pascal(),
+                ["SERVICE"] = GetBaseServiceName(),
                 ["NAME"] = srv.Name.Pascal(),
                 ["METHODS"] = methods.ToString()
             });

@@ -43,12 +43,14 @@ namespace Cybtans.Proto
             _errorListener.EnsureNoErrors(filename);
 
             var node = context.file;
+            node.Filename =Path.GetFileNameWithoutExtension(filename);
+
             var scope = _scope.CreateScope();
 
             _fileCache.Add(filename, (node, scope));
 
             if (node.Imports.Any())
-            {
+            {                
                 LoadImports(node, scope, filename);
             }
 
@@ -66,8 +68,14 @@ namespace Cybtans.Proto
 
             var fileResolver = _fileResolverFactory.GetResolver(directory);
 
-            foreach (var import in file.Imports)
-            {                
+            foreach (var import in file.Imports.ToArray())
+            {
+                if (ProtoFile.IsWhellKnowImport(import.Name))
+                {
+                    file.Imports.Remove(import);
+                    continue;
+                }
+
                 var importFile = fileResolver.GetFile(import.Name);
                 
                 var (importFileNode, importScope) = LoadFromFile(importFile.FullName);

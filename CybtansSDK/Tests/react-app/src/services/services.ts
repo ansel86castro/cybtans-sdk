@@ -6,6 +6,12 @@ import {
   CreateCustomerRequest,
   UpdateCustomerRequest,
   DeleteCustomerRequest,
+  GetAllCustomerEventResponse,
+  GetCustomerEventRequest,
+  CustomerEventDto,
+  CreateCustomerEventRequest,
+  UpdateCustomerEventRequest,
+  DeleteCustomerEventRequest,
   GetAllOrderResponse,
   GetOrderRequest,
   OrderDto,
@@ -18,12 +24,6 @@ import {
   CreateOrderStateRequest,
   UpdateOrderStateRequest,
   DeleteOrderStateRequest,
-  GetAllCustomerEventResponse,
-  GetCustomerEventRequest,
-  CustomerEventDto,
-  CreateCustomerEventRequest,
-  UpdateCustomerEventRequest,
-  DeleteCustomerEventRequest,
   GetAllReadOnlyEntityResponse,
   GetReadOnlyEntityRequest,
   ReadOnlyEntityDto,
@@ -137,7 +137,6 @@ class BaseTestsService {
     }
 }
 
-
 export class CustomerService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -179,6 +178,47 @@ export class CustomerService extends BaseTestsService {
 }
 
 
+export class CustomerEventService extends BaseTestsService {  
+
+    constructor(fetch:Fetch, options:TestsOptions){
+        super(fetch, options);        
+    }
+    
+    getAll(request:GetAllRequest) : Promise<GetAllCustomerEventResponse> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/CustomerEvent`+this.getQueryString(request);
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    get(request:GetCustomerEventRequest) : Promise<CustomerEventDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    create(request:CreateCustomerEventRequest) : Promise<CustomerEventDto> {
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	options.body = JSON.stringify(request);
+    	let endpoint = this._options.baseUrl+`/api/CustomerEvent`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    update(request:UpdateCustomerEventRequest) : Promise<CustomerEventDto> {
+    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	options.body = JSON.stringify(request);
+    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    delete(request:DeleteCustomerEventRequest) : Promise<ErrorInfo|void> {
+    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
+    }
+
+}
+
+
 /** Order's Service */
 export class OrderService extends BaseTestsService {  
 
@@ -193,92 +233,92 @@ export class OrderService extends BaseTestsService {
     }
     
     baar() : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/baar`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     test() : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/test`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     argument() : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/arg`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     /** Upload an image to the server */
     uploadImage(request:UploadImageRequest) : Promise<UploadImageResponse> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
     	let endpoint = this._options.baseUrl+`/api/Order/upload`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     uploadStreamById(request:UploadStreamByIdRequest) : Promise<UploadStreamResponse> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData(request);
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}/upload`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     uploadStream(request:Blob) : Promise<UploadStreamResponse> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData({blob:request});
-    	let endpoint = this._options.baseUrl+`/api/Order/stream`;
+    	let endpoint = this._options.baseUrl+`/api/Order/ByteStream`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     downloadImage(request:DownloadImageRequest) : Promise<Response> {
-    	let options:RequestInit = { method: 'GET', headers: { Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: {  }};
     	let endpoint = this._options.baseUrl+`/api/Order/download`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getBlob(response));
     }
     
     getMultiPath(request:MultiPathRequest) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/${request.param1}multipath/${request.param2}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     sendNotification(request:OrderNotification) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order/${request.orderId}/notify/${request.userId}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllOrderResponse> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     get(request:GetOrderRequest) : Promise<OrderDto> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     create(request:CreateOrderRequest) : Promise<OrderDto> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     update(request:UpdateOrderRequest) : Promise<OrderDto> {
-    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     delete(request:DeleteOrderRequest) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -321,47 +361,6 @@ export class OrderStateService extends BaseTestsService {
     delete(request:DeleteOrderStateRequest) : Promise<ErrorInfo|void> {
     	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/OrderState/${request.id}`;
-    	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
-    }
-
-}
-
-
-export class CustomerEventService extends BaseTestsService {  
-
-    constructor(fetch:Fetch, options:TestsOptions){
-        super(fetch, options);        
-    }
-    
-    getAll(request:GetAllRequest) : Promise<GetAllCustomerEventResponse> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-    	let endpoint = this._options.baseUrl+`/api/CustomerEvent`+this.getQueryString(request);
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    get(request:GetCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
-    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    create(request:CreateCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-    	options.body = JSON.stringify(request);
-    	let endpoint = this._options.baseUrl+`/api/CustomerEvent`;
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    update(request:UpdateCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
-    	options.body = JSON.stringify(request);
-    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
-    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
-    }
-    
-    delete(request:DeleteCustomerEventRequest) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
-    	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
 

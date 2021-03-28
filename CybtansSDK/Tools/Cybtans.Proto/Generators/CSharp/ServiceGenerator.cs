@@ -13,7 +13,7 @@ namespace Cybtans.Proto.Generators.CSharp
         public ServiceGenerator(ProtoFile proto, TypeGeneratorOption option, TypeGenerator typeGenerator) :base(proto, option)
         {
             this._typeGenerator = typeGenerator;
-            Namespace = option.Namespace ?? $"{proto.Option.Namespace}.Services";
+            Namespace = option.Namespace ?? $"{proto.Option.Namespace ?? proto.Filename.Pascal()}.Services";
 
             foreach (var item in Proto.Declarations)
             {

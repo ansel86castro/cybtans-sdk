@@ -1,4 +1,5 @@
 ﻿using Cybtans.Proto.AST;
+using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace Cybtans.Proto.Generators.CSharp
             _serviceGenerator = serviceGenerator;
             _typeGenerator = typeGenerator;
 
-            Namespace = option.Namespace ?? $"{proto.Option.Namespace}.Clients";           
+            Namespace = option.Namespace ?? $"{proto.Option.Namespace ?? proto.Filename.Pascal()}.Clients";           
         }
 
         public override void GenerateCode()
@@ -103,7 +104,7 @@ namespace Cybtans.Proto.Generators.CSharp
                 {
                     case "GET":
                         bodyWriter.Append($"[Get(\"{url}\")]");
-                        if((path == null || path.Count == 0) && request != PrimitiveType.Void)
+                        if((path == null || path.Count == 0) && !PrimitiveType.Void.Equals(request))
                         {
                             optional = " = null";
                         }

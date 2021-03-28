@@ -1,15 +1,26 @@
 ﻿#nullable enable
 
 using Cybtans.Proto.AST;
+using Cybtans.Proto.Utils;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
     public class EnumGenerator: SingleFileGenerator<TypeGeneratorOption>
     {
-        public EnumGenerator(ProtoFile proto, TypeGeneratorOption option) : base(proto, option,
-            option.Namespace ?? $"{proto.Option.Namespace}.Models")
-        {            
+        public EnumGenerator(ProtoFile entryPoint, IEnumerable<ProtoFile> protos, TypeGeneratorOption option) : base(entryPoint, protos, option,
+            option.Namespace ?? $"{entryPoint.Option.Namespace ?? entryPoint.Filename.Pascal()}.Models")
+        {     
+            
+        }
+
+        public override void GenerateCode()
+        {
+            if (!Proto.HaveEnums)
+                return;
+
+            base.GenerateCode();
         }
 
         public override void OnGenerationBegin(CsFileWriter writer)
