@@ -5,7 +5,7 @@
           "Type": "messages",
           "Output": ".",
           "ProtoFile": "./Proto/Data.proto",
-          "AssemblyFile": "./@{SERVICE}.Data/bin/Debug/netcoreapp3.1/@{SERVICE}.Data.dll"
+          "AssemblyFile": "./@{SERVICE}.RestApi/bin/Debug/netcoreapp3.1/@{SERVICE}.Data.dll"
         },
         {
             "Type": "proto",
