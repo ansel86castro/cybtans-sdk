@@ -9,8 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Utility library for cross cutting concerns
-    </Description>
-    <VersionPrefix>1.0.15</VersionPrefix>
+    </Description>    
   </PropertyGroup>
 
   <ItemGroup>

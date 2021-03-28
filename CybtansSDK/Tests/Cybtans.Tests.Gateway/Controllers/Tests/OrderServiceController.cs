@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -24,6 +25,7 @@ namespace Cybtans.Tests.Controllers
 			_service = service;
 		}
 		
+		[AllowAnonymous]
 		[HttpGet("foo")]
 		public Task Foo()
 		{
@@ -67,7 +69,7 @@ namespace Cybtans.Tests.Controllers
 			return _service.UploadStreamById(__request);
 		}
 		
-		[HttpPost("stream")]
+		[HttpPost("ByteStream")]
 		[DisableFormValueModelBinding]
 		public Task<UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream __request)
 		{

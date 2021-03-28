@@ -88,6 +88,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics", "Graphic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics.Tests", "Graphics\Cybtans.Graphics.Tests\Cybtans.Graphics.Tests.csproj", "{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneConverter", "Graphics\SceneConverter\SceneConverter.csproj", "{7A05AADD-4265-46F6-BEEC-3276F8775E61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -230,6 +232,10 @@ Global
 		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A05AADD-4265-46F6-BEEC-3276F8775E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A05AADD-4265-46F6-BEEC-3276F8775E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A05AADD-4265-46F6-BEEC-3276F8775E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A05AADD-4265-46F6-BEEC-3276F8775E61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,6 +259,7 @@ Global
 		{CFD441FD-9B18-43CE-9356-D9BD126BFED3} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 		{A2FBA870-49C3-45D3-8EE9-66B7649C2972} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD} = {9BB24624-B984-4F16-83C5-57DED80EB606}
+		{7A05AADD-4265-46F6-BEEC-3276F8775E61} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {412220C1-F0EB-4AB9-8FCA-DFBAB8477745}

@@ -23,6 +23,9 @@ namespace Cybtans.Tests.Services
            CreateMap<OrderItem, OrderItemDto>();
            CreateMap<OrderItemDto,OrderItem>();
            
+           CreateMap<Product, ProductDto>();
+           CreateMap<ProductDto,Product>();
+           
            CreateMap<Order, OrderDto>();
            CreateMap<OrderDto,Order>();
            

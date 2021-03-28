@@ -90,12 +90,12 @@ namespace Cybtans.Proto.AST
 
             if(RequestType == null)
             {
-                logger.AddError($"Type {RequestType} is not defined at {Line},{Column}");
+                logger.AddError($"Type {Request} is not defined at {Line},{Column}");
             }
 
             if(ResponseType == null)
             {
-                logger.AddError($"Type {ResponseType} is not defined at {Line},{Column}");
+                logger.AddError($"Type {Response} is not defined at {Line},{Column}");
             }
         }
 

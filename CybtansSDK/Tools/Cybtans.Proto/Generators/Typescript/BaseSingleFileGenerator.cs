@@ -1,4 +1,5 @@
 ﻿using Cybtans.Proto.AST;
+using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,12 +29,11 @@ namespace Cybtans.Proto.Generators.Typescript
             var writer = CreateWriter();
             OnGenerationBegin(writer);
 
-            foreach (var item in _proto.ImportedFiles)
+            var protos = TopologicalSort.Sort(new[] { _proto }, x => x.ImportedFiles);
+            foreach (var item in protos)
             {
                 GenerateCode(item);
-            }
-
-            GenerateCode(_proto);
+            }          
 
             OnGenerationEnd(writer);
 

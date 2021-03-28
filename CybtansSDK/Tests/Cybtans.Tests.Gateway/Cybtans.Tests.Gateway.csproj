@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Content Remove="Assets\Effects\Shaders\default.p.json" />
+    <Content Remove="Assets\Effects\Shaders\earth.p.json" />
     <Content Remove="Assets\Effects\Shaders\normal_map.p.json" />
   </ItemGroup>
 
@@ -20,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Assets\Effects\Shaders\earth.p.json" />
     <None Include="Assets\Effects\Shaders\normal_map.p.json" />
     <None Include="Assets\Effects\Shaders\default.p.json" />
   </ItemGroup>

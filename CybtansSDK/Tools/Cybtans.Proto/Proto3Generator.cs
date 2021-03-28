@@ -6,6 +6,7 @@ using System.IO;
 using Cybtans.Proto.AST;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace Cybtans.Proto
 {
@@ -15,6 +16,7 @@ namespace Cybtans.Proto
         readonly ErrorReporter _reporter = new ErrorReporter();
         readonly Scope _scope;
         readonly IFileResolverFactory _fileResolverFactory;
+        readonly Dictionary<string, (ProtoFile File, Scope Scope)> _fileCache = new Dictionary<string, (ProtoFile File, Scope Scope)>();
 
         public Proto3Generator(IFileResolverFactory fileResolverFactory)
         {
@@ -25,6 +27,11 @@ namespace Cybtans.Proto
 
         public (ProtoFile File, Scope Scope ) LoadFromFile(string filename)
         {
+            if(_fileCache.TryGetValue(filename, out var tuple))
+            {
+                return tuple;
+            }
+
             var content = File.ReadAllText(filename);
             ICharStream stream = CharStreams.fromstring(content);
             ITokenSource lexer = new Protobuf3Lexer(stream);
@@ -36,10 +43,14 @@ namespace Cybtans.Proto
             _errorListener.EnsureNoErrors(filename);
 
             var node = context.file;
+            node.Filename =Path.GetFileNameWithoutExtension(filename);
+
             var scope = _scope.CreateScope();
 
+            _fileCache.Add(filename, (node, scope));
+
             if (node.Imports.Any())
-            {
+            {                
                 LoadImports(node, scope, filename);
             }
 
@@ -57,8 +68,14 @@ namespace Cybtans.Proto
 
             var fileResolver = _fileResolverFactory.GetResolver(directory);
 
-            foreach (var import in file.Imports)
-            {                
+            foreach (var import in file.Imports.ToArray())
+            {
+                if (ProtoFile.IsWhellKnowImport(import.Name))
+                {
+                    file.Imports.Remove(import);
+                    continue;
+                }
+
                 var importFile = fileResolver.GetFile(import.Name);
                 
                 var (importFileNode, importScope) = LoadFromFile(importFile.FullName);

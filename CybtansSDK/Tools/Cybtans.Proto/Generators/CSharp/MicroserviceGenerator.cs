@@ -1,4 +1,5 @@
 ﻿using Cybtans.Proto.AST;
+using Cybtans.Proto.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,23 +18,27 @@ namespace Cybtans.Proto.Generators.CSharp
             _options = options;            
         }
 
-        public void GenerateCode(ProtoFile proto, Scope? scope =null)
+        public void GenerateCode(ProtoFile proto, Scope? scope = null)
         {
-            new EnumGenerator(proto, _options.ModelOptions)
+            var protos = TopologicalSort.Sort(new[] { proto }, x => x.ImportedFiles);
+
+            if (_options.ModelOptions == null)
+                return;
+
+            new EnumGenerator(proto, protos, _options.ModelOptions)
                 .GenerateCode();
 
-            GenerateCodeRecursive(proto);
-        }     
-
-        private void GenerateCodeRecursive(ProtoFile proto)
-        {
-            foreach (var item in proto.ImportedFiles)
+            foreach (var item in protos)
             {
-                GenerateCodeRecursive(item);
+                GenerateCodeInternal(item);
             }
 
+        }  
+
+        private void GenerateCodeInternal(ProtoFile proto)
+        {
             var typeGenerator = new TypeGenerator(proto, _options.ModelOptions);
-            typeGenerator.GenerateCode();
+            typeGenerator.GenerateCode();           
 
             if (_options.ServiceOptions != null)
             {

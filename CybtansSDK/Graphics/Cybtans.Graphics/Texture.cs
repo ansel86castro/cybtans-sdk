@@ -9,6 +9,12 @@ namespace Cybtans.Graphics
 {
     public class Texture : DomainTenantEntity<Guid>
     {
+        protected Texture(TextureType type) 
+        {
+            Id = Guid.NewGuid();
+            Type = type;
+        }
+
         public Texture(string filename, TextureType type)
         {
             Filename = filename;
@@ -21,9 +27,9 @@ namespace Cybtans.Graphics
 
         public TextureType Type { get; set; }
 
-        public string Format { get; }
+        public string Format { get; set; }
 
-        public TextureDto ToDto()
+        public virtual TextureDto ToDto()
         {
             return new TextureDto
             {
@@ -35,12 +41,60 @@ namespace Cybtans.Graphics
         }
     }
 
+
+    public class CubeTexture : Texture
+    {
+        public string PositiveX { get; set; }
+
+        public string NegativeX { get; set; }
+
+        public string PositiveY { get; set; }
+
+        public string NegativeY { get; set; }
+
+        public string PositiveZ { get; set; }
+
+        public string NegativeZ { get; set; }
+
+        public CubeTexture(CubeMapDto faces) : base(TextureType.TextureCube)
+        {
+            PositiveX = faces.PositiveX;
+            NegativeX = faces.NegativeX;
+            PositiveY = faces.PositiveY;
+            NegativeY = faces.NegativeY;
+            PositiveZ = faces.PositiveZ;
+            NegativeZ = faces.NegativeZ;
+
+            Format = Path.GetExtension(PositiveX);
+        }
+
+        public override TextureDto ToDto()
+        {
+            return new TextureDto
+            {
+                CubeMap = new CubeMapDto
+                {
+                    PositiveX = PositiveX,
+                    NegativeX = NegativeX,
+                    PositiveY = PositiveY,
+                    NegativeY = NegativeY,
+                    PositiveZ = PositiveZ,
+                    NegativeZ = NegativeZ
+                },
+                Format = Format,
+                Id = Id,
+                Type = (Models.TextureType)Type
+            };
+        }
+    }
+
+
     public enum TextureType
     {
-        None,
-        Texture2D,
-        Texture3D,
-        CubeMap
+        None = 0,
+        Texture2D = 1,
+        Texture3D = 2,
+        TextureCube = 3
     }
 
 }

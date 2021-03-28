@@ -152,10 +152,10 @@ service returns[ServiceDeclaration node]
     ;
 
 rpc returns[RpcDeclaration node]
-    :   'rpc' Ident '(' req=fullIdent ')' 'returns' '(' resp=fullIdent ')' {
+    :   'rpc' Ident '(' 'stream'? req=fullIdent ')' 'returns' '(' 'stream'? resp=fullIdent ')' {
             $node = new RpcDeclaration($Ident.text, $req.node, $resp.node, $start);            
         } 
-        ('{' (option{ $node.Options.Add($option.node);})* '}')? ';'
+        ('{' (option{ $node.Options.Add($option.node);})* '}' ';'? | ';') 
     ;
 
 //

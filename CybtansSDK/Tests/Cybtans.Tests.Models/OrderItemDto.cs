@@ -11,9 +11,13 @@ namespace Cybtans.Tests.Models
 		
 		public float Price {get; set;}
 		
-		public float Discount {get; set;}
+		public float? Discount {get; set;}
 		
 		public Guid OrderId {get; set;}
+		
+		public Guid? ProductId {get; set;}
+		
+		public ProductDto Product {get; set;}
 		
 		public Guid Id {get; set;}
 		
@@ -30,10 +34,12 @@ namespace Cybtans.Tests.Models
 		public const int Price = 2;
 		public const int Discount = 3;
 		public const int OrderId = 4;
-		public const int Id = 5;
+		public const int ProductId = 5;
+		public const int Product = 6;
+		public const int Id = 7;
 		private readonly int[] _props = new []
 		{
-			ProductName,Price,Discount,OrderId,Id
+			ProductName,Price,Discount,OrderId,ProductId,Product,Id
 		};
 		
 		public int[] GetPropertyCodes() => _props;
@@ -46,6 +52,8 @@ namespace Cybtans.Tests.Models
 		       Price => "Price",
 		       Discount => "Discount",
 		       OrderId => "OrderId",
+		       ProductId => "ProductId",
+		       Product => "Product",
 		       Id => "Id",
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -60,6 +68,8 @@ namespace Cybtans.Tests.Models
 		        "Price" => Price,
 		        "Discount" => Discount,
 		        "OrderId" => OrderId,
+		        "ProductId" => ProductId,
+		        "Product" => Product,
 		        "Id" => Id,
 		
 		        _ => -1,
@@ -72,8 +82,10 @@ namespace Cybtans.Tests.Models
 		    {
 		        ProductName => typeof(string),
 		        Price => typeof(float),
-		        Discount => typeof(float),
+		        Discount => typeof(float?),
 		        OrderId => typeof(Guid),
+		        ProductId => typeof(Guid?),
+		        Product => typeof(ProductDto),
 		        Id => typeof(Guid),
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -89,6 +101,8 @@ namespace Cybtans.Tests.Models
 		        Price => obj.Price,
 		        Discount => obj.Discount,
 		        OrderId => obj.OrderId,
+		        ProductId => obj.ProductId,
+		        Product => obj.Product,
 		        Id => obj.Id,
 		
 		        _ => throw new InvalidOperationException("property code not supported"),
@@ -102,8 +116,10 @@ namespace Cybtans.Tests.Models
 		    {
 		        case ProductName:  obj.ProductName = (string)value;break;
 		        case Price:  obj.Price = (float)value;break;
-		        case Discount:  obj.Discount = (float)value;break;
+		        case Discount:  obj.Discount = (float?)value;break;
 		        case OrderId:  obj.OrderId = (Guid)value;break;
+		        case ProductId:  obj.ProductId = (Guid?)value;break;
+		        case Product:  obj.Product = (ProductDto)value;break;
 		        case Id:  obj.Id = (Guid)value;break;
 		
 		        default: throw new InvalidOperationException("property code not supported");

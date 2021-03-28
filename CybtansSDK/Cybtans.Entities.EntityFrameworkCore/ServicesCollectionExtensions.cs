@@ -1,6 +1,5 @@
 ﻿using Cybtans.Entities;
 using Cybtans.Entities.EntityFrameworkCore;
-using Cybtans.Entities.EntiyFrameworkCore;
 using Cybtans.Entities.EventLog;
 using Cybtans.Messaging;
 using Microsoft.EntityFrameworkCore;

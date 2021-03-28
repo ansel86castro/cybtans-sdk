@@ -1,15 +1,15 @@
 import { mat4, vec3 } from "gl-matrix";
 import { float3, matrix } from "./MathUtils";
 
-export interface HashMap<T>{
-    [key:string]: T;
+export interface HashMap<T> {
+    [key: string]: T;
 }
 
-export function checkError(gl:WebGL2RenderingContext){
+export function checkError(gl: WebGL2RenderingContext) {
     const error = gl.getError();
-    if(error !== gl.NO_ERROR){
+    if (error !== gl.NO_ERROR) {
         let msg = error.toString();
-        switch(error){
+        switch (error) {
             case gl.INVALID_ENUM:
                 msg = 'INVALID_ENUM';
                 break;
@@ -31,7 +31,14 @@ export function checkError(gl:WebGL2RenderingContext){
         }
 
         console.error(`GL Error ${msg}`);
-        throw new Error(`GL Error r ${msg}`);        
+        throw new Error(`GL Error r ${msg}`);
     }
 
+}
+
+export function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }

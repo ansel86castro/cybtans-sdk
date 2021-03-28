@@ -59,7 +59,7 @@ namespace Cybtans.Proto.Generator
 
         public string Gateway { get; set; }
 
-        public CSharpStepOption Models { get; set; }
+        public CSharpModelGenerationOption Models { get; set; }
 
         public CSharpStepOption Services { get; set; }
 
@@ -88,6 +88,13 @@ namespace Cybtans.Proto.Generator
     public class CSharpStepOption : StepOption
     {
         public string Namespace { get; set; }
+
+        public bool Generate { get; set; }
+    }
+
+    public class CSharpModelGenerationOption : CSharpStepOption
+    {
+        public bool UseCytansSerialization { get; set; } = true;
     }
 
     public class StepClientOptions : StepOption

@@ -35,7 +35,7 @@ namespace Cybtans.Tests.Clients
 		[Post("/api/Order/{request.Id}/upload")]
 		Task<UploadStreamResponse> UploadStreamById([Body]UploadStreamByIdRequest request);
 		
-		[Post("/api/Order/stream")]
+		[Post("/api/Order/ByteStream")]
 		Task<UploadStreamResponse> UploadStream([Body]System.IO.Stream request);
 		
 		[Get("/api/Order/download")]

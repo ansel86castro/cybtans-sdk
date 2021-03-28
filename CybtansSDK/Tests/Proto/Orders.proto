@@ -7,7 +7,7 @@ package Cybtans.Tests;
 message UploadImageRequest {
 	string name = 1;
 	int32 size =2;
-	stream image=3;
+	ByteStream image=3;
 }
 
 message UploadImageResponse{
@@ -17,7 +17,7 @@ message UploadImageResponse{
 
 message UploadStreamByIdRequest{
 	string id = 1;
-	stream data = 2;
+	ByteStream data = 2;
 }
 
 message UploadStreamResponse{
@@ -31,7 +31,7 @@ message DownloadImageRequest{
 message DowndloadImageResponse{
 	string fileName = 1;
 	string contentType = 2;
-	stream image = 3;
+	ByteStream image = 3;
 }
 
 message MultiPathRequest{
@@ -46,11 +46,12 @@ message OrderNotification{
 }
 
 service OrderService {
-	option description = "Order's Service";
+	option description = "Order's Service";	
 
 	rpc Foo(void) returns (void){	
 		option template = "foo"; 
-		option method = "GET";		
+		option method = "GET";
+		option anonymous = true;
 	};
 
 	rpc Baar(void) returns (void){	
@@ -79,8 +80,8 @@ service OrderService {
 		option method = "POST";
 	};
 
-	rpc UploadStream(stream) returns (UploadStreamResponse) {
-		option template = "stream";
+	rpc UploadStream(ByteStream) returns (UploadStreamResponse) {
+		option template = "ByteStream";
 		option method = "POST";
 	};
 

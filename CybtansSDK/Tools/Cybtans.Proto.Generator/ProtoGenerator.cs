@@ -48,15 +48,16 @@ namespace Cybtans.Proto.Generator
 
             var options = new GenerationOptions()
             {
-                ModelOptions =ast.HaveMessages ?  new TypeGeneratorOption()
+                ModelOptions = ast.HaveMessages ?  new ModelGeneratorOptions()
                 {
                     OutputPath = Path.Combine(config.Path, step.Models?.Output ?? $"{step.Output}/{config.Service}.Models"),
-                    Namespace = step.Models?.Namespace
+                    Namespace = step.Models?.Namespace,
+                    GenerateAccesor = step.Models?.UseCytansSerialization ?? true
                 } : null,
-                ServiceOptions = ast.HaveServices ? new TypeGeneratorOption()
+                ServiceOptions = ast.HaveServices ? new ServiceGeneratorOptions()
                 {
                     OutputPath = Path.Combine(config.Path, step.Services?.Output ?? $"{step.Output}/{config.Service}.Services/Generated"),
-                    Namespace = step.Services?.Namespace
+                    Namespace = step.Services?.Namespace,                   
                 } : null,                
             };
 
@@ -67,11 +68,15 @@ namespace Cybtans.Proto.Generator
                     OutputPath = Path.Combine(config.Path, step.Controllers?.Output ?? $"{step.Output}/{config.Service}.RestApi/Controllers/Generated"),
                     Namespace = step.Controllers?.Namespace
                 };
-                options.ClientOptions = new TypeGeneratorOption()
+
+                if (step.CSharpClients?.Generate ?? true)
                 {
-                    OutputPath = Path.Combine(config.Path, step.CSharpClients?.Output ?? $"{step.Output}/{config.Service}.Clients"),
-                    Namespace = step.CSharpClients?.Namespace
-                };
+                    options.ClientOptions = new TypeGeneratorOption()
+                    {
+                        OutputPath = Path.Combine(config.Path, step.CSharpClients?.Output ?? $"{step.Output}/{config.Service}.Clients"),
+                        Namespace = step.CSharpClients?.Namespace
+                    };
+                }
             }
 
             if (!string.IsNullOrEmpty(step.Gateway) || step.GatewayOptions != null)
@@ -144,8 +149,8 @@ namespace Cybtans.Proto.Generator
         {
             var options = new GenerationOptions()
             {
-                ModelOptions = new TypeGeneratorOption(),
-                ServiceOptions = new TypeGeneratorOption(),
+                ModelOptions = new ModelGeneratorOptions(),
+                ServiceOptions = new ServiceGeneratorOptions(),
                 ControllerOptions = new WebApiControllerGeneratorOption(),
                 ClientOptions = new TypeGeneratorOption()
             };

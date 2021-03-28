@@ -17,9 +17,7 @@ message CameraDto {
 	float aspectRatio =6;
 	float width=7;
 	float height=8;
- 	repeated float localMatrix = 9;
-	repeated float viewMatrix = 10;
-	repeated float projMatrix = 11;
+ 	repeated float localMatrix = 9;	
 	guid id = 12;
 }
 
@@ -62,9 +60,9 @@ message VertexDefinitionDto {
 
 message VertexElementDto {
 	int16 offset =1;
-	int16 stream =2;
+	int16 stream =2 [optional = true];
 	string semantic =3;
-	int8 usageIndex =4;
+	int8 usageIndex =4 [optional = true];
     VertexElementFormat format =5;
     int32 size = 6;
 }
@@ -137,7 +135,16 @@ enum TextureType {
     None = 0;
     Texture2D = 1;
     Texture3D = 2;
-    CubeMap = 3;
+    TextureCube = 3;
+}
+
+message CubeMapDto {
+    string positiveX = 1;
+    string negativeX = 2;
+    string positiveY = 3;
+    string negativeY = 4;
+    string positiveZ = 5;
+    string negativeZ = 6;
 }
 
 message TextureDto {    
@@ -145,7 +152,9 @@ message TextureDto {
     TextureType type = 2;
     string format = 3;
     guid id = 4;
+    CubeMapDto cubeMap = 5;
 }
+
 
 message MaterialDto { 
     string name = 1;

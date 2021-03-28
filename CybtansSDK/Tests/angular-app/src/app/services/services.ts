@@ -225,7 +225,7 @@ export class OrderService {
     }
     
     uploadStream(request: Blob): Observable<UploadStreamResponse> {
-      return this.http.post<UploadStreamResponse>(`/api/Order/stream`, getFormData({ blob: request }), {
+      return this.http.post<UploadStreamResponse>(`/api/Order/ByteStream`, getFormData({ blob: request }), {
           headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }

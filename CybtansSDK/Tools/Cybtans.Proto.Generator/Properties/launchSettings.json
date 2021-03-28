@@ -22,7 +22,7 @@
     },
     "Cybtans.CodeGeneratorConfigs": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\Projects\\CybtansSDK\\cybtans-sdk\\CybtansSDK\\Graphics\\Cybtans.Graphics"
+      "commandLineArgs": "D:\\Projects\\CybtansSDK\\Examples\\Service3"
     }
   }
 }

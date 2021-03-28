@@ -88,7 +88,7 @@ namespace Cybtans.Proto.Generators.Typescript
                 }
 
                 methods.Append($"{rpc.Name.Camel()}");
-                if (request == PrimitiveType.Void)
+                if (PrimitiveType.Void.Equals(request))
                 {
                     methods.Append("()");
                 }
@@ -96,11 +96,10 @@ namespace Cybtans.Proto.Generators.Typescript
                 {
                     methods.Append($"(request: {request.GetTypeName()})");
                 }
-                
+
                 var responseType =
                   response.HasStreams() ? "HttpResponse<Blob>" :
-                  response == PrimitiveType.Void ? "{}" :
-                  response.GetTypeName();
+                  PrimitiveType.Void.Equals(response) ? "{}" : response.GetTypeName();
 
                 methods.Append($": Observable<{responseType}>");
 

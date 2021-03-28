@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Cybtans.Proto.AST
 {
-    public class PrimitiveType : ITypeDeclaration
+    public class PrimitiveType : ITypeDeclaration, IEquatable<PrimitiveType>
     {
         public static readonly PrimitiveType Double = new PrimitiveType("double", typeof(double));
         public static readonly PrimitiveType Float = new PrimitiveType("float", typeof(float));
@@ -24,13 +26,37 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Void = new PrimitiveType("void", typeof(void));
         public static readonly PrimitiveType Guid = new PrimitiveType("guid", typeof(Guid));
         public static readonly PrimitiveType Decimal = new PrimitiveType("decimal", typeof(decimal));
-        public static readonly PrimitiveType Stream = new PrimitiveType("stream", typeof(Stream));
+        public static readonly PrimitiveType Stream = new PrimitiveType("ByteStream", typeof(Stream));
+        public static readonly PrimitiveType TimeStamp = new PrimitiveType("google.protobuf.Timestamp", typeof(DateTime));
+        public static readonly PrimitiveType Duration = new PrimitiveType("google.protobuf.Duration", typeof(TimeSpan));
+        public static readonly PrimitiveType BoolValue = new PrimitiveType("google.protobuf.BoolValue", typeof(bool?));
+        public static readonly PrimitiveType DoubleValue = new PrimitiveType("google.protobuf.DoubleValue", typeof(double?));
+        public static readonly PrimitiveType FloatValue = new PrimitiveType("google.protobuf.FloatValue", typeof(float?));
+        public static readonly PrimitiveType Int32Value = new PrimitiveType("google.protobuf.Int32Value", typeof(int?));
+        public static readonly PrimitiveType Int64Value = new PrimitiveType("google.protobuf.Int64Value", typeof(long?));
+        public static readonly PrimitiveType UInt32Value = new PrimitiveType("google.protobuf.UInt32Value", typeof(uint?));
+        public static readonly PrimitiveType UInt64Value = new PrimitiveType("google.protobuf.UInt64Value", typeof(ulong?));
+        public static readonly PrimitiveType StringValue = new PrimitiveType("google.protobuf.StringValue", typeof(string));
+        public static readonly PrimitiveType BytesValue = new PrimitiveType("google.protobuf.BytesValue", typeof(byte[]));
+        public static readonly PrimitiveType Empty = new PrimitiveType("google.protobuf.Empty", typeof(void));
 
+        Type _genericDefinition;
         public PrimitiveType(string name, Type clrType)
         {
             Name = name;            
             ClrType = clrType;
+
+            if(ClrType.IsGenericType)
+            {
+                _genericDefinition = ClrType.GetGenericTypeDefinition();
+            }
         }
+
+        public bool IsGenericType => ClrType.IsGenericType;
+
+        public bool IsNullableValue => _genericDefinition == typeof(Nullable<>);
+
+        public Type GenericDefinition => _genericDefinition;
 
         public bool IsGenericDefinition => ClrType?.IsGenericTypeDefinition ?? false;
 
@@ -68,6 +94,21 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(decimal)) return Decimal;
             else if (type == typeof(Stream)) return Stream;
             else return null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as PrimitiveType);
+        }        
+
+        public bool Equals([AllowNull] PrimitiveType other)
+        {
+            if (other == null) return false;
+
+            if (System.Object.ReferenceEquals(this, other))
+                return true;
+
+            return ClrType == other.ClrType;
         }
     }
 }

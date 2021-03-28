@@ -34,8 +34,17 @@ export interface CustomerEventDto {
 export interface OrderItemDto {
   productName?: string|null;
   price: number;
-  discount: number;
+  discount?: number|null;
   orderId: string;
+  productId?: string|null;
+  product?: ProductDto|null;
+  id: string;
+}
+
+
+export interface ProductDto {
+  name?: string|null;
+  model?: string|null;
   id: string;
 }
 

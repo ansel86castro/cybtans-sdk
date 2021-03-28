@@ -137,7 +137,6 @@ class BaseTestsService {
     }
 }
 
-
 export class CustomerService extends BaseTestsService {  
 
     constructor(fetch:Fetch, options:TestsOptions){
@@ -269,7 +268,7 @@ export class OrderService extends BaseTestsService {
     uploadStream(request:Blob) : Promise<UploadStreamResponse> {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json' }};
     	options.body = this.getFormData({blob:request});
-    	let endpoint = this._options.baseUrl+`/api/Order/stream`;
+    	let endpoint = this._options.baseUrl+`/api/Order/ByteStream`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     

@@ -41,8 +41,13 @@ namespace Cybtans.Proto
         }
 
         public ITypeDeclaration? GetDeclaration(IdentifierExpression path)
-        {            
-            if(path.Left == null)
+        {
+            var fullname = path.ToString();
+            var decl = GetDeclaration(fullname);
+            if (decl != null)
+                return decl;
+            
+            if (path.Left == null)
             {
                 return GetDeclaration(path.Id);
             }
@@ -116,8 +121,7 @@ namespace Cybtans.Proto
             {
                 if (!this._declarations.TryAdd(item.Key, item.Value))
                 {
-                    _declarations[item.Key] = item.Value;
-                    //throw new InvalidOperationException($"There is already a declaration with the same name {item.Key}");
+                    _declarations[item.Key] = item.Value;                    
 
                 }
             }
@@ -157,7 +161,18 @@ namespace Cybtans.Proto
                 PrimitiveType.Void,
                 PrimitiveType.Guid,
                 PrimitiveType.Decimal,
-                PrimitiveType.Stream
+                PrimitiveType.Stream,
+                PrimitiveType.TimeStamp,
+                PrimitiveType.Duration,
+                PrimitiveType.BoolValue,
+                PrimitiveType.DoubleValue,
+                PrimitiveType.Int32Value,
+                PrimitiveType.Int64Value,
+                PrimitiveType.UInt32Value,
+                PrimitiveType.UInt64Value,
+                PrimitiveType.StringValue,
+                PrimitiveType.BytesValue,
+                PrimitiveType.Empty
             });
         }
     }
