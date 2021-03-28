@@ -9,8 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Message queue abstraction
-    </Description>
-    <VersionPrefix>1.0.15</VersionPrefix>
+    </Description>    
   </PropertyGroup>
 
   <ItemGroup>

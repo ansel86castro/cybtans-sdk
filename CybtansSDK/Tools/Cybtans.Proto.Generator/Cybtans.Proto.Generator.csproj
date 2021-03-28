@@ -8,8 +8,7 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <Nullable>disable</Nullable>    
     <IsPackable>false</IsPackable>    
-    <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>       
-    <VersionPrefix>3.1.4</VersionPrefix>
+    <ApplicationIcon>cybtan_blue_fuzzy.ico</ApplicationIcon>          
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
