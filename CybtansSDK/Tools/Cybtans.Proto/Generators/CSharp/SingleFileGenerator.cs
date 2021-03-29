@@ -29,9 +29,7 @@ namespace Cybtans.Proto.Generators.CSharp
             foreach (var item in _protos)
             {
                 GenerateCode(item);
-            }
-
-            GenerateCode(Proto);
+            }          
 
             OnGenerationEnd(writer);
 

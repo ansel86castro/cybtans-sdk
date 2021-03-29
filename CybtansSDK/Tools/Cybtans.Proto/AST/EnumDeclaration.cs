@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Cybtans.Proto.AST
 {
-    public class EnumDeclaration:TypeDeclaration<EnumOptions>
+    public class EnumDeclaration:UserDefinedType<EnumOptions>
     {
         public EnumDeclaration(string name, IToken start) : base(start, name)
         {
@@ -15,7 +15,7 @@ namespace Cybtans.Proto.AST
         }      
 
         public List<EnumMemberDeclaration> Members { get; } = new List<EnumMemberDeclaration>();
-
+      
         public override void CheckSemantic(Scope scope, IErrorReporter logger)
         {           
             base.CheckSemantic(scope, logger);

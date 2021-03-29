@@ -8,7 +8,8 @@ using System.Text.RegularExpressions;
 
 namespace Cybtans.Proto.AST
 {
-    public class MessageDeclaration : TypeDeclaration<MessageOptions>
+
+    public class MessageDeclaration : UserDefinedType<MessageOptions>
     {
         Scope _scope;
 
@@ -24,6 +25,8 @@ namespace Cybtans.Proto.AST
         public List<EnumDeclaration> Enums { get; } = new List<EnumDeclaration>();
 
         public string Namespace => ProtoDeclaration?.Option?.Namespace;
+
+     
 
         public Scope GetScope(Scope parent)
         {
@@ -52,18 +55,22 @@ namespace Cybtans.Proto.AST
             var childScope = GetScope(scope);
             foreach (var message in InnerMessages)
             {
+                message.DeclaringMessage = this;
                 message.ProtoDeclaration = ProtoDeclaration;
                 message.CheckSemantic(childScope, logger);
 
+                message.SourceName = message.Name;
                 message.Name = $"{Name}_{message.Name}";
                 ProtoDeclaration?.Declarations.Add(message);
             }
 
             foreach (var e in Enums)
             {
+                e.DeclaringMessage = this;
                 e.ProtoDeclaration = ProtoDeclaration;
                 e.CheckSemantic(childScope, logger);
-
+                
+                e.SourceName = e.Name;
                 e.Name = $"{Name}_{e.Name}";
                 ProtoDeclaration?.Declarations.Add(e);
             }            

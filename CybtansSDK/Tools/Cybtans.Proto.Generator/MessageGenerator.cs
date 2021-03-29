@@ -489,6 +489,7 @@ namespace Cybtans.Proto.Generator
                 {
                     codeWriter.Append(TemplateProcessor.Process(GetRawTemplate("ReadOnlyProtoServices.tpl"), new
                     {
+                        SERVICE_NAME = $"I{type.Name.Pascal()}Service",
                         ENTITY = type.Name.Pascal(),
                         ID_TYPE = GetTypeName(IdProp.PropertyType),
                         ID = IdProp.Name.Camel(),
@@ -500,6 +501,7 @@ namespace Cybtans.Proto.Generator
                 {
                     codeWriter.Append(TemplateProcessor.Process(GetRawTemplate("ProtoServices.tpl"), new
                     {
+                        SERVICE_NAME = $"I{type.Name.Pascal()}Service",
                         ENTITY = type.Name.Pascal(),
                         ID_TYPE = GetTypeName(IdProp.PropertyType),
                         ID = IdProp.Name.Camel(),
@@ -681,8 +683,8 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
-    [RegisterDependency(typeof(I@{ENTITY}Service))]
-    public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
+    [RegisterDependency(typeof(@{SERVICE_NAME}))]
+    public class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, @{SERVICE_NAME}
     {
         public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
             : base(repository, uow, mapper, logger) { }                
@@ -700,8 +702,8 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
-    [RegisterDependency(typeof(I@{ENTITY}Service))]
-    public partial class @{ ENTITY }Service : ReadOnlyService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response>, I@{ENTITY}Service
+    [RegisterDependency(typeof(@{SERVICE_NAME}))]
+    public partial class @{ ENTITY }Service : ReadOnlyService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response>, @{SERVICE_NAME}
     {
         public @{ ENTITY }Service(IRepository<@{ENTITY}, @{TKEY}> repository, IUnitOfWork uow, IMapper mapper, ILogger<@{ENTITY}Service> logger)
             : base(repository, uow, mapper, logger) { }                
@@ -720,8 +722,8 @@ using @{ SERVICE }.Models;
 
 namespace @{ SERVICE }.Services
 {
-    [RegisterDependency(typeof(I@{ENTITY}Service))]
-    public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, I@{ENTITY}Service
+    [RegisterDependency(typeof(@{SERVICE_NAME}))]
+    public partial class @{ ENTITY }Service : CrudService<@{ENTITY}, @{TKEY}, @{TMESSAGE}, Get@{ENTITY}Request, GetAllRequest, GetAll@{ENTITY}Response, Update@{ENTITY}Request, Create@{ENTITY}Request, Delete@{ENTITY}Request>, @{SERVICE_NAME}
     {
         
     }

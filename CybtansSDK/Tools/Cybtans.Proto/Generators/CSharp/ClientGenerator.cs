@@ -34,6 +34,11 @@ namespace Cybtans.Proto.Generators.CSharp
             }            
         }
 
+        public string GetClientName(ServiceDeclaration service)
+        {            
+            return $"I{service.Name.Pascal()}Client";
+        }
+
         private void GenerateClient(ServiceGenInfo info)
         {
             var writer = CreateWriter(Namespace);
@@ -53,8 +58,10 @@ namespace Cybtans.Proto.Generators.CSharp
                 clsWriter.Append("/// </summary>").AppendLine();
             }
 
+            var clientName = GetClientName(info.Service);
+
             clsWriter.Append("[ApiClient]").AppendLine();
-            clsWriter.Append($"public interface I{info.Name}").AppendLine();
+            clsWriter.Append($"public interface {clientName}").AppendLine();
             clsWriter.Append("{").AppendLine();
             clsWriter.Append('\t', 1);
 
@@ -127,7 +134,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.AppendLine().Append("}").AppendLine();
 
-            writer.Save($"I{info.Name}");
+            writer.Save(clientName);
 
         }              
 

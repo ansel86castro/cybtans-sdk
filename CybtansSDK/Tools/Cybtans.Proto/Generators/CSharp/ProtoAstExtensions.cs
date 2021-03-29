@@ -145,5 +145,18 @@ namespace Cybtans.Proto.Generators.CSharp
 
         //    return false;
         //}
+
+        public static string GetProtobufName(this IUserDefinedType type)
+        {
+            var name = type.SourceName ?? type.Name;
+            name = name.Pascal();
+
+            if(type.DeclaringMessage != null)
+            {
+                return $"{type.DeclaringMessage.GetProtobufName()}.Types.{name}";
+            }
+
+            return name;
+        }
     }
 }

@@ -15,11 +15,6 @@ using System.Windows.Markup;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
-    public class TypeGeneratorOption : OutputOption
-    {
-        public bool PartialClass { get; set; } = true;     
-     
-    }
 
     public class TypeGenerator : FileGenerator<ModelGeneratorOptions>
     {        
