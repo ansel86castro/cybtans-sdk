@@ -28,6 +28,9 @@ namespace Cybtans.Proto.Generators.CSharp
             new EnumGenerator(proto, protos, _options.ModelOptions)
                 .GenerateCode();
 
+            new GrpcMappingGenerator(proto, protos, _options.ServiceOptions, _options.ModelOptions)
+                .GenerateCode();
+
             foreach (var item in protos)
             {
                 GenerateCodeInternal(item);

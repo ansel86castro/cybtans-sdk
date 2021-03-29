@@ -2,10 +2,12 @@
 
 using Cybtans.Proto.AST;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Cybtans.Proto.Generators.CSharp
 {
+   
     public abstract class FileGenerator<T> 
         where T: CodeGenerationOption
     {
@@ -34,9 +36,11 @@ namespace Cybtans.Proto.Generators.CSharp
 
         protected virtual void GenerateCode(ProtoFile item) { }
 
+        public string OuputPath => _option.OutputPath ?? Environment.CurrentDirectory;
+
         public CsFileWriter CreateWriter(string ns)
         {
-            return new CsFileWriter(ns, _option.OutputPath ?? Environment.CurrentDirectory);
+            return new CsFileWriter(ns, OuputPath);
         }
 
         protected void CreateFile(string filename, CodeWriter code)
@@ -45,5 +49,6 @@ namespace Cybtans.Proto.Generators.CSharp
         }
     }
 
+   
 
 }

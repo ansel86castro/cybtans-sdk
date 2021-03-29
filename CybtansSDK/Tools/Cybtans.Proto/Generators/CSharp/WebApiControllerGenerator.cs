@@ -42,6 +42,11 @@ namespace Cybtans.Proto.Generators.CSharp
             GenerateControllerInternal(srvInfo, writer);
         }
 
+        protected virtual string GetServiceType(ServiceDeclaration service)
+        {
+            return _serviceGenerator.GetInterfaceName(service);
+        }
+
         protected void GenerateControllerInternal(ServiceGenInfo srvInfo, CsFileWriter writer)
         {
             var srv = srvInfo.Service;
@@ -82,11 +87,12 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var bodyWriter = clsWriter.Block("BODY");
 
-            bodyWriter.Append($"private readonly I{srvInfo.Name} _service;").AppendLine().AppendLine();
+            var serviceType = GetServiceType(srv);
+            bodyWriter.Append($"private readonly {serviceType} _service;").AppendLine().AppendLine();
 
             #region Constructor
 
-            bodyWriter.Append($"public {srvInfo.Name}Controller(I{srvInfo.Name} service)").AppendLine();
+            bodyWriter.Append($"public {srvInfo.Name}Controller({serviceType} service)").AppendLine();
             bodyWriter.Append("{").AppendLine();
             bodyWriter.Append('\t', 1).Append("_service = service;").AppendLine();
             bodyWriter.Append("}").AppendLine();

@@ -8,6 +8,7 @@ using System.Text;
 namespace Cybtans.Proto.AST
 {
 
+
     public abstract class DeclarationNode : ProtoAstNode
     {      
 
@@ -22,6 +23,7 @@ namespace Cybtans.Proto.AST
         public DeclarationNode(int line, int column) : base(line, column)
         {
         }
+    
 
         public string Name { get; set; }
 

@@ -28,5 +28,10 @@ namespace Cybtans.Proto.Generators.CSharp
             writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
             GenerateControllerInternal(srvInfo, writer);
         }
+
+        protected override string GetServiceType(ServiceDeclaration service)
+        {
+            return _clientGenerator.GetClientName(service);
+        }
     }
 }

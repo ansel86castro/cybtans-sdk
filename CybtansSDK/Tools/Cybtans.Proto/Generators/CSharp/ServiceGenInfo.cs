@@ -14,12 +14,12 @@ namespace Cybtans.Proto.Generators.CSharp
 
         public string Namespace { get; }
 
-        public ServiceGenInfo(ServiceDeclaration service, OutputOption outputOption, ProtoFile proto)
+        public ServiceGenInfo(ServiceDeclaration service, ServiceGeneratorOptions outputOption, ProtoFile proto)
         {
             Service = service;
 
             Name = service.Name.Pascal();
-            Namespace = $"{proto.Option.Namespace}.{outputOption.Namespace ?? "Services"}";
+            Namespace = outputOption.Namespace ?? $"{proto.Option.Namespace}.Services";
 
         }
 

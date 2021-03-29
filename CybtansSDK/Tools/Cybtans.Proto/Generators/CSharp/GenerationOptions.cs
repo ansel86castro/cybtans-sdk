@@ -20,7 +20,10 @@
 
     public class ServiceGeneratorOptions: TypeGeneratorOption
     {
+        public string? NameTemplate { get; set; }
 
+        public bool AutoRegisterImplementation { get; set; }
+        
     }
 
     public class WebApiControllerGeneratorOption: TypeGeneratorOption

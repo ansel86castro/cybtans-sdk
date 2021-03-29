@@ -41,6 +41,7 @@ namespace Cybtans.Proto.Test
         [InlineData("Protos/Catalog.proto", "Angular/Catalog")]
         [InlineData("Protos/Customers.proto", "Angular/Customer")]
         [InlineData("Protos/Compatibility.proto", "Angular/Compatibility")]
+        [InlineData("Protos/greet.proto", "Angular/Greet")]
         public void GenerateAngularCode(string filename, string output)
         {
             var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });

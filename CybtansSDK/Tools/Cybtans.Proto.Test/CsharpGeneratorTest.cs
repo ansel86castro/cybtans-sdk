@@ -125,6 +125,45 @@ namespace Cybtans.Proto.Test
             microserviceGenerator.GenerateCode(ast);
         }
 
+        [Theory]
+        [InlineData("Protos/greet.proto", "CSharp/greet")]        
+        public void GenerateGrpcProxy(string filename, string output)
+        {
+            var fileResolverFactory = new SearchPathFileResolverFactory(new string[] { "Proto" });
+
+            Proto3Generator generator = new Proto3Generator(fileResolverFactory);
+            var (ast, scope) = generator.LoadFromFile(filename);
+            Assert.NotNull(ast);
+
+            MicroserviceGenerator microserviceGenerator = new MicroserviceGenerator(new GenerationOptions
+            {
+                ModelOptions = new ModelGeneratorOptions
+                {
+                    OutputPath = output,                    
+                },
+                ServiceOptions = new ServiceGeneratorOptions
+                {
+                    OutputPath = output,
+                    NameTemplate = "@{Name}Repository",
+                    Namespace = "Cybtans.Tests.Grpc.Data"
+                },
+                ControllerOptions = new WebApiControllerGeneratorOption
+                {
+                    OutputPath = output
+                },
+                ClientOptions = new TypeGeneratorOption
+                {
+                    OutputPath = output
+                },
+                ApiGatewayOptions = new ApiGateWayGeneratorOption
+                {
+                    OutputPath = Path.Combine(output, "Gateway")
+                }
+            });
+
+            microserviceGenerator.GenerateCode(ast);
+        }
+
 
         private static void AssertAST(ProtoFile ast)
         {

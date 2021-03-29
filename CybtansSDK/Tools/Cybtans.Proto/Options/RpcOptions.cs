@@ -8,7 +8,7 @@ namespace Cybtans.Proto.Options
     {
         public RpcOptions() : base(OptionsType.Rpc)
         {
-
+            RpcSecurity = new Wrapper(this);
         }
 
         [Field("template")]
@@ -23,8 +23,14 @@ namespace Cybtans.Proto.Options
         [Field("description")]
         public string? Description { get; set; }
 
+        [Field("rpc_description")]
+        public string? RpcDescription { get => Description; set => Description = value; }
+
         [Field("google")]
         public GoogleHttpOptions? Google { get; set; }
+
+        [Field("rpc_security")]
+        public SecurityOptions.Wrapper RpcSecurity { get; }
 
     }
 

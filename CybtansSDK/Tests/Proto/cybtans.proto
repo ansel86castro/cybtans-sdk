@@ -55,7 +55,7 @@ extend google.protobuf.ServiceOptions {
 	string prefix  = 645001;
 	string service_description = 645002;
 	Security service_security = 645003;
-	string grpc_proxy = 645004;
+	bool grpc_proxy = 645004;
 }
 
 message Security {
