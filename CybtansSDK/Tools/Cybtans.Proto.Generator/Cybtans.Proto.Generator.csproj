@@ -77,11 +77,4 @@
   </ItemGroup>
 
 
-
-  <ItemGroup>
-    <None Update="Service1.proto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

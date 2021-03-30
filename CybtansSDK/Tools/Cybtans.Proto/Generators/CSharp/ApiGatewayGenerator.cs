@@ -24,8 +24,7 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Controllers");
 
-            writer.Usings.Append($"using {_clientGenerator.Namespace};").AppendLine();
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
+            writer.Usings.Append($"using {_clientGenerator.Namespace};").AppendLine();         
             GenerateControllerInternal(srvInfo, writer);
         }
 

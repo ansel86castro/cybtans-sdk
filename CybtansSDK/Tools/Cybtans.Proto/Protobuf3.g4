@@ -215,7 +215,7 @@ field returns[FieldDeclaration node]
     TypeIdentifier typeRef = new TypeIdentifier();
     List<OptionsExpression> options = null;
 }
-    :   ('repeated'{typeRef.IsArray=true;})? type { typeRef.Name=$type.node; } id=Ident '=' number=IntLit ('['fieldOptions{ options=$fieldOptions.value; } ']')? ';'
+    :   ('repeated'{typeRef.IsArray=true;})? type { typeRef.Name=$type.node; } (id=Ident | id = 'message' | id= 'service' | id = 'rpc') '=' number=IntLit ('['fieldOptions{ options=$fieldOptions.value; } ']')? ';'
         {
             $node = new FieldDeclaration($start, typeRef, $id.text, $number.int, options);
         }

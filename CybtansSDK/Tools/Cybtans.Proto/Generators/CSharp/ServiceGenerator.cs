@@ -73,9 +73,9 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             var writer = CreateWriter(info.Namespace);
            
-            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
-            writer.Usings.Append("using System.Collections.Generic;").AppendLine();
+            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();                       
+
+            writer.Usings.AppendLine().Append($"using mds = global::{_typeGenerator.Namespace};").AppendLine();
 
             var clsWriter = writer.Class;
 
@@ -115,7 +115,7 @@ namespace Cybtans.Proto.Generators.CSharp
                     bodyWriter.Append("/// </summary>").AppendLine();
                 }
 
-                bodyWriter.Append($"{returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")});");
+                bodyWriter.Append($"{returnInfo.GetFullReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetFullRequestTypeName("request")});");
                 bodyWriter.AppendLine();
                 bodyWriter.AppendLine();
             }
@@ -133,25 +133,33 @@ namespace Cybtans.Proto.Generators.CSharp
       
         private void GenerateGrpsProxy(ServiceGenInfo info)
         {
-            var writer = CreateWriter(info.Namespace);
+            var ns = _option.ImplementationNamespace  ?? $"{Proto.Option.Namespace}.Services";
+
+            var writer = CreateWriter(ns);
          
-            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();            
-            writer.Usings.Append("using System.Collections.Generic;").AppendLine();       
-            writer.Usings.Append("using Grpc.Core;").AppendLine(); 
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
+            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();                             
+            writer.Usings.Append("using Grpc.Core;").AppendLine();
+            writer.Usings.Append("using Microsoft.Extensions.Logging;").AppendLine();                       
+
+            if (_option.ImplementationNamespace != _option.Namespace)
+            {
+                writer.Usings.Append($"using {info.Namespace};").AppendLine();
+            }
 
             var proxyName = GetImplementationName(info.Service);
             var interfaceName = GetInterfaceName(info.Service);
 
-
             var clsWriter = writer.Class;
+
+            writer.Usings.Append($"using mds = global::{_typeGenerator.Namespace};").AppendLine();
 
             if (_option.AutoRegisterImplementation)
             {
                 writer.Usings.Append("using Cybtans.Services;").AppendLine();
                 clsWriter.Append($"[RegisterDependency(typeof({ interfaceName}))]").AppendLine();
             }
-            
+
+
             clsWriter.Append("public");
 
             if (_option.PartialClass)
@@ -168,13 +176,13 @@ namespace Cybtans.Proto.Generators.CSharp
 
             var grpcClientType = $"{Proto.Option.Namespace}.{info.Name}.{info.Name}Client";
 
-            bodyWriter.Append($"private readonly {grpcClientType}  _client;").AppendLine()                   
+            bodyWriter.Append($"private readonly global::{grpcClientType}  _client;").AppendLine()                   
                       .Append($"private readonly ILogger<{proxyName}> _logger;").AppendLine()
                       .AppendLine();
 
             #region Constructor
 
-            bodyWriter.Append($"public {proxyName}({grpcClientType} client, ILogger<{proxyName}> logger)").AppendLine();
+            bodyWriter.Append($"public {proxyName}(global::{grpcClientType} client, ILogger<{proxyName}> logger)").AppendLine();
             bodyWriter.Append("{").AppendLine();
             bodyWriter.Append('\t', 1).Append("_client = client;").AppendLine();         
             bodyWriter.Append('\t', 1).Append("_logger = logger;").AppendLine();
@@ -186,14 +194,11 @@ namespace Cybtans.Proto.Generators.CSharp
             {
                 var returnInfo = rpc.ResponseType;
                 var requestInfo = rpc.RequestType;
-                var rpcName = GetRpcName(rpc);             
-
-                var requestTypeName = requestInfo.GetTypeName();
-                var returnTypeName = returnInfo.GetTypeName();             
+                var rpcName = GetRpcName(rpc);                                  
 
                 bodyWriter.AppendLine();
               
-                bodyWriter.Append($"public async {returnInfo.GetReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetRequestTypeName("request")})").AppendLine();
+                bodyWriter.Append($"public async {returnInfo.GetFullReturnTypeName()} { GetRpcName(rpc)}({requestInfo.GetFullRequestTypeName("request")})").AppendLine();
                 bodyWriter.Append("{").AppendLine().Append('\t', 1);
 
                 var methodWriter = bodyWriter.Block($"METHODBODY_{rpc.Name}");
@@ -218,7 +223,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.Append("}").AppendLine();
 
-            writer.Save(proxyName);
+            writer.SaveTo(_option.ImplementationOutput, proxyName);
         }
 
       

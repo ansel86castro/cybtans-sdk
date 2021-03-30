@@ -57,7 +57,11 @@ namespace Cybtans.Proto.Generator
                 ServiceOptions = ast.HaveServices ? new ServiceGeneratorOptions()
                 {
                     OutputPath = Path.Combine(config.Path, step.Services?.Output ?? $"{step.Output}/{config.Service}.Services/Generated"),
-                    Namespace = step.Services?.Namespace,                   
+                    Namespace = step.Services?.Namespace,   
+                    NameTemplate = step.Services?.NameTemplate,
+                    AutoRegisterImplementation = step.Services?.Grpc?.AutoRegister ?? false,   
+                    ImplementationNamespace = step.Services?.Grpc?.Namespace,
+                    ImplementationOutput = Path.Combine(config.Path, step.Services?.Grpc.Output ?? $"{step.Output}/{config.Service}.Services/Generated")
                 } : null,                
             };
 

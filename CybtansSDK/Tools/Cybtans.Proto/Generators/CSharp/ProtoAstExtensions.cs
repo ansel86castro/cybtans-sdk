@@ -96,6 +96,18 @@ namespace Cybtans.Proto.Generators.CSharp
             }
         }
 
+        public static string GetFullReturnTypeName(this ITypeDeclaration type)
+        {
+            if (PrimitiveType.Void.Equals(type))
+            {
+                return "Task";
+            }
+            else
+            {
+                return $"Task<mds::{type.GetTypeName()}>";
+            }
+        }
+
         public static string GetControllerReturnTypeName(this ITypeDeclaration type)
         {
             if (PrimitiveType.Void.Equals(type))
@@ -105,10 +117,10 @@ namespace Cybtans.Proto.Generators.CSharp
             else if (type.HasStreams())
             {
                 return "async Task<IActionResult>";
-            }
+            }            
             else
             {
-                return $"Task<{type.GetTypeName()}>";
+                return $"Task<mds::{type.GetTypeName()}>";
             }
         }
 
@@ -124,6 +136,23 @@ namespace Cybtans.Proto.Generators.CSharp
                 return $"{type.GetTypeName()} {name}";
             }
         }
+
+        public static string GetFullRequestTypeName(this ITypeDeclaration type, string name)
+        {
+            if (PrimitiveType.Void.Equals(type))
+            {
+                return "";
+            }
+            else if (type is MessageDeclaration)
+            {
+                return $"mds::{type.GetTypeName()} {name}";
+            }
+            else
+            {                
+                return $"{type.GetTypeName()} {name}";
+            }
+        }
+        
 
         //public static bool HasStreams(this ITypeDeclaration type)
         //{

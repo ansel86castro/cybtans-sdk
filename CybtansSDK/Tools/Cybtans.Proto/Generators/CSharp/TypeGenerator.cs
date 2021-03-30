@@ -54,7 +54,7 @@ namespace Cybtans.Proto.Generators.CSharp
      
         private void GenerateMessage(MessageClassInfo info)
         {
-            var writer = CreateWriter(info.Namespace);
+            var writer = CreateWriter(Namespace);
 
             var clsWriter = writer.Class;
             var usingWriter = writer.Usings;
