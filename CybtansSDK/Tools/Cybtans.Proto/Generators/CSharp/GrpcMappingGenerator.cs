@@ -62,7 +62,7 @@ namespace Cybtans.Proto.Generators.CSharp
             if (!typesMap.Any())
                 return;
 
-            var ns = _option.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Services";
+            var ns = _option.ImplementationNamespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Services";           
             var modelNs = _modelOptions.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Models";
 
             var writer = CreateWriter(ns);
@@ -72,6 +72,10 @@ namespace Cybtans.Proto.Generators.CSharp
             writer.Usings.Append($"using {modelNs};").AppendLine();
             writer.Usings.Append("using System.Collections.Generic;").AppendLine();
             writer.Usings.Append("using System.Linq;").AppendLine();
+
+            writer.Usings.AppendLine().Append($"using mds = global::{modelNs};").AppendLine();
+
+
             var clsWriter = writer.Class;
 
             clsWriter.Append("public static class GrpcMappingExtensions").AppendLine().Append("{").AppendLine();
@@ -95,7 +99,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.Append("}").AppendLine();
 
-            writer.Save($"GrpcMappingExtensions");
+            writer.SaveTo(_option.ImplementationOutput, $"GrpcMappingExtensions");
 
         }
 
@@ -105,14 +109,14 @@ namespace Cybtans.Proto.Generators.CSharp
             var typeName = type.GetTypeName();
             var grpcTypeName = $"{proto.Option.Namespace}.{type.GetProtobufName()}";
 
-            writer.Append($"public static {grpcTypeName} ToProtobufModel(this {typeName} model)")
+            writer.Append($"public static global::{grpcTypeName} ToProtobufModel(this mds::{typeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
 
-            var bodyWriter = writer.Block($"ToProtobufModel_{typeName}_BODY");
+            var bodyWriter = writer.Block($"ToProtobufModel_{type.Name}_BODY");
 
             bodyWriter.Append($"if(model == null) return null;").AppendLine(2);
 
-            bodyWriter.Append($"{grpcTypeName} result = new {grpcTypeName}();").AppendLine();
+            bodyWriter.Append($"global::{grpcTypeName} result = new global::{grpcTypeName}();").AppendLine();
 
             foreach (var field in type.Fields)
             {
@@ -155,14 +159,14 @@ namespace Cybtans.Proto.Generators.CSharp
             var typeName = type.GetTypeName();
             var grpcTypeName = $"{proto.Option.Namespace}.{type.GetProtobufName()}";
 
-            writer.Append($"public static {typeName} ToPocoModel(this {grpcTypeName} model)")
+            writer.Append($"public static mds::{typeName} ToPocoModel(this global::{grpcTypeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
 
             var bodyWriter = writer.Block($"ToPocoModel_{typeName}_BODY");
 
             bodyWriter.Append($"if(model == null) return null;").AppendLine(2);
 
-            bodyWriter.Append($"{typeName} result = new {typeName}();").AppendLine();
+            bodyWriter.Append($"mds::{typeName} result = new mds::{typeName}();").AppendLine();
 
             foreach (var field in type.Fields)
             {

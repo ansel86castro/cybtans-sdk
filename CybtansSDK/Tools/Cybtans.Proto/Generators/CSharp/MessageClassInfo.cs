@@ -18,7 +18,7 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             this._msg = msg;
             Name = msg.Name.Pascal();
-            Namespace = $"{proto.Option.Namespace}.{outputOption.Namespace ?? "Models"}";            
+            Namespace = outputOption.Namespace ?? $"{proto.Option.Namespace ?? proto.Filename.Pascal()}.Models";
             _fields = new SortedList<string, MessageFieldInfo>();
             foreach (var item in msg.Fields.Select(x => new MessageFieldInfo(x)))
             {

@@ -1,0 +1,26 @@
+{
+  "Service": "Cybtans.Tests.Grpc",
+  "Steps": [
+    {
+      "Type": "proto",
+      "ProtoFile": "../Proto/greet.proto",
+      "Models": {
+        "Output": "../Cybtans.Tests.Gateway/Generated/Models",
+        "Namespace": "Cybtans.Tests.Gateway.Models",
+        "UseCytansSerialization": false
+      },
+      "Services": {
+        "Output": "../Cybtans.Tests.Gateway/Generated/Repository/Definitions",
+        "Namespace": "Cybtans.Test.Gateway.Repository.Definition",
+        "Grpc": {
+          "Output": "../Cybtans.Tests.Gateway/Generated/Repository/Implementation",
+          "Namespace": "Cybtans.Test.Gateway.Repository.Implementation",
+          "AutoRegister" :  true
+        }
+      },
+      "Controllers": {
+        "Output": "../Cybtans.Tests.Gateway/Controllers/Grpc"       
+      }      
+    }
+  ]
+}

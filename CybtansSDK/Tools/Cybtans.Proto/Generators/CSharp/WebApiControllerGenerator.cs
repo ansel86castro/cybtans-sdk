@@ -38,7 +38,7 @@ namespace Cybtans.Proto.Generators.CSharp
             var writer = CreateWriter(_option.Namespace ?? $"{Proto.Option.Namespace ?? Proto.Filename.Pascal()}.Controllers");
 
             writer.Usings.Append($"using {_serviceGenerator.Namespace};").AppendLine();
-            writer.Usings.Append($"using {_typeGenerator.Namespace};").AppendLine();
+          
             GenerateControllerInternal(srvInfo, writer);
         }
 
@@ -58,8 +58,10 @@ namespace Cybtans.Proto.Generators.CSharp
             if (srvInfo.Service.Rpcs.Any(x => x.RequestType.HasStreams() || x.ResponseType.HasStreams() ))
             {
                 writer.Usings.Append("using Cybtans.AspNetCore;").AppendLine();
-            }    
-            
+            }
+
+            writer.Usings.AppendLine().Append($"using mds = global::{_typeGenerator.Namespace};").AppendLine();            
+
             var clsWriter = writer.Class;
 
             if (srv.Option.RequiredAuthorization || srv.Option.AllowAnonymous ||
@@ -130,7 +132,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
                 bodyWriter.Append($"public {response.GetControllerReturnTypeName()} {rpcName}").Append("(");
                 var parametersWriter = bodyWriter.Block($"PARAMS_{rpc.Name}");
-                bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetRequestTypeName("__request")})").AppendLine()
+                bodyWriter.Append($"{GetRequestBinding(options.Method, request)}{request.GetFullRequestTypeName("__request")})").AppendLine()
                     .Append("{").AppendLine()
                     .Append('\t', 1);
 

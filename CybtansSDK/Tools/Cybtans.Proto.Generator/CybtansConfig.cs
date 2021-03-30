@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cybtans.Proto.Generators.CSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -61,7 +62,7 @@ namespace Cybtans.Proto.Generator
 
         public CSharpModelGenerationOption Models { get; set; }
 
-        public CSharpStepOption Services { get; set; }
+        public CSharpServiceGenerationOption Services { get; set; }
 
         public CSharpStepOption CSharpClients { get; set; }
 
@@ -95,6 +96,19 @@ namespace Cybtans.Proto.Generator
     public class CSharpModelGenerationOption : CSharpStepOption
     {
         public bool UseCytansSerialization { get; set; } = true;
+    }
+
+    public class CSharpServiceGenerationOption: CSharpStepOption
+    {
+        public string? NameTemplate { get; set; }
+
+        public GrpcProxy Grpc { get; set; }
+        
+        public class GrpcProxy: CSharpStepOption
+        {
+            public bool AutoRegister { get; set; }
+         
+        }
     }
 
     public class StepClientOptions : StepOption

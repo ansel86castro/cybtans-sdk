@@ -623,6 +623,7 @@ message GetAllRequest {
                      ReadOnlyServiceImpTemplate,
                     new
                     {
+                        SERVICE_NAME = $"I{type.Name}Service",
                         ENTITIES_NAMESPACE = ns,
                         SERVICE = options.ServiceName,
                         ENTITY = type.Name,
