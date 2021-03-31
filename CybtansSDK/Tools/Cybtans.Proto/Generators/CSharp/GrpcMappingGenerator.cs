@@ -203,13 +203,17 @@ namespace Cybtans.Proto.Generators.CSharp
 
         private string ConvertToGrpc(string fieldName, ITypeDeclaration fieldType)
         {
-            if (PrimitiveType.Datetime.Equals(fieldType))
+            if (PrimitiveType.TimeStamp == fieldType)
+            {
+                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName}.Value): null";
+            }
+            else if(PrimitiveType.Datetime == fieldType)
             {
                 return $"Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName})";
             }
-            else if (PrimitiveType.Duration.Equals(fieldType))
+            else if (PrimitiveType.Duration == fieldType)
             {
-                return $"Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan({fieldName})";
+                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan({fieldName}.Value): null";
             }
             else if (PrimitiveType.String.Equals(fieldType))
             {                
@@ -234,11 +238,11 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             if (PrimitiveType.Datetime.Equals(fieldType))
             {
-                return $"{fieldName}.ToDateTime()";
+                return $"{fieldName}?.ToDateTime()";
             }
             else if (PrimitiveType.Duration.Equals(fieldType))
             {
-                return $"{fieldName}.ToTimeSpan()";
+                return $"{fieldName}?.ToTimeSpan()";
             }
             else if (fieldType is MessageDeclaration)
             {

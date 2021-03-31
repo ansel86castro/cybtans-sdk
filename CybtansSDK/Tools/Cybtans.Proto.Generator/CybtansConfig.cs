@@ -76,14 +76,20 @@ namespace Cybtans.Proto.Generator
 
         #region Message Generator
         public string AssemblyFile { get; set; }
+
         public string[] Imports { get;  set; }
+
+        public GrpcCompatibility? Grpc { get; set; } = new GrpcCompatibility();       
+        
         #endregion
     }
 
     
     public class StepOption
     {
-        public string Output { get; set; }        
+        public string Output { get; set; }       
+        
+        public bool ClearOutput { get; set; }
     }
 
     public class CSharpStepOption : StepOption
@@ -116,6 +122,18 @@ namespace Cybtans.Proto.Generator
         public string Framework { get; set; }
 
         public Dictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
+    }
+
+    public class GrpcCompatibility
+    {
+        public bool Enable { get; set; }
+
+        public string MappingOutput { get; set; }
+
+        public string MappingNamespace { get; set; }
+
+        public string GrpcNamespace { get; set; }
+
     }
 
 

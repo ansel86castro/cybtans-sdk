@@ -35,6 +35,10 @@ namespace Cybtans.Proto.Generator
 
             public string[] Imports { get; set; }
 
+            public GrpcCompatibility? Grpc { get; set; } = new GrpcCompatibility();
+
+            public string? NameTemplate { get; set; }
+
             public bool IsValid()
             {
                 return !string.IsNullOrEmpty(AssemblyFilename)
@@ -181,8 +185,9 @@ namespace Cybtans.Proto.Generator
                 Imports = step.Imports,
                 ServiceName = config.Service,
                 ServiceDirectory = Path.Combine(config.Path, step.Output),
+                Grpc = step.Grpc                
             };
-
+            
             GenerateProto(options);
 
             return true;
@@ -228,6 +233,12 @@ namespace Cybtans.Proto.Generator
                 codeWriter.Append($"package {options.ServiceName};").AppendLine(2);
             }
 
+            if (options.Grpc.Enable)
+            {
+                codeWriter.Append("import \"google/protobuf/timestamp.proto\";");
+                codeWriter.Append("import \"google/protobuf/duration.proto\";");
+            }
+
             if(options.Imports!= null)
             {
                 foreach (var import in options.Imports)
@@ -254,7 +265,7 @@ namespace Cybtans.Proto.Generator
                 }
                 else if(type.IsClass && !type.IsAbstract)
                 {                                        
-                    GenerateMessage(type, codeWriter, generated, new HashSet<Type>());
+                    GenerateMessage(type, codeWriter, generated, new HashSet<Type>(), options);
                 }
             }
 
@@ -262,9 +273,14 @@ namespace Cybtans.Proto.Generator
             if (!string.IsNullOrEmpty(path) && path != "." && path != "..")
             {
                 Directory.CreateDirectory(path);
-            }
+            }           
 
             GenerateServices(codeWriter, generated, options);
+
+            if(options.Grpc.MappingOutput != null)
+            {
+                GenerateGrpcMapping(generated, options.Grpc);
+            }
 
             File.WriteAllText(outputFilename, codeWriter.ToString());
             return generated;
@@ -320,7 +336,7 @@ namespace Cybtans.Proto.Generator
             codeWriter.AppendLine(2);
         }
 
-        private void GenerateMessage(Type type, CodeWriter codeWriter, HashSet<Type> generated, HashSet<Type> visited)
+        private void GenerateMessage(Type type, CodeWriter codeWriter, HashSet<Type> generated, HashSet<Type> visited, GenerationOptions options)
         {
             var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
             if (attr == null || generated.Contains(type))
@@ -404,7 +420,10 @@ namespace Cybtans.Proto.Generator
 
                 codeWriter.Append($"{GetTypeName(propertyType)} {p.Name.Camel()} = {counter++}");
 
-                AppendOptions(codeWriter, p, optional);
+                if (!options.Grpc.Enable)
+                {
+                    AppendOptions(codeWriter, p, optional);
+                }
 
                 codeWriter.Append(";");
                 codeWriter.AppendLine();
@@ -422,7 +441,7 @@ namespace Cybtans.Proto.Generator
             {
                 if (t.IsClass)
                 {
-                    GenerateMessage(t, codeWriter, generated, new HashSet<Type>(visited));
+                    GenerateMessage(t, codeWriter, generated, new HashSet<Type>(visited), options);
                 }
                 else if (t.IsEnum)
                 {
@@ -525,6 +544,223 @@ namespace Cybtans.Proto.Generator
                 SecurityType.AllowAnonymous => $"option anonymous = true;",               
                 _ => throw new NotImplementedException()
             };
+        }
+
+
+        #region Mapping
+
+        public void GenerateGrpcMapping(HashSet<Type> types, GrpcCompatibility options)
+        {
+            if (options.GrpcNamespace == null)
+            {
+                throw new InvalidOperationException("GrpcNamespace not defined in cybtans.json");
+            }
+
+            if(options.MappingNamespace == null)
+            {
+                throw new InvalidOperationException("MappingNamespace not defined in cybtans.json");
+            }                        
+
+            var writer = new CsFileWriter(options.MappingNamespace, options.MappingOutput);
+
+            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();            
+            writer.Usings.Append("using System.Collections.Generic;").AppendLine();
+            writer.Usings.Append("using System.Linq;").AppendLine();         
+
+            var clsWriter = writer.Class;
+
+            clsWriter.Append("public static class GrpcMappingExtensions").AppendLine().Append("{").AppendLine();
+            clsWriter.Append('\t', 1);
+
+            var bodyWriter = clsWriter.Block("BODY");
+
+            foreach (var type in types)
+            {
+                if (type.IsClass && !type.IsAbstract)
+                {
+                    GenerateModelToProtobufMapping(type, bodyWriter, options);
+
+                    GenerateProtobufToPocoMapping(type, bodyWriter, options);
+                }
+            }
+
+            clsWriter.Append("}").AppendLine();
+
+            writer.Save("GrpcMappingExtensions");
+    
+        }
+
+        private void GenerateModelToProtobufMapping(Type type, CodeWriter writer, GrpcCompatibility options)
+        {            
+            var typeName = type.FullName;
+            var grpcTypeName = $"{options.GrpcNamespace}.{type.Name}";
+
+            writer.Append($"public static global::{grpcTypeName} ToProtobufModel(global::{typeName} model)")
+                .AppendLine().Append("{").AppendLine().Append('\t', 1);
+
+            var bodyWriter = writer.Block($"ToProtobufModel_{type.Name}_BODY");
+
+            bodyWriter.Append($"if(model == null) return null;").AppendLine(2);
+
+            bodyWriter.Append($"global::{grpcTypeName} result = new global::{grpcTypeName}();").AppendLine();
+
+            foreach (var field in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                var fieldName = field.Name;
+                var fieldType = field.PropertyType;
+
+                bool isArray = IsArray(fieldType, out var elementType);
+                if (isArray)
+                {
+                    bodyWriter.Append($"if(model.{fieldName} != null) ");
+
+                    var selector = ConvertToGrpc("x", fieldType, options);
+                    if (selector == "x")
+                    {
+                        bodyWriter.Append($"result.{fieldName}.AddRange(model.{fieldName});").AppendLine();
+                    }
+                    else
+                    {
+                        bodyWriter.Append($"result.{fieldName}.AddRange(model.{fieldName}.Select(x => {selector} ));").AppendLine();
+                    }
+                }               
+                else
+                {
+                    var path = ConvertToGrpc($"model.{fieldName}", fieldType, options);
+                    bodyWriter.Append($"result.{fieldName} = {path};").AppendLine();
+                }
+            }
+
+            bodyWriter.Append("return result;").AppendLine();
+
+            writer.Append("}").AppendLine(2);
+        }
+
+        private void GenerateProtobufToPocoMapping(Type type, CodeWriter writer, GrpcCompatibility options)
+        {           
+            var typeName = type.FullName;
+            var grpcTypeName = $"{options.GrpcNamespace}.{type.Name}";
+
+            writer.Append($"public static {typeName} ToPocoModel(this global::{grpcTypeName} model)")
+                .AppendLine().Append("{").AppendLine().Append('\t', 1);
+
+            var bodyWriter = writer.Block($"ToPocoModel_{type.Name}_BODY");
+
+            bodyWriter.Append($"if(model == null) return null;").AppendLine(2);
+
+            bodyWriter.Append($"global::{typeName} result = new global::{typeName}();").AppendLine();
+
+            foreach (var field in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                var fieldName = field.Name;
+                var fieldType = field.PropertyType;
+
+                bool isArray = IsArray(fieldType, out var elementType);
+
+                if (isArray)
+                {
+                    var selector = ConvertToRest("x", fieldType, options);
+                    if (selector == "x")
+                    {
+                        bodyWriter.Append($"result.{fieldName} = model.{fieldName}.ToList();").AppendLine();
+                    }
+                    else
+                    {
+                        bodyWriter.Append($"result.{fieldName} = model.{fieldName}.Select(x => {selector}).ToList();").AppendLine();
+                    }
+                }
+                else
+                {
+                    var path = ConvertToRest($"model.{fieldName}", fieldType, options);
+                    bodyWriter.Append($"result.{fieldName} = {path};").AppendLine();
+                }
+            }
+
+            bodyWriter.Append("return result;").AppendLine();
+
+            writer.Append("}").AppendLine(2);
+        }
+
+        private string ConvertToGrpc(string fieldName ,Type type, GrpcCompatibility options)
+        {
+            if (type == typeof(DateTime))
+            {
+                return $"Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName})";
+            }
+            else if(type == typeof(DateTime?))
+            {
+                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName}.Value): null";
+            }
+            else if (type == typeof(TimeSpan?))
+            {
+                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan({fieldName}.Value)";
+            }
+            else if(type == typeof(TimeSpan))
+            {
+                return $"Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan({fieldName})";
+            }
+            else if (type == typeof(string))
+            {
+                return $"{fieldName} ?? string.Empty";
+            }
+            else if (type.IsClass)
+            {
+                return $"ToProtobufModel({fieldName})";
+            }
+            else if (type.IsEnum)
+            {
+                var grpcTypeName = $"global::{options.GrpcNamespace}.{type.Name}";
+                return $"({grpcTypeName})(int){fieldName}";
+            }
+            else
+            {
+                return fieldName;
+            }
+        }
+
+        private string ConvertToRest(string fieldName, Type type, GrpcCompatibility options)
+        {
+            if (type == typeof(DateTime))
+            {
+                return $"{fieldName}?.ToDateTime()";
+            }
+            else if (type == typeof(TimeSpan))
+            {
+                return $"{fieldName}?.ToTimeSpan()";
+            }
+            else if (type.IsClass && type != typeof(string))
+            {
+                return $"ToPocoModel({fieldName})";
+            }
+            else if (type.IsEnum)
+            {
+                return $"({type.FullName})(int){fieldName}";
+            }
+            else
+            {
+                return fieldName;
+            }
+        }
+
+        #endregion
+
+        private static bool IsArray(Type propertyType, out Type elementType)
+        {
+            bool repeated = false;
+            elementType = null;
+
+            if (propertyType.IsArray && propertyType != typeof(byte[]))
+            {
+                elementType = propertyType.GetElementType();
+                repeated = true;
+            }
+            else if (propertyType.IsGenericType && typeof(ICollection<>).IsAssignableFrom(propertyType.GetGenericTypeDefinition()))
+            {
+                elementType = propertyType.GetGenericArguments()[0];
+                repeated = true;
+            }
+
+            return repeated;
         }
       
         private static PropertyInfo GetKey(Type type)
