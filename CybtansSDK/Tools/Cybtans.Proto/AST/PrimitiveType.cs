@@ -87,13 +87,18 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(bool)) return Bool;
             else if (type == typeof(string)) return String;
             else if (type == typeof(byte[])) return Bytes;
-            else if (type == typeof(DateTime)) return TimeStamp;
+            else if (type == typeof(DateTime)) return Datetime;
             else if (type == typeof(TimeSpan)) return Duration;
             else if (type == typeof(object)) return Object;
             else if (type == typeof(void)) return Empty;
             else if (type == typeof(Dictionary<,>)) return Map;
             else if (type == typeof(decimal)) return Decimal;
-            else if (type == typeof(Stream)) return Stream;
+            else if (type == typeof(Stream)) return Stream;            
+            else if (type == typeof(int?)) return Int32Value;
+            else if (type == typeof(uint?)) return UInt32Value;
+            else if (type == typeof(long?)) return Int64Value;
+            else if (type == typeof(ulong?)) return UInt64Value;            
+
             else return null;
         }
 

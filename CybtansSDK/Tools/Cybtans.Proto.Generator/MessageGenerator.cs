@@ -187,6 +187,11 @@ namespace Cybtans.Proto.Generator
                 ServiceDirectory = Path.Combine(config.Path, step.Output),
                 Grpc = step.Grpc                
             };
+
+            if (options.Grpc.MappingOutput != null)
+            {
+                options.Grpc.MappingOutput = Path.Combine(config.Path, options.Grpc.MappingOutput);
+            }
             
             GenerateProto(options);
 
@@ -208,8 +213,17 @@ namespace Cybtans.Proto.Generator
 
         #region Proto Generation
 
-        private string GetTypeName(Type type)
+        private string GetTypeName(Type type, GenerationOptions options)
         {
+            if (options.Grpc.Enable)
+            {
+                if (type == typeof(DateTime) || type == typeof(DateTime?))
+                    return PrimitiveType.TimeStamp.Name;
+
+                if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
+                    return PrimitiveType.Duration.Name;
+            }
+
             if (type.IsEnum)
                 return type.Name.Pascal();
 
@@ -217,15 +231,23 @@ namespace Cybtans.Proto.Generator
             if (primitive != null)
                 return primitive.Name;
 
+            return GetMessageName(type);
+        }
+
+        private string GetMessageName(Type type)
+        {            
             var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
             return attr?.Name ?? (type.Name.Pascal() + "Dto");
         }
+
 
         private HashSet<Type> GenerateMessages(GenerationOptions options, IEnumerable<Type> types)
         {
             string outputFilename = options.ProtoOutputFilename;            
 
             CodeWriter codeWriter = new CodeWriter();
+            codeWriter.Append(CodeWriter.Header).AppendLine(2);
+
             codeWriter.Append("syntax = \"proto3\";").AppendLine(2);
 
             if (options.GenerateCode)
@@ -235,8 +257,10 @@ namespace Cybtans.Proto.Generator
 
             if (options.Grpc.Enable)
             {
-                codeWriter.Append("import \"google/protobuf/timestamp.proto\";");
-                codeWriter.Append("import \"google/protobuf/duration.proto\";");
+                codeWriter.Append($"option csharp_namespace = \"{options.Grpc.GrpcNamespace}\";").AppendLine(2);
+
+                codeWriter.Append("import \"google/protobuf/timestamp.proto\";").AppendLine();
+                codeWriter.Append("import \"google/protobuf/duration.proto\";").AppendLine(2);
             }
 
             if(options.Imports!= null)
@@ -273,11 +297,13 @@ namespace Cybtans.Proto.Generator
             if (!string.IsNullOrEmpty(path) && path != "." && path != "..")
             {
                 Directory.CreateDirectory(path);
-            }           
+            }
 
-            GenerateServices(codeWriter, generated, options);
-
-            if(options.Grpc.MappingOutput != null)
+            if (!options.Grpc.Enable)
+            {
+                GenerateServices(codeWriter, generated, options);
+            }
+            else if(options.Grpc.MappingOutput != null)
             {
                 GenerateGrpcMapping(generated, options.Grpc);
             }
@@ -345,7 +371,7 @@ namespace Cybtans.Proto.Generator
             generated.Add(type);
             visited.Add(type);
 
-            codeWriter.Append($"message { GetTypeName(type) } {{");
+            codeWriter.Append($"message { GetTypeName(type, options) } {{");
             codeWriter.AppendLine();
 
             bool hasMessageOptions = false;
@@ -418,7 +444,7 @@ namespace Cybtans.Proto.Generator
                     codeWriter.Append("repeated ");
                 }
 
-                codeWriter.Append($"{GetTypeName(propertyType)} {p.Name.Camel()} = {counter++}");
+                codeWriter.Append($"{GetTypeName(propertyType, options)} {p.Name.Camel()} = {counter++}");
 
                 if (!options.Grpc.Enable)
                 {
@@ -510,9 +536,9 @@ namespace Cybtans.Proto.Generator
                     {
                         SERVICE_NAME = $"I{type.Name.Pascal()}Service",
                         ENTITY = type.Name.Pascal(),
-                        ID_TYPE = GetTypeName(IdProp.PropertyType),
+                        ID_TYPE = GetTypeName(IdProp.PropertyType, options),
                         ID = IdProp.Name.Camel(),
-                        ENTITYDTO = GetTypeName(type),
+                        ENTITYDTO = GetTypeName(type, options),
                         READ_POLICY = GetSecurity(attr.Security, attr.AllowedRead ?? $"{ type.Name.ToLowerInvariant()}.read"),                       
                     }));
                 }
@@ -522,9 +548,9 @@ namespace Cybtans.Proto.Generator
                     {
                         SERVICE_NAME = $"I{type.Name.Pascal()}Service",
                         ENTITY = type.Name.Pascal(),
-                        ID_TYPE = GetTypeName(IdProp.PropertyType),
+                        ID_TYPE = GetTypeName(IdProp.PropertyType, options),
                         ID = IdProp.Name.Camel(),
-                        ENTITYDTO = GetTypeName(type),
+                        ENTITYDTO = GetTypeName(type, options),
                         READ_POLICY = GetSecurity(attr.Security, attr.AllowedRead ?? $"{ type.Name.ToLowerInvariant()}.read"),
                         WRITE_POLICY = GetSecurity(attr.Security, attr.AllowedWrite ?? $"{ type.Name.ToLowerInvariant()}.write")
                     }));
@@ -562,8 +588,7 @@ namespace Cybtans.Proto.Generator
             }                        
 
             var writer = new CsFileWriter(options.MappingNamespace, options.MappingOutput);
-
-            writer.Usings.Append("using System.Threading.Tasks;").AppendLine();            
+                     
             writer.Usings.Append("using System.Collections.Generic;").AppendLine();
             writer.Usings.Append("using System.Linq;").AppendLine();         
 
@@ -586,16 +611,16 @@ namespace Cybtans.Proto.Generator
 
             clsWriter.Append("}").AppendLine();
 
-            writer.Save("GrpcMappingExtensions");
+            writer.Save("ProtobufMappingExtensions");
     
         }
 
         private void GenerateModelToProtobufMapping(Type type, CodeWriter writer, GrpcCompatibility options)
         {            
             var typeName = type.FullName;
-            var grpcTypeName = $"{options.GrpcNamespace}.{type.Name}";
+            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type)}";
 
-            writer.Append($"public static global::{grpcTypeName} ToProtobufModel(global::{typeName} model)")
+            writer.Append($"public static global::{grpcTypeName} ToProtobufModel(this global::{typeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
 
             var bodyWriter = writer.Block($"ToProtobufModel_{type.Name}_BODY");
@@ -639,7 +664,7 @@ namespace Cybtans.Proto.Generator
         private void GenerateProtobufToPocoMapping(Type type, CodeWriter writer, GrpcCompatibility options)
         {           
             var typeName = type.FullName;
-            var grpcTypeName = $"{options.GrpcNamespace}.{type.Name}";
+            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type)}";
 
             writer.Append($"public static {typeName} ToPocoModel(this global::{grpcTypeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
@@ -659,7 +684,7 @@ namespace Cybtans.Proto.Generator
 
                 if (isArray)
                 {
-                    var selector = ConvertToRest("x", fieldType, options);
+                    var selector = ConvertToRest("x", elementType, options);
                     if (selector == "x")
                     {
                         bodyWriter.Append($"result.{fieldName} = model.{fieldName}.ToList();").AppendLine();
@@ -711,9 +736,21 @@ namespace Cybtans.Proto.Generator
             {
                 var grpcTypeName = $"global::{options.GrpcNamespace}.{type.Name}";
                 return $"({grpcTypeName})(int){fieldName}";
-            }
+            }            
             else
             {
+               type = Nullable.GetUnderlyingType(type);
+                if(type != null)
+                {
+                    if (type.IsEnum)
+                    {
+                        var grpcTypeName = $"global::{options.GrpcNamespace}.{type.Name}";
+                        return $"({grpcTypeName})(int)({fieldName} ?? 0)";
+                    }
+
+                    return $"{fieldName} ?? default({type.Name})";
+                }
+
                 return fieldName;
             }
         }
@@ -722,7 +759,15 @@ namespace Cybtans.Proto.Generator
         {
             if (type == typeof(DateTime))
             {
+                return $"{fieldName}?.ToDateTime() ?? default(global::System.DateTime)";
+            }
+            else if (type == typeof(DateTime?))
+            {
                 return $"{fieldName}?.ToDateTime()";
+            }
+            else if (type == typeof(TimeSpan))
+            {
+                return $"{fieldName}?.ToTimeSpan() ?? default(global::System.TimeSpan)";
             }
             else if (type == typeof(TimeSpan))
             {
@@ -738,6 +783,16 @@ namespace Cybtans.Proto.Generator
             }
             else
             {
+                type = Nullable.GetUnderlyingType(type);
+                if (type != null)
+                {
+                    if (type.IsEnum)
+                    {                      
+                        return $"(global::{type.FullName})(int)({fieldName})";
+                    }
+                    
+                }
+
                 return fieldName;
             }
         }
@@ -817,8 +872,8 @@ message GetAllRequest {
                     continue;
 
                 writer.AppendLine();
-                writer.Append($"CreateMap<{type.Name}, {GetTypeName(type)}>();").AppendLine();
-                writer.Append($"CreateMap<{GetTypeName(type)},{type.Name}>();").AppendLine();
+                writer.Append($"CreateMap<{type.Name}, {GetTypeName(type, options)}>();").AppendLine();
+                writer.Append($"CreateMap<{GetTypeName(type, options)},{type.Name}>();").AppendLine();
             }
 
             File.WriteAllText($"{options.GetMappingOutputPath()}/GeneratedAutoMapperProfile.cs", 
@@ -864,7 +919,7 @@ message GetAllRequest {
                         SERVICE = options.ServiceName,
                         ENTITY = type.Name,
                         TKEY = primitiveType.GetPrimitiveTypeName(),
-                        TMESSAGE = GetTypeName(type)
+                        TMESSAGE = GetTypeName(type, options)
                     }));
 
             }

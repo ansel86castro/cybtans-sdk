@@ -35,7 +35,6 @@ namespace Cybtans.Proto.Generators.CSharp
         {
             Dictionary<MessageDeclaration, RpcTypeInfo> typesMap = new Dictionary<MessageDeclaration, RpcTypeInfo>();
 
-
             foreach (var proto in _protos)
             {
                 var types = proto.Declarations
@@ -99,7 +98,7 @@ namespace Cybtans.Proto.Generators.CSharp
 
             clsWriter.Append("}").AppendLine();
 
-            writer.SaveTo(_option.ImplementationOutput, $"GrpcMappingExtensions");
+            writer.SaveTo(_option.ImplementationOutput, $"ProtobufMappingExtensions");
 
         }
 
