@@ -66,8 +66,8 @@ namespace Cybtans.Proto.Generators.CSharp
                 case "guid": return "Guid";
                 case "decimal": return "decimal";
                 case "ByteStream": return "System.IO.Stream";
-                case "google.protobuf.Timestamp": return "DateTime";
-                case "google.protobuf.Duration": return "TimeSpan";
+                case "google.protobuf.Timestamp": return "DateTime?";
+                case "google.protobuf.Duration": return "TimeSpan?";
                 case "google.protobuf.Empty": return "void";
                 case "google.protobuf.BoolValue": return "bool?";
                 case "google.protobuf.DoubleValue": return "double?";
