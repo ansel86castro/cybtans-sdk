@@ -225,7 +225,7 @@ namespace Cybtans.Proto.Generators.CSharp
             else if(fieldType is EnumDeclaration e)
             {
                 var grpcTypeName = $"{Proto.Option.Namespace}.{e.GetProtobufName()}";
-                return $"({grpcTypeName})(int){fieldName}";
+                return $"({grpcTypeName}){fieldName}";
             }
             else
             {
@@ -249,7 +249,7 @@ namespace Cybtans.Proto.Generators.CSharp
             }
             else if (fieldType is EnumDeclaration)
             {
-                return $"({fieldType.GetTypeName()})(int){fieldName}";
+                return $"({fieldType.GetTypeName()}){fieldName}";
             }
             else
             {

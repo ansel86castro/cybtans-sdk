@@ -27,7 +27,7 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType Guid = new PrimitiveType("guid", typeof(Guid));
         public static readonly PrimitiveType Decimal = new PrimitiveType("decimal", typeof(decimal));
         public static readonly PrimitiveType Stream = new PrimitiveType("ByteStream", typeof(Stream));
-        public static readonly PrimitiveType TimeStamp = new PrimitiveType("google.protobuf.Timestamp", typeof(DateTime));
+        public static readonly PrimitiveType TimeStamp = new PrimitiveType("google.protobuf.Timestamp", typeof(DateTime?));
         public static readonly PrimitiveType Duration = new PrimitiveType("google.protobuf.Duration", typeof(TimeSpan));
         public static readonly PrimitiveType BoolValue = new PrimitiveType("google.protobuf.BoolValue", typeof(bool?));
         public static readonly PrimitiveType DoubleValue = new PrimitiveType("google.protobuf.DoubleValue", typeof(double?));
@@ -37,7 +37,7 @@ namespace Cybtans.Proto.AST
         public static readonly PrimitiveType UInt32Value = new PrimitiveType("google.protobuf.UInt32Value", typeof(uint?));
         public static readonly PrimitiveType UInt64Value = new PrimitiveType("google.protobuf.UInt64Value", typeof(ulong?));
         public static readonly PrimitiveType StringValue = new PrimitiveType("google.protobuf.StringValue", typeof(string));
-        public static readonly PrimitiveType BytesValue = new PrimitiveType("google.protobuf.BytesValue", typeof(byte[]));
+        public static readonly PrimitiveType BytesValue = new PrimitiveType("google.protobuf.BytesValue", typeof(byte[]));        
         public static readonly PrimitiveType Empty = new PrimitiveType("google.protobuf.Empty", typeof(void));
 
         Type _genericDefinition;
@@ -89,6 +89,8 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(byte[])) return Bytes;
             else if (type == typeof(DateTime)) return Datetime;
             else if (type == typeof(TimeSpan)) return Duration;
+            else if (type == typeof(DateTime?)) return TimeStamp;
+            else if (type == typeof(TimeSpan?)) return Duration;
             else if (type == typeof(object)) return Object;
             else if (type == typeof(void)) return Empty;
             else if (type == typeof(Dictionary<,>)) return Map;
@@ -97,7 +99,9 @@ namespace Cybtans.Proto.AST
             else if (type == typeof(int?)) return Int32Value;
             else if (type == typeof(uint?)) return UInt32Value;
             else if (type == typeof(long?)) return Int64Value;
-            else if (type == typeof(ulong?)) return UInt64Value;            
+            else if (type == typeof(ulong?)) return UInt64Value;
+            else if (type == typeof(double?)) return DoubleValue;
+            else if (type == typeof(float?)) return FloatValue;
 
             else return null;
         }

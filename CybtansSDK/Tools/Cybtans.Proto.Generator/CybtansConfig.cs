@@ -81,6 +81,8 @@ namespace Cybtans.Proto.Generator
 
         public GrpcCompatibility? Grpc { get; set; } = new GrpcCompatibility();       
         
+        public string NameTemplate { get; set; }
+
         #endregion
     }
 
