@@ -22,7 +22,7 @@
     },
     "Cybtans.CodeGeneratorConfigs": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\Projects\\Kaplan\\Repos\\KT.CareerJobs.Service\\src\\KT.CareerJobs.Service.Definition"
+      "commandLineArgs": "D:\\Projects\\CybtansSDK\\cybtans-sdk\\CybtansSDK\\Tests"
     }
   }
 }

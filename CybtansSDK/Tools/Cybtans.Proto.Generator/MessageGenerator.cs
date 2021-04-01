@@ -185,7 +185,8 @@ namespace Cybtans.Proto.Generator
                 Imports = step.Imports,
                 ServiceName = config.Service,
                 ServiceDirectory = Path.Combine(config.Path, step.Output),
-                Grpc = step.Grpc                
+                Grpc = step.Grpc,
+                NameTemplate = step.NameTemplate
             };
 
             if (options.Grpc.MappingOutput != null)
@@ -219,9 +220,13 @@ namespace Cybtans.Proto.Generator
             {
                 if (type == typeof(DateTime) || type == typeof(DateTime?))
                     return PrimitiveType.TimeStamp.Name;
-
-                if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
+                else if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
                     return PrimitiveType.Duration.Name;
+                else if (type == typeof(int?)) return PrimitiveType.Int32Value.Name;
+                else if (type == typeof(int?)) return PrimitiveType.Int32Value.Name;
+                else if (type == typeof(uint?)) return PrimitiveType.UInt32Value.Name;
+                else if (type == typeof(long?)) return PrimitiveType.Int64Value.Name;
+                else if (type == typeof(ulong?)) return PrimitiveType.UInt64Value.Name;
             }
 
             if (type.IsEnum)
@@ -231,13 +236,18 @@ namespace Cybtans.Proto.Generator
             if (primitive != null)
                 return primitive.Name;
 
-            return GetMessageName(type);
+            return GetMessageName(type, options.NameTemplate);
         }
 
-        private string GetMessageName(Type type)
-        {            
+        private string GetMessageName(Type type, string template)
+        {
             var attr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
-            return attr?.Name ?? (type.Name.Pascal() + "Dto");
+            if (attr?.Name != null)
+                return attr.Name;
+            else if (template != null)
+                return TemplateProcessor.Process(template, new { Name = type.Name.Pascal() });
+
+            return type.Name.Pascal() + "Dto";
         }
 
 
@@ -305,7 +315,7 @@ namespace Cybtans.Proto.Generator
             }
             else if(options.Grpc.MappingOutput != null)
             {
-                GenerateGrpcMapping(generated, options.Grpc);
+                GenerateGrpcMapping(generated, options);
             }
 
             File.WriteAllText(outputFilename, codeWriter.ToString());
@@ -572,11 +582,22 @@ namespace Cybtans.Proto.Generator
             };
         }
 
+        private bool IsGenerated(Type type)
+        {           
+            var isPrimitive = PrimitiveType.GetPrimitiveType(type) != null;
+            var propertyTypeAttr = type.GetCustomAttribute<GenerateMessageAttribute>(true);
+
+            if (!isPrimitive && !type.IsEnum && propertyTypeAttr == null)
+                return false;
+
+            return true;
+        }
 
         #region Mapping
 
-        public void GenerateGrpcMapping(HashSet<Type> types, GrpcCompatibility options)
+        public void GenerateGrpcMapping(HashSet<Type> types, GenerationOptions generationOptions)
         {
+            var options = generationOptions.Grpc;
             if (options.GrpcNamespace == null)
             {
                 throw new InvalidOperationException("GrpcNamespace not defined in cybtans.json");
@@ -603,9 +624,9 @@ namespace Cybtans.Proto.Generator
             {
                 if (type.IsClass && !type.IsAbstract)
                 {
-                    GenerateModelToProtobufMapping(type, bodyWriter, options);
+                    GenerateModelToProtobufMapping(type, bodyWriter, generationOptions);
 
-                    GenerateProtobufToPocoMapping(type, bodyWriter, options);
+                    GenerateProtobufToPocoMapping(type, bodyWriter, generationOptions);
                 }
             }
 
@@ -615,10 +636,14 @@ namespace Cybtans.Proto.Generator
     
         }
 
-        private void GenerateModelToProtobufMapping(Type type, CodeWriter writer, GrpcCompatibility options)
-        {            
+       
+
+        private void GenerateModelToProtobufMapping(Type type, CodeWriter writer, GenerationOptions generationOptions)
+        {
+            GrpcCompatibility options = generationOptions.Grpc;
+
             var typeName = type.FullName;
-            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type)}";
+            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type, generationOptions.NameTemplate)}";
 
             writer.Append($"public static global::{grpcTypeName} ToProtobufModel(this global::{typeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
@@ -634,23 +659,40 @@ namespace Cybtans.Proto.Generator
                 var fieldName = field.Name;
                 var fieldType = field.PropertyType;
 
-                bool isArray = IsArray(fieldType, out var elementType);
-                if (isArray)
+                if (field.GetCustomAttribute<MessageExcludedAttribute>() != null ||
+                   field.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainTenantEntity") ||
+                   field.DeclaringType.FullName.StartsWith("Cybtans.Entities.TenantEntity"))
+                    continue;
+
+                if (field.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainAuditableEntity") ||
+                    field.DeclaringType.FullName.StartsWith("Cybtans.Entities.AuditableEntity"))
                 {
+                    if (field.Name == "Creator")
+                        continue;
+                }              
+                
+                if (IsArray(fieldType, out var elementType))
+                {
+                    if (!IsGenerated(elementType))
+                        continue;
+
                     bodyWriter.Append($"if(model.{fieldName} != null) ");
 
-                    var selector = ConvertToGrpc("x", fieldType, options);
+                    var selector = ConvertToGrpc("x", elementType, options);
                     if (selector == "x")
                     {
                         bodyWriter.Append($"result.{fieldName}.AddRange(model.{fieldName});").AppendLine();
                     }
                     else
                     {
-                        bodyWriter.Append($"result.{fieldName}.AddRange(model.{fieldName}.Select(x => {selector} ));").AppendLine();
+                        bodyWriter.Append($"result.{fieldName}.AddRange(model.{fieldName}.Select(x => {selector}));").AppendLine();
                     }
                 }               
                 else
                 {
+                    if (!IsGenerated(fieldType))
+                        continue;
+
                     var path = ConvertToGrpc($"model.{fieldName}", fieldType, options);
                     bodyWriter.Append($"result.{fieldName} = {path};").AppendLine();
                 }
@@ -661,10 +703,11 @@ namespace Cybtans.Proto.Generator
             writer.Append("}").AppendLine(2);
         }
 
-        private void GenerateProtobufToPocoMapping(Type type, CodeWriter writer, GrpcCompatibility options)
-        {           
+        private void GenerateProtobufToPocoMapping(Type type, CodeWriter writer, GenerationOptions generationOptions)
+        {
+            GrpcCompatibility options = generationOptions.Grpc;
             var typeName = type.FullName;
-            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type)}";
+            var grpcTypeName = $"{options.GrpcNamespace}.{GetMessageName(type, generationOptions.NameTemplate)}";
 
             writer.Append($"public static {typeName} ToPocoModel(this global::{grpcTypeName} model)")
                 .AppendLine().Append("{").AppendLine().Append('\t', 1);
@@ -680,10 +723,24 @@ namespace Cybtans.Proto.Generator
                 var fieldName = field.Name;
                 var fieldType = field.PropertyType;
 
-                bool isArray = IsArray(fieldType, out var elementType);
+                if (field.GetCustomAttribute<MessageExcludedAttribute>() != null ||
+                   field.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainTenantEntity") ||
+                   field.DeclaringType.FullName.StartsWith("Cybtans.Entities.TenantEntity"))
+                        continue;
 
-                if (isArray)
+                if (field.DeclaringType.FullName.StartsWith("Cybtans.Entities.DomainAuditableEntity") ||
+                    field.DeclaringType.FullName.StartsWith("Cybtans.Entities.AuditableEntity"))
                 {
+                    if (field.Name == "Creator")
+                        continue;
+                }
+                
+
+                if (IsArray(fieldType, out var elementType))
+                {
+                    if (!IsGenerated(elementType))
+                        continue;
+
                     var selector = ConvertToRest("x", elementType, options);
                     if (selector == "x")
                     {
@@ -696,6 +753,9 @@ namespace Cybtans.Proto.Generator
                 }
                 else
                 {
+                    if (!IsGenerated(fieldType))
+                        continue;
+
                     var path = ConvertToRest($"model.{fieldName}", fieldType, options);
                     bodyWriter.Append($"result.{fieldName} = {path};").AppendLine();
                 }
@@ -745,7 +805,7 @@ namespace Cybtans.Proto.Generator
                     if (type.IsEnum)
                     {
                         var grpcTypeName = $"global::{options.GrpcNamespace}.{type.Name}";
-                        return $"({grpcTypeName})(int)({fieldName} ?? 0)";
+                        return $"({grpcTypeName})({fieldName} ?? 0)";
                     }
 
                     return $"{fieldName} ?? default({type.Name})";
@@ -779,7 +839,7 @@ namespace Cybtans.Proto.Generator
             }
             else if (type.IsEnum)
             {
-                return $"({type.FullName})(int){fieldName}";
+                return $"({type.FullName}){fieldName}";
             }
             else
             {

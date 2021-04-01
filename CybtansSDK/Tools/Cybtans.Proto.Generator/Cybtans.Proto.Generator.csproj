@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>cybtans-cli</AssemblyName>
+    <TargetFramework>net5</TargetFramework>
+    <AssemblyName>cybtans-cli5</AssemblyName>
     <StartupObject></StartupObject>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <Nullable>disable</Nullable>    
