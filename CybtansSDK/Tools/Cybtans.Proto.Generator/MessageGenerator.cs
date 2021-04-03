@@ -227,6 +227,8 @@ namespace Cybtans.Proto.Generator
                 else if (type == typeof(uint?)) return PrimitiveType.UInt32Value.Name;
                 else if (type == typeof(long?)) return PrimitiveType.Int64Value.Name;
                 else if (type == typeof(ulong?)) return PrimitiveType.UInt64Value.Name;
+                else if (type == typeof(Guid)) return PrimitiveType.String.Name;
+                else if (type == typeof(Guid?)) return PrimitiveType.StringValue.Name;
             }
 
             if (type.IsEnum)
@@ -770,11 +772,11 @@ namespace Cybtans.Proto.Generator
         {
             if (type == typeof(DateTime))
             {
-                return $"Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName})";
+                return $"Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.SpecifyKind({fieldName}, DateTimeKind.Utc))";
             }
             else if(type == typeof(DateTime?))
             {
-                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime({fieldName}.Value): null";
+                return $"{fieldName}.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.SpecifyKind({fieldName}.Value, DateTimeKind.Utc)): null";
             }
             else if (type == typeof(TimeSpan?))
             {
@@ -787,6 +789,14 @@ namespace Cybtans.Proto.Generator
             else if (type == typeof(string))
             {
                 return $"{fieldName} ?? string.Empty";
+            }
+            else if(type == typeof(Guid))
+            {
+                return $"{fieldName}.ToString()";
+            }
+            else if (type == typeof(Guid?))
+            {
+                return $"{fieldName}?.ToString()";
             }
             else if (type.IsClass)
             {
@@ -836,6 +846,14 @@ namespace Cybtans.Proto.Generator
             else if (type.IsClass && type != typeof(string))
             {
                 return $"ToPocoModel({fieldName})";
+            }
+            else if (type == typeof(Guid))
+            {
+                return $"!string.IsNullOrEmpty({fieldName}) ? Guid.Parse({fieldName}) : Guid.Empty";
+            }
+            else if (type == typeof(Guid?))
+            {
+                return $"!string.IsNullOrEmpty({fieldName}) ?  new Guid?(Guid.Parse({fieldName})) : new Guid?(null)";
             }
             else if (type.IsEnum)
             {
