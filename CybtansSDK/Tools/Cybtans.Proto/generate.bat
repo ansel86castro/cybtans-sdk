@@ -1,1 +1,0 @@
-.\antlr4.bat -Dlanguage=CSharp  -no-listener -no-visitor -o Generated Protobuf3.g4
