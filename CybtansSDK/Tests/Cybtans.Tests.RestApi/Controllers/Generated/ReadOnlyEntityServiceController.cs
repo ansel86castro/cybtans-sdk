@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Services;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -31,17 +29,17 @@ namespace Cybtans.Tests.Controllers
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest __request)
+		public Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 	}
 

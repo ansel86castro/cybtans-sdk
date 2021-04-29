@@ -7,16 +7,13 @@
 //******************************************************
 
 using System;
-using System.Threading.Tasks;
-using Cybtans.Tests.Gateway.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 using mds = global::Cybtans.Tests.Gateway.Models;
 
-namespace Cybtans.Test.Gateway.Repository.Implementation
+namespace Cybtans.Test.Gateway.Services.Implementation
 {
-	public static class GrpcMappingExtensions
+	public static class ProtobufMappingExtensions
 	{
 		public static global::Cybtans.Tests.Grpc.HelloRequest ToProtobufModel(this mds::HelloRequest model)
 		{
@@ -24,6 +21,11 @@ namespace Cybtans.Test.Gateway.Repository.Implementation
 			
 			global::Cybtans.Tests.Grpc.HelloRequest result = new global::Cybtans.Tests.Grpc.HelloRequest();
 			result.Name = model.Name ?? string.Empty;
+			result.Observations = model.Observations;
+			result.Date = model.Date.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.SpecifyKind(model.Date.Value, DateTimeKind.Utc)) : null;
+			result.Data = model.Data != null ? Google.Protobuf.ByteString.CopyFrom(model.Data) : Google.Protobuf.ByteString.Empty;
+			result.NullableInt = model.NullableInt;
+			result.Time = model.Time.HasValue ? Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan(model.Time.Value.TimeOfDay) : null;
 			return result;
 		}
 		
@@ -36,8 +38,10 @@ namespace Cybtans.Test.Gateway.Repository.Implementation
 			result.Keywords = model.Keywords.ToList();
 			result.Info = ToPocoModel(model.Info);
 			result.InfoArray = model.InfoArray.Select(x => ToPocoModel(x)).ToList();
-			result.Date = model.Date;
-			result.Time = model.Time?.ToTimeSpan();
+			result.Date = model.Date?.ToDateTime();
+			result.Time = model.Time != null ? DateTime.UnixEpoch.Add(model.Time.ToTimeSpan()) : new DateTime?();
+			result.Observations = model.Observations;
+			result.NullableInt = model.NullableInt;
 			return result;
 		}
 		
@@ -48,26 +52,26 @@ namespace Cybtans.Test.Gateway.Repository.Implementation
 			mds::HellowInfo result = new mds::HellowInfo();
 			result.Id = model.Id;
 			result.Name = model.Name;
-			result.Type = (HellowInfoType)model.Type;
+			result.Type = (mds::HellowInfo.Types.TypeInfo)model.Type;
 			result.InnerA = ToPocoModel(model.InnerA);
 			return result;
 		}
 		
-		public static mds::HellowInfoInnerA ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA model)
+		public static mds::HellowInfo.Types.InnerA ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA model)
 		{
 			if(model == null) return null;
 			
-			mds::HellowInfoInnerA result = new mds::HellowInfoInnerA();
+			mds::HellowInfo.Types.InnerA result = new mds::HellowInfo.Types.InnerA();
 			result.B = ToPocoModel(model.B);
 			return result;
 		}
 		
-		public static mds::InnerAInnerB ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA.Types.InnerB model)
+		public static mds::HellowInfo.Types.InnerA.Types.InnerB ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA.Types.InnerB model)
 		{
 			if(model == null) return null;
 			
-			mds::InnerAInnerB result = new mds::InnerAInnerB();
-			result.Type = (InnerBType)model.Type;
+			mds::HellowInfo.Types.InnerA.Types.InnerB result = new mds::HellowInfo.Types.InnerA.Types.InnerB();
+			result.Type = (mds::HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB)model.Type;
 			return result;
 		}
 		

@@ -9,12 +9,12 @@ namespace Cybtans.Tests.Integrations
     public class ReadOnlyEntityTest : IClassFixture<IntegrationFixture>
     {
         IntegrationFixture _fixture;        
-        IReadOnlyEntityService _service;
+        IReadOnlyEntityServiceClient _service;
 
         public ReadOnlyEntityTest(IntegrationFixture fixture)
         {
             _fixture = fixture;            
-            _service = fixture.GetClient<IReadOnlyEntityService>();
+            _service = fixture.GetClient<IReadOnlyEntityServiceClient>();
         }
        
         [Fact]
@@ -33,7 +33,7 @@ namespace Cybtans.Tests.Integrations
         {
             await _fixture.CreateTest()
                 .UseRoles("no-admin")
-                .RunAsync<IReadOnlyEntityService>(async service =>
+                .RunAsync<IReadOnlyEntityServiceClient>(async service =>
                 {
                     var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll());
                     Assert.NotNull(exception);

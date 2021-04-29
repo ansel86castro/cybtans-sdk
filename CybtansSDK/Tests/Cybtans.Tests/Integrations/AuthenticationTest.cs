@@ -13,13 +13,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        IAuthenticationService _service;
+        IAuthenticationServiceClient _service;
 
         public AuthenticationTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<IAuthenticationService>();
+            _service = fixture.GetClient<IAuthenticationServiceClient>();
         }
 
         [Fact]

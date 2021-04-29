@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Services;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -29,36 +27,36 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest __request)
+		public Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 		
 		[HttpPost]
-		public Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest __request)
+		public Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
 		{
-			return _service.Create(__request);
+			return _service.Create(request);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest __request)
+		public Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
 		{
-			__request.Id = id;
-			return _service.Update(__request);
+			request.Id = id;
+			return _service.Update(request);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest __request)
+		public Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
 		{
-			__request.Id = id;
-			return _service.Delete(__request);
+			request.Id = id;
+			return _service.Delete(request);
 		}
 	}
 

@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
+using Cybtans.Test.Gateway.Services.Definition;
 using System;
-using Cybtans.Test.Gateway.Repository.Definition;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Gateway.Models;
@@ -29,9 +27,9 @@ namespace Cybtans.Tests.Grpc.Controllers
 		}
 		
 		[HttpGet("hello")]
-		public Task<mds::HelloReply> SayHello([FromQuery]mds::HelloRequest __request)
+		public Task<mds::HelloReply> SayHello([FromQuery]mds::HelloRequest request)
 		{
-			return _service.SayHello(__request);
+			return _service.SayHello(request);
 		}
 	}
 

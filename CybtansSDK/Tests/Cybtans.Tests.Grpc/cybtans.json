@@ -10,17 +10,27 @@
         "UseCytansSerialization": false
       },
       "Services": {
-        "Output": "../Cybtans.Tests.Gateway/Generated/Repository/Definitions",
-        "Namespace": "Cybtans.Test.Gateway.Repository.Definition",
+        "Output": "../Cybtans.Tests.Gateway/Generated/Services/Definitions",
+        "Namespace": "Cybtans.Test.Gateway.Services.Definition",
         "Grpc": {
-          "Output": "../Cybtans.Tests.Gateway/Generated/Repository/Implementation",
-          "Namespace": "Cybtans.Test.Gateway.Repository.Implementation",
-          "AutoRegister" :  true
+          "Output": "../Cybtans.Tests.Gateway/Generated/Services/Implementation",
+          "Namespace": "Cybtans.Test.Gateway.Services.Implementation",
+          "AutoRegister": true
         }
       },
       "Controllers": {
-        "Output": "../Cybtans.Tests.Gateway/Controllers/Grpc"       
-      }      
+        "Output": "../Cybtans.Tests.Gateway/Generated/Controllers"
+      },     
+      "Clients": [
+        {
+          "Output": "../react-app/src/services/grpc",
+          "Framework": "react"
+        },
+        {
+          "Output": "../angular-app/src/app/services/grpc",
+          "Framework": "angular"
+        }
+      ]
     }
   ]
 }

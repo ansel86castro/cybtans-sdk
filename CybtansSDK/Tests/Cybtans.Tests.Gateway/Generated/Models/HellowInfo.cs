@@ -16,10 +16,67 @@ namespace Cybtans.Tests.Gateway.Models
 		
 		public string Name {get; set;}
 		
-		public HellowInfoType Type {get; set;}
+		public Types.TypeInfo Type {get; set;}
 		
-		public HellowInfoInnerA InnerA {get; set;}
+		public Types.InnerA InnerA {get; set;}
 		
+	
+		#region HellowInfo Nested types
+		public static class Types
+		{
+			public class InnerA 
+			{
+				public Types.InnerB B {get; set;}
+				
+				
+				public static implicit operator InnerA(Types.InnerB b)
+				{
+					return new InnerA { B = b };
+				}
+			
+				#region InnerA Nested types
+				public static class Types
+				{
+					public class InnerB 
+					{
+						public Types.TypeB Type {get; set;}
+						
+						
+						public static implicit operator InnerB(Types.TypeB type)
+						{
+							return new InnerB { Type = type };
+						}
+					
+						#region InnerB Nested types
+						public static class Types
+						{
+							public enum TypeB 
+							{
+								A = 0,
+								
+								B = 1,
+								
+							}
+					
+						}
+						#endregion
+					
+					}
+			
+				}
+				#endregion
+			
+			}
+			public enum TypeInfo 
+			{
+				A = 0,
+				
+				B = 1,
+				
+			}
+	
+		}
+		#endregion
 	
 	}
 

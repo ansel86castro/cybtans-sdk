@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Services;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -37,9 +35,9 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Generates an access token")]
 		[HttpPost("login")]
-		public Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest __request)
+		public Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
 		{
-			return _service.Login(__request);
+			return _service.Login(request);
 		}
 	}
 

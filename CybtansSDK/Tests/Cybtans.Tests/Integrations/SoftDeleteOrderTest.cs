@@ -14,13 +14,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        Clients.ISoftDeleteOrderService _service;
+        Clients.ISoftDeleteOrderServiceClient _service;
 
         public SoftDeleteOrderTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<Clients.ISoftDeleteOrderService>();
+            _service = fixture.GetClient<Clients.ISoftDeleteOrderServiceClient>();
         }
 
         private async Task<SoftDeleteOrderDto> CreateOrderInternal()

@@ -23,7 +23,11 @@ namespace Cybtans.Tests.Gateway.Models
 		
 		public DateTime? Date {get; set;}
 		
-		public TimeSpan? Time {get; set;}
+		public DateTime? Time {get; set;}
+		
+		public string Observations {get; set;}
+		
+		public int? NullableInt {get; set;}
 		
 	
 	}

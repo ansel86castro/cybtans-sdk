@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
 </Project>

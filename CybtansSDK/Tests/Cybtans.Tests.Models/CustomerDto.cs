@@ -59,112 +59,115 @@ namespace Cybtans.Tests.Models
 		{
 			return __accesor;
 		}
-	}
 	
+		#region CustomerDto  Accesor
+		public sealed class CustomerDtoAccesor : IReflectorMetadata
+		{
+			public const int Name = 1;
+			public const int FirstLastName = 2;
+			public const int SecondLastName = 3;
+			public const int CustomerProfileId = 4;
+			public const int CustomerProfile = 5;
+			public const int Id = 6;
+			public const int CreateDate = 7;
+			public const int UpdateDate = 8;
+			private readonly int[] _props = new []
+			{
+				Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,Id,CreateDate,UpdateDate
+			};
+			
+			public int[] GetPropertyCodes() => _props;
+			
+			public string GetPropertyName(int propertyCode)
+			{
+			    return propertyCode switch
+			    {
+			       Name => "Name",
+			       FirstLastName => "FirstLastName",
+			       SecondLastName => "SecondLastName",
+			       CustomerProfileId => "CustomerProfileId",
+			       CustomerProfile => "CustomerProfile",
+			       Id => "Id",
+			       CreateDate => "CreateDate",
+			       UpdateDate => "UpdateDate",
+			
+			        _ => throw new InvalidOperationException("property code not supported"),
+			    };
+			}
+			
+			public int GetPropertyCode(string propertyName)
+			{
+			    return propertyName switch
+			    {
+			        "Name" => Name,
+			        "FirstLastName" => FirstLastName,
+			        "SecondLastName" => SecondLastName,
+			        "CustomerProfileId" => CustomerProfileId,
+			        "CustomerProfile" => CustomerProfile,
+			        "Id" => Id,
+			        "CreateDate" => CreateDate,
+			        "UpdateDate" => UpdateDate,
+			
+			        _ => -1,
+			    };
+			}
+			
+			public Type GetPropertyType(int propertyCode)
+			{
+			    return propertyCode switch
+			    {
+			        Name => typeof(string),
+			        FirstLastName => typeof(string),
+			        SecondLastName => typeof(string),
+			        CustomerProfileId => typeof(Guid?),
+			        CustomerProfile => typeof(CustomerProfileDto),
+			        Id => typeof(Guid),
+			        CreateDate => typeof(DateTime?),
+			        UpdateDate => typeof(DateTime?),
+			
+			        _ => throw new InvalidOperationException("property code not supported"),
+			    };
+			}
+			       
+			public object GetValue(object target, int propertyCode)
+			{
+			    CustomerDto obj = (CustomerDto)target;
+			    return propertyCode switch
+			    {
+			        Name => obj.Name,
+			        FirstLastName => obj.FirstLastName,
+			        SecondLastName => obj.SecondLastName,
+			        CustomerProfileId => obj.CustomerProfileId,
+			        CustomerProfile => obj.CustomerProfile,
+			        Id => obj.Id,
+			        CreateDate => obj.CreateDate,
+			        UpdateDate => obj.UpdateDate,
+			
+			        _ => throw new InvalidOperationException("property code not supported"),
+			    };
+			}
+			
+			public void SetValue(object target, int propertyCode, object value)
+			{
+			    CustomerDto obj = (CustomerDto)target;
+			    switch (propertyCode)
+			    {
+			        case Name:  obj.Name = (string)value;break;
+			        case FirstLastName:  obj.FirstLastName = (string)value;break;
+			        case SecondLastName:  obj.SecondLastName = (string)value;break;
+			        case CustomerProfileId:  obj.CustomerProfileId = (Guid?)value;break;
+			        case CustomerProfile:  obj.CustomerProfile = (CustomerProfileDto)value;break;
+			        case Id:  obj.Id = (Guid)value;break;
+			        case CreateDate:  obj.CreateDate = (DateTime?)value;break;
+			        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
+			
+			        default: throw new InvalidOperationException("property code not supported");
+			    }
+			}
+		
+		}
+		#endregion
 	
-	public sealed class CustomerDtoAccesor : IReflectorMetadata
-	{
-		public const int Name = 1;
-		public const int FirstLastName = 2;
-		public const int SecondLastName = 3;
-		public const int CustomerProfileId = 4;
-		public const int CustomerProfile = 5;
-		public const int Id = 6;
-		public const int CreateDate = 7;
-		public const int UpdateDate = 8;
-		private readonly int[] _props = new []
-		{
-			Name,FirstLastName,SecondLastName,CustomerProfileId,CustomerProfile,Id,CreateDate,UpdateDate
-		};
-		
-		public int[] GetPropertyCodes() => _props;
-		
-		public string GetPropertyName(int propertyCode)
-		{
-		    return propertyCode switch
-		    {
-		       Name => "Name",
-		       FirstLastName => "FirstLastName",
-		       SecondLastName => "SecondLastName",
-		       CustomerProfileId => "CustomerProfileId",
-		       CustomerProfile => "CustomerProfile",
-		       Id => "Id",
-		       CreateDate => "CreateDate",
-		       UpdateDate => "UpdateDate",
-		
-		        _ => throw new InvalidOperationException("property code not supported"),
-		    };
-		}
-		
-		public int GetPropertyCode(string propertyName)
-		{
-		    return propertyName switch
-		    {
-		        "Name" => Name,
-		        "FirstLastName" => FirstLastName,
-		        "SecondLastName" => SecondLastName,
-		        "CustomerProfileId" => CustomerProfileId,
-		        "CustomerProfile" => CustomerProfile,
-		        "Id" => Id,
-		        "CreateDate" => CreateDate,
-		        "UpdateDate" => UpdateDate,
-		
-		        _ => -1,
-		    };
-		}
-		
-		public Type GetPropertyType(int propertyCode)
-		{
-		    return propertyCode switch
-		    {
-		        Name => typeof(string),
-		        FirstLastName => typeof(string),
-		        SecondLastName => typeof(string),
-		        CustomerProfileId => typeof(Guid?),
-		        CustomerProfile => typeof(CustomerProfileDto),
-		        Id => typeof(Guid),
-		        CreateDate => typeof(DateTime?),
-		        UpdateDate => typeof(DateTime?),
-		
-		        _ => throw new InvalidOperationException("property code not supported"),
-		    };
-		}
-		       
-		public object GetValue(object target, int propertyCode)
-		{
-		    CustomerDto obj = (CustomerDto)target;
-		    return propertyCode switch
-		    {
-		        Name => obj.Name,
-		        FirstLastName => obj.FirstLastName,
-		        SecondLastName => obj.SecondLastName,
-		        CustomerProfileId => obj.CustomerProfileId,
-		        CustomerProfile => obj.CustomerProfile,
-		        Id => obj.Id,
-		        CreateDate => obj.CreateDate,
-		        UpdateDate => obj.UpdateDate,
-		
-		        _ => throw new InvalidOperationException("property code not supported"),
-		    };
-		}
-		
-		public void SetValue(object target, int propertyCode, object value)
-		{
-		    CustomerDto obj = (CustomerDto)target;
-		    switch (propertyCode)
-		    {
-		        case Name:  obj.Name = (string)value;break;
-		        case FirstLastName:  obj.FirstLastName = (string)value;break;
-		        case SecondLastName:  obj.SecondLastName = (string)value;break;
-		        case CustomerProfileId:  obj.CustomerProfileId = (Guid?)value;break;
-		        case CustomerProfile:  obj.CustomerProfile = (CustomerProfileDto)value;break;
-		        case Id:  obj.Id = (Guid)value;break;
-		        case CreateDate:  obj.CreateDate = (DateTime?)value;break;
-		        case UpdateDate:  obj.UpdateDate = (DateTime?)value;break;
-		
-		        default: throw new InvalidOperationException("property code not supported");
-		    }
-		}
 	
 	}
 

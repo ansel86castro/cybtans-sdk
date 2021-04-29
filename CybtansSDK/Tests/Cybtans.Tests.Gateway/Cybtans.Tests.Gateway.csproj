@@ -29,7 +29,7 @@
   <ItemGroup>		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="3.1.7" />		
-	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />		
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />		
 	<PackageReference Include="RabbitMQ.Client" Version="6.2.1" />		
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
 	<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.5.1" />
@@ -59,6 +59,9 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <Folder Include="Controllers\Tests\" />
+    <Folder Include="Generated\Controllers\" />
+    <Folder Include="Generated\Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

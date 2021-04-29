@@ -30,13 +30,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;        
-        Clients.IOrderService _service;
+        Clients.IOrderServiceClient _service;
 
         public OrdersTests(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<Clients.IOrderService>();
+            _service = fixture.GetClient<Clients.IOrderServiceClient>();
         }
 
         private async Task<OrderDto> CreateOrderInternal()

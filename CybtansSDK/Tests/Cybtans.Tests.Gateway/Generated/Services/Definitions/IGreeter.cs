@@ -6,20 +6,17 @@
 // </auto-generated>
 //******************************************************
 
-using System;
+using System.Threading.Tasks;
 
-namespace Cybtans.Tests.Gateway.Models
+using mds = global::Cybtans.Tests.Gateway.Models;
+
+namespace Cybtans.Test.Gateway.Services.Definition
 {
-	public class InnerAInnerB 
+	public interface IGreeter 
 	{
-		public InnerBType Type {get; set;}
 		
+		Task<mds::HelloReply> SayHello(mds::HelloRequest request);
 		
-		
-		public static implicit operator InnerAInnerB(InnerBType type)
-		{
-			return new InnerAInnerB { Type = type };
-		}
 	}
 
 }

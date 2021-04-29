@@ -4,9 +4,10 @@ option csharp_namespace = "Cybtans.Tests.Grpc";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
-import "cybtans.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
 
-package greet;
+import "cybtans.proto";
 
 // The greeting service definition.
 service Greeter {
@@ -23,6 +24,11 @@ service Greeter {
 // The request message containing the user's name.
 message HelloRequest {
   string name = 1;
+  google.protobuf.StringValue observations = 2;
+  google.protobuf.Timestamp date = 3;
+  bytes data = 4;
+  google.protobuf.Int32Value nullableInt = 5;
+  google.protobuf.Duration time = 6;
 }
 
 // The response message containing the greetings.
@@ -33,16 +39,17 @@ message HelloReply {
   repeated HellowInfo info_array = 4;
   google.protobuf.Timestamp date = 5;
   google.protobuf.Duration time = 6;
-
+  google.protobuf.StringValue observations = 7;
+  google.protobuf.Int32Value nullableInt = 8;
 }
 
 message HellowInfo {
 	int32 id = 1;
 	string name = 2;
-	Type type = 3;	
+	TypeInfo type = 3;	
 	InnerA innerA = 4;
 
-	enum Type{
+	enum TypeInfo{
 		A = 0;
 		B = 1;
 	}
@@ -51,9 +58,9 @@ message HellowInfo {
 		InnerB b = 1;
 
 		message InnerB {			
-			Type type = 1;
+			TypeB type = 1;
 
-			enum Type{
+			enum TypeB{
 				A = 0;
 				B = 1;
 			}

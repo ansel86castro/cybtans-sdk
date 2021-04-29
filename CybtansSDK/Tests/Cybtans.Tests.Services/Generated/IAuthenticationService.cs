@@ -6,7 +6,6 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using System.Threading.Tasks;
 
 using mds = global::Cybtans.Tests.Models;

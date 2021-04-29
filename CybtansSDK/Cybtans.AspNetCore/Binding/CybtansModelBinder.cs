@@ -1,9 +1,11 @@
 ﻿using Cybtans.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System;
+using System.Buffers;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,17 +14,29 @@ using System.Threading.Tasks;
 
 namespace Cybtans.AspNetCore
 {
+    public class CybtansModelBinderOptions
+    {
+        const int Kb = 1024;
+        const int Mb = Kb * Kb;
+
+        public int BufferSize { get; set; } = 80 * Kb;
+        public int MultipartBodyLengthLimit { get; set; } = 128 * Mb;
+    }
+
     public class CybtansModelBinder : IModelBinder
     {
-        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());     
+        static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
+        private CybtansModelBinderOptions _options;
+
+        public CybtansModelBinder(IOptions<CybtansModelBinderOptions> options)
+        {
+            _options = options.Value;
+        }
 
         private async Task<object> DeserializeBinary(Stream source, ModelBindingContext bindingContext)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                await source.CopyToAsync(stream).ConfigureAwait(false);
-                stream.Position = 0;
-
+            using (Stream stream = await GetSafeStream(source).ConfigureAwait(false))
+            {              
                 var obj = Serializer.Value.Deserialize(stream, bindingContext.ModelType);
                 return obj;
             }
@@ -36,7 +50,7 @@ namespace Cybtans.AspNetCore
                 var contentType = MediaTypeHeaderValue.Parse(request.ContentType);
                 if (contentType.MediaType == BinarySerializer.MEDIA_TYPE)
                 {
-                    bindingContext.Result = ModelBindingResult.Success(await DeserializeBinary(request.Body, bindingContext));
+                    bindingContext.Result = ModelBindingResult.Success(await DeserializeBinary(request.Body, bindingContext).ConfigureAwait(false));
                     return;
                 }
                 else if (contentType.MediaType == "multipart/form-data")
@@ -49,7 +63,7 @@ namespace Cybtans.AspNetCore
                     var boundary = HeaderUtilities.RemoveQuotes(contentType.Boundary).Value;
 
                     var reader = new MultipartReader(boundary, request.Body);
-                    var section = await reader.ReadNextSectionAsync();
+                    var section = await reader.ReadNextSectionAsync().ConfigureAwait(false);
 
                     while (section != null)
                     {
@@ -64,19 +78,19 @@ namespace Cybtans.AspNetCore
                             //json body
                             if (contentType?.MediaType == "application/json")
                             {
-                                var json = await section.ReadAsStringAsync();
-                                obj = JsonConvert.DeserializeObject(json, bindingContext.ModelType);
+                                var stream = await GetSafeStream(section.Body).ConfigureAwait(false);
+                                obj = await System.Text.Json.JsonSerializer.DeserializeAsync(stream, bindingContext.ModelType).ConfigureAwait(false);
                             }
                             else if (contentType?.MediaType == BinarySerializer.MEDIA_TYPE)
                             {
-                                obj = await DeserializeBinary(section.Body, bindingContext);
+                                obj = await DeserializeBinary(section.Body, bindingContext).ConfigureAwait(false);
                             }
                             else
                             {
                                 obj ??= Activator.CreateInstance(bindingContext.ModelType);
 
                                 //form value
-                                var sectionValue = await section.AsFormDataSection().GetValueAsync();                                
+                                var sectionValue = await section.AsFormDataSection().GetValueAsync().ConfigureAwait(false);                                
                                 var formReader = new FormReader(sectionValue);
                                 var form = formReader.ReadForm();
 
@@ -98,9 +112,12 @@ namespace Cybtans.AspNetCore
                         }
                         else if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                         {
-                            var stream = new MemoryStream();
-                            await section.AsFileSection().FileStream.CopyToAsync(stream);
-                            stream.Position = 0;
+                            if (!contentDisposition.IsFileDisposition())
+                            {
+                                throw new InvalidDataException($"Form Data must be a file section");
+                            }
+
+                            var stream = await GetSafeStream(section.Body).ConfigureAwait(false);
 
                             if (bindingContext.ModelType == typeof(Stream))
                             {
@@ -108,6 +125,11 @@ namespace Cybtans.AspNetCore
                             }
                             else
                             {
+                                if(contentDisposition.Name.Length == 0)
+                                {
+                                    throw new InvalidDataException($"File section must contains content-diposition name");
+                                }
+
                                 obj ??= Activator.CreateInstance(bindingContext.ModelType);
                                 SetValue(bindingContext, obj, stream, contentDisposition.Name.Value);
                             }
@@ -210,5 +232,34 @@ namespace Cybtans.AspNetCore
                 prop?.PropertySetter(obj, value);
             }
         }
+    
+       
+        private async Task<Stream> GetSafeStream(Stream fs)
+        {
+            var bufferSize = _options.BufferSize;
+            var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
+            {             
+                var stream = new MemoryStream();
+                var memory = buffer.AsMemory(0, bufferSize);
+                for (int bytes = await fs.ReadAsync(memory).ConfigureAwait(false); bytes > 0; bytes = await fs.ReadAsync(memory).ConfigureAwait(false))
+                {
+                    stream.Write(buffer, 0, bytes);
+
+                    if(stream.Length > _options.MultipartBodyLengthLimit)
+                    {
+                        throw new InvalidDataException($"File section exceeds the limit of {_options.MultipartBodyLengthLimit} bytes");
+                    }
+                }                
+                stream.Position = 0;
+                return stream;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+
+         
     }
 }

@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Clients;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -29,36 +27,36 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest __request)
+		public Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 		
 		[HttpPost]
-		public Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest __request)
+		public Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
 		{
-			return _service.Create(__request);
+			return _service.Create(request);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest __request)
+		public Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Update(__request);
+			request.Id = id;
+			return _service.Update(request);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest __request)
+		public Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Delete(__request);
+			request.Id = id;
+			return _service.Delete(request);
 		}
 	}
 

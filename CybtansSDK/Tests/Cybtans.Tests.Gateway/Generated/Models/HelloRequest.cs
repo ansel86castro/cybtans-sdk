@@ -14,12 +14,17 @@ namespace Cybtans.Tests.Gateway.Models
 	{
 		public string Name {get; set;}
 		
+		public string Observations {get; set;}
 		
+		public DateTime? Date {get; set;}
 		
-		public static implicit operator HelloRequest(string name)
-		{
-			return new HelloRequest { Name = name };
-		}
+		public byte[] Data {get; set;}
+		
+		public int? NullableInt {get; set;}
+		
+		public DateTime? Time {get; set;}
+		
+	
 	}
 
 }

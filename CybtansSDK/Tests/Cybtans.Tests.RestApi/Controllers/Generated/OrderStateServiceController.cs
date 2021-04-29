@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Services;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -31,40 +29,40 @@ namespace Cybtans.Tests.Controllers
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest __request)
+		public Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpPost]
-		public Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest __request)
+		public Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
 		{
-			return _service.Create(__request);
+			return _service.Create(request);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpPut("{id}")]
-		public Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest __request)
+		public Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest request)
 		{
-			__request.Id = id;
-			return _service.Update(__request);
+			request.Id = id;
+			return _service.Update(request);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpDelete("{id}")]
-		public Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest __request)
+		public Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)
 		{
-			__request.Id = id;
-			return _service.Delete(__request);
+			request.Id = id;
+			return _service.Delete(request);
 		}
 	}
 

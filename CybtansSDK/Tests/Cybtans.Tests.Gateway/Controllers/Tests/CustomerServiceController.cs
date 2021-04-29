@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Clients;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using mds = global::Cybtans.Tests.Models;
@@ -29,36 +27,36 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllCustomerResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllCustomerResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::CustomerDto> Get(Guid id, [FromQuery]mds::GetCustomerRequest __request)
+		public Task<mds::CustomerDto> Get(Guid id, [FromQuery]mds::GetCustomerRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 		
 		[HttpPost]
-		public Task<mds::CustomerDto> Create([FromBody]mds::CreateCustomerRequest __request)
+		public Task<mds::CustomerDto> Create([FromBody]mds::CreateCustomerRequest request)
 		{
-			return _service.Create(__request);
+			return _service.Create(request);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::CustomerDto> Update(Guid id, [FromBody]mds::UpdateCustomerRequest __request)
+		public Task<mds::CustomerDto> Update(Guid id, [FromBody]mds::UpdateCustomerRequest request)
 		{
-			__request.Id = id;
-			return _service.Update(__request);
+			request.Id = id;
+			return _service.Update(request);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteCustomerRequest __request)
+		public Task Delete(Guid id, [FromQuery]mds::DeleteCustomerRequest request)
 		{
-			__request.Id = id;
-			return _service.Delete(__request);
+			request.Id = id;
+			return _service.Delete(request);
 		}
 	}
 

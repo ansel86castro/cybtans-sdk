@@ -6,7 +6,6 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Refit;
 using Cybtans.Refit;
 using System.Net.Http;

@@ -6,15 +6,14 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using Cybtans.Test.Gateway.Repository.Definition;
+using Cybtans.Test.Gateway.Services.Definition;
 using mds = global::Cybtans.Tests.Gateway.Models;
 using Cybtans.Services;
 
-namespace Cybtans.Test.Gateway.Repository.Implementation
+namespace Cybtans.Test.Gateway.Services.Implementation
 {
 	[RegisterDependency(typeof(IGreeter))]
 	public class Greeter : IGreeter

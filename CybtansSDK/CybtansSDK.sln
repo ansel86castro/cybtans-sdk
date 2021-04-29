@@ -5,14 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Refit", "Cybtans.Refit\Cybtans.Refit.csproj", "{419F80C1-7A33-4FB7-A007-A028BCA61377}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5D6A5BBA-EFB4-46C0-ACEF-FF9166196F1C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto", "Tools\Cybtans.Proto\Cybtans.Proto.csproj", "{06D0DBB0-3488-466B-B3A5-C59F96D761B0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto.Test", "Tools\Cybtans.Proto.Test\Cybtans.Proto.Test.csproj", "{6735CF20-A68B-4D75-A20B-DF0986E18DD4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Proto.Generator", "Tools\Cybtans.Proto.Generator\Cybtans.Proto.Generator.csproj", "{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "Benchmark\Benchmark.csproj", "{5D49E34E-696D-4254-81B5-92112E734125}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AspNetCore", "Cybtans.AspNetCore\Cybtans.AspNetCore.csproj", "{9E3BB74B-9B8A-4B11-92DB-59DF14DE9745}"
@@ -92,7 +84,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Graphics.Tests", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SceneConverter", "Graphics\SceneConverter\SceneConverter.csproj", "{7A05AADD-4265-46F6-BEEC-3276F8775E61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Tests.Grpc", "Tests\Cybtans.Tests.Grpc\Cybtans.Tests.Grpc.csproj", "{A8A95057-A14A-4EB4-A4CE-6814F51D20D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Grpc", "Tests\Cybtans.Tests.Grpc\Cybtans.Tests.Grpc.csproj", "{A8A95057-A14A-4EB4-A4CE-6814F51D20D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.AzureStorage", "Cybtans.AzureStorage\Cybtans.AzureStorage.csproj", "{D282B68A-AFDE-4E74-8869-8A5CFB522512}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,18 +98,6 @@ Global
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{419F80C1-7A33-4FB7-A007-A028BCA61377}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06D0DBB0-3488-466B-B3A5-C59F96D761B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06D0DBB0-3488-466B-B3A5-C59F96D761B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06D0DBB0-3488-466B-B3A5-C59F96D761B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06D0DBB0-3488-466B-B3A5-C59F96D761B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6735CF20-A68B-4D75-A20B-DF0986E18DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6735CF20-A68B-4D75-A20B-DF0986E18DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6735CF20-A68B-4D75-A20B-DF0986E18DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6735CF20-A68B-4D75-A20B-DF0986E18DD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C667D95B-D4F5-4163-BF72-4D5CC865D1B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D49E34E-696D-4254-81B5-92112E734125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5D49E34E-696D-4254-81B5-92112E734125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D49E34E-696D-4254-81B5-92112E734125}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -244,14 +226,15 @@ Global
 		{A8A95057-A14A-4EB4-A4CE-6814F51D20D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8A95057-A14A-4EB4-A4CE-6814F51D20D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8A95057-A14A-4EB4-A4CE-6814F51D20D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D282B68A-AFDE-4E74-8869-8A5CFB522512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D282B68A-AFDE-4E74-8869-8A5CFB522512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D282B68A-AFDE-4E74-8869-8A5CFB522512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D282B68A-AFDE-4E74-8869-8A5CFB522512}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{06D0DBB0-3488-466B-B3A5-C59F96D761B0} = {5D6A5BBA-EFB4-46C0-ACEF-FF9166196F1C}
-		{6735CF20-A68B-4D75-A20B-DF0986E18DD4} = {5D6A5BBA-EFB4-46C0-ACEF-FF9166196F1C}
-		{C667D95B-D4F5-4163-BF72-4D5CC865D1B7} = {5D6A5BBA-EFB4-46C0-ACEF-FF9166196F1C}
 		{BDDE5CC7-DF08-4D8F-A21E-9DDD25035A58} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{60589772-F9CD-4301-B66E-B244A7A1623B} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{34829353-DACF-461F-A68B-C5B077181AE6} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}

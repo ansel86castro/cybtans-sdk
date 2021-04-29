@@ -6,7 +6,6 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using System.ComponentModel;
 
 namespace Cybtans.Tests.Models

@@ -79,23 +79,30 @@ namespace Cybtans.Tests.Services
             {
                 throw new ValidationException().AddError("Image", "Image is required");
             }
-
-            using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
+            try
             {
-                await request.Image.CopyToAsync(fs);
+                using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
+                {
+                    await request.Image.CopyToAsync(fs);
 
-                await fs.FlushAsync();
+                    await fs.FlushAsync();
+                }
+
+                request.Image.Position = 0;
+                var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Image));
+                var checkSum = CryptoService.ToStringX2(hash);
+
+                return new UploadImageResponse
+                {
+                    Url = "http://localhost/image.jpg",
+                    M5checksum = checkSum
+                };
             }
-
-            request.Image.Position = 0;
-            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Image));
-            var checkSum = CryptoService.ToStringX2(hash);
-
-            return new UploadImageResponse
+            catch (Exception e)
             {
-                Url = "http://localhost/image.jpg",
-                M5checksum = checkSum
-            };
+                Logger.LogError(e, e.Message);
+                throw;
+            }
         }
 
         public async Task<UploadStreamResponse> UploadStream(Stream stream)

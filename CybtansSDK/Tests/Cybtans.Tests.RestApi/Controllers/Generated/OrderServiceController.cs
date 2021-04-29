@@ -6,11 +6,9 @@
 // </auto-generated>
 //******************************************************
 
-using System;
 using Cybtans.Tests.Services;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Cybtans.AspNetCore;
 
@@ -65,30 +63,30 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Upload an image to the server")]
 		[HttpPost("upload")]
 		[DisableFormValueModelBinding]
-		public Task<mds::UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]mds::UploadImageRequest __request)
+		public Task<mds::UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]mds::UploadImageRequest request)
 		{
-			return _service.UploadImage(__request);
+			return _service.UploadImage(request);
 		}
 		
 		[HttpPost("{id}/upload")]
 		[DisableFormValueModelBinding]
-		public Task<mds::UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]mds::UploadStreamByIdRequest __request)
+		public Task<mds::UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]mds::UploadStreamByIdRequest request)
 		{
-			__request.Id = id;
-			return _service.UploadStreamById(__request);
+			request.Id = id;
+			return _service.UploadStreamById(request);
 		}
 		
 		[HttpPost("ByteStream")]
 		[DisableFormValueModelBinding]
-		public Task<mds::UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream __request)
+		public Task<mds::UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream request)
 		{
-			return _service.UploadStream(__request);
+			return _service.UploadStream(request);
 		}
 		
 		[HttpGet("download")]
-		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest __request)
+		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request)
 		{
-			var result = await _service.DownloadImage(__request);
+			var result = await _service.DownloadImage(request);
 			
 			 if(Request.Headers.ContainsKey("Accept")
 				&& System.Net.Http.Headers.MediaTypeHeaderValue.TryParse(Request.Headers["Accept"], out var mimeType) && mimeType?.MediaType == "application/x-cybtans")
@@ -99,52 +97,52 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet("{param1}multipath/{param2}")]
-		public Task GetMultiPath(string param1, string param2, [FromQuery]mds::MultiPathRequest __request)
+		public Task GetMultiPath(string param1, string param2, [FromQuery]mds::MultiPathRequest request)
 		{
-			__request.Param1 = param1;
-			__request.Param2 = param2;
-			return _service.GetMultiPath(__request);
+			request.Param1 = param1;
+			request.Param2 = param2;
+			return _service.GetMultiPath(request);
 		}
 		
 		[HttpPost("{orderId}/notify/{userId}")]
-		public Task SendNotification(string orderId, string userId, [FromBody]mds::OrderNotification __request)
+		public Task SendNotification(string orderId, string userId, [FromBody]mds::OrderNotification request)
 		{
-			__request.OrderId = orderId;
-			__request.UserId = userId;
-			return _service.SendNotification(__request);
+			request.OrderId = orderId;
+			request.UserId = userId;
+			return _service.SendNotification(request);
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest __request)
+		public Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(__request);
+			return _service.GetAll(request);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::OrderDto> Get(Guid id, [FromQuery]mds::GetOrderRequest __request)
+		public Task<mds::OrderDto> Get(Guid id, [FromQuery]mds::GetOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Get(__request);
+			request.Id = id;
+			return _service.Get(request);
 		}
 		
 		[HttpPost]
-		public Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest __request)
+		public Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
 		{
-			return _service.Create(__request);
+			return _service.Create(request);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::OrderDto> Update(Guid id, [FromBody]mds::UpdateOrderRequest __request)
+		public Task<mds::OrderDto> Update(Guid id, [FromBody]mds::UpdateOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Update(__request);
+			request.Id = id;
+			return _service.Update(request);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest __request)
+		public Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
 		{
-			__request.Id = id;
-			return _service.Delete(__request);
+			request.Id = id;
+			return _service.Delete(request);
 		}
 	}
 

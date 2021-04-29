@@ -1,4 +1,5 @@
 using Grpc.Core;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,23 +18,30 @@ namespace Cybtans.Tests.Grpc
 
         public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
+            _logger.LogInformation("called SayHellow ({Request})", request);
+
             var response = new HelloReply
             {
                 Message = "Hello " + request.Name,
-                Info = new HellowInfo 
+                Info = new HellowInfo
                 {
-                   
+                    Id = 1,
+                    InnerA = new HellowInfo.Types.InnerA
+                    {
+                        B = new HellowInfo.Types.InnerA.Types.InnerB
+                        {
+                            Type = HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB.B
+                        }
+                    },
+                    Name = "Say Hellow",
+                    Type = HellowInfo.Types.TypeInfo.B
                 },
                 InfoArray = { new HellowInfo[] { new HellowInfo() } },
                 Keywords = { new[] { "", "" } },
-                Date = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.Now),
-                Time = Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan(TimeSpan.FromSeconds(1))
+                Date = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.UtcNow),
+                Time = Google.Protobuf.WellKnownTypes.Duration.FromTimeSpan(TimeSpan.Parse("01:05:00")),                 
             };
-
-            DateTime d = response.Date.ToDateTime();
-            TimeSpan t = response.Time.ToTimeSpan();
-
-            var list = response.Keywords.ToList();
+            
             return Task.FromResult(response);
         }
     }

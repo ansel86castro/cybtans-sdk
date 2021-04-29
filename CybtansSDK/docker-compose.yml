@@ -46,3 +46,10 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
+
+  cybtans.tests.grpc:
+    image: ${DOCKER_REGISTRY-}cybtanstestsgrpc
+    build:
+      context: .
+      dockerfile: Tests/Cybtans.Tests.Grpc/Dockerfile
+
