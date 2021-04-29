@@ -18,14 +18,14 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        Clients.ICustomerEventService _customerEventService;
-        Clients.ICustomerService _service;
+        Clients.ICustomerEventServiceClient _customerEventService;
+        Clients.ICustomerServiceClient _service;
         public CustomerTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _customerEventService = fixture.GetClient<Clients.ICustomerEventService>();
-            _service = fixture.GetClient<Clients.ICustomerService>();
+            _customerEventService = fixture.GetClient<Clients.ICustomerEventServiceClient>();
+            _service = fixture.GetClient<Clients.ICustomerServiceClient>();
         }
 
         [Fact]

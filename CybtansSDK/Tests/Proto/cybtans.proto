@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MethodOptions {  
+
+  //Path template
+  string template = 64001;
+
+  //Http Method (GET, POST, PUT, DELETE)
+  string method = 640002;  
+  
+  //Rpc description string
+  string rpc_description = 640003;
+
+  Security rpc_security = 640004;
+
+  //File stream response options
+  FileStreamOptions file = 640005;
+}
+
+
+message FileStreamOptions {
+
+	//Response content type
+	string contentType = 641001;
+
+	//Response filename
+	string name = 641002;
+}
+
+
+extend google.protobuf.FieldOptions {
+
+  string field_description = 642001;
+  
+  TypescriptOptions ts = 642002;
+
+  bool required = 643003;
+
+  bool optional = 643004;
+}
+
+message TypescriptOptions{
+	//Generates the message as Partial<TMessage> in Typescript
+	bool partial = 643001;
+}
+
+extend google.protobuf.MessageOptions {
+	//Message description string
+   string message_description = 644001;
+}
+
+extend google.protobuf.ServiceOptions {
+	string prefix  = 645001;
+	string service_description = 645002;
+	Security service_security = 645003;
+	bool grpc_proxy = 645004;
+}
+
+message Security {
+	//Allowed access policy  
+  string policy = 646004;
+  
+  //Allowed access roles (admin, customer)
+  string roles = 646005;
+  
+  //Allowed to authorized users only
+  bool authorized = 646007;
+
+  //Allowed anonymous access
+  bool anonymous = 646008;
+}
+
+message ByteStream {
+	// Stream in C#, Blob in javascript
+}

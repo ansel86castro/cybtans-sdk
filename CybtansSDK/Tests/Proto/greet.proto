@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+option csharp_namespace = "Cybtans.Tests.Grpc";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+import "cybtans.proto";
+
+// The greeting service definition.
+service Greeter {
+	option (prefix) = "greeter";
+	option (grpc_proxy) = true;
+
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply){
+	option (template) = "hello"; 
+	option (method) = "GET";		
+  }
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+  google.protobuf.StringValue observations = 2;
+  google.protobuf.Timestamp date = 3;
+  bytes data = 4;
+  google.protobuf.Int32Value nullableInt = 5;
+  google.protobuf.Duration time = 6;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+  repeated string keywords = 2;
+  HellowInfo info = 3;
+  repeated HellowInfo info_array = 4;
+  google.protobuf.Timestamp date = 5;
+  google.protobuf.Duration time = 6;
+  google.protobuf.StringValue observations = 7;
+  google.protobuf.Int32Value nullableInt = 8;
+}
+
+message HellowInfo {
+	int32 id = 1;
+	string name = 2;
+	TypeInfo type = 3;	
+	InnerA innerA = 4;
+
+	enum TypeInfo{
+		A = 0;
+		B = 1;
+	}
+
+	message InnerA {
+		InnerB b = 1;
+
+		message InnerB {			
+			TypeB type = 1;
+
+			enum TypeB{
+				A = 0;
+				B = 1;
+			}
+		}
+	}
+}

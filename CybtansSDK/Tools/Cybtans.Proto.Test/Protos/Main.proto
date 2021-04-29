@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-package Main;
-
-import "./MainService1.proto";
-import "./MainService2.proto";

@@ -1,0 +1,36 @@
+{
+  "Service": "Cybtans.Tests.Grpc",
+  "Steps": [
+    {
+      "Type": "proto",
+      "ProtoFile": "../Proto/greet.proto",
+      "Models": {
+        "Output": "../Cybtans.Tests.Gateway/Generated/Models",
+        "Namespace": "Cybtans.Tests.Gateway.Models",
+        "UseCytansSerialization": false
+      },
+      "Services": {
+        "Output": "../Cybtans.Tests.Gateway/Generated/Services/Definitions",
+        "Namespace": "Cybtans.Test.Gateway.Services.Definition",
+        "Grpc": {
+          "Output": "../Cybtans.Tests.Gateway/Generated/Services/Implementation",
+          "Namespace": "Cybtans.Test.Gateway.Services.Implementation",
+          "AutoRegister": true
+        }
+      },
+      "Controllers": {
+        "Output": "../Cybtans.Tests.Gateway/Generated/Controllers"
+      },     
+      "Clients": [
+        {
+          "Output": "../react-app/src/services/grpc",
+          "Framework": "react"
+        },
+        {
+          "Output": "../angular-app/src/app/services/grpc",
+          "Framework": "angular"
+        }
+      ]
+    }
+  ]
+}

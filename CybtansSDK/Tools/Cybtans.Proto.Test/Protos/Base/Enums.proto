@@ -1,9 +1,0 @@
-﻿syntax = "proto3";
-
-option namespace = "Customer.Enums2";
-
-enum CustomerType {
-	Basic = 0;
-	Standard = 1;
-	Premiun = 2;
-}

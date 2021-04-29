@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Cybtans.AspNetCore;
 using Cybtans.Messaging;
+using Cybtans.Services.Extensions;
 using Cybtans.Tests.Clients;
+using Cybtans.Tests.Grpc;
 using Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +38,7 @@ namespace Cybtans.Tests.Gateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();            
 
             AddSwagger(services);
             AddAuthentication(services);
@@ -55,6 +57,7 @@ namespace Cybtans.Tests.Gateway
                     });
             });
 
+            //Add Rest service Clients
             RegisterClients(services);
 
             services
@@ -70,12 +73,21 @@ namespace Cybtans.Tests.Gateway
             });
 
             #endregion
-
-            #region SignalR
             
+            //Add Signal R
             services.AddSignalR();
 
-            #endregion
+            //Add Grpc clients
+            // This switch must be set before creating the GrpcChannel/HttpClient.
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+            services.AddGrpcClient<Greeter.GreeterClient>(o =>
+            {                
+                o.Address = new Uri(Configuration["GreteerService"]);
+            });
+
+            services.AddCybtansServices(typeof(Startup).Assembly);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,7 +103,7 @@ namespace Cybtans.Tests.Gateway
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cybtans.Test V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cybtans.Test Gateway V1");
                 c.EnableFilter();
                 c.EnableDeepLinking();
                 c.ShowCommonExtensions();

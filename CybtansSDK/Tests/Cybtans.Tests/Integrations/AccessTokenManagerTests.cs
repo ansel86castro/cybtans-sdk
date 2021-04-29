@@ -67,7 +67,7 @@ namespace Cybtans.Tests.Integrations
     {
         private TokenManagerOptions _options;
         AccessTokenManager _tokenManager;
-        IOrderStateService _service;
+        IOrderStateServiceClient _service;
 
         public AccessTokenManagerTests()
         {
@@ -75,10 +75,10 @@ namespace Cybtans.Tests.Integrations
 
             AddTokenManager(services);
 
-            AddClient<IOrderStateService>(services);
+            AddClient<IOrderStateServiceClient>(services);
 
             var provider = services.BuildServiceProvider();
-            _service = provider.GetRequiredService<IOrderStateService>();
+            _service = provider.GetRequiredService<IOrderStateServiceClient>();
         }
 
         private static void AddClient<T>(ServiceCollection services)

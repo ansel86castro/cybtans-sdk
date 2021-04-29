@@ -19,6 +19,7 @@ using System.Data.Common;
 using Cybtans.Tests.Domain.EF;
 using Cybtans.Tests.Domain;
 using Cybtans.Messaging;
+using Cybtans.Tests.Grpc;
 
 namespace Cybtans.Test.RestApi
 {
@@ -119,6 +120,15 @@ namespace Cybtans.Test.RestApi
             services.AddLocalCache();
 
             #endregion
+            //Add Grpc clients
+            // This switch must be set before creating the GrpcChannel/HttpClient.
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+
+            services.AddGrpcClient<Greeter.GreeterClient>(o =>
+            {
+                o.Address = new Uri(Configuration["GreteerService"]);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -139,7 +149,7 @@ namespace Cybtans.Test.RestApi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cybtans.Test V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cybtans.Test API V1");
                 c.EnableFilter();
                 c.EnableDeepLinking();
                 c.ShowCommonExtensions();  

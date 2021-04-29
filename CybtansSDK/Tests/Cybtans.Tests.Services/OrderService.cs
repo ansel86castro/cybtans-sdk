@@ -13,6 +13,10 @@ using System.Diagnostics.Contracts;
 using Cybtans.Services.Security;
 using Cybtans.Tests.Domain;
 using Cybtans.Messaging;
+using AutoMapper.QueryableExtensions;
+using Cybtans.Tests.Grpc;
+using Grpc.Core;
+using SQLitePCL;
 
 namespace Cybtans.Tests.Services
 {
@@ -21,12 +25,30 @@ namespace Cybtans.Tests.Services
         IOrderService
     {
         private IBroadcastService _broadCastService;
+        private readonly Greeter.GreeterClient _greeterClient;
 
         public OrderService(IRepository<Order, Guid> repository, IUnitOfWork uow, IMapper mapper, ILogger<OrderService> logger,
-            IBroadcastService broadCastService)
+            IBroadcastService broadCastService, Cybtans.Tests.Grpc.Greeter.GreeterClient greeterClient)
             : base(repository, uow, mapper, logger) 
         {
             _broadCastService = broadCastService;
+            _greeterClient = greeterClient;
+        }
+
+        public async Task<CustomerDto> SayHelloAsync(OrderDto request)
+        {            
+            try
+            {
+               Logger.LogDebug("Grpc call Cybtans.Tests.Grpc.Greeter.Greeter.SayHelloAsync");
+
+               var response = await _greeterClient.SayHelloAsync(Mapper.Map<OrderDto, Cybtans.Tests.Grpc.HelloRequest>(request));
+               return Mapper.Map<Cybtans.Tests.Grpc.HelloReply, CustomerDto>(response);
+            }
+            catch(RpcException e)
+            {
+                Logger.LogError(e, "Grpc call failed Cybtans.Tests.Grpc.Greeter.Greeter.SayHelloAsync");
+                throw;
+            }
         }
 
         public Task Argument()
@@ -57,23 +79,30 @@ namespace Cybtans.Tests.Services
             {
                 throw new ValidationException().AddError("Image", "Image is required");
             }
-
-            using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
+            try
             {
-                await request.Image.CopyToAsync(fs);
+                using (var fs = new FileStream(request.Name, FileMode.Create, FileAccess.Write))
+                {
+                    await request.Image.CopyToAsync(fs);
 
-                await fs.FlushAsync();
+                    await fs.FlushAsync();
+                }
+
+                request.Image.Position = 0;
+                var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Image));
+                var checkSum = CryptoService.ToStringX2(hash);
+
+                return new UploadImageResponse
+                {
+                    Url = "http://localhost/image.jpg",
+                    M5checksum = checkSum
+                };
             }
-
-            request.Image.Position = 0;
-            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Image));
-            var checkSum = CryptoService.ToStringX2(hash);
-
-            return new UploadImageResponse
+            catch (Exception e)
             {
-                Url = "http://localhost/image.jpg",
-                M5checksum = checkSum
-            };
+                Logger.LogError(e, e.Message);
+                throw;
+            }
         }
 
         public async Task<UploadStreamResponse> UploadStream(Stream stream)

@@ -18,13 +18,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        IOrderStateService _service;
+        IOrderStateServiceClient _service;
 
         public OrderStateTests(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<IOrderStateService>();
+            _service = fixture.GetClient<IOrderStateServiceClient>();
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Cybtans.Tests.Integrations
         {
             await _fixture.CreateTest()
                 .UseRoles("no-admin")
-                .RunAsync<IOrderStateService>(async service =>
+                .RunAsync<IOrderStateServiceClient>(async service =>
                 {
                     var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll());
                     Assert.NotNull(exception);
@@ -78,7 +78,7 @@ namespace Cybtans.Tests.Integrations
 
             await _fixture.CreateTest()
                 .UseService(mockService.Object)
-                .RunAsync<IOrderStateService>(async service =>
+                .RunAsync<IOrderStateServiceClient>(async service =>
                 {
                     var result = await service.Get(1);
                     Assert.NotNull(result);
