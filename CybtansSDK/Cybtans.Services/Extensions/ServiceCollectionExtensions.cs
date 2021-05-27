@@ -85,6 +85,7 @@ namespace Cybtans.Services.Extensions
 
             services.TryAddSingleton<ILockProvider, DistributedLockProvider>();
             return services;
-        }
+        }      
+
     }
 }

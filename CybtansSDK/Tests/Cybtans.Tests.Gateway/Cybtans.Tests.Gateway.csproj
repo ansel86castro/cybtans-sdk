@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>4041874b-d25c-4567-aa14-61cad65579b3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
@@ -28,12 +28,12 @@
 
   <ItemGroup>		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />		
-	<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="3.1.7" />		
+	<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="5.0.6" />		
 	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />		
 	<PackageReference Include="RabbitMQ.Client" Version="6.2.1" />		
-	<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-	<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.5.1" />
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />		
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+	<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.1.4" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />		
   </ItemGroup>
 	
   <ItemGroup>

@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.2.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    <PackageReference Include="FluentValidation" Version="10.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj" />
     <ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
     <ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />

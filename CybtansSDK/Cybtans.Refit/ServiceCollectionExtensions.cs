@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.BaseAddress = new Uri(baseUrl);
                 c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
             })
-            .AddHttpMessageHandler(()=> new HttpClientErrorHandler())
+            .AddHttpMessageHandler(()=> new HttpClientRetryHandler())
             .AddTypedClient(c => RestService.For<T>(c, settings));            
         }
 
@@ -51,7 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.BaseAddress = new Uri(baseUrl);
                 c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
             });
-            builder.AddHttpMessageHandler(() => new HttpClientErrorHandler());
+            builder.AddHttpMessageHandler(() => new HttpClientRetryHandler());
 
             builder.Services.TryAddSingleton(interfaceType, s =>
             {

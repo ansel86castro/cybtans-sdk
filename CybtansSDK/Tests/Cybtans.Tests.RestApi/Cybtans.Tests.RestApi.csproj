@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>c44be5dc-568c-4e61-ba16-231a16732f84</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
@@ -10,18 +10,19 @@
   </PropertyGroup>
      
   <ItemGroup>
-  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
   <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
-  <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-  <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.5.1" />
-  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
-  <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" /> 
-  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-  <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+  <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.1.4" />
+  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
+  <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" /> 
+  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+  <PackageReference Include="FluentValidation.AspNetCore" Version="10.1.0" />
   </ItemGroup>
 
   <ItemGroup>
   	<ProjectReference Include="..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
+  	<ProjectReference Include="..\..\Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Entities.EntityFrameworkCore\Cybtans.Entities.EntityFrameworkCore.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />

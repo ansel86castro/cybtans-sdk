@@ -53,9 +53,8 @@ namespace Cybtans.Tests.Domain.EF
         }
 
         public static DbConnection CreateInMemoryDatabase(string database = "AdventureWorks")
-        {
-            //var connection = new SqliteConnection($"Data Source={database};Mode=Memory;Cache=Shared");
-            var connection = new SqliteConnection($"Data Source =:memory:");
+        {                        
+            var connection = new SqliteConnection(database == null ? "Data Source =:memory:" : $"Data Source={database};Mode=Memory;Cache=Shared");
             connection.Open();
 
             return connection;

@@ -1,43 +1,44 @@
 ﻿using Cybtans.Serialization;
+using Microsoft.IO;
 using Refit;
 using System;
 using System.Buffers;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cybtans.Refit
 {
-    public class CybtansContentSerializer : IContentSerializer
-    {
-        const int MaxBufferSize = 256 * 1024;
+    public class CybtansContentSerializer : IHttpContentSerializer
+    {      
+        const string TAG = "CybtansContentSerializer";
 
         static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());        
         private readonly Encoding _encoding;
         private readonly string _mediaType;
-        private readonly IContentSerializer _defaultSerializer;
-        private readonly ArrayPool<byte> _arrayPool;
-        public CybtansContentSerializer(Encoding encoding, IContentSerializer defaultSerializer)
+        private readonly IHttpContentSerializer _defaultSerializer;      
+        private static readonly RecyclableMemoryStreamManager _streamManager = new RecyclableMemoryStreamManager();
+
+        public CybtansContentSerializer(Encoding encoding, IHttpContentSerializer defaultSerializer)
         {                       
             _encoding = encoding;
             _mediaType = $"{BinarySerializer.MEDIA_TYPE}; charset={_encoding.WebName}";
-            _defaultSerializer = defaultSerializer;
-            _arrayPool = ArrayPool<byte>.Shared;
+            _defaultSerializer = defaultSerializer;            
         }
 
-        public CybtansContentSerializer(IContentSerializer defaultSerializer) : this(BinarySerializer.DefaultEncoding, defaultSerializer) { }
+        public CybtansContentSerializer(IHttpContentSerializer defaultSerializer) : this(BinarySerializer.DefaultEncoding, defaultSerializer) { }
 
         public CybtansContentSerializer() : this(BinarySerializer.DefaultEncoding, new SystemTextJsonContentSerializer()) { }
 
-        public async Task<T> DeserializeAsync<T>(HttpContent content)
+        public async Task<T> FromHttpContentAsync<T>(HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (content.Headers.ContentType != null && content.Headers.ContentType.MediaType != BinarySerializer.MEDIA_TYPE)
-            {
-                var json = await content.ReadAsStringAsync();
-                return await _defaultSerializer.DeserializeAsync<T>(content).ConfigureAwait(false);
+            {                
+                return await _defaultSerializer.FromHttpContentAsync<T>(content, cancellationToken).ConfigureAwait(false);
             }
 
             BinarySerializer serializer;
@@ -54,15 +55,13 @@ namespace Cybtans.Refit
                 serializer = new BinarySerializer(encoding);
             }
 
-            var buffer = content.Headers?.ContentLength != null && content.Headers?.ContentLength <= MaxBufferSize ?
-                _arrayPool.Rent((int)content.Headers?.ContentLength) : 
-                null;
-
-            MemoryStream stream = buffer != null ? new MemoryStream(buffer,0, buffer.Length, true):
-                content.Headers?.ContentLength != null ? new MemoryStream((int)content.Headers.ContentLength) :
-                new MemoryStream();
+            MemoryStream stream = null;
             try
             {
+                stream = content.Headers?.ContentLength != null ?
+                                _streamManager.GetStream("CybtansContentSerializer", (int)content.Headers.ContentLength) :
+                                _streamManager.GetStream("CybtansContentSerializer");
+
                 await content.CopyToAsync(stream);
                 stream.Position = 0;
 
@@ -70,20 +69,16 @@ namespace Cybtans.Refit
             }
             finally
             {
-                if (buffer != null)
-                    _arrayPool.Return(buffer);
-                else
-                {
-                    stream?.Dispose();
-                }
+                stream?.Dispose();
             }
-        }
+        }      
 
-        public Task<HttpContent> SerializeAsync<T>(T item)
+        public HttpContent ToHttpContent<T>(T item)
         {
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
+         
+            using var stream = _streamManager.GetStream();
             
-            using var stream = new MemoryStream();
             serializer.Serialize(stream, item);
             var bytes = stream.ToArray();
 
@@ -91,8 +86,12 @@ namespace Cybtans.Refit
             httpContent.Headers.ContentType = MediaTypeHeaderValue.Parse(_mediaType);
             httpContent.Headers.ContentLength = bytes.Length;
 
-            return Task.FromResult<HttpContent>(httpContent);
+            return httpContent;
         }
-        
+
+        public string GetFieldNameForProperty(PropertyInfo propertyInfo)
+        {
+            return propertyInfo.Name;
+        }
     }
 }

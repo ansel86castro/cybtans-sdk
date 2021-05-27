@@ -71,6 +71,7 @@ namespace Cybtans.Test.RestApi
             .AddRepositories();
 
             services.AddTransient<AdventureContextSeed>();
+            services.AddDatabaseConnectionFactory(o => o.ConnectionFactoryDelegate = () => AdventureContext.CreateInMemoryDatabase("RestAPI"));
 
             #endregion
 

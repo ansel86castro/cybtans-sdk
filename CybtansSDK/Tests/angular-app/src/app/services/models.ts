@@ -347,3 +347,24 @@ export interface OrderNotification {
   orderId?: string|null;
   msg?: string|null;
 }
+
+
+export interface GetAllNamesResponse {
+  items?: OrderNamesDto[]|null;
+}
+
+
+export interface OrderNamesDto {
+  id?: string|null;
+  description?: string|null;
+}
+
+
+export interface GetOrderNameRequest {
+  id?: string|null;
+}
+
+
+export interface CreateOrderNameRequest {
+  name?: string|null;
+}

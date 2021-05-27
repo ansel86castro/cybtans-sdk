@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Cybtans.Entities
 {
+    [Serializable]
     public class EntityException : Exception
     {
         public EntityException() { }
@@ -15,20 +17,45 @@ namespace Cybtans.Entities
         public EntityException(string message, Exception innerException) : base(message, innerException)
         {
         }
-    }
-    public class EntityNotFoundException : EntityException
-    {
-        public IEnumerable<object> Entities { get; set; }
 
-        public EntityNotFoundException(string message) : base(message) { }
-
-        public EntityNotFoundException(string message, IEnumerable<object> entities)
-            : base(message)
+        protected EntityException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            this.Entities = entities;
+
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 
+    [Serializable]
+    public sealed class EntityNotFoundException : EntityException
+    {
+        public EntityNotFoundException()
+        {
+        }
+
+        public EntityNotFoundException(string message) : base(message)
+        {
+        }
+
+        public EntityNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected EntityNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
+    }
+
+    [Serializable]
     public class EntityEventIntegrationException : EntityException
     {
         public IEnumerable<EntityEvent> Events { get; }
@@ -41,6 +68,16 @@ namespace Cybtans.Entities
         public EntityEventIntegrationException(string message, IEnumerable<EntityEvent> events, Exception innerException) : base(message, innerException)
         {
             Events = events;
+        }
+
+        protected EntityEventIntegrationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 }

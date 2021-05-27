@@ -14,7 +14,7 @@ namespace Cybtans.AspNetCore.Migrations
         public static bool IsInKubernetes(this IHost host)
         {
             var cfg = host.Services.GetService<IConfiguration>();
-            var orchestratorType = cfg.GetValue<string>("OrchestratorType");
+            var orchestratorType = cfg["OrchestratorType"];
             return orchestratorType?.ToUpper() == "K8S";
         }
 

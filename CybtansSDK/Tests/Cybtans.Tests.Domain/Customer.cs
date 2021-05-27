@@ -34,4 +34,11 @@ namespace Cybtans.Tests.Domain
         [MessageExcluded]
         public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
+
+    public class CustomerName
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+    }
 }

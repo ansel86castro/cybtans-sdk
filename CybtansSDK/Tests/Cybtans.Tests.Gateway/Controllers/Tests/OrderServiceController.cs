@@ -112,6 +112,25 @@ namespace Cybtans.Tests.Controllers
 			return _service.SendNotification(request);
 		}
 		
+		[HttpGet("names")]
+		public Task<mds::GetAllNamesResponse> GetAllNames()
+		{
+			return _service.GetAllNames();
+		}
+		
+		[HttpGet("names/{id}")]
+		public Task<mds::OrderNamesDto> GetOrderName(string id, [FromQuery]mds::GetOrderNameRequest request)
+		{
+			request.Id = id;
+			return _service.GetOrderName(request);
+		}
+		
+		[HttpPost("names")]
+		public Task<mds::OrderNamesDto> CreateOrderName([FromBody]mds::CreateOrderNameRequest request)
+		{
+			return _service.CreateOrderName(request);
+		}
+		
 		[HttpGet]
 		public Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{

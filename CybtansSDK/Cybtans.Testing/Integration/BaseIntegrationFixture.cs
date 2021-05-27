@@ -264,7 +264,7 @@ namespace Cybtans.Tests.Integrations
         {
             return factory.CreateDefaultClient(
                 new TestHttpClientAuthenticationHandler(),
-                new HttpClientErrorHandler());
+                new HttpClientExceptionHandler());
         }
 
         public static TClient GetClient<TClient, TStartup>(this WebApplicationFactory<TStartup> factory) 

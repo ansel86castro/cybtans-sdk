@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cybtans.Entities
 {
     public enum ReadConsistency
     {
-        Default,
-        Weak,
-        Strong
+        Strong = 0,
+        Weak = 1,
+        Default = Strong
     }
 
     public interface IRepository<T, TKey> :IQueryable<T>
     {
-        IQueryable<T> WithDetails();
+        Task<PagedQuery<T>> GetAllPaginated(
+          int page = 1,
+          int pageSize = 100,
+          bool includeDetails = true,
+          Func<IQueryable<T>, IQueryable<T>> filterFunc = null,
+          Func<IQueryable<T>, IOrderedQueryable<T>> sortFunc = null,          
+          ReadConsistency consistency = ReadConsistency.Default);
 
-        IQueryable<T> WithDetails(params Expression<Func<T, object>>[] propertySelectors);
+        IQueryable<T> GetAll(bool includeDetails = false, ReadConsistency consistency = ReadConsistency.Default);
 
-        IQueryable<T> GetAll(ReadConsistency consistency = ReadConsistency.Default, Expression<Func<T, object>>[] include = null);
-
-        ValueTask<T> Get(TKey key, ReadConsistency consistency = ReadConsistency.Default);
+        ValueTask<T> Get(TKey key, bool includeDetails = false, ReadConsistency consistency = ReadConsistency.Default);
 
         void Update(T item);
 
@@ -37,7 +40,7 @@ namespace Cybtans.Entities
 
         IUnitOfWork UnitOfWork { get; }
 
-        public Task SaveChanges()
+        public Task SaveChangesAsync()
         {
             return UnitOfWork.SaveChangesAsync();
         }
@@ -48,8 +51,4 @@ namespace Cybtans.Entities
 
     }
 
-    public interface IEntityRepository<T>:IRepository<T, Guid>
-    {
-
-    }
 }
