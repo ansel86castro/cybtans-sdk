@@ -19,7 +19,8 @@
         }
       },
       "Controllers": {
-        "Output": "../Cybtans.Tests.Gateway/Generated/Controllers"
+        "Output": "../Cybtans.Tests.Gateway/Generated/Controllers",
+        "UseActionInterceptor" : true
       },     
       "Clients": [
         {

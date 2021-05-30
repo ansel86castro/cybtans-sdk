@@ -39,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
     <ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\Cybtans.Validations\Cybtans.Validations.csproj" />
     <ProjectReference Include="..\..\Graphics\Cybtans.Graphics.Models\Cybtans.Graphics.Models.csproj" />
     <ProjectReference Include="..\..\Graphics\Cybtans.Graphics\Cybtans.Graphics.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj" />
@@ -60,7 +61,6 @@
 	
   <ItemGroup>
     <Folder Include="Controllers\Tests\" />
-    <Folder Include="Generated\Controllers\" />
     <Folder Include="Generated\Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

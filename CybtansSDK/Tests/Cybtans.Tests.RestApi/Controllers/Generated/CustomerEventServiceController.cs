@@ -10,6 +10,7 @@ using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 
@@ -20,43 +21,85 @@ namespace Cybtans.Tests.Controllers
 	public partial class CustomerEventServiceController : ControllerBase
 	{
 		private readonly ICustomerEventService _service;
+		private readonly ILogger<CustomerEventServiceController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
 		
-		public CustomerEventServiceController(ICustomerEventService service)
+		public CustomerEventServiceController(ICustomerEventService service,  ILogger<CustomerEventServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
 		{
 			_service = service;
+			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(GetAll)).ConfigureAwait(false);
+			}
+			
+			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
+		public async Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
 		{
 			request.Id = id;
-			return _service.Get(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Get)).ConfigureAwait(false);
+			}
+			
+			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
 		[HttpPost]
-		public Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
+		public async Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
 		{
-			return _service.Create(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Create)).ConfigureAwait(false);
+			}
+			
+			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
+		public async Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
 		{
 			request.Id = id;
-			return _service.Update(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Update)).ConfigureAwait(false);
+			}
+			
+			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
+		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
 		{
 			request.Id = id;
-			return _service.Delete(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Delete)).ConfigureAwait(false);
+			}
+			
+			await _service.Delete(request).ConfigureAwait(false);
 		}
 	}
 

@@ -588,18 +588,7 @@ namespace Cybtans.Tests.Integrations
             });
 
             Assert.NotNull(result);
-        }
-
-        [Fact(Skip = "Skip")]
-        public async Task CreateOrderName()
-        {
-            var result = await _service.CreateOrderName(new CreateOrderNameRequest
-            {
-                 Name = "CreateOrderName"
-            });
-            
-            Assert.NotNull(result);
-        }
+        }        
 
 
         //[Fact]

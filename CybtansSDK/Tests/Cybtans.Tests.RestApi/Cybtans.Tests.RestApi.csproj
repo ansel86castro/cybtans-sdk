@@ -27,6 +27,7 @@
   	<ProjectReference Include="..\..\Cybtans.Messaging.RabbitMQ\Cybtans.Messaging.RabbitMQ.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
   	<ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
+  	<ProjectReference Include="..\..\Cybtans.Validations\Cybtans.Validations.csproj" />
   	<ProjectReference Include="..\Cybtans.Tests.Domain.EF\Cybtans.Tests.Domain.EF.csproj" />
   	<ProjectReference Include="..\Cybtans.Tests.Domain\Cybtans.Tests.Domain.csproj" />
   	<ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />

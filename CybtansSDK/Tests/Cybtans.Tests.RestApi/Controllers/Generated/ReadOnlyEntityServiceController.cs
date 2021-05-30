@@ -10,6 +10,7 @@ using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,25 +22,44 @@ namespace Cybtans.Tests.Controllers
 	public partial class ReadOnlyEntityServiceController : ControllerBase
 	{
 		private readonly IReadOnlyEntityService _service;
+		private readonly ILogger<ReadOnlyEntityServiceController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
 		
-		public ReadOnlyEntityServiceController(IReadOnlyEntityService service)
+		public ReadOnlyEntityServiceController(IReadOnlyEntityService service,  ILogger<ReadOnlyEntityServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
 		{
 			_service = service;
+			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(GetAll)).ConfigureAwait(false);
+			}
+			
+			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
+		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
 		{
 			request.Id = id;
-			return _service.Get(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Get)).ConfigureAwait(false);
+			}
+			
+			return await _service.Get(request).ConfigureAwait(false);
 		}
 	}
 

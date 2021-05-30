@@ -20,6 +20,8 @@ using Cybtans.Tests.Domain.EF;
 using Cybtans.Tests.Domain;
 using Cybtans.Messaging;
 using Cybtans.Tests.Grpc;
+using Cybtans.AspNetCore.Interceptors;
+using Cybtans.Tests.RestApi;
 
 namespace Cybtans.Test.RestApi
 {
@@ -82,7 +84,7 @@ namespace Cybtans.Test.RestApi
             {
                 options.Filters.Add<HttpResponseExceptionFilter>();
             })
-            .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
+            //.AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
             .AddCybtansFormatter();
             
             #endregion
@@ -96,6 +98,11 @@ namespace Cybtans.Test.RestApi
             services.AddSingleton<EntityEventDelegateHandler<OrderMessageHandler>>();
             services.AddTransient<OrderMessageHandler>();
             services.AddMessageHandler<CustomerEvent, Customer>();
+            services.AddDefaultValidatorProvider(p =>
+            {
+                p.AddValidatorFromAssembly(typeof(TestStub).Assembly);
+            });
+            services.AddSingleton<IActionInterceptor, ValidatorActionInterceptor>();
 
             #endregion
 
@@ -121,6 +128,7 @@ namespace Cybtans.Test.RestApi
             services.AddLocalCache();
 
             #endregion
+          
             //Add Grpc clients
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);

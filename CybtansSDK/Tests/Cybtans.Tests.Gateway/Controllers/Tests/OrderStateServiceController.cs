@@ -10,6 +10,7 @@ using Cybtans.Tests.Clients;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,48 +22,63 @@ namespace Cybtans.Tests.Controllers
 	public partial class OrderStateServiceController : ControllerBase
 	{
 		private readonly IOrderStateServiceClient _service;
+		private readonly ILogger<OrderStateServiceController> _logger;
 		
-		public OrderStateServiceController(IOrderStateServiceClient service)
+		public OrderStateServiceController(IOrderStateServiceClient service,  ILogger<OrderStateServiceController> logger)
 		{
 			_service = service;
+			_logger = logger;
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest request)
+		public async Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest request)
 		{
 			request.Id = id;
-			return _service.Get(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpPost]
-		public Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
+		public async Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
 		{
-			return _service.Create(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
+			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpPut("{id}")]
-		public Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest request)
+		public async Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest request)
 		{
 			request.Id = id;
-			return _service.Update(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
+			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpDelete("{id}")]
-		public Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)
+		public async Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)
 		{
 			request.Id = id;
-			return _service.Delete(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			await _service.Delete(request).ConfigureAwait(false);
 		}
 	}
 

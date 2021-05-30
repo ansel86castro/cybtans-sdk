@@ -54,10 +54,10 @@ namespace Cybtans.Validations
 
         private static Services.ValidationResult ToValidationResult(IEnumerable<ValidationFailure> failures)
         {
-            Services.ValidationResult err = new Services.ValidationResult() { ErrorCode = 400 };
+            Services.ValidationResult err = new Services.ValidationResult("One or more validation errors occurred.") { ErrorCode = 400 };
           
             if (failures?.Any() ?? false)
-            {
+            {                
                 foreach (var item in failures)
                 {
                     err.AddError(item.PropertyName, item.ErrorMessage);                    

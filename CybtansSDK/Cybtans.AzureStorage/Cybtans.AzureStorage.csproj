@@ -2,7 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>    
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>cybtans, services, azure storage</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>
+      IFileStorage implementation with Azure File Storage
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +20,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cybtans.Services\Cybtans.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

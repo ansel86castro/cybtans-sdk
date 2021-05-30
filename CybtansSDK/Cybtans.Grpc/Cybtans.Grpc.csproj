@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageIcon>cybtan.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
+    <PackageTags>cybtans, grpc, exceptions handling, validation</PackageTags>
+    <Authors>Ansel Castro</Authors>
+    <Product>Cybtans SDK</Product>
+    <Description>
+      Grpc Utilities including Exception Handling, Message Validation.
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,4 +25,11 @@
     <ProjectReference Include="..\Cybtans.Validations\Cybtans.Validations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\cybtan.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
 </Project>

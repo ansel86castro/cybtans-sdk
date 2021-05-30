@@ -16,7 +16,7 @@ namespace Cybtans.Tests.Gateway
         {
             var host = CreateHostBuilder(args).Build();
             
-            host.Services.StartBroadCastService();
+            //host.Services.StartBroadCastService();
 
             host.Run();
         }
