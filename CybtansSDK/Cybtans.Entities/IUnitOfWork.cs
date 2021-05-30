@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cybtans.Entities
@@ -15,4 +13,6 @@ namespace Cybtans.Entities
 
         Task<T> ExecuteResilientTransacion<T>(Func<Task<T>> action);
     }
+
+    
 }

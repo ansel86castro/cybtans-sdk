@@ -64,14 +64,13 @@ namespace Cybtans.Messaging.RabbitMQ
 
             try
             {
-                //_publishChannel?.Dispose();
-               // _consumerChannel?.Dispose();
-
-                _connection?.Dispose();                
+                _publishChannel?.Close();
+                _consumerChannel?.Close();
+                _connection?.Close();                
             }
             catch(IOException ex)
             {
-                _logger?.LogCritical(ex, ex.Message);                
+                _logger?.LogError(ex, ex.Message);                
             }            
         }
 
@@ -102,7 +101,7 @@ namespace Cybtans.Messaging.RabbitMQ
 
                 if (_connection == null)
                 {
-                    _logger?.LogCritical("FATAL ERROR: RabbitMQ connections could not be created and opened");
+                    _logger?.LogError("FATAL ERROR: RabbitMQ connections could not be created and opened");
                     throw new QueueConnectionException("RabbitMQ connection is not created");
                 }              
 
@@ -152,8 +151,7 @@ namespace Cybtans.Messaging.RabbitMQ
         }
 
         private void CreateConsumerChannel()
-        {
-           
+        {           
             OpenConnection();
             
             lock (sync_root)
@@ -167,6 +165,11 @@ namespace Cybtans.Messaging.RabbitMQ
                 if (_consumerChannel == null)
                     throw new QueueSubscribeException("RabbitMQ consume channel is not created");
 
+                if (_options.Queue.PrefetchCount != null)
+                {
+                    _consumerChannel.BasicQos(0, _options.Queue.PrefetchCount.Value, false);
+                }
+
                 _consumerChannel.CallbackException += (sender, ea) =>
                 {
                     _logger?.LogWarning(ea.Exception, "Recreating RabbitMQ consumer channel");
@@ -179,7 +182,20 @@ namespace Cybtans.Messaging.RabbitMQ
 
                 try
                 {
-                    _queue = _consumerChannel.QueueDeclare(_options.Queue.Name ?? "", _options.Queue.Durable, _options.Queue.Exclusive, _options.Queue.AutoDelete, null);
+                    Dictionary<string, object>? args = null;
+                    if(_options.Queue.DeadLetterExchange != null)
+                    {
+                        args ??= new Dictionary<string, object>();
+
+                        args["x-dead-letter-exchange"] = _options.Queue.DeadLetterExchange;
+                    }
+
+                    _queue = _consumerChannel.QueueDeclare(_options.Queue.Name ?? "",
+                        _options.Queue.Durable,
+                        _options.Queue.Exclusive, 
+                        _options.Queue.AutoDelete, 
+                        args);
+
                     _queueName = _queue.QueueName;
                     _queueLocked = false;
                 }
@@ -236,7 +252,11 @@ namespace Cybtans.Messaging.RabbitMQ
 
             if (!_consumeExchanges.Contains(exchange))
             {
-                _consumerChannel!.ExchangeDeclare(exchange, type: _options.ExchangeType, durable: _options.Exchange.Durable, autoDelete: _options.Exchange.AutoDelete);
+                _consumerChannel!.ExchangeDeclare(exchange, 
+                    type: _options.ExchangeType, 
+                    durable: _options.Exchange.Durable, 
+                    autoDelete: _options.Exchange.AutoDelete);
+
                 _consumeExchanges.Add(exchange);
             }
         }
@@ -317,7 +337,7 @@ namespace Cybtans.Messaging.RabbitMQ
 
                     _consumerChannel.BasicConsume(
                         queue: _queueName,
-                        autoAck: false,
+                        autoAck: _options.Queue.AutoAck,
                         consumer: _consumer);
                 }
             }
@@ -396,14 +416,14 @@ namespace Cybtans.Messaging.RabbitMQ
 
                     await _subscriptionManager.HandleMessage(exchage, topic, data).ConfigureAwait(false);
                     if (deliveryTag > 0)
-                    {
+                    {                        
                         _consumerChannel?.BasicAck(deliveryTag, multiple: false);
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger?.LogError(ex, ex.Message);
-                    _consumerChannel?.BasicNack(deliveryTag, false, true);
+                    _consumerChannel?.BasicNack(deliveryTag, false, _options.Queue.NackRequeue);
                 }
             });
         }

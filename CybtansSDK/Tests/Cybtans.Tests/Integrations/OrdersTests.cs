@@ -1,5 +1,4 @@
 ﻿using Cybtans.AspNetCore;
-using Cybtans.Entities;
 using Cybtans.Refit;
 using Cybtans.Services;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
@@ -23,6 +22,7 @@ using System.Net.Http.Headers;
 using Cybtans.Services.Security;
 using Cybtans.Tests.Domain.EF;
 using Cybtans.Tests.Domain;
+using Cybtans.Entities.Extensions;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -88,7 +88,7 @@ namespace Cybtans.Tests.Integrations
 
 
         [Fact]
-        public async Task ShouldGetAll()
+        public async Task GetAll()
         {
             var result = await _service.GetAll();
 
@@ -566,6 +566,29 @@ namespace Cybtans.Tests.Integrations
             Assert.True(result.TotalCount > 0);
             Assert.NotEmpty(result.Items);
         }
+
+
+        [Fact]
+        public async Task GetAllNames()
+        {
+            var result = await _service.GetAllNames();
+          
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Items);
+        }
+
+        [Fact]
+        public async Task GetOrderName()
+        {
+            var orders = await _service.GetAllNames();
+
+             var result = await _service.GetOrderName(new GetOrderNameRequest
+            {
+                Id = orders.Items.First().Id
+            });
+
+            Assert.NotNull(result);
+        }        
 
 
         //[Fact]

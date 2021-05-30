@@ -33,11 +33,30 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddUnitOfWork<TDbContext>(this IServiceCollection services)
            where TDbContext : DbContext
         {
-            services.AddScoped<IUnitOfWork>((srvProvicer) =>
+            services.AddScoped<IDbContextUnitOfWork>((srvProvicer) =>
             {
                 var eventPublisher = srvProvicer.GetService<IEntityEventPublisher>();
                 return new EfUnitOfWork(srvProvicer.GetRequiredService<TDbContext>(), eventPublisher);
-            });            
+            });
+
+            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IDbContextUnitOfWork>());
+            return services;
+        }
+
+        public static IServiceCollection AddReadOutUnitOfWork<TDbContext, TReadOnlyContext>(this IServiceCollection services)
+          where TDbContext : DbContext
+          where TReadOnlyContext : DbContext
+        {
+            services.AddScoped<IDbContextUnitOfWork>((srvProvicer) =>
+            {
+                var eventPublisher = srvProvicer.GetService<IEntityEventPublisher>();
+                return new ReadScaleOutUnitOfWork(
+                    srvProvicer.GetRequiredService<TDbContext>(),
+                    srvProvicer.GetRequiredService<TReadOnlyContext>(),
+                    eventPublisher);
+            });
+
+            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<IDbContextUnitOfWork>());
             return services;
         }
 
@@ -45,6 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {            
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+            services.AddScoped(typeof(IEntityRepository<,>), typeof(EfEntityRepository<,>));            
 
             return services;
         }

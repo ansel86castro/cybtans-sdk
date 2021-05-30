@@ -52,6 +52,11 @@ steps:
         dotnet pack ./CybtansSDK/Cybtans.Testing/Cybtans.Testing.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
         dotnet pack ./CybtansSDK/Cybtans.Automation/Cybtans.Automation.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
         dotnet pack ./CybtansSDK/Cybtans.Math/Cybtans.Math.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Validations/Cybtans.Validations.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Entities.Dapper/Cybtans.Entities.Dapper.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.AzureStorage/Cybtans.AzureStorage.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Grpc/Cybtans.Grpc.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Graphics/Cybtans.Graphics.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
   - task: NuGetCommand@2
     displayName: "Publish Packages"

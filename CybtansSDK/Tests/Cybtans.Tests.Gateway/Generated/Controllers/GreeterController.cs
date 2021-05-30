@@ -10,6 +10,7 @@ using Cybtans.Test.Gateway.Services.Definition;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Gateway.Models;
 
@@ -20,16 +21,27 @@ namespace Cybtans.Tests.Grpc.Controllers
 	public partial class GreeterController : ControllerBase
 	{
 		private readonly IGreeter _service;
+		private readonly ILogger<GreeterController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
 		
-		public GreeterController(IGreeter service)
+		public GreeterController(IGreeter service,  ILogger<GreeterController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
 		{
 			_service = service;
+			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
 		[HttpGet("hello")]
-		public Task<mds::HelloReply> SayHello([FromQuery]mds::HelloRequest request)
+		public async Task<mds::HelloReply> SayHello([FromQuery]mds::HelloRequest request)
 		{
-			return _service.SayHello(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(SayHello), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(SayHello)).ConfigureAwait(false);
+			}
+			
+			return await _service.SayHello(request).ConfigureAwait(false);
 		}
 	}
 

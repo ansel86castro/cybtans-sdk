@@ -13,6 +13,8 @@ namespace Cybtans.Tests.Integrations
 {
     public class IntegrationFixture: BaseIntegrationFixture<Startup>
     {
+        private static object @lock = new object();
+
         public EntityEventDelegateHandler<OrderMessageHandler> OrderEvents { get; private set; }
 
         public IntegrationFixture()
@@ -50,12 +52,17 @@ namespace Cybtans.Tests.Integrations
 
             using (var scope = sp.CreateScope())
             {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<AdventureContext>();
 
-                db.Database.EnsureCreated();
+                lock (@lock)
+                {
+                    var scopedServices = scope.ServiceProvider;
+                    var db = scopedServices.GetRequiredService<AdventureContext>();
 
-                RepositoryFixture.Seed(db).Wait();
+                    if (db.Database.EnsureCreated())
+                    {
+                        RepositoryFixture.Seed(db).Wait();
+                    }
+                }
             }
         }        
     }

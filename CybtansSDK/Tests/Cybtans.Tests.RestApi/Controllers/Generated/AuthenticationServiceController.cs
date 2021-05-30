@@ -10,6 +10,7 @@ using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 
@@ -24,10 +25,14 @@ namespace Cybtans.Tests.Controllers
 	public partial class AuthenticationServiceController : ControllerBase
 	{
 		private readonly IAuthenticationService _service;
+		private readonly ILogger<AuthenticationServiceController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
 		
-		public AuthenticationServiceController(IAuthenticationService service)
+		public AuthenticationServiceController(IAuthenticationService service,  ILogger<AuthenticationServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
 		{
 			_service = service;
+			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
 		/// <summary>
@@ -35,9 +40,16 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Generates an access token")]
 		[HttpPost("login")]
-		public Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
+		public async Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
 		{
-			return _service.Login(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request, nameof(Login)).ConfigureAwait(false);
+			}
+			
+			return await _service.Login(request).ConfigureAwait(false);
 		}
 	}
 

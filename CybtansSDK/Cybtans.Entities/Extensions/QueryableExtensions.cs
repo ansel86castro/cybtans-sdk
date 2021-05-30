@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Cybtans.Entities
+namespace Cybtans.Entities.Extensions
 {
 
     public static class QueryableExtensions
-    {       
+    {
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> query)
         {
             if (IAsyncQueryExecutioner.Executioner == null)
@@ -25,7 +25,7 @@ namespace Cybtans.Entities
             if (IAsyncQueryExecutioner.Executioner == null)
                 return Task.FromResult(query.First());
 
-            return IAsyncQueryExecutioner.Executioner.FirstAsync(query);            
+            return IAsyncQueryExecutioner.Executioner.FirstAsync(query);
         }
 
         public static Task<T> FirstOrDefaultAsync<T>(this IQueryable<T> query)
@@ -213,20 +213,20 @@ namespace Cybtans.Entities
         }
 
         public static PagedQuery<T> PageBy<T>(this IQueryable<T> source, int count, int skip = 0, int take = 50)
-        {            
+        {
             return new PagedQuery<T>(
-                query: source.Skip(skip).Take(take), 
-                page:  skip / take, 
+                query: source.Skip(skip).Take(take),
+                page: skip / take,
                 totalPages: count / take + (count % take == 0 ? 0 : 1),
                 totalCount: count);
-        }      
+        }
 
         public static async Task<PagedQuery<T>> PageBy<T>(this IQueryable<T> source, Func<IQueryable<T>, IQueryable<T>> filter, int skip = 0, int take = 50)
         {
             source = filter(source);
             var count = await source.CountAsync();
-            return PageBy(source, count, skip, take);
-            
+            return source.PageBy(count, skip, take);
+
         }
 
 
@@ -279,7 +279,7 @@ namespace Cybtans.Entities
             return IAsyncQueryExecutioner.Executioner.ToDictionaryAsync(query, keySelector);
         }
 
-        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<T, TKey, TElement>(this IQueryable<T> query, Func<T, TKey> keySelector, Func<T, TElement> elementSelector , CancellationToken cancellationToken = default)
+        public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<T, TKey, TElement>(this IQueryable<T> query, Func<T, TKey> keySelector, Func<T, TElement> elementSelector, CancellationToken cancellationToken = default)
         {
             if (IAsyncQueryExecutioner.Executioner == null)
                 return Task.FromResult(query.ToDictionary(keySelector, elementSelector));

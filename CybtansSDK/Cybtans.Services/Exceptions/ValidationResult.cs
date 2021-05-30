@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cybtans.Services
 {
 
     public class ValidationResult:ErrorInfo
     {        
-        public Dictionary<string, List<string>> Errors { get; private set; }
+        public Dictionary<string, List<string>> Errors { get; set; }
 
         public ValidationResult()
         {
@@ -30,9 +26,12 @@ namespace Cybtans.Services
         { 
             if(!Errors.TryGetValue(member, out var list))
             {
-                Errors.Add(member, new List<string>());
+                list = new List<string>();
+                Errors.Add(member, list);
             }
-            Errors[member].Add(error);            
+
+            list.Add(error);            
+
             return this;
         }
 

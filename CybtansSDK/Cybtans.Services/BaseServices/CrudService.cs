@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Cybtans.Entities;
 using Cybtans.Serialization;
-using Cybtans.Expressions;
 using System;
 
 namespace Cybtans.Services
@@ -101,15 +99,7 @@ namespace Cybtans.Services
             Logger?.LogDebug($"Entity {typeof(TEntity)} Updated (Id:{id})");
 
             return Mapper.Map<TEntity, TEntityDto>(entity);
-        }
-
-        protected virtual async Task<TEntityDto> Get(TKey id)
-        {
-            return (await Mapper.ProjectTo<TEntityDto>(
-                Repository.GetAll()
-                .Where(x => x.Id.Equals(id)))
-                .FirstOrDefaultAsync()) ?? throw new EntityNotFoundException($"Entity with Id {id} not found");
-        }
+        }       
 
      
         private static TEntityDto GetValue(IReflectorMetadataProvider request)

@@ -51,6 +51,15 @@ namespace Cybtans.Tests.Services
 		Task SendNotification(mds::OrderNotification request);
 		
 		
+		Task<mds::GetAllNamesResponse> GetAllNames();
+		
+		
+		Task<mds::OrderNamesDto> GetOrderName(mds::GetOrderNameRequest request);
+		
+		
+		Task<mds::OrderNamesDto> CreateOrderName(mds::CreateOrderNameRequest request);
+		
+		
 		Task<mds::GetAllOrderResponse> GetAll(mds::GetAllRequest request);
 		
 		

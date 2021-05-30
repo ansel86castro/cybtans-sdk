@@ -9,6 +9,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Linq.Expressions;
 using Cybtans.Tests.Domain;
+using Cybtans.Entities.Extensions;
 
 namespace Cybtans.Tests.Entities.EntityFrameworkCore
 {
@@ -37,14 +38,12 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
         {
             var order = await CreateOrderInternal(_repository);
 
-            var value = await _repository.GetAll(include: new Expression<Func<Order, object>>[]
-            {
-                    x=>x.Items,
-                    x=>x.Customer,
-                    x=>x.Customer.CustomerProfile
-            })
-            .Where(x=>x.Id == order.Id)
-            .FirstOrDefaultAsync();
+            var value = await _repository.GetAll()
+                .Include(x => x.Items)
+                .Include(x => x.Customer)
+                .Include(x => x.Customer.CustomerProfile)
+                .Where(x => x.Id == order.Id)
+                .FirstOrDefaultAsync();
 
             Assert.NotNull(value);
             Assert.NotNull(value.Customer);
@@ -64,10 +63,10 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
             Assert.NotNull(order);
             Assert.Empty(order.Items);
 
-            order = await _repository.GetAll(include: new Expression<Func<Order, object>>[]
-            {
-                 x=>x.Items
-            }).Where(x => x.Id == order.Id).FirstOrDefaultAsync();
+            order = await _repository.GetAll()            
+             .Include(x=>x.Items)
+             .Where(x => x.Id == order.Id)
+             .FirstOrDefaultAsync();
 
             order.OrderStateId = RepositoryFixture.OrderStateProcessed;
             order.Items.Add(new OrderItem
@@ -81,9 +80,7 @@ namespace Cybtans.Tests.Entities.EntityFrameworkCore
 
             await _repository.UnitOfWork.SaveChangesAsync();
 
-            var value = await _repository.GetAll(include:new Expression<Func<Order, object>>[]{
-                x=>x.Items
-            }).Where(x => x.Description == "Test Order").FirstOrDefaultAsync();
+            var value = await _repository.GetAll().Include(x => x.Items).Where(x => x.Description == "Test Order").FirstOrDefaultAsync();
 
             Assert.Equal(RepositoryFixture.OrderStateProcessed, order.OrderStateId);
             Assert.Equal(2, order.Items.Count);

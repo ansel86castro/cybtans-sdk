@@ -1,5 +1,4 @@
-﻿using Cybtans.Serialization;
-using Polly;
+﻿using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
 using System;
@@ -9,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Refit
 {
-    public class HttpClientErrorHandler : DelegatingHandler
+    public class HttpClientRetryHandler : DelegatingHandler
     {
         private AsyncRetryPolicy<HttpResponseMessage> _policy;
         private Random rand = new Random();
 
-        public HttpClientErrorHandler()
+        public HttpClientRetryHandler()
         {
             _policy = HttpPolicyExtensions
-              .HandleTransientHttpError()             
-              .WaitAndRetryAsync(3, retry => 
-                    TimeSpan.FromSeconds(Math.Pow(2, retry) + Jitter()));
+              .HandleTransientHttpError()                           
+              .WaitAndRetryAsync(3, retry => TimeSpan.FromSeconds(Math.Pow(2, retry) + Jitter()))              
+              ;
         }
 
-        private double Jitter() => rand.NextDouble();
-        
+        private double Jitter() => rand.NextDouble();    
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

@@ -44,5 +44,13 @@ namespace Cybtans.Messaging.RabbitMQ
         public bool AutoDelete { get; set; } = true;
 
         public bool Exclusive { get; set; } = true;
+
+        public bool AutoAck { get; set; } = false;
+
+        public ushort? PrefetchCount { get; set; }
+
+        public string? DeadLetterExchange { get; set; }
+
+        public bool NackRequeue { get; set; }
     }
 }

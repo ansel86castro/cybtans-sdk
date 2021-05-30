@@ -54,6 +54,10 @@ import {
   DowndloadImageResponse,
   MultiPathRequest,
   OrderNotification,
+  GetAllNamesResponse,
+  GetOrderNameRequest,
+  OrderNamesDto,
+  CreateOrderNameRequest,
  } from './models';
 
 function getQueryString(data:any): string|undefined {
@@ -253,6 +257,24 @@ export class OrderService {
     
     sendNotification(request: OrderNotification): Observable<{}> {
       return this.http.post<{}>(`/api/Order/${request.orderId}/notify/${request.userId}`, request, {
+          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+      });
+    }
+    
+    getAllNames(): Observable<GetAllNamesResponse> {
+      return this.http.get<GetAllNamesResponse>(`/api/Order/names`, {
+          headers: new HttpHeaders({ Accept: 'application/json' }),
+      });
+    }
+    
+    getOrderName(request: GetOrderNameRequest): Observable<OrderNamesDto> {
+      return this.http.get<OrderNamesDto>(`/api/Order/names/${request.id}`, {
+          headers: new HttpHeaders({ Accept: 'application/json' }),
+      });
+    }
+    
+    createOrderName(request: CreateOrderNameRequest): Observable<OrderNamesDto> {
+      return this.http.post<OrderNamesDto>(`/api/Order/names`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }

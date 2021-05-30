@@ -66,14 +66,14 @@ namespace Cybtans.Tests.Gateway
 
             #region Messaging
 
-            services.AddScoped<OrderNotificationHandler>();            
-            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>(), sm=>
+            services.AddScoped<OrderNotificationHandler>();
+            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>(), sm =>
             {
                 sm.Subscribe<OrderNotification, OrderNotificationHandler>("Orders");
             });
 
             #endregion
-            
+
             //Add Signal R
             services.AddSignalR();
 

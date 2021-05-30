@@ -99,4 +99,38 @@ service OrderService {
 		option template = "{orderId}/notify/{userId}";
 		option method = "POST";
 	};
+
+	rpc GetAllNames(void) returns (GetAllNamesResponse){		
+		option method = "GET";
+		option template = "names";		
+	};
+
+	rpc GetOrderName(GetOrderNameRequest) returns (OrderNamesDto){		
+		option method = "GET";
+		option template = "names/{id}";		
+	};
+
+	rpc CreateOrderName(CreateOrderNameRequest) returns (OrderNamesDto){
+		option method = "POST";
+		option template = "names";		
+	};
+
 }
+
+message GetAllNamesResponse {
+	repeated OrderNamesDto items = 1; 
+}
+
+message OrderNamesDto{
+	string id = 1;
+	string description = 2;
+}
+
+message GetOrderNameRequest{
+	string id = 1;
+}
+
+message CreateOrderNameRequest{
+	string name = 1;
+}
+

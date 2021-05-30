@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Cybtans.Expressions;
 using System.Threading.Tasks;
+using Cybtans.Entities.Extensions;
 
 namespace Cybtans.Services.Extensions
 {

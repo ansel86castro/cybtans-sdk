@@ -10,24 +10,25 @@ using System.Threading.Tasks;
 namespace Cybtans.Tests.Services.Validations
 {
 
-    public class CreateOrderValidator : AbstractValidator<CreateOrderRequest>
+    public class TestCreateOrderValidator : AbstractValidator<CreateOrderRequest>
     {
-        public CreateOrderValidator()
+        public TestCreateOrderValidator()
         {
-            RuleFor(x => x.Value).NotNull().SetValidator(new OrderValidator());            
+            RuleFor(x => x.Value).NotNull().SetValidator(new TestOrderValidator());            
         }       
     }
 
-    public class OrderValidator : AbstractValidator<OrderDto>
+    public class TestOrderValidator : AbstractValidator<OrderDto>
     {
-        public OrderValidator()
-        {
+        public TestOrderValidator()
+        {         
             RuleFor(x => x.Description).NotEmpty().WithMessage("Description can not be empty");
-            RuleFor(x => x.OrderStateId).GreaterThan(0);               
+            RuleFor(x => x.OrderStateId).GreaterThan(0);   
+            
         }
 
         public override Task<ValidationResult> ValidateAsync(ValidationContext<OrderDto> context, CancellationToken cancellation = default)
-        {            
+        {                        
             return base.ValidateAsync(context, cancellation);
         }
     }

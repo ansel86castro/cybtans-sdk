@@ -51,6 +51,10 @@ import {
   DowndloadImageResponse,
   MultiPathRequest,
   OrderNotification,
+  GetAllNamesResponse,
+  GetOrderNameRequest,
+  OrderNamesDto,
+  CreateOrderNameRequest,
  } from './models';
 
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
@@ -297,6 +301,25 @@ export class OrderService extends BaseTestsService {
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Order/${request.orderId}/notify/${request.userId}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
+    }
+    
+    getAllNames() : Promise<GetAllNamesResponse> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/Order/names`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    getOrderName(request:GetOrderNameRequest) : Promise<OrderNamesDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let endpoint = this._options.baseUrl+`/api/Order/names/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    createOrderName(request:CreateOrderNameRequest) : Promise<OrderNamesDto> {
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	options.body = JSON.stringify(request);
+    	let endpoint = this._options.baseUrl+`/api/Order/names`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     getAll(request:GetAllRequest) : Promise<GetAllOrderResponse> {

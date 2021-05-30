@@ -6,6 +6,7 @@ using Cybtans.Expressions;
 using System.Threading.Tasks;
 using System.Linq;
 using Cybtans.Services.Extensions;
+using Cybtans.Entities.Extensions;
 
 namespace Cybtans.Services
 {
@@ -47,7 +48,7 @@ namespace Cybtans.Services
         {
             var args = request.Map<GetAllEntitiesRequest>();
 
-            var page = await _repository.GetAll().PageBy(args.Filter, args.Sort, args.Skip, args.Take);
+            var page = await _repository.GetAll(consistency: ReadConsistency.Weak).PageBy(args.Filter, args.Sort, args.Skip, args.Take);
             return new GetAllResponse<TEntityDto>
             {
                 Items = await _mapper.ProjectTo<TEntityDto>(page.Query).ToListAsync(),
@@ -61,7 +62,7 @@ namespace Cybtans.Services
         protected virtual async Task<TEntityDto> Get(TKey id)
         {
             return (await _mapper.ProjectTo<TEntityDto>(
-                _repository.GetAll()
+                _repository.GetAll(consistency: ReadConsistency.Weak)
                 .Where(x => x.Id.Equals(id)))
                 .FirstOrDefaultAsync()) ?? throw new EntityNotFoundException($"Entity with Id {id} not found");
         }

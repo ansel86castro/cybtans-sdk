@@ -17,6 +17,7 @@ using AutoMapper.QueryableExtensions;
 using Cybtans.Tests.Grpc;
 using Grpc.Core;
 using SQLitePCL;
+using System.Linq;
 
 namespace Cybtans.Tests.Services
 {
@@ -25,31 +26,20 @@ namespace Cybtans.Tests.Services
         IOrderService
     {
         private IBroadcastService _broadCastService;
-        private readonly Greeter.GreeterClient _greeterClient;
+        private readonly IDatabaseConnectionFactory _connectionFactory;
 
-        public OrderService(IRepository<Order, Guid> repository, IUnitOfWork uow, IMapper mapper, ILogger<OrderService> logger,
-            IBroadcastService broadCastService, Cybtans.Tests.Grpc.Greeter.GreeterClient greeterClient)
+        public OrderService(
+            IRepository<Order, Guid> repository, 
+            IUnitOfWork uow, 
+            IMapper mapper, 
+            ILogger<OrderService> logger,
+            IBroadcastService broadCastService,
+            IDatabaseConnectionFactory connectionFactory)
             : base(repository, uow, mapper, logger) 
         {
             _broadCastService = broadCastService;
-            _greeterClient = greeterClient;
-        }
-
-        public async Task<CustomerDto> SayHelloAsync(OrderDto request)
-        {            
-            try
-            {
-               Logger.LogDebug("Grpc call Cybtans.Tests.Grpc.Greeter.Greeter.SayHelloAsync");
-
-               var response = await _greeterClient.SayHelloAsync(Mapper.Map<OrderDto, Cybtans.Tests.Grpc.HelloRequest>(request));
-               return Mapper.Map<Cybtans.Tests.Grpc.HelloReply, CustomerDto>(response);
-            }
-            catch(RpcException e)
-            {
-                Logger.LogError(e, "Grpc call failed Cybtans.Tests.Grpc.Greeter.Greeter.SayHelloAsync");
-                throw;
-            }
-        }
+            _connectionFactory = connectionFactory;
+        }     
 
         public Task Argument()
         {
@@ -146,6 +136,57 @@ namespace Cybtans.Tests.Services
         public async Task SendNotification(OrderNotification request)
         {
             await _broadCastService.Publish(request, "Orders");
+        }
+
+        public async Task<GetAllNamesResponse> GetAllNames()
+        {
+            using var conn = _connectionFactory.GetConnection();
+            var items = await conn.QueryAsync<OrderNamesDto>("SELECT Id, Description FROM orders");
+
+            return new GetAllNamesResponse
+            {
+                Items = items.ToList()
+            };
+        }
+
+        public async Task<OrderNamesDto> GetOrderName(GetOrderNameRequest request)
+        {
+            using var conn = _connectionFactory.GetConnection();
+            var item = await conn.QueryFirstOrDefaultAsync<OrderNamesDto>("SELECT Id, Description FROM orders WHERE Id=@Id", 
+                new { request.Id });
+
+            return item;
+        }
+
+        public async Task<OrderNamesDto> CreateOrderName(CreateOrderNameRequest request)
+        {
+            using var conn = _connectionFactory.GetConnection();
+            var id = Guid.NewGuid();
+
+            var customer = await conn.QueryFirstOrDefaultAsync<CustomerName>("SELECT * FROM customers LIMIT 1");
+
+            var rows = await conn.ExecuteAsync(@"INSERT INTO orders(
+                                            Id, 
+                                            Description, 
+                                            CustomerId, 
+                                            OrderStateId,
+                                            OrderType,
+                                            TenantId,
+                                            CreateDate,
+                                            UpdateDate,
+                                            Creator
+                                            ) VALUES(@Id, @Description, @CustomerId, @OrderStateId, @OrderType, 0, date('now'), NULL, NULL)",
+                                            new
+                                            {
+                                                Id = id.ToString(),
+                                                Description =  request.Name,
+                                                CustomerId = customer.Id,
+                                                OrderStateId = 1,
+                                                OrderType = Domain.OrderTypeEnum.Normal,
+                                            });
+            if (rows <= 0)
+                throw new InvalidOperationException();
+            return await GetOrderName(id.ToString());          
         }
     }
 }

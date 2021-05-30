@@ -54,6 +54,15 @@ namespace Cybtans.Tests.Clients
 		[Post("/api/Order/{request.OrderId}/notify/{request.UserId}")]
 		Task SendNotification([Body]OrderNotification request);
 		
+		[Get("/api/Order/names")]
+		Task<GetAllNamesResponse> GetAllNames();
+		
+		[Get("/api/Order/names/{request.Id}")]
+		Task<OrderNamesDto> GetOrderName(GetOrderNameRequest request);
+		
+		[Post("/api/Order/names")]
+		Task<OrderNamesDto> CreateOrderName([Body]CreateOrderNameRequest request);
+		
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		

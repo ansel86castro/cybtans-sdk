@@ -12,6 +12,12 @@
       "Output": ".",
       "ProtoFile": "./Proto/Test.proto",
       "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests",
+      "Controllers": {        
+        "UseActionInterceptor": true
+      },
+      "CSharpClients": {
+        "Generate": true
+      },
       "Clients": [
         {
           "Output": "./react-app/src/services",

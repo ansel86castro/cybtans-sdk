@@ -10,6 +10,7 @@ using Cybtans.Tests.Clients;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -21,25 +22,32 @@ namespace Cybtans.Tests.Controllers
 	public partial class ReadOnlyEntityServiceController : ControllerBase
 	{
 		private readonly IReadOnlyEntityServiceClient _service;
+		private readonly ILogger<ReadOnlyEntityServiceController> _logger;
 		
-		public ReadOnlyEntityServiceController(IReadOnlyEntityServiceClient service)
+		public ReadOnlyEntityServiceController(IReadOnlyEntityServiceClient service,  ILogger<ReadOnlyEntityServiceController> logger)
 		{
 			_service = service;
+			_logger = logger;
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
+		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
 		{
 			request.Id = id;
-			return _service.Get(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			return await _service.Get(request).ConfigureAwait(false);
 		}
 	}
 

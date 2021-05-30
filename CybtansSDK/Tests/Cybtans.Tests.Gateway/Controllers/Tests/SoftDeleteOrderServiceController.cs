@@ -10,6 +10,7 @@ using Cybtans.Tests.Clients;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 
@@ -20,43 +21,58 @@ namespace Cybtans.Tests.Controllers
 	public partial class SoftDeleteOrderServiceController : ControllerBase
 	{
 		private readonly ISoftDeleteOrderServiceClient _service;
+		private readonly ILogger<SoftDeleteOrderServiceController> _logger;
 		
-		public SoftDeleteOrderServiceController(ISoftDeleteOrderServiceClient service)
+		public SoftDeleteOrderServiceController(ISoftDeleteOrderServiceClient service,  ILogger<SoftDeleteOrderServiceController> logger)
 		{
 			_service = service;
+			_logger = logger;
 		}
 		
 		[HttpGet]
-		public Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
-			return _service.GetAll(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("{id}")]
-		public Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest request)
+		public async Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
-			return _service.Get(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
 		[HttpPost]
-		public Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
+		public async Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
 		{
-			return _service.Create(request);
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
+			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
 		[HttpPut("{id}")]
-		public Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest request)
+		public async Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
-			return _service.Update(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
+			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
 		[HttpDelete("{id}")]
-		public Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
+		public async Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
-			return _service.Delete(request);
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			await _service.Delete(request).ConfigureAwait(false);
 		}
 	}
 
