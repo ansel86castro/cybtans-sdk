@@ -30,6 +30,10 @@ namespace Cybtans.Tests.Controllers
 			_logger = logger;
 		}
 		
+		/// <summary>
+		/// Returns a collection of ReadOnlyEntityDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of ReadOnlyEntityDto")]
 		[Authorize(Roles = "admin")]
 		[HttpGet]
 		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
@@ -39,6 +43,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one ReadOnlyEntityDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one ReadOnlyEntityDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
 		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)

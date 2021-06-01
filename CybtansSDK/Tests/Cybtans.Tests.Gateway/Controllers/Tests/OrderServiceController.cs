@@ -163,6 +163,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns a collection of OrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of OrderDto")]
 		[HttpGet]
 		public async Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -171,6 +175,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one OrderDto by Id")]
 		[HttpGet("{id}")]
 		public async Task<mds::OrderDto> Get(Guid id, [FromQuery]mds::GetOrderRequest request)
 		{
@@ -181,6 +189,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one OrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one OrderDto")]
 		[HttpPost]
 		public async Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
 		{
@@ -189,6 +201,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one OrderDto by Id")]
 		[HttpPut("{id}")]
 		public async Task<mds::OrderDto> Update(Guid id, [FromBody]mds::UpdateOrderRequest request)
 		{
@@ -199,6 +215,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one OrderDto by Id")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
 		{

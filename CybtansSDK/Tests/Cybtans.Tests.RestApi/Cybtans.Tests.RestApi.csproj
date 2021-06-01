@@ -10,6 +10,10 @@
   </PropertyGroup>
      
   <ItemGroup>
+  <PackageReference Include="GraphQL" Version="4.5.0" />
+  <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="5.0.2" />
+  <PackageReference Include="GraphQL.Server.Transports.AspNetCore.SystemTextJson" Version="5.0.2" />
+  <PackageReference Include="GraphQL.Server.Ui.Playground" Version="5.0.2" />  
   <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
   <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
   <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
@@ -37,6 +41,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Controllers\Generated\" />
+    <Folder Include="Generated\GraphQL\" />
   </ItemGroup>
 
   <ItemGroup>

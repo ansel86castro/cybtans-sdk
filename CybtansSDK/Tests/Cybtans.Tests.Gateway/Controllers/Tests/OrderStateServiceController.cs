@@ -30,6 +30,10 @@ namespace Cybtans.Tests.Controllers
 			_logger = logger;
 		}
 		
+		/// <summary>
+		/// Returns a collection of OrderStateDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of OrderStateDto")]
 		[Authorize(Roles = "admin")]
 		[HttpGet]
 		public async Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest request)
@@ -39,6 +43,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one OrderStateDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
 		public async Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest request)
@@ -50,6 +58,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one OrderStateDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one OrderStateDto")]
 		[Authorize(Roles = "admin")]
 		[HttpPost]
 		public async Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
@@ -59,6 +71,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one OrderStateDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpPut("{id}")]
 		public async Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest request)
@@ -70,6 +86,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one OrderStateDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpDelete("{id}")]
 		public async Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)

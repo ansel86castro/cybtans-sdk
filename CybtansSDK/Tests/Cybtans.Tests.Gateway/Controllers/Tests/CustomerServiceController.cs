@@ -29,6 +29,10 @@ namespace Cybtans.Tests.Controllers
 			_logger = logger;
 		}
 		
+		/// <summary>
+		/// Returns a collection of CustomerDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of CustomerDto")]
 		[HttpGet]
 		public async Task<mds::GetAllCustomerResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -37,6 +41,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one CustomerDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one CustomerDto by Id")]
 		[HttpGet("{id}")]
 		public async Task<mds::CustomerDto> Get(Guid id, [FromQuery]mds::GetCustomerRequest request)
 		{
@@ -47,6 +55,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one CustomerDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one CustomerDto")]
 		[HttpPost]
 		public async Task<mds::CustomerDto> Create([FromBody]mds::CreateCustomerRequest request)
 		{
@@ -55,6 +67,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one CustomerDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one CustomerDto by Id")]
 		[HttpPut("{id}")]
 		public async Task<mds::CustomerDto> Update(Guid id, [FromBody]mds::UpdateCustomerRequest request)
 		{
@@ -65,6 +81,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one CustomerDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one CustomerDto by Id")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerRequest request)
 		{

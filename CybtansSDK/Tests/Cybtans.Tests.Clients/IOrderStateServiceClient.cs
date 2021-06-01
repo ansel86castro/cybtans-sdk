@@ -18,22 +18,37 @@ namespace Cybtans.Tests.Clients
 	public interface IOrderStateServiceClient
 	{
 		
+		/// <summary>
+		/// Returns a collection of OrderStateDto
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Get("/api/OrderState")]
 		Task<GetAllOrderStateResponse> GetAll(GetAllRequest request = null);
 		
+		/// <summary>
+		/// Returns one OrderStateDto by Id
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Get("/api/OrderState/{request.Id}")]
 		Task<OrderStateDto> Get(GetOrderStateRequest request);
 		
+		/// <summary>
+		/// Creates one OrderStateDto
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Post("/api/OrderState")]
 		Task<OrderStateDto> Create([Body]CreateOrderStateRequest request);
 		
+		/// <summary>
+		/// Updates one OrderStateDto by Id
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Put("/api/OrderState/{request.Id}")]
 		Task<OrderStateDto> Update([Body]UpdateOrderStateRequest request);
 		
+		/// <summary>
+		/// Deletes one OrderStateDto by Id
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Delete("/api/OrderState/{request.Id}")]
 		Task Delete(DeleteOrderStateRequest request);

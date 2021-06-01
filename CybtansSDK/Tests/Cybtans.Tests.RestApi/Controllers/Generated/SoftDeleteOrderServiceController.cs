@@ -31,6 +31,10 @@ namespace Cybtans.Tests.Controllers
 			_interceptor = interceptor;
 		}
 		
+		/// <summary>
+		/// Returns a collection of SoftDeleteOrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of SoftDeleteOrderDto")]
 		[HttpGet]
 		public async Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -44,6 +48,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one SoftDeleteOrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one SoftDeleteOrderDto by Id")]
 		[HttpGet("{id}")]
 		public async Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest request)
 		{
@@ -59,6 +67,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one SoftDeleteOrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one SoftDeleteOrderDto")]
 		[HttpPost]
 		public async Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
 		{
@@ -72,6 +84,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one SoftDeleteOrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one SoftDeleteOrderDto by Id")]
 		[HttpPut("{id}")]
 		public async Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest request)
 		{
@@ -87,6 +103,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one SoftDeleteOrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one SoftDeleteOrderDto by Id")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
 		{

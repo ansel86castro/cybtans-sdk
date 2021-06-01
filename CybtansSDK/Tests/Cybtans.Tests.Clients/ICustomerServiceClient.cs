@@ -18,18 +18,33 @@ namespace Cybtans.Tests.Clients
 	public interface ICustomerServiceClient
 	{
 		
+		/// <summary>
+		/// Returns a collection of CustomerDto
+		/// </summary>
 		[Get("/api/Customer")]
 		Task<GetAllCustomerResponse> GetAll(GetAllRequest request = null);
 		
+		/// <summary>
+		/// Returns one CustomerDto by Id
+		/// </summary>
 		[Get("/api/Customer/{request.Id}")]
 		Task<CustomerDto> Get(GetCustomerRequest request);
 		
+		/// <summary>
+		/// Creates one CustomerDto
+		/// </summary>
 		[Post("/api/Customer")]
 		Task<CustomerDto> Create([Body]CreateCustomerRequest request);
 		
+		/// <summary>
+		/// Updates one CustomerDto by Id
+		/// </summary>
 		[Put("/api/Customer/{request.Id}")]
 		Task<CustomerDto> Update([Body]UpdateCustomerRequest request);
 		
+		/// <summary>
+		/// Deletes one CustomerDto by Id
+		/// </summary>
 		[Delete("/api/Customer/{request.Id}")]
 		Task Delete(DeleteCustomerRequest request);
 	

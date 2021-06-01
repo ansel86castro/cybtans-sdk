@@ -15,18 +15,33 @@ namespace Cybtans.Tests.Services
 	public interface ICustomerEventService 
 	{
 		
+		/// <summary>
+		/// Returns a collection of CustomerEventDto
+		/// </summary>
 		Task<mds::GetAllCustomerEventResponse> GetAll(mds::GetAllRequest request);
 		
 		
+		/// <summary>
+		/// Returns one CustomerEventDto by Id
+		/// </summary>
 		Task<mds::CustomerEventDto> Get(mds::GetCustomerEventRequest request);
 		
 		
+		/// <summary>
+		/// Creates one CustomerEventDto
+		/// </summary>
 		Task<mds::CustomerEventDto> Create(mds::CreateCustomerEventRequest request);
 		
 		
+		/// <summary>
+		/// Updates one CustomerEventDto by Id
+		/// </summary>
 		Task<mds::CustomerEventDto> Update(mds::UpdateCustomerEventRequest request);
 		
 		
+		/// <summary>
+		/// Deletes one CustomerEventDto by Id
+		/// </summary>
 		Task Delete(mds::DeleteCustomerEventRequest request);
 		
 	}

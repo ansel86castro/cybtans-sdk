@@ -58,7 +58,7 @@ message OrderDto {
 	int32 orderStateId = 3;
 	OrderTypeEnum orderType = 4;
 	OrderStateDto orderState = 5;
-	CustomerDto customer = 6;
+	CustomerDto customer = 6 [description = "Customer"];
 	repeated OrderItemDto items = 7;
 	guid id = 8;
 	datetime createDate = 9 [optional = true];
@@ -143,31 +143,38 @@ service CustomerService {
 	option (prefix) ="api/Customer";
 
 	rpc GetAll(GetAllRequest) returns (GetAllCustomerResponse){		
-		option method = "GET";
-		
+		option (method) = "GET";
+		option (description) = "Returns a collection of CustomerDto";
+		option (graphql).query = "customers";
+
 	};
 
 	rpc Get(GetCustomerRequest) returns (CustomerDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		
+		option (template) = "{id}"; 
+		option (method) = "GET";
+		option (description) = "Returns one CustomerDto by Id";
+		option (graphql).query = "customer";
+
 	};
 
 	rpc Create(CreateCustomerRequest) returns (CustomerDto){			
-		option method = "POST";
-		
+		option (method) = "POST";
+		option (description) = "Creates one CustomerDto";
+
 	};
 
 	rpc Update(UpdateCustomerRequest) returns (CustomerDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		
+		option (template) = "{id}"; 
+		option (method) = "PUT";
+		option (description) = "Updates one CustomerDto by Id";
+
 	};
 
 	rpc Delete(DeleteCustomerRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		
+		option (template) = "{id}"; 
+		option (method) = "DELETE";
+		option (description) = "Deletes one CustomerDto by Id";
+
 	};
 }
 
@@ -203,31 +210,38 @@ service CustomerEventService {
 	option (prefix) ="api/CustomerEvent";
 
 	rpc GetAll(GetAllRequest) returns (GetAllCustomerEventResponse){		
-		option method = "GET";
-		
+		option (method) = "GET";
+		option (description) = "Returns a collection of CustomerEventDto";
+		option (graphql).query = "customerEvents";
+
 	};
 
 	rpc Get(GetCustomerEventRequest) returns (CustomerEventDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		
+		option (template) = "{id}"; 
+		option (method) = "GET";
+		option (description) = "Returns one CustomerEventDto by Id";
+		option (graphql).query = "customerEvent";
+
 	};
 
 	rpc Create(CreateCustomerEventRequest) returns (CustomerEventDto){			
-		option method = "POST";
-		
+		option (method) = "POST";
+		option (description) = "Creates one CustomerEventDto";
+
 	};
 
 	rpc Update(UpdateCustomerEventRequest) returns (CustomerEventDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		
+		option (template) = "{id}"; 
+		option (method) = "PUT";
+		option (description) = "Updates one CustomerEventDto by Id";
+
 	};
 
 	rpc Delete(DeleteCustomerEventRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		
+		option (template) = "{id}"; 
+		option (method) = "DELETE";
+		option (description) = "Deletes one CustomerEventDto by Id";
+
 	};
 }
 
@@ -263,31 +277,38 @@ service OrderService {
 	option (prefix) ="api/Order";
 
 	rpc GetAll(GetAllRequest) returns (GetAllOrderResponse){		
-		option method = "GET";
-		
+		option (method) = "GET";
+		option (description) = "Returns a collection of OrderDto";
+		option (graphql).query = "orders";
+
 	};
 
 	rpc Get(GetOrderRequest) returns (OrderDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		
+		option (template) = "{id}"; 
+		option (method) = "GET";
+		option (description) = "Returns one OrderDto by Id";
+		option (graphql).query = "order";
+
 	};
 
 	rpc Create(CreateOrderRequest) returns (OrderDto){			
-		option method = "POST";
-		
+		option (method) = "POST";
+		option (description) = "Creates one OrderDto";
+
 	};
 
 	rpc Update(UpdateOrderRequest) returns (OrderDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		
+		option (template) = "{id}"; 
+		option (method) = "PUT";
+		option (description) = "Updates one OrderDto by Id";
+
 	};
 
 	rpc Delete(DeleteOrderRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		
+		option (template) = "{id}"; 
+		option (method) = "DELETE";
+		option (description) = "Deletes one OrderDto by Id";
+
 	};
 }
 
@@ -323,31 +344,43 @@ service OrderStateService {
 	option (prefix) ="api/OrderState";
 
 	rpc GetAll(GetAllRequest) returns (GetAllOrderStateResponse){		
-		option method = "GET";
-		option roles = "admin";
+		option (method) = "GET";
+		option (roles) = "admin";
+		option (description) = "Returns a collection of OrderStateDto";
+		option (graphql).query = "orderStates";
+
 	};
 
 	rpc Get(GetOrderStateRequest) returns (OrderStateDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		option roles = "admin";
+		option (template) = "{id}"; 
+		option (method) = "GET";
+		option (roles) = "admin";
+		option (description) = "Returns one OrderStateDto by Id";
+		option (graphql).query = "orderState";
+
 	};
 
 	rpc Create(CreateOrderStateRequest) returns (OrderStateDto){			
-		option method = "POST";
-		option roles = "admin";
+		option (method) = "POST";
+		option (roles) = "admin";
+		option (description) = "Creates one OrderStateDto";
+
 	};
 
 	rpc Update(UpdateOrderStateRequest) returns (OrderStateDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		option roles = "admin";
+		option (template) = "{id}"; 
+		option (method) = "PUT";
+		option (roles) = "admin";
+		option (description) = "Updates one OrderStateDto by Id";
+
 	};
 
 	rpc Delete(DeleteOrderStateRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		option roles = "admin";
+		option (template) = "{id}"; 
+		option (method) = "DELETE";
+		option (roles) = "admin";
+		option (description) = "Deletes one OrderStateDto by Id";
+
 	};
 }
 
@@ -371,13 +404,19 @@ service ReadOnlyEntityService {
 
 	rpc GetAll(GetAllRequest) returns (GetAllReadOnlyEntityResponse){		
 		option method = "GET";
-		option roles = "admin";
+		option (roles) = "admin";
+		option (description) = "Returns a collection of ReadOnlyEntityDto";
+		option (graphql).query = "readOnlyEntities";
+
 	};
 
 	rpc Get(GetReadOnlyEntityRequest) returns (ReadOnlyEntityDto){	
 		option template = "{id}"; 
 		option method = "GET";
-		option roles = "admin";
+		option (roles) = "admin";
+		option (description) = "Returns one ReadOnlyEntityDto by Id";
+		option (graphql).query = "readOnlyEntity";
+
 	};	
 }
 
@@ -413,31 +452,38 @@ service SoftDeleteOrderService {
 	option (prefix) ="api/SoftDeleteOrder";
 
 	rpc GetAll(GetAllRequest) returns (GetAllSoftDeleteOrderResponse){		
-		option method = "GET";
-		
+		option (method) = "GET";
+		option (description) = "Returns a collection of SoftDeleteOrderDto";
+		option (graphql).query = "softDeleteOrders";
+
 	};
 
 	rpc Get(GetSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){	
-		option template = "{id}"; 
-		option method = "GET";
-		
+		option (template) = "{id}"; 
+		option (method) = "GET";
+		option (description) = "Returns one SoftDeleteOrderDto by Id";
+		option (graphql).query = "softDeleteOrder";
+
 	};
 
 	rpc Create(CreateSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){			
-		option method = "POST";
-		
+		option (method) = "POST";
+		option (description) = "Creates one SoftDeleteOrderDto";
+
 	};
 
 	rpc Update(UpdateSoftDeleteOrderRequest) returns (SoftDeleteOrderDto){			
-		option template = "{id}"; 
-		option method = "PUT";
-		
+		option (template) = "{id}"; 
+		option (method) = "PUT";
+		option (description) = "Updates one SoftDeleteOrderDto by Id";
+
 	};
 
 	rpc Delete(DeleteSoftDeleteOrderRequest) returns (void){
-		option template = "{id}"; 
-		option method = "DELETE";
-		
+		option (template) = "{id}"; 
+		option (method) = "DELETE";
+		option (description) = "Deletes one SoftDeleteOrderDto by Id";
+
 	};
 }
 

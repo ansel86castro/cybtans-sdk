@@ -15,9 +15,15 @@ namespace Cybtans.Tests.Services
 	public interface IReadOnlyEntityService 
 	{
 		
+		/// <summary>
+		/// Returns a collection of ReadOnlyEntityDto
+		/// </summary>
 		Task<mds::GetAllReadOnlyEntityResponse> GetAll(mds::GetAllRequest request);
 		
 		
+		/// <summary>
+		/// Returns one ReadOnlyEntityDto by Id
+		/// </summary>
 		Task<mds::ReadOnlyEntityDto> Get(mds::GetReadOnlyEntityRequest request);
 		
 	}

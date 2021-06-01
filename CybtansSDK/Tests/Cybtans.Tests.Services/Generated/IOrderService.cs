@@ -60,18 +60,33 @@ namespace Cybtans.Tests.Services
 		Task<mds::OrderNamesDto> CreateOrderName(mds::CreateOrderNameRequest request);
 		
 		
+		/// <summary>
+		/// Returns a collection of OrderDto
+		/// </summary>
 		Task<mds::GetAllOrderResponse> GetAll(mds::GetAllRequest request);
 		
 		
+		/// <summary>
+		/// Returns one OrderDto by Id
+		/// </summary>
 		Task<mds::OrderDto> Get(mds::GetOrderRequest request);
 		
 		
+		/// <summary>
+		/// Creates one OrderDto
+		/// </summary>
 		Task<mds::OrderDto> Create(mds::CreateOrderRequest request);
 		
 		
+		/// <summary>
+		/// Updates one OrderDto by Id
+		/// </summary>
 		Task<mds::OrderDto> Update(mds::UpdateOrderRequest request);
 		
 		
+		/// <summary>
+		/// Deletes one OrderDto by Id
+		/// </summary>
 		Task Delete(mds::DeleteOrderRequest request);
 		
 	}

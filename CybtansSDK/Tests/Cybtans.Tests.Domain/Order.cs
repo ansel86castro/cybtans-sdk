@@ -1,6 +1,7 @@
 ﻿using Cybtans.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Cybtans.Tests.Domain
@@ -24,6 +25,7 @@ namespace Cybtans.Tests.Domain
         [EventData]
         public virtual OrderState OrderState { get; set; }
 
+        [Description("Customer")]
         public virtual Customer Customer { get; set; }
 
         [EventData]

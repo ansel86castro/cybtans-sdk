@@ -9,6 +9,7 @@
 using System;
 using Cybtans.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Cybtans.Tests.Models
 {
@@ -26,6 +27,10 @@ namespace Cybtans.Tests.Models
 		
 		public OrderStateDto OrderState {get; set;}
 		
+		/// <summary>
+		/// Customer
+		/// </summary>
+		[Description("Customer")]
 		public CustomerDto Customer {get; set;}
 		
 		public List<OrderItemDto> Items {get; set;}

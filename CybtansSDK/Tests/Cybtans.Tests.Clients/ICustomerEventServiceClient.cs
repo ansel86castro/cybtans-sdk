@@ -18,18 +18,33 @@ namespace Cybtans.Tests.Clients
 	public interface ICustomerEventServiceClient
 	{
 		
+		/// <summary>
+		/// Returns a collection of CustomerEventDto
+		/// </summary>
 		[Get("/api/CustomerEvent")]
 		Task<GetAllCustomerEventResponse> GetAll(GetAllRequest request = null);
 		
+		/// <summary>
+		/// Returns one CustomerEventDto by Id
+		/// </summary>
 		[Get("/api/CustomerEvent/{request.Id}")]
 		Task<CustomerEventDto> Get(GetCustomerEventRequest request);
 		
+		/// <summary>
+		/// Creates one CustomerEventDto
+		/// </summary>
 		[Post("/api/CustomerEvent")]
 		Task<CustomerEventDto> Create([Body]CreateCustomerEventRequest request);
 		
+		/// <summary>
+		/// Updates one CustomerEventDto by Id
+		/// </summary>
 		[Put("/api/CustomerEvent/{request.Id}")]
 		Task<CustomerEventDto> Update([Body]UpdateCustomerEventRequest request);
 		
+		/// <summary>
+		/// Deletes one CustomerEventDto by Id
+		/// </summary>
 		[Delete("/api/CustomerEvent/{request.Id}")]
 		Task Delete(DeleteCustomerEventRequest request);
 	

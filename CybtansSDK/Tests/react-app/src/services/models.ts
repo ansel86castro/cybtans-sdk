@@ -63,6 +63,7 @@ export interface OrderDto {
   orderStateId: number;
   orderType: OrderTypeEnum;
   orderState?: OrderStateDto|null;
+  /** Customer */
   customer?: CustomerDto|null;
   items?: OrderItemDto[]|null;
   id: string;

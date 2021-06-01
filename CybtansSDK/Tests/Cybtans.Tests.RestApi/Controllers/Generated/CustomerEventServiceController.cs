@@ -31,6 +31,10 @@ namespace Cybtans.Tests.Controllers
 			_interceptor = interceptor;
 		}
 		
+		/// <summary>
+		/// Returns a collection of CustomerEventDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of CustomerEventDto")]
 		[HttpGet]
 		public async Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -44,6 +48,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one CustomerEventDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one CustomerEventDto by Id")]
 		[HttpGet("{id}")]
 		public async Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
 		{
@@ -59,6 +67,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one CustomerEventDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one CustomerEventDto")]
 		[HttpPost]
 		public async Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
 		{
@@ -72,6 +84,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one CustomerEventDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one CustomerEventDto by Id")]
 		[HttpPut("{id}")]
 		public async Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
 		{
@@ -87,6 +103,10 @@ namespace Cybtans.Tests.Controllers
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one CustomerEventDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one CustomerEventDto by Id")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
 		{
