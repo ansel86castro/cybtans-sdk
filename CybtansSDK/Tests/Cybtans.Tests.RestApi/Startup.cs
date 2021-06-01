@@ -297,7 +297,10 @@ namespace Cybtans.Test.RestApi
                 };
                 options.Validate();
             });
-            services.AddAuthorization();
+            services.AddAuthorization(options=>
+            {
+                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));
+            });
 		}
     }
 }

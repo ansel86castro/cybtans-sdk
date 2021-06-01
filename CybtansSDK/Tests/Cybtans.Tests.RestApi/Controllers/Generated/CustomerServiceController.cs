@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -35,6 +36,7 @@ namespace Cybtans.Tests.Controllers
 		/// Returns a collection of CustomerDto
 		/// </summary>
 		[System.ComponentModel.Description("Returns a collection of CustomerDto")]
+		[Authorize(Policy = "AdminUser")]
 		[HttpGet]
 		public async Task<mds::GetAllCustomerResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -52,6 +54,7 @@ namespace Cybtans.Tests.Controllers
 		/// Returns one CustomerDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Returns one CustomerDto by Id")]
+		[Authorize(Policy = "AdminUser")]
 		[HttpGet("{id}")]
 		public async Task<mds::CustomerDto> Get(Guid id, [FromQuery]mds::GetCustomerRequest request)
 		{
@@ -71,6 +74,7 @@ namespace Cybtans.Tests.Controllers
 		/// Creates one CustomerDto
 		/// </summary>
 		[System.ComponentModel.Description("Creates one CustomerDto")]
+		[Authorize(Policy = "AdminUser")]
 		[HttpPost]
 		public async Task<mds::CustomerDto> Create([FromBody]mds::CreateCustomerRequest request)
 		{
@@ -88,6 +92,7 @@ namespace Cybtans.Tests.Controllers
 		/// Updates one CustomerDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Updates one CustomerDto by Id")]
+		[Authorize(Policy = "AdminUser")]
 		[HttpPut("{id}")]
 		public async Task<mds::CustomerDto> Update(Guid id, [FromBody]mds::UpdateCustomerRequest request)
 		{
@@ -107,6 +112,7 @@ namespace Cybtans.Tests.Controllers
 		/// Deletes one CustomerDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Deletes one CustomerDto by Id")]
+		[Authorize(Policy = "AdminUser")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerRequest request)
 		{

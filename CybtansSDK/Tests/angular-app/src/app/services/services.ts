@@ -121,35 +121,35 @@ export class CustomerService {
     /** Returns a collection of CustomerDto */
     getAll(request: GetAllRequest): Observable<GetAllCustomerResponse> {
       return this.http.get<GetAllCustomerResponse>(`/api/Customer${ getQueryString(request) }`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
     /** Returns one CustomerDto by Id */
     get(request: GetCustomerRequest): Observable<CustomerDto> {
       return this.http.get<CustomerDto>(`/api/Customer/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
     /** Creates one CustomerDto */
     create(request: CreateCustomerRequest): Observable<CustomerDto> {
       return this.http.post<CustomerDto>(`/api/Customer`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
     /** Updates one CustomerDto by Id */
     update(request: UpdateCustomerRequest): Observable<CustomerDto> {
       return this.http.put<CustomerDto>(`/api/Customer/${request.id}`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
     /** Deletes one CustomerDto by Id */
     delete(request: DeleteCustomerRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/Customer/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
 
@@ -166,35 +166,35 @@ export class CustomerEventService {
     /** Returns a collection of CustomerEventDto */
     getAll(request: GetAllRequest): Observable<GetAllCustomerEventResponse> {
       return this.http.get<GetAllCustomerEventResponse>(`/api/CustomerEvent${ getQueryString(request) }`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
     /** Returns one CustomerEventDto by Id */
     get(request: GetCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.get<CustomerEventDto>(`/api/CustomerEvent/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
     /** Creates one CustomerEventDto */
     create(request: CreateCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.post<CustomerEventDto>(`/api/CustomerEvent`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
     /** Updates one CustomerEventDto by Id */
     update(request: UpdateCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.put<CustomerEventDto>(`/api/CustomerEvent/${request.id}`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
     /** Deletes one CustomerEventDto by Id */
     delete(request: DeleteCustomerEventRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/CustomerEvent/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
 

@@ -21,30 +21,35 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns a collection of CustomerDto
 		/// </summary>
+		[Headers("Authorization: Bearer")]
 		[Get("/api/Customer")]
 		Task<GetAllCustomerResponse> GetAll(GetAllRequest request = null);
 		
 		/// <summary>
 		/// Returns one CustomerDto by Id
 		/// </summary>
+		[Headers("Authorization: Bearer")]
 		[Get("/api/Customer/{request.Id}")]
 		Task<CustomerDto> Get(GetCustomerRequest request);
 		
 		/// <summary>
 		/// Creates one CustomerDto
 		/// </summary>
+		[Headers("Authorization: Bearer")]
 		[Post("/api/Customer")]
 		Task<CustomerDto> Create([Body]CreateCustomerRequest request);
 		
 		/// <summary>
 		/// Updates one CustomerDto by Id
 		/// </summary>
+		[Headers("Authorization: Bearer")]
 		[Put("/api/Customer/{request.Id}")]
 		Task<CustomerDto> Update([Body]UpdateCustomerRequest request);
 		
 		/// <summary>
 		/// Deletes one CustomerDto by Id
 		/// </summary>
+		[Headers("Authorization: Bearer")]
 		[Delete("/api/Customer/{request.Id}")]
 		Task Delete(DeleteCustomerRequest request);
 	

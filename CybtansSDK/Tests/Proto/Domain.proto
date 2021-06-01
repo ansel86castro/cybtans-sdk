@@ -144,6 +144,7 @@ service CustomerService {
 
 	rpc GetAll(GetAllRequest) returns (GetAllCustomerResponse){		
 		option (method) = "GET";
+		option (policy) = "AdminUser";
 		option (description) = "Returns a collection of CustomerDto";
 		option (graphql).query = "customers";
 
@@ -152,6 +153,7 @@ service CustomerService {
 	rpc Get(GetCustomerRequest) returns (CustomerDto){	
 		option (template) = "{id}"; 
 		option (method) = "GET";
+		option (policy) = "AdminUser";
 		option (description) = "Returns one CustomerDto by Id";
 		option (graphql).query = "customer";
 
@@ -159,6 +161,7 @@ service CustomerService {
 
 	rpc Create(CreateCustomerRequest) returns (CustomerDto){			
 		option (method) = "POST";
+		option (policy) = "AdminUser";
 		option (description) = "Creates one CustomerDto";
 
 	};
@@ -166,6 +169,7 @@ service CustomerService {
 	rpc Update(UpdateCustomerRequest) returns (CustomerDto){			
 		option (template) = "{id}"; 
 		option (method) = "PUT";
+		option (policy) = "AdminUser";
 		option (description) = "Updates one CustomerDto by Id";
 
 	};
@@ -173,6 +177,7 @@ service CustomerService {
 	rpc Delete(DeleteCustomerRequest) returns (void){
 		option (template) = "{id}"; 
 		option (method) = "DELETE";
+		option (policy) = "AdminUser";
 		option (description) = "Deletes one CustomerDto by Id";
 
 	};
@@ -211,6 +216,7 @@ service CustomerEventService {
 
 	rpc GetAll(GetAllRequest) returns (GetAllCustomerEventResponse){		
 		option (method) = "GET";
+		option (authorized) = true;
 		option (description) = "Returns a collection of CustomerEventDto";
 		option (graphql).query = "customerEvents";
 
@@ -219,6 +225,7 @@ service CustomerEventService {
 	rpc Get(GetCustomerEventRequest) returns (CustomerEventDto){	
 		option (template) = "{id}"; 
 		option (method) = "GET";
+		option (authorized) = true;
 		option (description) = "Returns one CustomerEventDto by Id";
 		option (graphql).query = "customerEvent";
 
@@ -226,6 +233,7 @@ service CustomerEventService {
 
 	rpc Create(CreateCustomerEventRequest) returns (CustomerEventDto){			
 		option (method) = "POST";
+		option (authorized) = true;
 		option (description) = "Creates one CustomerEventDto";
 
 	};
@@ -233,6 +241,7 @@ service CustomerEventService {
 	rpc Update(UpdateCustomerEventRequest) returns (CustomerEventDto){			
 		option (template) = "{id}"; 
 		option (method) = "PUT";
+		option (authorized) = true;
 		option (description) = "Updates one CustomerEventDto by Id";
 
 	};
@@ -240,6 +249,7 @@ service CustomerEventService {
 	rpc Delete(DeleteCustomerEventRequest) returns (void){
 		option (template) = "{id}"; 
 		option (method) = "DELETE";
+		option (authorized) = true;
 		option (description) = "Deletes one CustomerEventDto by Id";
 
 	};

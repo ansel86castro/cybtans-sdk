@@ -112,23 +112,33 @@ namespace Cybtans.Tests.RestApi.GraphQl
 
     public class Query : ObjectGraphType
     {
-        public Query(IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
+        public Query()
         {
-            FieldAsync<OrderStateType>("orderState", 
+            FieldAsync<OrderStateType>("orderState",
                 arguments: new QueryArguments()
                 {
                     new QueryArgument<IntGraphType>(){ Name = "id", Description = "Type Ids" },
                 },
-                resolve: async context => 
-                {                    
-                    //if(!httpContextAccessor.HttpContext.User.IsInRole("admin"))
-                    //{                        
-                    //    throw new UnauthorizedAccessException();
-                    //}
-                    //if(!(await authorizationService.AuthorizeAsync(httpContextAccessor.HttpContext.User, "PolicyName")).Succeeded)
-                    //{
-                    //    throw new UnauthorizedAccessException();
-                    //}
+                resolve: async context =>
+                {
+                    var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+
+                    if (!httpContext.User.Identity.IsAuthenticated)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    if (!httpContext.User.IsInRole("admin"))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+                    var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, "PolicyName");
+                    if (!authorizationResult.Succeeded)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
 
                     var service = context.RequestServices.GetRequiredService<IOrderStateService>();
 
@@ -168,7 +178,7 @@ namespace Cybtans.Tests.RestApi.GraphQl
         public QuerySchema(IServiceProvider provider, IHttpContextAccessor httpContextAccessor, IAuthorizationService authorizationService)
             : base(provider)
         {            
-            Query = new Query(httpContextAccessor, authorizationService); 
+            Query = new Query(); 
         }
     }
 

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -35,6 +36,7 @@ namespace Cybtans.Tests.Controllers
 		/// Returns a collection of CustomerEventDto
 		/// </summary>
 		[System.ComponentModel.Description("Returns a collection of CustomerEventDto")]
+		[Authorize]
 		[HttpGet]
 		public async Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
@@ -52,6 +54,7 @@ namespace Cybtans.Tests.Controllers
 		/// Returns one CustomerEventDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Returns one CustomerEventDto by Id")]
+		[Authorize]
 		[HttpGet("{id}")]
 		public async Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
 		{
@@ -71,6 +74,7 @@ namespace Cybtans.Tests.Controllers
 		/// Creates one CustomerEventDto
 		/// </summary>
 		[System.ComponentModel.Description("Creates one CustomerEventDto")]
+		[Authorize]
 		[HttpPost]
 		public async Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
 		{
@@ -88,6 +92,7 @@ namespace Cybtans.Tests.Controllers
 		/// Updates one CustomerEventDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Updates one CustomerEventDto by Id")]
+		[Authorize]
 		[HttpPut("{id}")]
 		public async Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
 		{
@@ -107,6 +112,7 @@ namespace Cybtans.Tests.Controllers
 		/// Deletes one CustomerEventDto by Id
 		/// </summary>
 		[System.ComponentModel.Description("Deletes one CustomerEventDto by Id")]
+		[Authorize]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
 		{

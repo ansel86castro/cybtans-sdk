@@ -157,21 +157,21 @@ export class CustomerService extends BaseTestsService {
     
     /** Returns a collection of CustomerDto */
     getAll(request:GetAllRequest) : Promise<GetAllCustomerResponse> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/Customer`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     /** Returns one CustomerDto by Id */
     get(request:GetCustomerRequest) : Promise<CustomerDto> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     /** Creates one CustomerDto */
     create(request:CreateCustomerRequest) : Promise<CustomerDto> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Customer`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
@@ -179,7 +179,7 @@ export class CustomerService extends BaseTestsService {
     
     /** Updates one CustomerDto by Id */
     update(request:UpdateCustomerRequest) : Promise<CustomerDto> {
-    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
@@ -187,7 +187,7 @@ export class CustomerService extends BaseTestsService {
     
     /** Deletes one CustomerDto by Id */
     delete(request:DeleteCustomerRequest) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/Customer/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }
@@ -203,21 +203,21 @@ export class CustomerEventService extends BaseTestsService {
     
     /** Returns a collection of CustomerEventDto */
     getAll(request:GetAllRequest) : Promise<GetAllCustomerEventResponse> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent`+this.getQueryString(request);
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     /** Returns one CustomerEventDto by Id */
     get(request:GetCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
     
     /** Creates one CustomerEventDto */
     create(request:CreateCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
@@ -225,7 +225,7 @@ export class CustomerEventService extends BaseTestsService {
     
     /** Updates one CustomerEventDto by Id */
     update(request:UpdateCustomerEventRequest) : Promise<CustomerEventDto> {
-    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
+    	let options:RequestInit = { method: 'PUT', headers: { Accept: 'application/json', Authorization: 'Bearer', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
@@ -233,7 +233,7 @@ export class CustomerEventService extends BaseTestsService {
     
     /** Deletes one CustomerEventDto by Id */
     delete(request:DeleteCustomerEventRequest) : Promise<ErrorInfo|void> {
-    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json' }};
+    	let options:RequestInit = { method: 'DELETE', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
     	let endpoint = this._options.baseUrl+`/api/CustomerEvent/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.ensureSuccess(response));
     }

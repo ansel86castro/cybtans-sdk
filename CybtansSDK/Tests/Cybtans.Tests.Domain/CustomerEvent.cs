@@ -3,7 +3,7 @@ using System;
 
 namespace Cybtans.Tests.Domain
 {
-    [GenerateMessage(Service = ServiceType.Default)]
+    [GenerateMessage(Service = ServiceType.Default, Security = SecurityType.Authorized)]
     public class CustomerEvent : Entity<Guid>
     {
         public string FullName { get; set; }
