@@ -274,9 +274,9 @@ namespace Cybtans.Tests.GraphQL
 	}
 	
 	
-	public class GraphQLQueryDefinition : ObjectGraphType
+	public partial class TestQueryDefinitions : ObjectGraphType
 	{
-		public GraphQLQueryDefinition()
+		public void AddTestDefinitions()
 		{
 			#region CustomerService
 			
@@ -623,14 +623,5 @@ namespace Cybtans.Tests.GraphQL
 		
 		}}
 	
-	
-	public class GraphQLQueryDefinitionSchema : Schema
-	{
-	    public GraphQLQueryDefinitionSchema(IServiceProvider provider)
-	        : base(provider)
-	    {            
-	        Query = new GraphQLQueryDefinition(); 
-	    }
-	}
 
 }

@@ -42,6 +42,7 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			result.Time = model.Time != null ? DateTime.UnixEpoch.Add(model.Time.ToTimeSpan()) : new DateTime?();
 			result.Observations = model.Observations;
 			result.NullableInt = model.NullableInt;
+			result.Data = model.Data?.ToByteArray();
 			return result;
 		}
 		

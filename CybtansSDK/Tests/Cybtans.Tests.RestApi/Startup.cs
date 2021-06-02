@@ -136,8 +136,6 @@ namespace Cybtans.Test.RestApi
             //Add Grpc clients
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-
             services.AddGrpcClient<Greeter.GreeterClient>(o =>
             {
                 o.Address = new Uri(Configuration["GreteerService"]);
@@ -147,7 +145,7 @@ namespace Cybtans.Test.RestApi
 
             #region GraphQL
         
-            services.AddSingleton<ISchema, GraphQLQueryDefinitionSchema>();
+            services.AddSingleton<ISchema, TestQueryDefinitionsSchema>();
             services.AddGraphQL(options =>
             {                
                 options.EnableMetrics = true;                
@@ -299,7 +297,7 @@ namespace Cybtans.Test.RestApi
             });
             services.AddAuthorization(options=>
             {
-                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));
+                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));                
             });
 		}
     }

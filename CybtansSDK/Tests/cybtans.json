@@ -6,21 +6,30 @@
       "Output": ".",
       "ProtoFile": "./Proto/Domain.proto",
       "AssemblyFile": "./Cybtans.Tests.Domain/bin/Debug/net5.0/Cybtans.Tests.Domain.dll",
-      "GenerateGraphQLQuery" : true
+      "GenerateGraphQLQuery": true
     },
     {
       "Type": "proto",
       "Output": ".",
       "ProtoFile": "./Proto/Test.proto",
-      "Gateway": "./Cybtans.Tests.Gateway/Controllers/Tests",
+      "ApiGateway": {
+        "Output": "./Cybtans.Tests.Gateway/Controllers/Generated/Tests",
+        "GraphQL": {
+          "Generate": true,
+          "Namespace": "Cybtans.Tests.Gateway.GraphQL",
+          "QueryName": "GraphQLQueryDefinitions"
+        }
+      },
+      "Services": {
+        "GraphQL": {
+          "Generate": true
+        }
+      },
       "Controllers": {
         "UseActionInterceptor": true
       },
       "CSharpClients": {
         "Generate": true
-      },
-      "GraphQL": {
-        "Generate": true        
       },
       "Clients": [
         {

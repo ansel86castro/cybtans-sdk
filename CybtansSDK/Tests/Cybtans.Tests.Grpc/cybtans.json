@@ -12,10 +12,17 @@
       "Services": {
         "Output": "../Cybtans.Tests.Gateway/Generated/Services/Definitions",
         "Namespace": "Cybtans.Test.Gateway.Services.Definition",
+        
         "Grpc": {
           "Output": "../Cybtans.Tests.Gateway/Generated/Services/Implementation",
           "Namespace": "Cybtans.Test.Gateway.Services.Implementation",
           "AutoRegister": true
+        },
+        "GraphQL": {
+          "Generate": true,
+          "Output": "../Cybtans.Tests.Gateway/Generated/Services/Implementation",
+          "Namespace": "Cybtans.Tests.Gateway.GraphQL",
+          "QueryName": "GraphQLQueryDefinitions"
         }
       },
       "Controllers": {
