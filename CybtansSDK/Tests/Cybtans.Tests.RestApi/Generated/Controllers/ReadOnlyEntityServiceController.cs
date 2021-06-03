@@ -23,9 +23,9 @@ namespace Cybtans.Tests.Controllers
 	{
 		private readonly IReadOnlyEntityService _service;
 		private readonly ILogger<ReadOnlyEntityServiceController> _logger;
-		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public ReadOnlyEntityServiceController(IReadOnlyEntityService service,  ILogger<ReadOnlyEntityServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
+		public ReadOnlyEntityServiceController(IReadOnlyEntityService service,  ILogger<ReadOnlyEntityServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
@@ -44,7 +44,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(GetAll)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
@@ -64,7 +64,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Get)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);

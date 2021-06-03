@@ -31,6 +31,8 @@ namespace Cybtans.Tests.Gateway.Models
 		
 		public byte[] Data {get; set;}
 		
+		public HelloModelModel HelloModel {get; set;}
+		
 	
 	}
 

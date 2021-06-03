@@ -28,6 +28,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			Field<DateTimeGraphType>("Time");
 			Field(x => x.Observations, nullable:true);
 			Field(x => x.NullableInt, nullable:true);
+			Field<HelloModelModelGraphType>("HelloModel");
 		
 		}
 	}
@@ -73,6 +74,17 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	
 	public class HellowInfo_Types_InnerA_Types_InnerB_Types_TypeBGraphType : EnumerationGraphType<HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB>
 	{
+	}
+	
+	
+	public class HelloModelModelGraphType : ObjectGraphType<HelloModelModel>
+	{
+		public HelloModelModelGraphType()
+		{
+			Field(x => x.Id, nullable:true);
+			Field(x => x.Message, nullable:true);
+		
+		}
 	}
 	
 	

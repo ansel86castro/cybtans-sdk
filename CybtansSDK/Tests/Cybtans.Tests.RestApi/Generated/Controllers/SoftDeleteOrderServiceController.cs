@@ -22,9 +22,9 @@ namespace Cybtans.Tests.Controllers
 	{
 		private readonly ISoftDeleteOrderService _service;
 		private readonly ILogger<SoftDeleteOrderServiceController> _logger;
-		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public SoftDeleteOrderServiceController(ISoftDeleteOrderService service,  ILogger<SoftDeleteOrderServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
+		public SoftDeleteOrderServiceController(ISoftDeleteOrderService service,  ILogger<SoftDeleteOrderServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
@@ -42,7 +42,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(GetAll)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
@@ -61,7 +61,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Get)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
@@ -78,7 +78,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Create)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Create(request).ConfigureAwait(false);
@@ -97,7 +97,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Update)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Update(request).ConfigureAwait(false);
@@ -116,7 +116,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Delete)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			await _service.Delete(request).ConfigureAwait(false);

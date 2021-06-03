@@ -7,7 +7,8 @@ import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
-import "cybtans.proto";
+import "protos/cybtans.proto";
+import "protos/data.proto";
 
 // The greeting service definition.
 service Greeter {
@@ -43,6 +44,7 @@ message HelloReply {
   google.protobuf.StringValue observations = 7;
   google.protobuf.Int32Value nullableInt = 8;
   bytes data = 9;
+  HelloModelModel helloModel = 10;
 }
 
 message HellowInfo {

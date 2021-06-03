@@ -1,9 +1,21 @@
 {
-  "Service": "Cybtans.Tests.Grpc",
   "Steps": [
     {
+      "Type": "messages",
+      "Output": ".",
+      "ProtoFile": "./protos/data.proto",
+      "AssemblyFile": "./bin/Debug/net5.0/Cybtans.Tests.Grpc.dll",
+      "NameTemplate": "@{Name}Model",
+      "Grpc": {
+        "Enable": true,
+        "MappingOutput": "./ProtoMappings",
+        "MappingNamespace": "Cybtans.Tests.Grpc.Mappings",
+        "GrpcNamespace": "Cybtans.Tests.Grpc"
+      }
+    },
+    {
       "Type": "proto",
-      "ProtoFile": "../Proto/greet.proto",
+      "ProtoFile": "./protos/greet.proto",
       "Models": {
         "Output": "../Cybtans.Tests.Gateway/Generated/Models",
         "Namespace": "Cybtans.Tests.Gateway.Models",
@@ -12,7 +24,7 @@
       "Services": {
         "Output": "../Cybtans.Tests.Gateway/Generated/Services/Definitions",
         "Namespace": "Cybtans.Test.Gateway.Services.Definition",
-        
+
         "Grpc": {
           "Output": "../Cybtans.Tests.Gateway/Generated/Services/Implementation",
           "Namespace": "Cybtans.Test.Gateway.Services.Implementation",
@@ -27,8 +39,9 @@
       },
       "Controllers": {
         "Output": "../Cybtans.Tests.Gateway/Generated/Controllers",
-        "UseActionInterceptor" : true
-      },     
+        "Namespace": "Cybtans.Tests.Grpc.Controllers",
+        "UseActionInterceptor": true
+      },
       "Clients": [
         {
           "Output": "../react-app/src/services/grpc",

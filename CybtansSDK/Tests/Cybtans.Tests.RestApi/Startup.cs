@@ -104,7 +104,7 @@ namespace Cybtans.Test.RestApi
             {
                 p.AddValidatorFromAssembly(typeof(TestStub).Assembly);
             });
-            services.AddSingleton<IActionInterceptor, ValidatorActionInterceptor>();
+            services.AddSingleton<IMessageInterceptor, ValidatorActionInterceptor>();
 
             #endregion
 

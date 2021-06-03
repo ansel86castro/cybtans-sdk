@@ -64,7 +64,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Generated\Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

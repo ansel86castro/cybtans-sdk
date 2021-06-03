@@ -7,6 +7,12 @@
 //******************************************************
 
 
+export interface HelloModelModel {
+  id?: string|null;
+  message?: string|null;
+}
+
+
 export interface HelloRequest {
   name?: string|null;
   observations?: string|null;
@@ -27,6 +33,7 @@ export interface HelloReply {
   observations?: string|null;
   nullableInt?: number|undefined|null;
   data?: string|null;
+  helloModel?: HelloModelModel|null;
 }
 
 

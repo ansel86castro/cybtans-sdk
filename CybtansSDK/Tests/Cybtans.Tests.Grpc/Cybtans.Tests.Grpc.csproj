@@ -19,13 +19,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Proto\greet.proto" GrpcServices="Both" />
-    <Protobuf Include="..\Proto\cybtans.proto" GrpcServices="None" />
+    <Protobuf Include="protos\greet.proto" GrpcServices="Both" />
+    <Protobuf Include="protos\cybtans.proto" GrpcServices="None" />
+    <Protobuf Include="protos\data.proto" GrpcServices="None" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.37.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.Proto\Cybtans.Entities.Proto.csproj" />
   </ItemGroup>
 
 </Project>

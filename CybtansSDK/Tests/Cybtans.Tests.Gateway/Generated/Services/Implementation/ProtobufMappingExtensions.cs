@@ -43,6 +43,7 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			result.Observations = model.Observations;
 			result.NullableInt = model.NullableInt;
 			result.Data = model.Data?.ToByteArray();
+			result.HelloModel = ToPocoModel(model.HelloModel);
 			return result;
 		}
 		
@@ -73,6 +74,16 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			
 			mds::HellowInfo.Types.InnerA.Types.InnerB result = new mds::HellowInfo.Types.InnerA.Types.InnerB();
 			result.Type = (mds::HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB)model.Type;
+			return result;
+		}
+		
+		public static mds::HelloModelModel ToPocoModel(this global::Cybtans.Tests.Grpc.HelloModelModel model)
+		{
+			if(model == null) return null;
+			
+			mds::HelloModelModel result = new mds::HelloModelModel();
+			result.Id = model.Id;
+			result.Message = model.Message;
 			return result;
 		}
 		

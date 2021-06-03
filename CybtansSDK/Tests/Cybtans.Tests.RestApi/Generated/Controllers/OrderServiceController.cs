@@ -28,9 +28,9 @@ namespace Cybtans.Tests.Controllers
 	{
 		private readonly IOrderService _service;
 		private readonly ILogger<OrderServiceController> _logger;
-		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public OrderServiceController(IOrderService service,  ILogger<OrderServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
+		public OrderServiceController(IOrderService service,  ILogger<OrderServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
@@ -82,7 +82,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(UploadImage)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.UploadImage(request).ConfigureAwait(false);
@@ -98,7 +98,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(UploadStreamById)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.UploadStreamById(request).ConfigureAwait(false);
@@ -112,7 +112,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(UploadStream)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.UploadStream(request).ConfigureAwait(false);
@@ -125,7 +125,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(DownloadImage)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			var result = await _service.DownloadImage(request).ConfigureAwait(false);
@@ -147,7 +147,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(GetMultiPath)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			await _service.GetMultiPath(request).ConfigureAwait(false);
@@ -163,7 +163,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(SendNotification)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			await _service.SendNotification(request).ConfigureAwait(false);
@@ -186,7 +186,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(GetOrderName)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.GetOrderName(request).ConfigureAwait(false);
@@ -199,7 +199,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(CreateOrderName)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
@@ -216,7 +216,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(GetAll)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
@@ -235,7 +235,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Get)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
@@ -252,7 +252,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Create)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Create(request).ConfigureAwait(false);
@@ -271,7 +271,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Update)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Update(request).ConfigureAwait(false);
@@ -290,7 +290,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Delete)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			await _service.Delete(request).ConfigureAwait(false);
