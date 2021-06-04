@@ -9,8 +9,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AutoMapper;
-using FluentValidation.AspNetCore;
 using Cybtans.AspNetCore;
 using Cybtans.Entities.EntityFrameworkCore;
 using Cybtans.Services.Extensions;
@@ -22,6 +20,10 @@ using Cybtans.Messaging;
 using Cybtans.Tests.Grpc;
 using Cybtans.AspNetCore.Interceptors;
 using Cybtans.Tests.RestApi;
+using GraphQL.Types;
+using GraphQL.Server;
+using Cybtans.Tests.RestApi.GraphQl;
+using Cybtans.Tests.GraphQL;
 
 namespace Cybtans.Test.RestApi
 {
@@ -50,7 +52,7 @@ namespace Cybtans.Test.RestApi
                     builder =>
                     {
                         builder.SetIsOriginAllowedToAllowWildcardSubdomains()
-                         .WithOrigins(Configuration.GetValue<string>("AllowedHosts").Split(','))
+                         .AllowAnyOrigin()
                          .AllowAnyHeader()
                          .AllowAnyMethod();
                     });
@@ -102,7 +104,7 @@ namespace Cybtans.Test.RestApi
             {
                 p.AddValidatorFromAssembly(typeof(TestStub).Assembly);
             });
-            services.AddSingleton<IActionInterceptor, ValidatorActionInterceptor>();
+            services.AddSingleton<IMessageInterceptor, ValidatorActionInterceptor>();
 
             #endregion
 
@@ -128,16 +130,31 @@ namespace Cybtans.Test.RestApi
             services.AddLocalCache();
 
             #endregion
-          
+
+            #region Grpc Clients
+
             //Add Grpc clients
             // This switch must be set before creating the GrpcChannel/HttpClient.
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-
             services.AddGrpcClient<Greeter.GreeterClient>(o =>
             {
                 o.Address = new Uri(Configuration["GreteerService"]);
             });
+
+            #endregion
+
+            #region GraphQL
+        
+            services.AddSingleton<ISchema, TestQueryDefinitionsSchema>();
+            services.AddGraphQL(options =>
+            {                
+                options.EnableMetrics = true;                
+            })
+             .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+             .AddSystemTextJson()
+             .AddGraphTypes(typeof(Startup), ServiceLifetime.Singleton);
+
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -181,6 +198,16 @@ namespace Cybtans.Test.RestApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            #region GraphQL
+
+            // add http for Schema at default url /graphql
+            app.UseGraphQL<ISchema>();
+
+            // use graphql-playground at default url /ui/playground
+            app.UseGraphQLPlayground("/ui/playground");
+
+            #endregion
 
             app.UseEndpoints(endpoints =>
             {
@@ -268,7 +295,10 @@ namespace Cybtans.Test.RestApi
                 };
                 options.Validate();
             });
-            services.AddAuthorization();
+            services.AddAuthorization(options=>
+            {
+                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));                
+            });
 		}
     }
 }

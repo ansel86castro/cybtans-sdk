@@ -22,9 +22,9 @@ namespace Cybtans.Tests.Grpc.Controllers
 	{
 		private readonly IGreeter _service;
 		private readonly ILogger<GreeterController> _logger;
-		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public GreeterController(IGreeter service,  ILogger<GreeterController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
+		public GreeterController(IGreeter service,  ILogger<GreeterController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.Grpc.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(SayHello)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.SayHello(request).ConfigureAwait(false);

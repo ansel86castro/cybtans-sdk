@@ -6,7 +6,7 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +26,15 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class OrderServiceController : ControllerBase
 	{
-		private readonly IOrderServiceClient _service;
+		private readonly IOrderService _service;
 		private readonly ILogger<OrderServiceController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public OrderServiceController(IOrderServiceClient service,  ILogger<OrderServiceController> logger)
+		public OrderServiceController(IOrderService service,  ILogger<OrderServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
 		[AllowAnonymous]
@@ -78,6 +80,11 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.UploadImage(request).ConfigureAwait(false);
 		}
 		
@@ -89,6 +96,11 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.UploadStreamById(request).ConfigureAwait(false);
 		}
 		
@@ -98,6 +110,11 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.UploadStream(request).ConfigureAwait(false);
 		}
 		
@@ -105,6 +122,11 @@ namespace Cybtans.Tests.Controllers
 		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			var result = await _service.DownloadImage(request).ConfigureAwait(false);
 			
@@ -123,6 +145,11 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetMultiPath), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			await _service.GetMultiPath(request).ConfigureAwait(false);
 		}
 		
@@ -133,6 +160,11 @@ namespace Cybtans.Tests.Controllers
 			request.UserId = userId;
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(SendNotification), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			await _service.SendNotification(request).ConfigureAwait(false);
 		}
@@ -152,6 +184,11 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.GetOrderName(request).ConfigureAwait(false);
 		}
 		
@@ -160,17 +197,35 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns a collection of OrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of OrderDto")]
 		[HttpGet]
 		public async Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one OrderDto by Id")]
 		[HttpGet("{id}")]
 		public async Task<mds::OrderDto> Get(Guid id, [FromQuery]mds::GetOrderRequest request)
 		{
@@ -178,17 +233,35 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Creates one OrderDto
+		/// </summary>
+		[System.ComponentModel.Description("Creates one OrderDto")]
 		[HttpPost]
 		public async Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Create(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Updates one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Updates one OrderDto by Id")]
 		[HttpPut("{id}")]
 		public async Task<mds::OrderDto> Update(Guid id, [FromBody]mds::UpdateOrderRequest request)
 		{
@@ -196,15 +269,29 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Deletes one OrderDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Deletes one OrderDto by Id")]
 		[HttpDelete("{id}")]
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
 		{
 			request.Id = id;
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			await _service.Delete(request).ConfigureAwait(false);
 		}

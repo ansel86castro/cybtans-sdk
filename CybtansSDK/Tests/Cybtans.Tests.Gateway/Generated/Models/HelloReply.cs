@@ -29,6 +29,10 @@ namespace Cybtans.Tests.Gateway.Models
 		
 		public int? NullableInt {get; set;}
 		
+		public byte[] Data {get; set;}
+		
+		public HelloModelModel HelloModel {get; set;}
+		
 	
 	}
 

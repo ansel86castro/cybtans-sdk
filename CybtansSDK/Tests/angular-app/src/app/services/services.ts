@@ -118,33 +118,38 @@ export class CustomerService {
 
     constructor(private http: HttpClient) {}
     
+    /** Returns a collection of CustomerDto */
     getAll(request: GetAllRequest): Observable<GetAllCustomerResponse> {
       return this.http.get<GetAllCustomerResponse>(`/api/Customer${ getQueryString(request) }`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Returns one CustomerDto by Id */
     get(request: GetCustomerRequest): Observable<CustomerDto> {
       return this.http.get<CustomerDto>(`/api/Customer/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Creates one CustomerDto */
     create(request: CreateCustomerRequest): Observable<CustomerDto> {
       return this.http.post<CustomerDto>(`/api/Customer`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Updates one CustomerDto by Id */
     update(request: UpdateCustomerRequest): Observable<CustomerDto> {
       return this.http.put<CustomerDto>(`/api/Customer/${request.id}`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Deletes one CustomerDto by Id */
     delete(request: DeleteCustomerRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/Customer/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
 
@@ -158,33 +163,38 @@ export class CustomerEventService {
 
     constructor(private http: HttpClient) {}
     
+    /** Returns a collection of CustomerEventDto */
     getAll(request: GetAllRequest): Observable<GetAllCustomerEventResponse> {
       return this.http.get<GetAllCustomerEventResponse>(`/api/CustomerEvent${ getQueryString(request) }`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Returns one CustomerEventDto by Id */
     get(request: GetCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.get<CustomerEventDto>(`/api/CustomerEvent/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Creates one CustomerEventDto */
     create(request: CreateCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.post<CustomerEventDto>(`/api/CustomerEvent`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Updates one CustomerEventDto by Id */
     update(request: UpdateCustomerEventRequest): Observable<CustomerEventDto> {
       return this.http.put<CustomerEventDto>(`/api/CustomerEvent/${request.id}`, request, {
-          headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Deletes one CustomerEventDto by Id */
     delete(request: DeleteCustomerEventRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/CustomerEvent/${request.id}`, {
-          headers: new HttpHeaders({ Accept: 'application/json' }),
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
 
@@ -279,30 +289,35 @@ export class OrderService {
       });
     }
     
+    /** Returns a collection of OrderDto */
     getAll(request: GetAllRequest): Observable<GetAllOrderResponse> {
       return this.http.get<GetAllOrderResponse>(`/api/Order${ getQueryString(request) }`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }
     
+    /** Returns one OrderDto by Id */
     get(request: GetOrderRequest): Observable<OrderDto> {
       return this.http.get<OrderDto>(`/api/Order/${request.id}`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }
     
+    /** Creates one OrderDto */
     create(request: CreateOrderRequest): Observable<OrderDto> {
       return this.http.post<OrderDto>(`/api/Order`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Updates one OrderDto by Id */
     update(request: UpdateOrderRequest): Observable<OrderDto> {
       return this.http.put<OrderDto>(`/api/Order/${request.id}`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Deletes one OrderDto by Id */
     delete(request: DeleteOrderRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/Order/${request.id}`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
@@ -319,30 +334,35 @@ export class OrderStateService {
 
     constructor(private http: HttpClient) {}
     
+    /** Returns a collection of OrderStateDto */
     getAll(request: GetAllRequest): Observable<GetAllOrderStateResponse> {
       return this.http.get<GetAllOrderStateResponse>(`/api/OrderState${ getQueryString(request) }`, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Returns one OrderStateDto by Id */
     get(request: GetOrderStateRequest): Observable<OrderStateDto> {
       return this.http.get<OrderStateDto>(`/api/OrderState/${request.id}`, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Creates one OrderStateDto */
     create(request: CreateOrderStateRequest): Observable<OrderStateDto> {
       return this.http.post<OrderStateDto>(`/api/OrderState`, request, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Updates one OrderStateDto by Id */
     update(request: UpdateOrderStateRequest): Observable<OrderStateDto> {
       return this.http.put<OrderStateDto>(`/api/OrderState/${request.id}`, request, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Deletes one OrderStateDto by Id */
     delete(request: DeleteOrderStateRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/OrderState/${request.id}`, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
@@ -359,12 +379,14 @@ export class ReadOnlyEntityService {
 
     constructor(private http: HttpClient) {}
     
+    /** Returns a collection of ReadOnlyEntityDto */
     getAll(request: GetAllRequest): Observable<GetAllReadOnlyEntityResponse> {
       return this.http.get<GetAllReadOnlyEntityResponse>(`/api/ReadOnlyEntity${ getQueryString(request) }`, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
     
+    /** Returns one ReadOnlyEntityDto by Id */
     get(request: GetReadOnlyEntityRequest): Observable<ReadOnlyEntityDto> {
       return this.http.get<ReadOnlyEntityDto>(`/api/ReadOnlyEntity/${request.id}`, {
           headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
@@ -381,30 +403,35 @@ export class SoftDeleteOrderService {
 
     constructor(private http: HttpClient) {}
     
+    /** Returns a collection of SoftDeleteOrderDto */
     getAll(request: GetAllRequest): Observable<GetAllSoftDeleteOrderResponse> {
       return this.http.get<GetAllSoftDeleteOrderResponse>(`/api/SoftDeleteOrder${ getQueryString(request) }`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }
     
+    /** Returns one SoftDeleteOrderDto by Id */
     get(request: GetSoftDeleteOrderRequest): Observable<SoftDeleteOrderDto> {
       return this.http.get<SoftDeleteOrderDto>(`/api/SoftDeleteOrder/${request.id}`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),
       });
     }
     
+    /** Creates one SoftDeleteOrderDto */
     create(request: CreateSoftDeleteOrderRequest): Observable<SoftDeleteOrderDto> {
       return this.http.post<SoftDeleteOrderDto>(`/api/SoftDeleteOrder`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Updates one SoftDeleteOrderDto by Id */
     update(request: UpdateSoftDeleteOrderRequest): Observable<SoftDeleteOrderDto> {
       return this.http.put<SoftDeleteOrderDto>(`/api/SoftDeleteOrder/${request.id}`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
       });
     }
     
+    /** Deletes one SoftDeleteOrderDto by Id */
     delete(request: DeleteSoftDeleteOrderRequest): Observable<{}> {
       return this.http.delete<{}>(`/api/SoftDeleteOrder/${request.id}`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),

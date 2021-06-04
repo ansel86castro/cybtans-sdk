@@ -15,18 +15,33 @@ namespace Cybtans.Tests.Services
 	public interface ICustomerService 
 	{
 		
+		/// <summary>
+		/// Returns a collection of CustomerDto
+		/// </summary>
 		Task<mds::GetAllCustomerResponse> GetAll(mds::GetAllRequest request);
 		
 		
+		/// <summary>
+		/// Returns one CustomerDto by Id
+		/// </summary>
 		Task<mds::CustomerDto> Get(mds::GetCustomerRequest request);
 		
 		
+		/// <summary>
+		/// Creates one CustomerDto
+		/// </summary>
 		Task<mds::CustomerDto> Create(mds::CreateCustomerRequest request);
 		
 		
+		/// <summary>
+		/// Updates one CustomerDto by Id
+		/// </summary>
 		Task<mds::CustomerDto> Update(mds::UpdateCustomerRequest request);
 		
 		
+		/// <summary>
+		/// Deletes one CustomerDto by Id
+		/// </summary>
 		Task Delete(mds::DeleteCustomerRequest request);
 		
 	}

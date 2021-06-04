@@ -26,8 +26,12 @@
     <None Include="Assets\Effects\Shaders\default.p.json" />
   </ItemGroup>
 
-  <ItemGroup>		
-	<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />		
+  <ItemGroup>
+  <PackageReference Include="GraphQL" Version="4.5.0" />
+  <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="5.0.2" />
+  <PackageReference Include="GraphQL.Server.Transports.AspNetCore.SystemTextJson" Version="5.0.2" />
+  <PackageReference Include="GraphQL.Server.Ui.Playground" Version="5.0.2" />
+  <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />		
 	<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.Json" Version="5.0.6" />		
 	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />		
 	<PackageReference Include="RabbitMQ.Client" Version="6.2.1" />		
@@ -60,8 +64,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Controllers\Tests\" />
-    <Folder Include="Generated\Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

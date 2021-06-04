@@ -103,6 +103,7 @@ service OrderService {
 	rpc GetAllNames(void) returns (GetAllNamesResponse){		
 		option method = "GET";
 		option template = "names";		
+		option (graphql).query = "ordernames";
 	};
 
 	rpc GetOrderName(GetOrderNameRequest) returns (OrderNamesDto){		

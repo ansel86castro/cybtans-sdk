@@ -2,8 +2,8 @@
 
 namespace Cybtans.AspNetCore.Interceptors
 {
-    public interface IActionInterceptor
+    public interface IMessageInterceptor
     {
-        ValueTask Handle<T>(T msg, string action) where T : class;
+        ValueTask Handle<T>(T msg) where T : class;
     }
 }

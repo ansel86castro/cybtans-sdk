@@ -18,10 +18,16 @@ namespace Cybtans.Tests.Clients
 	public interface IReadOnlyEntityServiceClient
 	{
 		
+		/// <summary>
+		/// Returns a collection of ReadOnlyEntityDto
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Get("/api/ReadOnlyEntity")]
 		Task<GetAllReadOnlyEntityResponse> GetAll(GetAllRequest request = null);
 		
+		/// <summary>
+		/// Returns one ReadOnlyEntityDto by Id
+		/// </summary>
 		[Headers("Authorization: Bearer")]
 		[Get("/api/ReadOnlyEntity/{request.Id}")]
 		Task<ReadOnlyEntityDto> Get(GetReadOnlyEntityRequest request);

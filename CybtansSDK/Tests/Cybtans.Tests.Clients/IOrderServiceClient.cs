@@ -63,18 +63,33 @@ namespace Cybtans.Tests.Clients
 		[Post("/api/Order/names")]
 		Task<OrderNamesDto> CreateOrderName([Body]CreateOrderNameRequest request);
 		
+		/// <summary>
+		/// Returns a collection of OrderDto
+		/// </summary>
 		[Get("/api/Order")]
 		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
 		
+		/// <summary>
+		/// Returns one OrderDto by Id
+		/// </summary>
 		[Get("/api/Order/{request.Id}")]
 		Task<OrderDto> Get(GetOrderRequest request);
 		
+		/// <summary>
+		/// Creates one OrderDto
+		/// </summary>
 		[Post("/api/Order")]
 		Task<OrderDto> Create([Body]CreateOrderRequest request);
 		
+		/// <summary>
+		/// Updates one OrderDto by Id
+		/// </summary>
 		[Put("/api/Order/{request.Id}")]
 		Task<OrderDto> Update([Body]UpdateOrderRequest request);
 		
+		/// <summary>
+		/// Deletes one OrderDto by Id
+		/// </summary>
 		[Delete("/api/Order/{request.Id}")]
 		Task Delete(DeleteOrderRequest request);
 	

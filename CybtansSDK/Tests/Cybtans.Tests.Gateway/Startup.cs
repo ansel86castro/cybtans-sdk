@@ -9,8 +9,11 @@ using Cybtans.AspNetCore;
 using Cybtans.Messaging;
 using Cybtans.Services.Extensions;
 using Cybtans.Tests.Clients;
+using Cybtans.Tests.Gateway.GraphQL;
 using Cybtans.Tests.Grpc;
 using Cybtans.Tests.Models;
+using GraphQL.Server;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -88,6 +91,19 @@ namespace Cybtans.Tests.Gateway
 
             services.AddCybtansServices(typeof(Startup).Assembly);
 
+            #region GraphQL
+
+            services.AddSingleton<ISchema, ApiGatewayDefinitionsSchema>();
+            services.AddGraphQL(options =>
+            {
+                options.EnableMetrics = true;
+            })
+             .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
+             .AddSystemTextJson()
+             .AddGraphTypes(typeof(Startup), ServiceLifetime.Singleton);
+
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,6 +147,16 @@ namespace Cybtans.Tests.Gateway
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            #region GraphQL
+
+            // add http for Schema at default url /graphql
+            app.UseGraphQL<ISchema>();
+
+            // use graphql-playground at default url /ui/playground
+            app.UseGraphQLPlayground("/ui/playground");
+
+            #endregion
 
             app.UseEndpoints(endpoints =>
             {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Tests.RestApi
 {
-    public class ValidatorActionInterceptor : IActionInterceptor
+    public class ValidatorActionInterceptor : IMessageInterceptor
     {
         private readonly IValidatorProvider _validatorProvider ;
 
@@ -13,7 +13,7 @@ namespace Cybtans.Tests.RestApi
             _validatorProvider  = validatorProvider;
         }
 
-        public ValueTask Handle<T>(T msg, string action) where T:class
+        public ValueTask Handle<T>(T msg) where T:class
         {
             return _validatorProvider.ValidateAsync(msg);
         }

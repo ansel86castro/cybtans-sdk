@@ -6,7 +6,7 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,24 +21,39 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class ReadOnlyEntityServiceController : ControllerBase
 	{
-		private readonly IReadOnlyEntityServiceClient _service;
+		private readonly IReadOnlyEntityService _service;
 		private readonly ILogger<ReadOnlyEntityServiceController> _logger;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public ReadOnlyEntityServiceController(IReadOnlyEntityServiceClient service,  ILogger<ReadOnlyEntityServiceController> logger)
+		public ReadOnlyEntityServiceController(IReadOnlyEntityService service,  ILogger<ReadOnlyEntityServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
+			_interceptor = interceptor;
 		}
 		
+		/// <summary>
+		/// Returns a collection of ReadOnlyEntityDto
+		/// </summary>
+		[System.ComponentModel.Description("Returns a collection of ReadOnlyEntityDto")]
 		[Authorize(Roles = "admin")]
 		[HttpGet]
 		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
+		/// <summary>
+		/// Returns one ReadOnlyEntityDto by Id
+		/// </summary>
+		[System.ComponentModel.Description("Returns one ReadOnlyEntityDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
 		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
@@ -46,6 +61,11 @@ namespace Cybtans.Tests.Controllers
 			request.Id = id;
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
 		}

@@ -26,9 +26,9 @@ namespace Cybtans.Tests.Controllers
 	{
 		private readonly IAuthenticationService _service;
 		private readonly ILogger<AuthenticationServiceController> _logger;
-		private readonly global::Cybtans.AspNetCore.Interceptors.IActionInterceptor _interceptor;
+		private readonly global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor _interceptor;
 		
-		public AuthenticationServiceController(IAuthenticationService service,  ILogger<AuthenticationServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IActionInterceptor interceptor = null)
+		public AuthenticationServiceController(IAuthenticationService service,  ILogger<AuthenticationServiceController> logger, global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor interceptor = null)
 		{
 			_service = service;
 			_logger = logger;
@@ -46,7 +46,7 @@ namespace Cybtans.Tests.Controllers
 			
 			if(_interceptor != null )
 			{
-			    await _interceptor.Handle(request, nameof(Login)).ConfigureAwait(false);
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			return await _service.Login(request).ConfigureAwait(false);

@@ -7,13 +7,19 @@
 //******************************************************
 
 
+export interface HelloModelModel {
+  id?: string|null;
+  message?: string|null;
+}
+
+
 export interface HelloRequest {
   name?: string|null;
-  observations: string;
-  date: string|Date;
+  observations?: string|null;
+  date?: string|Date|null;
   data?: string|null;
-  nullableInt: number|undefined|null;
-  time: string|Date;
+  nullableInt?: number|undefined|null;
+  time?: string|Date|null;
 }
 
 
@@ -22,10 +28,12 @@ export interface HelloReply {
   keywords?: string[]|null;
   info?: HellowInfo|null;
   infoarray?: HellowInfo[]|null;
-  date: string|Date;
-  time: string|Date;
-  observations: string;
-  nullableInt: number|undefined|null;
+  date?: string|Date|null;
+  time?: string|Date|null;
+  observations?: string|null;
+  nullableInt?: number|undefined|null;
+  data?: string|null;
+  helloModel?: HelloModelModel|null;
 }
 
 

@@ -7,7 +7,8 @@ import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
-import "cybtans.proto";
+import "protos/cybtans.proto";
+import "protos/data.proto";
 
 // The greeting service definition.
 service Greeter {
@@ -17,7 +18,8 @@ service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply){
 	option (template) = "hello"; 
-	option (method) = "GET";		
+	option (method) = "GET";	
+	option (graphql).query = "hello";
   }
 }
 
@@ -41,6 +43,8 @@ message HelloReply {
   google.protobuf.Duration time = 6;
   google.protobuf.StringValue observations = 7;
   google.protobuf.Int32Value nullableInt = 8;
+  bytes data = 9;
+  HelloModelModel helloModel = 10;
 }
 
 message HellowInfo {
