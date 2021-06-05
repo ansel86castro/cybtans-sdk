@@ -40,6 +40,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
@@ -52,6 +54,8 @@ namespace Cybtans.Tests.Controllers
 		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			

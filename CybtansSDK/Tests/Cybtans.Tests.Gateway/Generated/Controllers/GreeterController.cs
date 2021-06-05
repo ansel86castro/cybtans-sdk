@@ -41,6 +41,13 @@ namespace Cybtans.Tests.Grpc.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(SayHello), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.SayHello(request).ConfigureAwait(false);
 		}
 	}

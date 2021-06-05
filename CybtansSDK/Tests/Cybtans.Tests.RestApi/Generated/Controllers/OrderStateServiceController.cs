@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/OrderState")]
 	[ApiController]
@@ -47,6 +47,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
@@ -67,6 +74,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
@@ -78,6 +92,13 @@ namespace Cybtans.Tests.Controllers
 		[HttpPost]
 		public async Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			if(_interceptor != null )
@@ -105,6 +126,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
@@ -117,6 +145,13 @@ namespace Cybtans.Tests.Controllers
 		public async Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			

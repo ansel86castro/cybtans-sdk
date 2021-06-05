@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	/// <summary>
 	/// Jwt Authentication Service
@@ -42,6 +42,13 @@ namespace Cybtans.Tests.Controllers
 		[HttpPost("login")]
 		public async Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
 			
 			if(_interceptor != null )

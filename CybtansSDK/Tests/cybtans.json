@@ -26,7 +26,8 @@
         }
       },
       "Controllers": {
-        "UseActionInterceptor": true
+        "UseActionInterceptor": true,
+        "Namespace": "Cybtans.Tests.RestApi.Controllers"
       },
       "CSharpClients": {
         "Generate": true

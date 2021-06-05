@@ -35,10 +35,18 @@ namespace Cybtans.Tests.Controllers
 			_logger = logger;
 		}
 		
+		/// <summary>
+		/// Hellow; "Func"
+		/// </summary>
+		[System.ComponentModel.Description("Hellow; \"Func\"")]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
 		[AllowAnonymous]
 		[HttpGet("foo")]
 		public async Task Foo()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(Foo));
+			
 			_logger.LogInformation("Executing {Action}", nameof(Foo));
 			
 			await _service.Foo().ConfigureAwait(false);
@@ -49,6 +57,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(Baar));
 			
+			_logger.LogInformation("Executing {Action}", nameof(Baar));
+			
 			await _service.Baar().ConfigureAwait(false);
 		}
 		
@@ -57,12 +67,16 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(Test));
 			
+			_logger.LogInformation("Executing {Action}", nameof(Test));
+			
 			await _service.Test().ConfigureAwait(false);
 		}
 		
 		[HttpGet("arg")]
 		public async Task Argument()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(Argument));
+			
 			_logger.LogInformation("Executing {Action}", nameof(Argument));
 			
 			await _service.Argument().ConfigureAwait(false);
@@ -78,6 +92,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
+			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
+			
 			return await _service.UploadImage(request).ConfigureAwait(false);
 		}
 		
@@ -86,6 +102,8 @@ namespace Cybtans.Tests.Controllers
 		public async Task<mds::UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]mds::UploadStreamByIdRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
 			
 			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
 			
@@ -98,12 +116,16 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
 			
+			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
+			
 			return await _service.UploadStream(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("download")]
 		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
 			
 			var result = await _service.DownloadImage(request).ConfigureAwait(false);
@@ -123,6 +145,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetMultiPath), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetMultiPath), request);
+			
 			await _service.GetMultiPath(request).ConfigureAwait(false);
 		}
 		
@@ -134,12 +158,16 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(SendNotification), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(SendNotification), request);
+			
 			await _service.SendNotification(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("names")]
 		public async Task<mds::GetAllNamesResponse> GetAllNames()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
+			
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
 			return await _service.GetAllNames().ConfigureAwait(false);
@@ -152,12 +180,16 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
+			
 			return await _service.GetOrderName(request).ConfigureAwait(false);
 		}
 		
 		[HttpPost("names")]
 		public async Task<mds::OrderNamesDto> CreateOrderName([FromBody]mds::CreateOrderNameRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
 			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
@@ -170,6 +202,8 @@ namespace Cybtans.Tests.Controllers
 		[HttpGet]
 		public async Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
@@ -186,6 +220,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
@@ -196,6 +232,8 @@ namespace Cybtans.Tests.Controllers
 		[HttpPost]
 		public async Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			return await _service.Create(request).ConfigureAwait(false);
@@ -212,6 +250,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
@@ -223,6 +263,8 @@ namespace Cybtans.Tests.Controllers
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			

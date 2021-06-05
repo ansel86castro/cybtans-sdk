@@ -5,7 +5,7 @@ import "./Domain.proto";
 package Cybtans.Tests;
 
 message UploadImageRequest {
-	string name = 1;
+	string name = 1 [description = 'Image Name "Hola" '];
 	int32 size =2;
 	ByteStream image=3;
 }
@@ -52,6 +52,8 @@ service OrderService {
 		option template = "foo"; 
 		option method = "GET";
 		option anonymous = true;
+		option description = 'Hellow; "Func"';
+		option attributes = "ProducesResponseType(404); ProducesResponseType(500)";
 	};
 
 	rpc Baar(void) returns (void){	

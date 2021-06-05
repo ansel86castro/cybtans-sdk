@@ -8,6 +8,7 @@
 
 using System;
 using Cybtans.Serialization;
+using System.ComponentModel;
 
 namespace Cybtans.Tests.Models
 {
@@ -15,6 +16,10 @@ namespace Cybtans.Tests.Models
 	{
 		private static readonly UploadImageRequestAccesor __accesor = new UploadImageRequestAccesor();
 		
+		/// <summary>
+		/// Image Name "Hola" 
+		/// </summary>
+		[Description("Image Name \"Hola\" ")]
 		public string Name {get; set;}
 		
 		public int Size {get; set;}

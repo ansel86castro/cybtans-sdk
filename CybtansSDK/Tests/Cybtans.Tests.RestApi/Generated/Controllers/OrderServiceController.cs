@@ -16,7 +16,7 @@ using Cybtans.AspNetCore;
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	/// <summary>
 	/// Order's Service
@@ -37,10 +37,18 @@ namespace Cybtans.Tests.Controllers
 			_interceptor = interceptor;
 		}
 		
+		/// <summary>
+		/// Hellow; "Func"
+		/// </summary>
+		[System.ComponentModel.Description("Hellow; \"Func\"")]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
 		[AllowAnonymous]
 		[HttpGet("foo")]
 		public async Task Foo()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(Foo));
+			
 			_logger.LogInformation("Executing {Action}", nameof(Foo));
 			
 			await _service.Foo().ConfigureAwait(false);
@@ -51,6 +59,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(Baar));
 			
+			_logger.LogInformation("Executing {Action}", nameof(Baar));
+			
 			await _service.Baar().ConfigureAwait(false);
 		}
 		
@@ -59,12 +69,16 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(Test));
 			
+			_logger.LogInformation("Executing {Action}", nameof(Test));
+			
 			await _service.Test().ConfigureAwait(false);
 		}
 		
 		[HttpGet("arg")]
 		public async Task Argument()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(Argument));
+			
 			_logger.LogInformation("Executing {Action}", nameof(Argument));
 			
 			await _service.Argument().ConfigureAwait(false);
@@ -78,6 +92,13 @@ namespace Cybtans.Tests.Controllers
 		[DisableFormValueModelBinding]
 		public async Task<mds::UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]mds::UploadImageRequest request)
 		{
+			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
 			if(_interceptor != null )
@@ -101,6 +122,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.UploadStreamById(request).ConfigureAwait(false);
 		}
 		
@@ -115,12 +143,26 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.UploadStream(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("download")]
 		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
 			
 			if(_interceptor != null )
@@ -150,6 +192,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetMultiPath), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			await _service.GetMultiPath(request).ConfigureAwait(false);
 		}
 		
@@ -166,12 +215,21 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(SendNotification), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			await _service.SendNotification(request).ConfigureAwait(false);
 		}
 		
 		[HttpGet("names")]
 		public async Task<mds::GetAllNamesResponse> GetAllNames()
 		{
+			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
+			
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
 			return await _service.GetAllNames().ConfigureAwait(false);
@@ -181,6 +239,13 @@ namespace Cybtans.Tests.Controllers
 		public async Task<mds::OrderNamesDto> GetOrderName(string id, [FromQuery]mds::GetOrderNameRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
 			
@@ -202,6 +267,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
 		}
 		
@@ -212,6 +284,13 @@ namespace Cybtans.Tests.Controllers
 		[HttpGet]
 		public async Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
 			if(_interceptor != null )
@@ -238,6 +317,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
@@ -248,6 +334,13 @@ namespace Cybtans.Tests.Controllers
 		[HttpPost]
 		public async Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
 		{
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			if(_interceptor != null )
@@ -274,6 +367,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
@@ -285,6 +385,13 @@ namespace Cybtans.Tests.Controllers
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
 		{
 			request.Id = id;
+			
+			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			

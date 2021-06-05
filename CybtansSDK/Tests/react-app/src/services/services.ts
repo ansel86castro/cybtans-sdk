@@ -248,6 +248,7 @@ export class OrderService extends BaseTestsService {
         super(fetch, options);        
     }
     
+    /** Hellow; "Func" */
     foo() : Promise<ErrorInfo|void> {
     	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json' }};
     	let endpoint = this._options.baseUrl+`/api/Order/foo`;

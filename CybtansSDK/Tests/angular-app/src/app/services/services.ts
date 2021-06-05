@@ -209,6 +209,7 @@ export class OrderService {
 
     constructor(private http: HttpClient) {}
     
+    /** Hellow; "Func" */
     foo(): Observable<{}> {
       return this.http.get<{}>(`/api/Order/foo`, {
           headers: new HttpHeaders({ Accept: 'application/json' }),

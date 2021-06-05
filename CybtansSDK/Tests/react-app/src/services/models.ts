@@ -302,6 +302,7 @@ export interface LoginResponse {
 
 
 export interface UploadImageRequest {
+  /** Image Name "Hola"  */
   name?: string|null;
   size: number;
   image?: Blob|null;
