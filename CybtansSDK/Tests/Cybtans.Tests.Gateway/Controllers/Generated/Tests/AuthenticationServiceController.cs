@@ -42,8 +42,6 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
-			
 			return await _service.Login(request).ConfigureAwait(false);
 		}
 	}

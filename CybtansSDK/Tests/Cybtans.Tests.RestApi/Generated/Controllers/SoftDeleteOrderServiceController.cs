@@ -45,13 +45,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
@@ -71,13 +64,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
@@ -88,13 +74,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[HttpPost]
 		public async Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
 		{
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			if(_interceptor != null )
@@ -121,13 +100,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
@@ -139,13 +111,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
-			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			

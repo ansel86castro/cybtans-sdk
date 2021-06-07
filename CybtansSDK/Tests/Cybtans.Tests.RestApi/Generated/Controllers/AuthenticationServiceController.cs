@@ -49,13 +49,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			return await _service.Login(request).ConfigureAwait(false);
 		}
 	}

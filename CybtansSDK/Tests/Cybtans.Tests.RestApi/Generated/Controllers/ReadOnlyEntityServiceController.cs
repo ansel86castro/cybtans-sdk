@@ -47,13 +47,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
@@ -66,13 +59,6 @@ namespace Cybtans.Tests.RestApi.Controllers
 		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
 		{
 			request.Id = id;
-			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
-			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			

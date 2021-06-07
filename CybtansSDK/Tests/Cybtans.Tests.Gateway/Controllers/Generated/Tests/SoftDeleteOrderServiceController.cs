@@ -38,8 +38,6 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
-			
 			return await _service.GetAll(request).ConfigureAwait(false);
 		}
 		
@@ -54,8 +52,6 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
-			
 			return await _service.Get(request).ConfigureAwait(false);
 		}
 		
@@ -66,8 +62,6 @@ namespace Cybtans.Tests.Controllers
 		[HttpPost]
 		public async Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
 		{
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
-			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			return await _service.Create(request).ConfigureAwait(false);
@@ -84,8 +78,6 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
-			
 			return await _service.Update(request).ConfigureAwait(false);
 		}
 		
@@ -97,8 +89,6 @@ namespace Cybtans.Tests.Controllers
 		public async Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
-			
-			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Delete), request);
 			
