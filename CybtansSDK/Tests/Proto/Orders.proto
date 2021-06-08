@@ -5,7 +5,7 @@ import "./Domain.proto";
 package Cybtans.Tests;
 
 message UploadImageRequest {
-	string name = 1 [description = 'Image Name "Hola" '];
+	string name = 1 [(description) = 'Image Name "Hola" '];
 	int32 size =2;
 	ByteStream image=3;
 }
@@ -46,7 +46,7 @@ message OrderNotification{
 }
 
 service OrderService {
-	option description = "Order's Service";	
+	option (description) = "Order's Service";	
 
 	rpc Foo(void) returns (void){	
 		option template = "foo"; 
