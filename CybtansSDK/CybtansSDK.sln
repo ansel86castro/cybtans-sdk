@@ -47,7 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proto", "Proto", "{6C4CD476
 		Tests\Proto\Authentication.proto = Tests\Proto\Authentication.proto
 		Tests\Proto\cybtans.proto = Tests\Proto\cybtans.proto
 		Tests\Proto\Domain.proto = Tests\Proto\Domain.proto
-		Tests\Proto\greet.proto = Tests\Proto\greet.proto
 		Tests\Proto\Orders.proto = Tests\Proto\Orders.proto
 		Tests\Proto\Test.proto = Tests\Proto\Test.proto
 	EndProjectSection
@@ -88,11 +87,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Grpc", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AzureStorage", "Cybtans.AzureStorage\Cybtans.AzureStorage.csproj", "{D282B68A-AFDE-4E74-8869-8A5CFB522512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Entities.Dapper", "Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj", "{D347689F-43BE-4B6A-A151-3C3CA3068F40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Entities.Dapper", "Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj", "{D347689F-43BE-4B6A-A151-3C3CA3068F40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Validations", "Cybtans.Validations\Cybtans.Validations.csproj", "{6C1C1273-1692-40C6-A491-C23DDB26D434}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Validations", "Cybtans.Validations\Cybtans.Validations.csproj", "{6C1C1273-1692-40C6-A491-C23DDB26D434}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Grpc", "Cybtans.Grpc\Cybtans.Grpc.csproj", "{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Grpc", "Cybtans.Grpc\Cybtans.Grpc.csproj", "{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

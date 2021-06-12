@@ -8,38 +8,34 @@
 
 using System;
 using Cybtans.Serialization;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cybtans.Tests.Models
 {
-	public class UploadImageRequest : IReflectorMetadataProvider
+	public class ClientRequest : IReflectorMetadataProvider
 	{
-		private static readonly UploadImageRequestAccesor __accesor = new UploadImageRequestAccesor();
+		private static readonly ClientRequestAccesor __accesor = new ClientRequestAccesor();
 		
-		/// <summary>
-		/// Image Name "Hola" 
-		/// </summary>
-		[Description("Image Name \"Hola\" ")]
-		public string Name {get; set;}
-		
-		public int Size {get; set;}
-		
-		public System.IO.Stream Image {get; set;}
+		[Required]
+		public Guid Id {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
 		}
-	
-		#region UploadImageRequest  Accesor
-		public sealed class UploadImageRequestAccesor : IReflectorMetadata
+		public static implicit operator ClientRequest(Guid id)
 		{
-			public const int Name = 1;
-			public const int Size = 2;
-			public const int Image = 3;
+			return new ClientRequest { Id = id };
+		}
+	
+	
+		#region ClientRequest  Accesor
+		public sealed class ClientRequestAccesor : IReflectorMetadata
+		{
+			public const int Id = 1;
 			private readonly int[] _props = new []
 			{
-				Name,Size,Image
+				Id
 			};
 			
 			public int[] GetPropertyCodes() => _props;
@@ -48,9 +44,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyCode switch
 			    {
-			       Name => "Name",
-			       Size => "Size",
-			       Image => "Image",
+			       Id => "Id",
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -60,9 +54,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyName switch
 			    {
-			        "Name" => Name,
-			        "Size" => Size,
-			        "Image" => Image,
+			        "Id" => Id,
 			
 			        _ => -1,
 			    };
@@ -72,9 +64,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyCode switch
 			    {
-			        Name => typeof(string),
-			        Size => typeof(int),
-			        Image => typeof(System.IO.Stream),
+			        Id => typeof(Guid),
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -82,12 +72,10 @@ namespace Cybtans.Tests.Models
 			       
 			public object GetValue(object target, int propertyCode)
 			{
-			    UploadImageRequest obj = (UploadImageRequest)target;
+			    ClientRequest obj = (ClientRequest)target;
 			    return propertyCode switch
 			    {
-			        Name => obj.Name,
-			        Size => obj.Size,
-			        Image => obj.Image,
+			        Id => obj.Id,
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -95,12 +83,10 @@ namespace Cybtans.Tests.Models
 			
 			public void SetValue(object target, int propertyCode, object value)
 			{
-			    UploadImageRequest obj = (UploadImageRequest)target;
+			    ClientRequest obj = (ClientRequest)target;
 			    switch (propertyCode)
 			    {
-			        case Name:  obj.Name = (string)value;break;
-			        case Size:  obj.Size = (int)value;break;
-			        case Image:  obj.Image = (System.IO.Stream)value;break;
+			        case Id:  obj.Id = (Guid)value;break;
 			
 			        default: throw new InvalidOperationException("property code not supported");
 			    }

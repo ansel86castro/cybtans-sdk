@@ -39,6 +39,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -53,6 +54,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
 			return await _service.Get(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -65,6 +67,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			return await _service.Create(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -79,6 +82,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
 			return await _service.Update(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>

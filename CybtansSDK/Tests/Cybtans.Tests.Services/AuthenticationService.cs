@@ -69,7 +69,9 @@ namespace Cybtans.Tests.Services
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),               
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Roles)
+                new Claim(ClaimTypes.Role, user.Roles),
+                new Claim("client_id", "D6E29710-B68F-4D2D-9471-273DECF9C4B7"),
+                new Claim("creator_id", "1")
            };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Secret));

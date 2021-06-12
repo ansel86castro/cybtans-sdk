@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Net;
 
 namespace Cybtans.AspNetCore
@@ -23,7 +24,7 @@ namespace Cybtans.AspNetCore
         }
         
 
-        public void OnException(ExceptionContext context)
+        public virtual void OnException(ExceptionContext context)
         {
             switch (context.Exception)
             {
@@ -82,7 +83,29 @@ namespace Cybtans.AspNetCore
                         StatusCode = (int)HttpStatusCode.BadRequest
                     };
                     context.ExceptionHandled = true;
-                    break;                    
+                    break;
+                case UnauthorizedAccessException unauthorizedAccess:
+                    context.Result = new ObjectResult(new ValidationResult(unauthorizedAccess.Message)
+                    {
+                        ErrorCode = (int)HttpStatusCode.Forbidden,
+                        StackTrace = _showDetails ? unauthorizedAccess.StackTrace : null
+                    })
+                    {
+                        StatusCode = (int)HttpStatusCode.Forbidden
+                    };
+                    context.ExceptionHandled = true;
+                    break;
+                case FileNotFoundException fileNotFoundException:
+                    context.Result = new ObjectResult(new ValidationResult(fileNotFoundException.Message)
+                    {
+                        ErrorCode = (int)HttpStatusCode.NotFound,
+                        StackTrace = _showDetails ? fileNotFoundException.StackTrace : null
+                    })
+                    {
+                        StatusCode = (int)HttpStatusCode.NotFound
+                    };
+                    context.ExceptionHandled = true;
+                    break;
                 default:
                     _logger.LogError(context.Exception, context.Exception.Message);
 

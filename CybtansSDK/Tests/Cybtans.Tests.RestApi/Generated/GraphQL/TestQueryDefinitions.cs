@@ -274,6 +274,21 @@ namespace Cybtans.Tests.GraphQL
 	}
 	
 	
+	public class ClientDtoGraphType : ObjectGraphType<ClientDto>
+	{
+		public ClientDtoGraphType()
+		{
+			Field(x => x.Id);
+			Field(x => x.Name, nullable:true);
+			Field(x => x.ClientTypeId);
+			Field(x => x.ClientStatusId, nullable:true);
+			Field<DateTimeGraphType>("CreatedAt");
+			Field(x => x.CreatorId);
+		
+		}
+	}
+	
+	
 	public partial class TestQueryDefinitions : ObjectGraphType
 	{
 		public void AddTestDefinitions()
@@ -291,22 +306,23 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
-					var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, "AdminUser");
-					if (!authorizationResult.Succeeded)
-					{
-						 throw new UnauthorizedAccessException("Policy Authorization Required");
-					}
-					
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
 					request.Sort = context.GetArgument<string>("sort", default(string));
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, httpContext, "AdminUser").ConfigureAwait(false);
+					if (!policyResult.Succeeded)
+					{
+						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ICustomerService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -318,19 +334,20 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
-					var authorizationResult = await authorizationService.AuthorizeAsync(httpContext.User, "AdminUser");
-					if (!authorizationResult.Succeeded)
-					{
-						 throw new UnauthorizedAccessException("Policy Authorization Required");
-					}
-					
 					var request = new GetCustomerRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, httpContext, "AdminUser").ConfigureAwait(false);
+					if (!policyResult.Succeeded)
+					{
+						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ICustomerService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -349,20 +366,21 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					if (!httpContext.User.Identity.IsAuthenticated)
-					{
-						 throw new UnauthorizedAccessException("Authentication Required");
-					}
-					
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
 					request.Sort = context.GetArgument<string>("sort", default(string));
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.Identity.IsAuthenticated)
+					{
+						 throw new UnauthorizedAccessException("Authentication Required");
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ICustomerEventService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -374,17 +392,18 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
+					var request = new GetCustomerEventRequest();
+					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var request = new GetCustomerEventRequest();
-					request.Id = context.GetArgument<Guid>("id", default(Guid));
-					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ICustomerEventService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -403,7 +422,8 @@ namespace Cybtans.Tests.GraphQL
 					request.Name = context.GetArgument<string>("name", default(string));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
-					return await service.DownloadImage(request);
+					var result = await service.DownloadImage(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -411,7 +431,8 @@ namespace Cybtans.Tests.GraphQL
 			 	resolve: async context =>
 				{
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
-					return await service.GetAllNames();
+					var result = await service.GetAllNames().ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -426,7 +447,8 @@ namespace Cybtans.Tests.GraphQL
 					request.Id = context.GetArgument<string>("id", default(string));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
-					return await service.GetOrderName(request);
+					var result = await service.GetOrderName(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -448,7 +470,8 @@ namespace Cybtans.Tests.GraphQL
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -464,7 +487,8 @@ namespace Cybtans.Tests.GraphQL
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -483,20 +507,21 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					if (!httpContext.User.IsInRole("admin"))
-					{
-						 throw new UnauthorizedAccessException("Roles Authorization Required");
-					}
-					
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
 					request.Sort = context.GetArgument<string>("sort", default(string));
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.IsInRole("admin"))
+					{
+						 throw new UnauthorizedAccessException("Roles Authorization Required");
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderStateService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -508,17 +533,18 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
+					var request = new GetOrderStateRequest();
+					request.Id = context.GetArgument<int>("id", default(int));
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var request = new GetOrderStateRequest();
-					request.Id = context.GetArgument<int>("id", default(int));
-					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderStateService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -537,20 +563,21 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					if (!httpContext.User.IsInRole("admin"))
-					{
-						 throw new UnauthorizedAccessException("Roles Authorization Required");
-					}
-					
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
 					request.Sort = context.GetArgument<string>("sort", default(string));
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.IsInRole("admin"))
+					{
+						 throw new UnauthorizedAccessException("Roles Authorization Required");
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IReadOnlyEntityService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -562,17 +589,18 @@ namespace Cybtans.Tests.GraphQL
 				},
 				resolve: async context =>
 				{
+					var request = new GetReadOnlyEntityRequest();
+					request.Id = context.GetArgument<int>("id", default(int));
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var request = new GetReadOnlyEntityRequest();
-					request.Id = context.GetArgument<int>("id", default(int));
-					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IReadOnlyEntityService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -598,7 +626,8 @@ namespace Cybtans.Tests.GraphQL
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
-					return await service.GetAll(request);
+					var result = await service.GetAll(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
@@ -614,11 +643,115 @@ namespace Cybtans.Tests.GraphQL
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
-					return await service.Get(request);
+					var result = await service.Get(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			
 			#endregion SoftDeleteOrderService
+			
+			#region ClientService
+			
+			FieldAsync<ClientDtoGraphType>("ClientService_Client",
+			 	arguments: new QueryArguments()
+				{
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
+				},
+				resolve: async context =>
+				{
+					var request = new ClientRequest();
+					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.Identity.IsAuthenticated)
+					{
+						 throw new UnauthorizedAccessException("Authentication Required");
+					}
+					
+					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, request, "ClientPolicy").ConfigureAwait(false);
+					if (!policyResult.Succeeded)
+					{
+						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+					}
+					
+					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
+					var result = await service.GetClient(request).ConfigureAwait(false);
+					if (result != null)
+					{
+						policyResult = await authorizationService.AuthorizeAsync(httpContext.User, result, "ClientCreator").ConfigureAwait(false);
+						if (!policyResult.Succeeded)
+						{
+							 throw new UnauthorizedAccessException($"Result Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+						}
+					}
+					
+					return result;
+				}
+			);
+			
+			FieldAsync<ClientDtoGraphType>("ClientService_Client2",
+			 	arguments: new QueryArguments()
+				{
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
+				},
+				resolve: async context =>
+				{
+					var request = new ClientRequest();
+					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.Identity.IsAuthenticated)
+					{
+						 throw new UnauthorizedAccessException("Authentication Required");
+					}
+					
+					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, request, "ClientPolicy").ConfigureAwait(false);
+					if (!policyResult.Succeeded)
+					{
+						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+					}
+					
+					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
+					var result = await service.GetClient2(request).ConfigureAwait(false);
+					return result;
+				}
+			);
+			
+			FieldAsync<ClientDtoGraphType>("ClientService_Client3",
+			 	arguments: new QueryArguments()
+				{
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
+				},
+				resolve: async context =>
+				{
+					var request = new ClientRequest();
+					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					if (!httpContext.User.Identity.IsAuthenticated)
+					{
+						 throw new UnauthorizedAccessException("Authentication Required");
+					}
+					
+					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
+					var result = await service.GetClient3(request).ConfigureAwait(false);
+					if (result != null)
+					{
+						var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+						var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, result, "ClientCreator").ConfigureAwait(false);
+						if (!policyResult.Succeeded)
+						{
+							 throw new UnauthorizedAccessException($"Result Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
+						}
+					}
+					
+					return result;
+				}
+			);
+			
+			#endregion ClientService
 			
 		
 		}}

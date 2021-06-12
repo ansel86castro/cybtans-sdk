@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 using mds = global::Cybtans.Tests.Models;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	/// <summary>
 	/// Jwt Authentication Service
@@ -50,6 +50,7 @@ namespace Cybtans.Tests.Controllers
 			}
 			
 			return await _service.Login(request).ConfigureAwait(false);
+		
 		}
 	}
 

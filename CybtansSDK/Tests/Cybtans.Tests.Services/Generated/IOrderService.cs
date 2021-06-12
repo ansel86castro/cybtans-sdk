@@ -18,6 +18,9 @@ namespace Cybtans.Tests.Services
 	public interface IOrderService 
 	{
 		
+		/// <summary>
+		/// Hellow; "Func"
+		/// </summary>
 		Task Foo();
 		
 		

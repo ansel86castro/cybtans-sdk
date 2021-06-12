@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	[Route("api/ReadOnlyEntity")]
 	[ApiController]
@@ -48,6 +48,7 @@ namespace Cybtans.Tests.Controllers
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -68,6 +69,7 @@ namespace Cybtans.Tests.Controllers
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
+		
 		}
 	}
 

@@ -6,3 +6,38 @@ import "./Orders.proto";
 
 package Cybtans.Tests;
 
+service ClientService {
+	option (prefix) = "api/clients";
+	option (authorized) = true;
+
+	rpc GetClient(ClientRequest) returns (ClientDto){
+		option method = "GET";
+		option template = "{id}";		
+		option (auth) = { request:"ClientPolicy" result:"ClientCreator" };			
+	}
+
+	rpc GetClient2(ClientRequest) returns (ClientDto){
+		option method = "GET";
+		option template = "client2/{id}";		
+		option (auth).request = "ClientPolicy";			
+	}
+
+	rpc GetClient3(ClientRequest) returns (ClientDto){
+		option method = "GET";
+		option template = "client3/{id}";		
+		option (auth).result = "ClientCreator";			
+	}
+}
+
+message ClientRequest{
+	guid id = 1 [required = true];	
+}
+
+message ClientDto{
+	guid id = 1;
+	string name = 2;
+	int32 clientTypeId = 3;
+	int32 clientStatusId = 4 [optional = true];	
+	datetime createdAt = 5;
+	int32 creatorId = 6;
+}

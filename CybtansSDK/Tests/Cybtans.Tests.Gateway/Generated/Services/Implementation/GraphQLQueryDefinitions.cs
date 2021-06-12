@@ -114,7 +114,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Time = context.GetArgument<DateTime?>("time", default(DateTime?));
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Test.Gateway.Services.Definition.IGreeter>();
-					return await service.SayHello(request);
+					var result = await service.SayHello(request).ConfigureAwait(false);
+					return result;
 				}
 			);
 			

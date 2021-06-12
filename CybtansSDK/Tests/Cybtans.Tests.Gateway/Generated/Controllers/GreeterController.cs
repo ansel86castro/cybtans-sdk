@@ -42,6 +42,7 @@ namespace Cybtans.Tests.Grpc.Controllers
 			}
 			
 			return await _service.SayHello(request).ConfigureAwait(false);
+		
 		}
 	}
 

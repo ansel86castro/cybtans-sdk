@@ -21,6 +21,9 @@ namespace Cybtans.Tests.Clients
 	public interface IOrderServiceClient
 	{
 		
+		/// <summary>
+		/// Hellow; "Func"
+		/// </summary>
 		[Get("/api/Order/foo")]
 		Task Foo();
 		
