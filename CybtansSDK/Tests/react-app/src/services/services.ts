@@ -55,6 +55,8 @@ import {
   GetOrderNameRequest,
   OrderNamesDto,
   CreateOrderNameRequest,
+  ClientRequest,
+  ClientDto,
  } from './models';
 
 export type Fetch = (input: RequestInfo, init?: RequestInit)=> Promise<Response>;
@@ -500,6 +502,33 @@ export class AuthenticationService extends BaseTestsService {
     	let options:RequestInit = { method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }};
     	options.body = JSON.stringify(request);
     	let endpoint = this._options.baseUrl+`/api/auth/login`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+
+}
+
+
+export class ClientService extends BaseTestsService {  
+
+    constructor(fetch:Fetch, options:TestsOptions){
+        super(fetch, options);        
+    }
+    
+    getClient(request:ClientRequest) : Promise<ClientDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/clients/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    getClient2(request:ClientRequest) : Promise<ClientDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/clients/client2/${request.id}`;
+    	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
+    }
+    
+    getClient3(request:ClientRequest) : Promise<ClientDto> {
+    	let options:RequestInit = { method: 'GET', headers: { Accept: 'application/json', Authorization: 'Bearer' }};
+    	let endpoint = this._options.baseUrl+`/api/clients/client3/${request.id}`;
     	return this._fetch(endpoint, options).then((response:Response) => this.getObject(response));
     }
 

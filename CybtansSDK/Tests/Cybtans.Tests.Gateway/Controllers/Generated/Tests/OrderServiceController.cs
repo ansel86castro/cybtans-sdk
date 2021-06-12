@@ -85,6 +85,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
 			return await _service.UploadImage(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("{id}/upload")]
@@ -96,6 +97,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
 			
 			return await _service.UploadStreamById(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("ByteStream")]
@@ -105,6 +107,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
 			
 			return await _service.UploadStream(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpGet("download")]
@@ -149,6 +152,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
 			return await _service.GetAllNames().ConfigureAwait(false);
+		
 		}
 		
 		[HttpGet("names/{id}")]
@@ -159,6 +163,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
 			
 			return await _service.GetOrderName(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("names")]
@@ -167,6 +172,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
 			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -179,6 +185,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -193,6 +200,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
 			return await _service.Get(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -205,6 +213,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
 			return await _service.Create(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -219,6 +228,7 @@ namespace Cybtans.Tests.Controllers
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
 			return await _service.Update(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>

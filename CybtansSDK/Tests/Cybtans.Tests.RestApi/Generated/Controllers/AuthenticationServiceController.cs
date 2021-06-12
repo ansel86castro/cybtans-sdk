@@ -50,6 +50,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Login(request).ConfigureAwait(false);
+		
 		}
 	}
 

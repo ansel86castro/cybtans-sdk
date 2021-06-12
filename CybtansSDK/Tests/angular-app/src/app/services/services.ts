@@ -58,6 +58,8 @@ import {
   GetOrderNameRequest,
   OrderNamesDto,
   CreateOrderNameRequest,
+  ClientRequest,
+  ClientDto,
  } from './models';
 
 function getQueryString(data:any): string|undefined {
@@ -454,6 +456,34 @@ export class AuthenticationService {
     login(request: LoginRequest): Observable<LoginResponse> {
       return this.http.post<LoginResponse>(`/api/auth/login`, request, {
           headers: new HttpHeaders({ Accept: 'application/json', 'Content-Type': 'application/json' }),
+      });
+    }
+
+}
+
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ClientService {
+
+    constructor(private http: HttpClient) {}
+    
+    getClient(request: ClientRequest): Observable<ClientDto> {
+      return this.http.get<ClientDto>(`/api/clients/${request.id}`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+    
+    getClient2(request: ClientRequest): Observable<ClientDto> {
+      return this.http.get<ClientDto>(`/api/clients/client2/${request.id}`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
+      });
+    }
+    
+    getClient3(request: ClientRequest): Observable<ClientDto> {
+      return this.http.get<ClientDto>(`/api/clients/client3/${request.id}`, {
+          headers: new HttpHeaders({ Authorization: 'Bearer', Accept: 'application/json' }),
       });
     }
 

@@ -92,6 +92,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.UploadImage(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("{id}/upload")]
@@ -108,6 +109,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.UploadStreamById(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("ByteStream")]
@@ -122,6 +124,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.UploadStream(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpGet("download")]
@@ -181,6 +184,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
 			return await _service.GetAllNames().ConfigureAwait(false);
+		
 		}
 		
 		[HttpGet("names/{id}")]
@@ -196,6 +200,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.GetOrderName(request).ConfigureAwait(false);
+		
 		}
 		
 		[HttpPost("names")]
@@ -209,6 +214,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.CreateOrderName(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -226,6 +232,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -245,6 +252,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -262,6 +270,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Create(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -281,6 +290,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Update(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>

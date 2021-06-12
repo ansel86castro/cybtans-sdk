@@ -46,6 +46,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.GetAll(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -65,6 +66,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Get(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -82,6 +84,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Create(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
@@ -101,6 +104,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 			}
 			
 			return await _service.Update(request).ConfigureAwait(false);
+		
 		}
 		
 		/// <summary>
