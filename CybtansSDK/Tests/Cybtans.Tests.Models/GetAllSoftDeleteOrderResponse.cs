@@ -36,7 +36,7 @@ namespace Cybtans.Tests.Models
 			public const int Page = 2;
 			public const int TotalPages = 3;
 			public const int TotalCount = 4;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Items,Page,TotalPages,TotalCount
 			};

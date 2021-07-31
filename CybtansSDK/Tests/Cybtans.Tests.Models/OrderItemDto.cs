@@ -44,7 +44,7 @@ namespace Cybtans.Tests.Models
 			public const int ProductId = 5;
 			public const int Product = 6;
 			public const int Id = 7;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				ProductName,Price,Discount,OrderId,ProductId,Product,Id
 			};

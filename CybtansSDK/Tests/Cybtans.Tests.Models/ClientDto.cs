@@ -41,7 +41,7 @@ namespace Cybtans.Tests.Models
 			public const int ClientStatusId = 4;
 			public const int CreatedAt = 5;
 			public const int CreatorId = 6;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Id,Name,ClientTypeId,ClientStatusId,CreatedAt,CreatorId
 			};

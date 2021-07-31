@@ -45,7 +45,7 @@ namespace Cybtans.Tests.Models
 		{
 			public const int Username = 1;
 			public const int Password = 2;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Username,Password
 			};

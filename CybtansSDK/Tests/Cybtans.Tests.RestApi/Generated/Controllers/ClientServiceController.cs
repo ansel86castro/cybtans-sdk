@@ -42,15 +42,15 @@ namespace Cybtans.Tests.RestApi.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetClient), request);
 			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			var authRequestResult = await _authorizationService.AuthorizeAsync(User, request, "ClientPolicy").ConfigureAwait(false);
 			if (!authRequestResult.Succeeded)
 			{
 			    throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", authRequestResult.Failure.FailedRequirements) }");
+			}
+			
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
 			var result = await _service.GetClient(request).ConfigureAwait(false);
@@ -73,19 +73,19 @@ namespace Cybtans.Tests.RestApi.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetClient2), request);
 			
-			if(_interceptor != null )
-			{
-			    await _interceptor.Handle(request).ConfigureAwait(false);
-			}
-			
 			var authRequestResult = await _authorizationService.AuthorizeAsync(User, request, "ClientPolicy").ConfigureAwait(false);
 			if (!authRequestResult.Succeeded)
 			{
 			    throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", authRequestResult.Failure.FailedRequirements) }");
 			}
 			
-			return await _service.GetClient2(request).ConfigureAwait(false);
-		
+			if(_interceptor != null )
+			{
+			    await _interceptor.Handle(request).ConfigureAwait(false);
+			}
+			
+			var result = await _service.GetClient2(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("client3/{id}")]

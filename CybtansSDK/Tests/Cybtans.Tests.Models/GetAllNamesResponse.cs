@@ -32,7 +32,7 @@ namespace Cybtans.Tests.Models
 		public sealed class GetAllNamesResponseAccesor : IReflectorMetadata
 		{
 			public const int Items = 1;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Items
 			};

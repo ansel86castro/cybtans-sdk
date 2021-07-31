@@ -49,8 +49,8 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Login(request).ConfigureAwait(false);
-		
+			var result = await _service.Login(request).ConfigureAwait(false);
+			return result;
 		}
 	}
 

@@ -45,8 +45,8 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.GetAll(request).ConfigureAwait(false);
-		
+			var result = await _service.GetAll(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -65,8 +65,8 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Get(request).ConfigureAwait(false);
-		
+			var result = await _service.Get(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -83,8 +83,8 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Create(request).ConfigureAwait(false);
-		
+			var result = await _service.Create(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -103,8 +103,8 @@ namespace Cybtans.Tests.RestApi.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Update(request).ConfigureAwait(false);
-		
+			var result = await _service.Update(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>

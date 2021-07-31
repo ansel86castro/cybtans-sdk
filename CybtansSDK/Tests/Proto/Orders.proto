@@ -111,6 +111,7 @@ service OrderService {
 	rpc GetOrderName(GetOrderNameRequest) returns (OrderNamesDto){		
 		option method = "GET";
 		option template = "names/{id}";		
+		option handle_result = true;
 	};
 
 	rpc CreateOrderName(CreateOrderNameRequest) returns (OrderNamesDto){

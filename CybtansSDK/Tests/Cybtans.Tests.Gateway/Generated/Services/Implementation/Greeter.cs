@@ -16,7 +16,7 @@ using Cybtans.Services;
 namespace Cybtans.Test.Gateway.Services.Implementation
 {
 	[RegisterDependency(typeof(IGreeter))]
-	public class Greeter : IGreeter
+	public partial class Greeter : IGreeter
 	{
 		private readonly global::Cybtans.Tests.Grpc.Greeter.GreeterClient  _client;
 		private readonly ILogger<Greeter> _logger;

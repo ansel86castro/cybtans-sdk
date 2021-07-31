@@ -72,8 +72,8 @@ namespace Cybtans.Tests.Controllers
 			    throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", authRequestResult.Failure.FailedRequirements) }");
 			}
 			
-			return await _service.GetClient2(request).ConfigureAwait(false);
-		
+			var result = await _service.GetClient2(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("client3/{id}")]

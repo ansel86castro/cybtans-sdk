@@ -37,7 +37,7 @@ namespace Cybtans.Tests.Models
 			public const int Name = 1;
 			public const int Size = 2;
 			public const int Image = 3;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Name,Size,Image
 			};

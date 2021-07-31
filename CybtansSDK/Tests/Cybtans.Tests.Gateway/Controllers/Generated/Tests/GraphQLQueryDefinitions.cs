@@ -448,6 +448,13 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.GetOrderName(request).ConfigureAwait(false);
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.HandleResult(result).ConfigureAwait(false);
+					}
+					
 					return result;
 				}
 			);
@@ -754,7 +761,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			#endregion ClientService
 			
 		
-		}}
+		}
+	}
 	
 
 }

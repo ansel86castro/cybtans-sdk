@@ -35,7 +35,7 @@ namespace Cybtans.Tests.Models
 			public const int Sort = 2;
 			public const int Skip = 3;
 			public const int Take = 4;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Filter,Sort,Skip,Take
 			};

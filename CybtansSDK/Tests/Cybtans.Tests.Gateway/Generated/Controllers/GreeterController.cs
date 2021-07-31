@@ -41,8 +41,8 @@ namespace Cybtans.Tests.Grpc.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.SayHello(request).ConfigureAwait(false);
-		
+			var result = await _service.SayHello(request).ConfigureAwait(false);
+			return result;
 		}
 	}
 

@@ -84,8 +84,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
-			return await _service.UploadImage(request).ConfigureAwait(false);
-		
+			var result = await _service.UploadImage(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpPost("{id}/upload")]
@@ -96,8 +96,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
 			
-			return await _service.UploadStreamById(request).ConfigureAwait(false);
-		
+			var result = await _service.UploadStreamById(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpPost("ByteStream")]
@@ -106,8 +106,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
 			
-			return await _service.UploadStream(request).ConfigureAwait(false);
-		
+			var result = await _service.UploadStream(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("download")]
@@ -151,8 +151,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
-			return await _service.GetAllNames().ConfigureAwait(false);
-		
+			var result = await _service.GetAllNames().ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("names/{id}")]
@@ -162,8 +162,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetOrderName), request);
 			
-			return await _service.GetOrderName(request).ConfigureAwait(false);
-		
+			var result = await _service.GetOrderName(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpPost("names")]
@@ -171,8 +171,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
 			
-			return await _service.CreateOrderName(request).ConfigureAwait(false);
-		
+			var result = await _service.CreateOrderName(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -184,8 +184,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
-			return await _service.GetAll(request).ConfigureAwait(false);
-		
+			var result = await _service.GetAll(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -199,8 +199,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
-			return await _service.Get(request).ConfigureAwait(false);
-		
+			var result = await _service.Get(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -212,8 +212,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
-			return await _service.Create(request).ConfigureAwait(false);
-		
+			var result = await _service.Create(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -227,8 +227,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Update), request);
 			
-			return await _service.Update(request).ConfigureAwait(false);
-		
+			var result = await _service.Update(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>

@@ -113,6 +113,12 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.NullableInt = context.GetArgument<int?>("nullableInt", default(int?));
 					request.Time = context.GetArgument<DateTime?>("time", default(DateTime?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Test.Gateway.Services.Definition.IGreeter>();
 					var result = await service.SayHello(request).ConfigureAwait(false);
 					return result;
@@ -122,7 +128,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			#endregion Greeter
 			
 		
-		}}
+		}
+	}
 	
 
 }

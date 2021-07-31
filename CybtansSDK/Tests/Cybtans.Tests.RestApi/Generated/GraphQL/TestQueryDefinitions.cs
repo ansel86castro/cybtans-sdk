@@ -312,6 +312,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
 					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, httpContext, "AdminUser").ConfigureAwait(false);
@@ -336,6 +342,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetCustomerRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
@@ -372,6 +384,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
@@ -394,6 +412,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetCustomerEventRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
@@ -421,6 +445,12 @@ namespace Cybtans.Tests.GraphQL
 					var request = new DownloadImageRequest();
 					request.Name = context.GetArgument<string>("name", default(string));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.DownloadImage(request).ConfigureAwait(false);
 					return result;
@@ -446,8 +476,20 @@ namespace Cybtans.Tests.GraphQL
 					var request = new GetOrderNameRequest();
 					request.Id = context.GetArgument<string>("id", default(string));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.GetOrderName(request).ConfigureAwait(false);
+					
+					if( interceptor != null )
+					{
+						await interceptor.HandleResult(result).ConfigureAwait(false);
+					}
+					
 					return result;
 				}
 			);
@@ -469,6 +511,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
@@ -485,6 +533,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.Get(request).ConfigureAwait(false);
@@ -513,6 +567,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
@@ -535,6 +595,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetOrderStateRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
@@ -569,6 +635,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
@@ -591,6 +663,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetReadOnlyEntityRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
@@ -625,6 +703,12 @@ namespace Cybtans.Tests.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
@@ -641,6 +725,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new GetSoftDeleteOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
 					var result = await service.Get(request).ConfigureAwait(false);
@@ -661,6 +751,12 @@ namespace Cybtans.Tests.GraphQL
 				{
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
+					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
 					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
@@ -700,6 +796,12 @@ namespace Cybtans.Tests.GraphQL
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
@@ -729,6 +831,12 @@ namespace Cybtans.Tests.GraphQL
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
+					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					if( interceptor != null )
+					{
+						await interceptor.Handle(request).ConfigureAwait(false);
+					}
+					
 					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
@@ -754,7 +862,8 @@ namespace Cybtans.Tests.GraphQL
 			#endregion ClientService
 			
 		
-		}}
+		}
+	}
 	
 
 }

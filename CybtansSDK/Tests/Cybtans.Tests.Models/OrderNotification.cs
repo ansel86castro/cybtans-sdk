@@ -32,7 +32,7 @@ namespace Cybtans.Tests.Models
 			public const int UserId = 1;
 			public const int OrderId = 2;
 			public const int Msg = 3;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				UserId,OrderId,Msg
 			};

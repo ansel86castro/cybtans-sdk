@@ -33,7 +33,7 @@ namespace Cybtans.Tests.Models
 		public sealed class ClientRequestAccesor : IReflectorMetadata
 		{
 			public const int Id = 1;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Id
 			};
