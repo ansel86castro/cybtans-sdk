@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Cybtans.Messaging
 {
     public interface IMessageSubscriptionManager
-    {
+    {   
         void Subscribe<TMessage, THandler>(string? exchange = null, string? topic = null) where THandler : IMessageHandler<TMessage>;
         void Subscribe<TMessage>(IMessageHandler<TMessage> handler, string? exchange = null, string? topic = null);
         void Unsubscribe<TMessage, THandler>(string? exchange = null, string? topic = null) where THandler : IMessageHandler<TMessage>;
@@ -17,18 +17,13 @@ namespace Cybtans.Messaging
 
     public interface IMessageQueue :IMessageSubscriptionManager, IDisposable
     {
-        Task Publish(byte[] bytes, string exchange, string topic);
+        Task Publish(byte[] bytes, string? exchange, string topic);
 
-        Task Publish(object message, string? exchange , string? topic);
+        Task Publish(object message, string? exchange = null, string? topic = null);
        
         BindingInfo? GetBinding(Type type, string topic);
     
-        void Start();
-
-        public Task Publish(object message)
-        {
-            return Publish(message, null, null);
-        }
+        void Start();        
 
     }
 }

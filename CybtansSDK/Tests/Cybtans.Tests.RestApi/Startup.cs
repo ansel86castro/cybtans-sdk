@@ -112,7 +112,7 @@ namespace Cybtans.Test.RestApi
 
             #region Messaging
 
-            services.AddMessageQueue(Configuration)
+            services.AddRabbitMessageQueue(Configuration)
              .ConfigureSubscriptions(sm =>
              {
                  sm.SubscribeHandlerForEvents<Order, OrderMessageHandler>("Test");
@@ -124,7 +124,8 @@ namespace Cybtans.Test.RestApi
 
             services.AddAccessTokenManager(Configuration);
 
-            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>());
+            services.AddRabbitBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>());
+           
             #endregion
 
             #region Caching 

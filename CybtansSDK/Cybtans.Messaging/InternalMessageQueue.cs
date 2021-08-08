@@ -10,6 +10,7 @@ namespace Cybtans.Messaging
     public class InternalMessageQueue : IMessageQueue
     {        
         private readonly MessageSubscriptionManager _subscriptionManager;
+        private IMessageSerializer _serializer = new CybtansMessageSerializer();
 
         public InternalMessageQueue(MessageSubscriptionManager subscriptionManager)
         {
@@ -28,7 +29,7 @@ namespace Cybtans.Messaging
 
         public Task Publish(byte[] bytes, string exchange, string topic)
         {
-            return _subscriptionManager.HandleMessage(exchange, topic, bytes);
+            return _subscriptionManager.HandleMessage(exchange, topic, bytes, _serializer);
         }
 
         public async Task Publish(object message, string? exchange, string? topic)
@@ -46,7 +47,7 @@ namespace Cybtans.Messaging
             }
 
             var data = BinaryConvert.Serialize(message);
-            await _subscriptionManager.HandleMessage(exchange, topic, data).ConfigureAwait(false);
+            await _subscriptionManager.HandleMessage(exchange, topic, data, _serializer).ConfigureAwait(false);
         }
 
         public void RegisterBinding<T>(string exchage, string? topic = null)

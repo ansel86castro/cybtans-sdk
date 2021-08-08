@@ -1,11 +1,8 @@
 ﻿#nullable enable
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +18,7 @@ namespace Cybtans.Messaging
         readonly Dictionary<string, BindingInfo> _exchageBidings = new Dictionary<string, BindingInfo>();
         readonly string? _globalExchange;
         readonly IServiceProvider? _serviceProvider;
-        private readonly ILogger<MessageSubscriptionManager>? _logger;
+        private readonly ILogger<MessageSubscriptionManager>? _logger;        
 
         public MessageSubscriptionManager(IServiceProvider? provider = null, string? globalExchange= null, ILogger<MessageSubscriptionManager> logger = null)
         {            
@@ -254,7 +251,7 @@ namespace Cybtans.Messaging
         }
        
 
-        public async Task HandleMessage(string exchange, string topic, byte[] data)
+        public async Task HandleMessage(string exchange, string topic, ReadOnlyMemory<byte> data, IMessageSerializer serializer)
         {
             var key = BindingInfo.GetKey(exchange, topic);
 
@@ -267,13 +264,13 @@ namespace Cybtans.Messaging
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         _logger?.LogDebug("Executing Handler {Key} {Type}", key, info.GetType());
-                        await info.HandleMessage(scope.ServiceProvider, data);
+                        await info.HandleMessage(serializer, scope.ServiceProvider, data);
                     }
                 }
                 else
                 {
                     _logger?.LogDebug("Executing Handler {Key}", key);
-                    await info.HandleMessage(null, data);
+                    await info.HandleMessage(serializer, null, data);
                 }
             }
             else

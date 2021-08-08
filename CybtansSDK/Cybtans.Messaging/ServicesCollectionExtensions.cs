@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddInternalMessageQueue(this IServiceCollection services, string exchange = "",
             Action<IMessageSubscriptionManager>? config = null)
         {
-            services.TryAddSingleton<MessageSubscriptionManager>(provider =>
+            services.TryAddSingleton(provider =>
            {
                var subscriptionManager = new MessageSubscriptionManager(provider, exchange, provider.GetService<ILogger<MessageSubscriptionManager>>());
                config?.Invoke(subscriptionManager);
@@ -30,5 +30,16 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static void StartMessageQueue(this IServiceProvider provider)
+        {
+            var queue = provider.GetRequiredService<IMessageQueue>();
+            queue.Start();
+        }
+
+        public static void StartBroadCastService(this IServiceProvider provider)
+        {
+            var queue = provider.GetRequiredService<IBroadcastService>();
+            queue.Start();
+        }
     }
 }

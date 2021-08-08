@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>05c2b856-e860-431e-9e4f-e7f8f2d264ad</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Cybtans.AspNetCore\Cybtans.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Cybtans.Messaging.AzureServiceBus\Cybtans.Messaging.AzureServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

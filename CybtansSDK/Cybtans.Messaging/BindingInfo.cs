@@ -21,7 +21,7 @@ namespace Cybtans.Messaging
 
         public static string GetKey(string exchange, string topic) => $"{exchange}:{topic}";
 
-        internal virtual Task HandleMessage(IServiceProvider? provider, byte[] message)
+        internal virtual Task HandleMessage(IMessageSerializer serializer, IServiceProvider? provider, ReadOnlyMemory<byte> message)
         {
             return Task.CompletedTask;
         }

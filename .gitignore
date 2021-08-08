@@ -349,3 +349,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 CybtansSDK.CodeGen/CybtansSDK.Proto/.antlr/
+CybtansSDK/Tests/AzureServiceBus/Service1/Properties/launchSettings.json
+CybtansSDK/Tests/AzureServiceBus/Service2/Properties/launchSettings.json

@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Cybtans.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -62,21 +63,21 @@ namespace Cybtans.Messaging
             }
         }
 
-        private IMessageHandler<T> GetHandler(IServiceProvider? provider)
-        {
-            if (_handler == null)
-            {
-                _handler = (IMessageHandler<T>)(provider?.GetService(_type) ?? Activator.CreateInstance(_type));
-            }
-            return _handler;
-        }
+        //private IMessageHandler<T> GetHandler(IServiceProvider? provider)
+        //{
+        //    if (_handler == null)
+        //    {
+        //        _handler = (IMessageHandler<T>)(provider?.GetService(_type) ?? Activator.CreateInstance(_type));
+        //    }
+        //    return _handler;
+        //}
 
-        internal override Task HandleMessage(IServiceProvider? provider, byte[] content)
+        internal override Task HandleMessage(IMessageSerializer serializer, IServiceProvider? provider, ReadOnlyMemory<byte> content)
         {
             IMessageHandler<T>? handler = _handler;
             if (provider != null)
             {
-                handler = (IMessageHandler<T>?)provider?.GetService(_type);
+                handler = (IMessageHandler<T>)ActivatorUtilities.GetServiceOrCreateInstance(provider, _type);
             }
             else if (_handler == null)
             {
@@ -86,7 +87,7 @@ namespace Cybtans.Messaging
             if (handler == null)            
                 return Task.CompletedTask;           
 
-            var message = BinaryConvert.Deserialize<T>(content);
+            var message = serializer.Deserialize<T>(content);
             return handler.HandleMessage(message);            
         }
     }

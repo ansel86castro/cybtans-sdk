@@ -70,7 +70,7 @@ namespace Cybtans.Tests.Gateway
             #region Messaging
 
             services.AddScoped<OrderNotificationHandler>();
-            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>(), sm =>
+            services.AddRabbitBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>(), sm =>
             {
                 sm.Subscribe<OrderNotification, OrderNotificationHandler>("Orders");
             });
