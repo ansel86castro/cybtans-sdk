@@ -7,17 +7,20 @@ namespace Cybtans.Serialization
     public static class BinaryConvert
     {
         private static ThreadLocal<BinarySerializer> serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
-        public static byte[] Serialize(object obj) => new BinarySerializer().Serialize(obj);
+       
+        public static byte[] Serialize(object obj) => serializer.Value.Serialize(obj);
 
-        public static void Serialize(Stream stream, object obj) => serializer.Value.Serialize(stream, obj);
+        public static void Serialize(Stream stream, object obj) => serializer.Value.Serialize(stream, obj);        
 
         public static T Deserialize<T>(Stream stream) => (T)Deserialize(stream, typeof(T));
 
-        public static T Deserialize<T>(byte[] bytes) => (T)Deserialize(bytes, typeof(T));
+        public static T Deserialize<T>(byte[] bytes) => serializer.Value.Deserialize<T>(bytes); 
 
-        public static object Deserialize(byte[] bytes) => Deserialize(bytes, null);
+        public static T Deserialize<T>(ReadOnlySpan<byte> memory) => (T)serializer.Value.Deserialize(memory, typeof(T));
 
-        public static object Deserialize(Stream stream) => Deserialize(stream, null);
+        public static object Deserialize(byte[] bytes) => serializer.Value.Deserialize(bytes, null);
+
+        public static object Deserialize(Stream stream) => serializer.Value.Deserialize(stream, null);
 
         public static object Deserialize(byte[] bytes, Type? type)
         {

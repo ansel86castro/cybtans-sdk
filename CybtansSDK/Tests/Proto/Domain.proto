@@ -11,37 +11,37 @@ syntax = "proto3";
 package Cybtans.Tests;
 
 message CustomerDto {
-	option description = "Customer Entity";
+	option (description) = "Customer Entity";
 
-	string name = 1 [required = true, description = "Customer's Name"];
-	string firstLastName = 2 [description = "Customer's FirstLastName"];
-	string secondLastName = 3 [description = "Customer's SecondLastName", deprecated = true];
-	guid customerProfileId = 4 [optional = true, description = "Customer's Profile Id, can be null"];
+	string name = 1 [(required) = true, (description) = "Customer's Name"];
+	string firstLastName = 2 [(description) = "Customer's FirstLastName"];
+	string secondLastName = 3 [(description) = "Customer's SecondLastName", (deprecated) = true];
+	guid customerProfileId = 4 [(optional) = true, (description) = "Customer's Profile Id, can be null"];
 	CustomerProfileDto customerProfile = 5;
 	guid id = 6;
-	datetime createDate = 7 [optional = true];
-	datetime updateDate = 8 [optional = true];
+	datetime createDate = 7 [(optional) = true];
+	datetime updateDate = 8 [(optional) = true];
 }
 
 message CustomerProfileDto {
 	string name = 1;
 	guid id = 2;
-	datetime createDate = 3 [optional = true];
-	datetime updateDate = 4 [optional = true];
+	datetime createDate = 3 [(optional) = true];
+	datetime updateDate = 4 [(optional) = true];
 }
 
 message CustomerEventDto {
 	string fullName = 1;
-	guid customerProfileId = 2 [optional = true];
+	guid customerProfileId = 2 [(optional) = true];
 	guid id = 3;
 }
 
 message OrderItemDto {
 	string productName = 1;
 	float price = 2;
-	float discount = 3 [optional = true];
+	float discount = 3 [(optional) = true];
 	guid orderId = 4;
-	guid productId = 5 [optional = true];
+	guid productId = 5 [(optional) = true];
 	ProductDto product = 6;
 	guid id = 7;
 }
@@ -58,19 +58,19 @@ message OrderDto {
 	int32 orderStateId = 3;
 	OrderTypeEnum orderType = 4;
 	OrderStateDto orderState = 5;
-	CustomerDto customer = 6 [description = "Customer"];
+	CustomerDto customer = 6 [(description) = "Customer"];
 	repeated OrderItemDto items = 7;
 	guid id = 8;
-	datetime createDate = 9 [optional = true];
-	datetime updateDate = 10 [optional = true];
+	datetime createDate = 9 [(optional) = true];
+	datetime updateDate = 10 [(optional) = true];
 }
 
 enum OrderTypeEnum {
-	option description = "Enum Type Description";
+	option (description) = "Enum Type Description";
 
-	Default = 0 [description = "Default"];
-	Normal = 1 [description = "Normal"];
-	Shipping = 2 [description = "Shipping"];
+	Default = 0 [(description) = "Default"];
+	Normal = 1 [(description) = "Normal"];
+	Shipping = 2 [(description) = "Shipping"];
 }
 
 message OrderStateDto {
@@ -80,8 +80,8 @@ message OrderStateDto {
 
 message ReadOnlyEntityDto {
 	string name = 1;
-	datetime createDate = 2 [optional = true];
-	datetime updateDate = 3 [optional = true];
+	datetime createDate = 2 [(optional) = true];
+	datetime updateDate = 3 [(optional) = true];
 	int32 id = 4;
 }
 
@@ -90,8 +90,8 @@ message SoftDeleteOrderDto {
 	bool isDeleted = 2;
 	repeated SoftDeleteOrderItemDto items = 3;
 	guid id = 4;
-	datetime createDate = 5 [optional = true];
-	datetime updateDate = 6 [optional = true];
+	datetime createDate = 5 [(optional) = true];
+	datetime updateDate = 6 [(optional) = true];
 }
 
 message SoftDeleteOrderItemDto {
@@ -99,8 +99,8 @@ message SoftDeleteOrderItemDto {
 	bool isDeleted = 2;
 	guid softDeleteOrderId = 3;
 	guid id = 4;
-	datetime createDate = 5 [optional = true];
-	datetime updateDate = 6 [optional = true];
+	datetime createDate = 5 [(optional) = true];
+	datetime updateDate = 6 [(optional) = true];
 }
 
 

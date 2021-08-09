@@ -31,7 +31,7 @@ namespace Cybtans.Tests.Models
 		public sealed class UploadStreamResponseAccesor : IReflectorMetadata
 		{
 			public const int M5checksum = 1;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				M5checksum
 			};

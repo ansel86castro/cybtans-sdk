@@ -10,38 +10,51 @@ using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public interface IMessageQueueBuilder
+    public interface IRabbitMessageQueueBuilder
     {
-        IMessageQueueBuilder ConfigureOptions(Action<RabbitMessageQueueOptions> action);
 
-        IMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action);
+        IRabbitMessageQueueBuilder ConfigureOptions(Action<RabbitMessageQueueOptions> action);
+
+        IRabbitMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action);
     }
    
-    internal class MessageQueueBuilder : IMessageQueueBuilder
+    internal class MessageQueueBuilder : IRabbitMessageQueueBuilder
     {
         private Action<RabbitMessageQueueOptions>? _configureOptions;
         private Action<IMessageSubscriptionManager>? _configureSubscription;
         private Action<ConnectionFactory>? _configureConnectionFactory;
+        private IMessageSerializer _messageSerializer;
 
-        private IConfiguration _configuration;
-        public MessageQueueBuilder(IConfiguration configuration)
+        private IConfiguration? _configuration;
+        public MessageQueueBuilder(IConfiguration? configuration)
         {
             _configuration = configuration;
+            _messageSerializer = new CybtansMessageSerializer();
         }
 
-        public IMessageQueueBuilder ConfigureOptions(Action<RabbitMessageQueueOptions> action)
+        public void UseJsonSerializer()
+        {
+            _messageSerializer = new JsonMessageSerializer();
+        }
+
+        public void UseSerializer(IMessageSerializer serializer)
+        {
+            _messageSerializer = serializer;
+        }
+
+        public IRabbitMessageQueueBuilder ConfigureOptions(Action<RabbitMessageQueueOptions> action)
         {
             this._configureOptions = action;
             return this;
         }
 
-        public IMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action)
+        public IRabbitMessageQueueBuilder ConfigureSubscriptions(Action<IMessageSubscriptionManager> action)
         {
             this._configureSubscription = action;
             return this;
         }
 
-        public IMessageQueueBuilder ConfigureFactory(Action<ConnectionFactory> action)
+        public IRabbitMessageQueueBuilder ConfigureFactory(Action<ConnectionFactory> action)
         {
             _configureConnectionFactory = action;
             return this;
@@ -49,7 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
       
 
         internal void AddMessageQueue(IServiceCollection services)
-        {
+        {            
             AddSubscriptionManager(services);
             services.TryAddSingleton<IMessageQueue>(provider =>
             {
@@ -59,12 +72,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 var factory = new ConnectionFactory() { HostName = options.Hostname };
                 _configureConnectionFactory?.Invoke(factory);
 
-                return new RabbitMessageQueue(factory, subscriptionManager, options, provider.GetService<ILogger<RabbitMessageQueue>>());
+                return new RabbitMessageQueue(factory, subscriptionManager, options, provider.GetService<ILogger<RabbitMessageQueue>>(), _messageSerializer);
             });
         }
 
         internal void AddSubscriptionManager(IServiceCollection services)
-        {
+        {            
             services.TryAddSingleton(provider => CreateOptions());
             services.TryAddSingleton(provider =>
             {
@@ -79,7 +92,10 @@ namespace Microsoft.Extensions.DependencyInjection
         private RabbitMessageQueueOptions CreateOptions()
         {
             var options = new RabbitMessageQueueOptions();
-            ConfigurationBinder.Bind(_configuration, "RabbitMessageQueueOptions", options);
+            if (_configuration != null)
+            {
+                ConfigurationBinder.Bind(_configuration, "RabbitMessageQueueOptions", options);
+            }
             _configureOptions?.Invoke(options);
             return options;
         }
@@ -88,24 +104,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
     public static class MessageQueueServiceCollectionExtensions
     {       
-        public static IMessageQueueBuilder AddMessageQueue(this IServiceCollection services, IConfiguration configuration)
+        public static IRabbitMessageQueueBuilder AddRabbitMessageQueue(this IServiceCollection services, IConfiguration? configuration=null)
         {         
             MessageQueueBuilder builder = new MessageQueueBuilder(configuration);
             builder.AddMessageQueue(services);            
             return builder;
-        }
-
-        public static void StartMessageQueue(this IServiceProvider provider)
-        {
-            var queue = provider.GetRequiredService<IMessageQueue>();
-            queue.Start();
-        }
+        }     
        
     }
 
     public static class BroadCastServiceCollectionExtensions
     {
-        public static IServiceCollection AddBroadCastService(
+        public static IServiceCollection AddRabbitBroadCastService(
             this IServiceCollection services, 
             BroadcastServiceOptions options,  
             Action<IBroadcastSubscriptionManager>? subcriptionConfig = null,
@@ -126,18 +136,12 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddBroadCastService(this IServiceCollection services,
+        public static IServiceCollection AddRabbitBroadCastService(this IServiceCollection services,
             IConfiguration config,
             Action<IBroadcastSubscriptionManager>? subcriptionConfig = null,
             Action<ConnectionFactory>? connectionConfig = null)
         {
-            return AddBroadCastService(services, config.Get<BroadcastServiceOptions>(), subcriptionConfig, connectionConfig);
-        }
-
-        public static void StartBroadCastService(this IServiceProvider provider)
-        {
-            var queue = provider.GetRequiredService<IBroadcastService>();
-            queue.Start();
-        }
+            return AddRabbitBroadCastService(services, config.Get<BroadcastServiceOptions>(), subcriptionConfig, connectionConfig);
+        }       
     }
 }

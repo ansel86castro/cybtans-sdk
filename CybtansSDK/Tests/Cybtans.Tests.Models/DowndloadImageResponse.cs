@@ -32,7 +32,7 @@ namespace Cybtans.Tests.Models
 			public const int FileName = 1;
 			public const int ContentType = 2;
 			public const int Image = 3;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				FileName,ContentType,Image
 			};

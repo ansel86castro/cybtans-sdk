@@ -24,6 +24,8 @@ using GraphQL.Types;
 using GraphQL.Server;
 using Cybtans.Tests.RestApi.GraphQl;
 using Cybtans.Tests.GraphQL;
+using Cybtans.Tests.RestApi.Security;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Test.RestApi
 {
@@ -110,7 +112,7 @@ namespace Cybtans.Test.RestApi
 
             #region Messaging
 
-            services.AddMessageQueue(Configuration)
+            services.AddRabbitMessageQueue(Configuration)
              .ConfigureSubscriptions(sm =>
              {
                  sm.SubscribeHandlerForEvents<Order, OrderMessageHandler>("Test");
@@ -122,7 +124,8 @@ namespace Cybtans.Test.RestApi
 
             services.AddAccessTokenManager(Configuration);
 
-            services.AddBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>());
+            services.AddRabbitBroadCastService(Configuration.GetSection("BroadCastOptions").Get<BroadcastServiceOptions>());
+           
             #endregion
 
             #region Caching 
@@ -295,10 +298,26 @@ namespace Cybtans.Test.RestApi
                 };
                 options.Validate();
             });
+           
             services.AddAuthorization(options=>
             {
-                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));                
+                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));
+               
+                options.AddPolicy("ClientPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.AddRequirements(new ClientPolicyRequirement());
+                    
+                });
+
+                options.AddPolicy("ClientCreator", policy =>
+                {
+                    policy.AddRequirements(new ClientCreatorRequiriment());
+                });
             });
-		}
+
+            services.AddSingleton<IAuthorizationHandler, ClientPolicyHandlers>();
+            services.AddSingleton<IAuthorizationHandler, ClientCreatorPolicyHandler>();
+        }
     }
 }

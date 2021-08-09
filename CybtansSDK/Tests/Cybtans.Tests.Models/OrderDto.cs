@@ -59,7 +59,7 @@ namespace Cybtans.Tests.Models
 			public const int Id = 8;
 			public const int CreateDate = 9;
 			public const int UpdateDate = 10;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Description,CustomerId,OrderStateId,OrderType,OrderState,Customer,Items,Id,CreateDate,UpdateDate
 			};

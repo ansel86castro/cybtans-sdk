@@ -29,7 +29,7 @@ namespace Cybtans.Tests.Models
 		{
 			public const int Id = 1;
 			public const int Data = 2;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Id,Data
 			};

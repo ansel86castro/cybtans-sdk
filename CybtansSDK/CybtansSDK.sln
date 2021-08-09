@@ -47,7 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Proto", "Proto", "{6C4CD476
 		Tests\Proto\Authentication.proto = Tests\Proto\Authentication.proto
 		Tests\Proto\cybtans.proto = Tests\Proto\cybtans.proto
 		Tests\Proto\Domain.proto = Tests\Proto\Domain.proto
-		Tests\Proto\greet.proto = Tests\Proto\greet.proto
 		Tests\Proto\Orders.proto = Tests\Proto\Orders.proto
 		Tests\Proto\Test.proto = Tests\Proto\Test.proto
 	EndProjectSection
@@ -88,11 +87,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Tests.Grpc", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.AzureStorage", "Cybtans.AzureStorage\Cybtans.AzureStorage.csproj", "{D282B68A-AFDE-4E74-8869-8A5CFB522512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Entities.Dapper", "Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj", "{D347689F-43BE-4B6A-A151-3C3CA3068F40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Entities.Dapper", "Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj", "{D347689F-43BE-4B6A-A151-3C3CA3068F40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Validations", "Cybtans.Validations\Cybtans.Validations.csproj", "{6C1C1273-1692-40C6-A491-C23DDB26D434}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Validations", "Cybtans.Validations\Cybtans.Validations.csproj", "{6C1C1273-1692-40C6-A491-C23DDB26D434}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Grpc", "Cybtans.Grpc\Cybtans.Grpc.csproj", "{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Grpc", "Cybtans.Grpc\Cybtans.Grpc.csproj", "{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Messaging.AzureServiceBus", "Cybtans.Messaging.AzureServiceBus\Cybtans.Messaging.AzureServiceBus.csproj", "{064FDAF3-F3F1-4F96-96CB-286EAA3021B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureServiceBus", "AzureServiceBus", "{D781369F-16D0-41C8-94BF-86C3552F3590}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service1", "Tests\AzureServiceBus\Service1\Service1.csproj", "{CB3DB035-B120-4444-A5E5-75FA63BBD457}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service2", "Tests\AzureServiceBus\Service2\Service2.csproj", "{7501485F-28C4-4C34-88C3-A241F6ED5857}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -248,6 +255,18 @@ Global
 		{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFA9DF49-59A5-40E9-973D-49BF3E9F7069}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064FDAF3-F3F1-4F96-96CB-286EAA3021B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064FDAF3-F3F1-4F96-96CB-286EAA3021B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064FDAF3-F3F1-4F96-96CB-286EAA3021B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064FDAF3-F3F1-4F96-96CB-286EAA3021B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB3DB035-B120-4444-A5E5-75FA63BBD457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB3DB035-B120-4444-A5E5-75FA63BBD457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB3DB035-B120-4444-A5E5-75FA63BBD457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB3DB035-B120-4444-A5E5-75FA63BBD457}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -270,6 +289,9 @@ Global
 		{2ADBC8CA-D4B3-437F-AB9D-0015C969E7BD} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 		{7A05AADD-4265-46F6-BEEC-3276F8775E61} = {9BB24624-B984-4F16-83C5-57DED80EB606}
 		{A8A95057-A14A-4EB4-A4CE-6814F51D20D8} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
+		{D781369F-16D0-41C8-94BF-86C3552F3590} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
+		{CB3DB035-B120-4444-A5E5-75FA63BBD457} = {D781369F-16D0-41C8-94BF-86C3552F3590}
+		{7501485F-28C4-4C34-88C3-A241F6ED5857} = {D781369F-16D0-41C8-94BF-86C3552F3590}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {412220C1-F0EB-4AB9-8FCA-DFBAB8477745}

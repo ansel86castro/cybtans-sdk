@@ -40,7 +40,7 @@ namespace Cybtans.Tests.Models
 		public sealed class LoginResponseAccesor : IReflectorMetadata
 		{
 			public const int Token = 1;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Token
 			};

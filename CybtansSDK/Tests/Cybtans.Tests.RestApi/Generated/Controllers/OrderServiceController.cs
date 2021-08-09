@@ -16,7 +16,7 @@ using Cybtans.AspNetCore;
 using mds = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cybtans.Tests.Controllers
+namespace Cybtans.Tests.RestApi.Controllers
 {
 	/// <summary>
 	/// Order's Service
@@ -37,6 +37,12 @@ namespace Cybtans.Tests.Controllers
 			_interceptor = interceptor;
 		}
 		
+		/// <summary>
+		/// Hellow; "Func"
+		/// </summary>
+		[System.ComponentModel.Description("Hellow; \"Func\"")]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(500)]
 		[AllowAnonymous]
 		[HttpGet("foo")]
 		public async Task Foo()
@@ -85,7 +91,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.UploadImage(request).ConfigureAwait(false);
+			var result = await _service.UploadImage(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpPost("{id}/upload")]
@@ -101,7 +108,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.UploadStreamById(request).ConfigureAwait(false);
+			var result = await _service.UploadStreamById(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpPost("ByteStream")]
@@ -115,7 +123,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.UploadStream(request).ConfigureAwait(false);
+			var result = await _service.UploadStream(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("download")]
@@ -174,7 +183,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
-			return await _service.GetAllNames().ConfigureAwait(false);
+			var result = await _service.GetAllNames().ConfigureAwait(false);
+			return result;
 		}
 		
 		[HttpGet("names/{id}")]
@@ -189,7 +199,13 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.GetOrderName(request).ConfigureAwait(false);
+			var result = await _service.GetOrderName(request).ConfigureAwait(false);
+			if(_interceptor != null )
+			{
+			    await _interceptor.HandleResult(result).ConfigureAwait(false);
+			}
+			
+			return result;
 		}
 		
 		[HttpPost("names")]
@@ -202,7 +218,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.CreateOrderName(request).ConfigureAwait(false);
+			var result = await _service.CreateOrderName(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -219,7 +236,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.GetAll(request).ConfigureAwait(false);
+			var result = await _service.GetAll(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -238,7 +256,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Get(request).ConfigureAwait(false);
+			var result = await _service.Get(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -255,7 +274,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Create(request).ConfigureAwait(false);
+			var result = await _service.Create(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -274,7 +294,8 @@ namespace Cybtans.Tests.Controllers
 			    await _interceptor.Handle(request).ConfigureAwait(false);
 			}
 			
-			return await _service.Update(request).ConfigureAwait(false);
+			var result = await _service.Update(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>

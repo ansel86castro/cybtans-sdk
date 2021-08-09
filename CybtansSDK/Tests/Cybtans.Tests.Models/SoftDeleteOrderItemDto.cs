@@ -41,7 +41,7 @@ namespace Cybtans.Tests.Models
 			public const int Id = 4;
 			public const int CreateDate = 5;
 			public const int UpdateDate = 6;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Name,IsDeleted,SoftDeleteOrderId,Id,CreateDate,UpdateDate
 			};

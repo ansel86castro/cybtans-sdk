@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Microsoft.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace Cybtans.Serialization
         readonly byte[] _buffer = new byte[256];
         Memory<byte> _memory;
         Dictionary<Type, TypeCache>? _typeCache;
+
+        private static readonly RecyclableMemoryStreamManager _manager = new RecyclableMemoryStreamManager();
 
         public enum Types : byte
         {
@@ -91,7 +94,7 @@ namespace Cybtans.Serialization
 
         public byte[] Serialize(object obj)
         {
-            using var memStream = new MemoryStream();
+            using var memStream = _manager.GetStream();
             Serialize(memStream, obj);
 
             return memStream.ToArray();
@@ -548,7 +551,16 @@ namespace Cybtans.Serialization
 
         public object? Deserialize(byte[] bytes, Type? type)
         {
-            using var stream = new MemoryStream(bytes);
+            using var stream = _manager.GetStream(bytes);
+            return Deserialize(stream, type);
+        }
+
+        public object? Deserialize(ReadOnlySpan<byte> memory, Type type)
+        {
+            using var stream = _manager.GetStream();
+            stream.Write(memory);
+            stream.Position = 0;
+
             return Deserialize(stream, type);
         }
 

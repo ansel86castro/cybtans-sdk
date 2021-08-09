@@ -302,6 +302,7 @@ export interface LoginResponse {
 
 
 export interface UploadImageRequest {
+  /** Image Name "Hola"  */
   name?: string|null;
   size: number;
   image?: Blob|null;
@@ -368,4 +369,19 @@ export interface GetOrderNameRequest {
 
 export interface CreateOrderNameRequest {
   name?: string|null;
+}
+
+
+export interface ClientRequest {
+  id: string;
+}
+
+
+export interface ClientDto {
+  id: string;
+  name?: string|null;
+  clientTypeId: number;
+  clientStatusId?: number|null;
+  createdAt: string|Date;
+  creatorId: number;
 }

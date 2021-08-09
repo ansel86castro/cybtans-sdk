@@ -40,7 +40,8 @@ namespace Cybtans.Tests.Controllers
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
-			return await _service.GetAll(request).ConfigureAwait(false);
+			var result = await _service.GetAll(request).ConfigureAwait(false);
+			return result;
 		}
 		
 		/// <summary>
@@ -55,7 +56,8 @@ namespace Cybtans.Tests.Controllers
 			
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Get), request);
 			
-			return await _service.Get(request).ConfigureAwait(false);
+			var result = await _service.Get(request).ConfigureAwait(false);
+			return result;
 		}
 	}
 

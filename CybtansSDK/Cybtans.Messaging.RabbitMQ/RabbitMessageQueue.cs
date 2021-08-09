@@ -34,23 +34,26 @@ namespace Cybtans.Messaging.RabbitMQ
         private readonly HashSet<string> _publishExchanges = new HashSet<string>();
         private readonly HashSet<string> _consumeExchanges = new HashSet<string>();
         private readonly MessageSubscriptionManager _subscriptionManager;
+        private readonly IMessageSerializer _messageSerializer;
 
         public event EventHandler? Started;
 
-        public RabbitMessageQueue(IConnectionFactory connectionFactory, MessageSubscriptionManager subscriptionManager, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null)
+        public RabbitMessageQueue(IConnectionFactory connectionFactory, MessageSubscriptionManager subscriptionManager, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null, IMessageSerializer messageSerializer = null)
         {
             _connectionFactory = connectionFactory;
             _logger = logger;
             _options = options ?? new RabbitMessageQueueOptions();
             _subscriptionManager = subscriptionManager;
+            _messageSerializer = messageSerializer ?? new CybtansMessageSerializer();
         }
 
-        public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null)            
+        public RabbitMessageQueue(IConnectionFactory connectionFactory, RabbitMessageQueueOptions? options = null, ILogger<RabbitMessageQueue>? logger = null, IMessageSerializer messageSerializer= null)            
         {
             _connectionFactory = connectionFactory;
             _logger = logger;
             _options = options ?? new RabbitMessageQueueOptions();
             _subscriptionManager = new MessageSubscriptionManager(null, _options.Exchange.Name);
+            _messageSerializer = messageSerializer ?? new CybtansMessageSerializer();
         }
 
         public bool IsConnected =>  _connection != null && _connection.IsOpen && !_disposed;
@@ -280,7 +283,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 topic = binding.Topic;
             }
 
-            var bytes = BinaryConvert.Serialize(message);
+            var bytes = _messageSerializer.Serialize(message);
             return Task.Run(() => PublishInternal(exchange,  topic, bytes));
         }       
 
@@ -403,7 +406,7 @@ namespace Cybtans.Messaging.RabbitMQ
         {
             var exchage = args.Exchange;
             var topic = args.RoutingKey;
-            var data = args.Body.ToArray();
+            var data = args.Body;
             var deliveryTag = args.DeliveryTag;
 
             _logger?.LogDebug("Message Received {Exchange} {Topic}", exchage, topic);
@@ -414,7 +417,7 @@ namespace Cybtans.Messaging.RabbitMQ
                 {
                     _logger?.LogDebug("Message Dispatched {Exchange} {Topic}", exchage, topic);
 
-                    await _subscriptionManager.HandleMessage(exchage, topic, data).ConfigureAwait(false);
+                    await _subscriptionManager.HandleMessage(exchage, topic, data, _messageSerializer).ConfigureAwait(false);
                     if (deliveryTag > 0)
                     {                        
                         _consumerChannel?.BasicAck(deliveryTag, multiple: false);

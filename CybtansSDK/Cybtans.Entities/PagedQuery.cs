@@ -23,4 +23,23 @@ namespace Cybtans.Entities
 
         public long TotalCount { get; }
     }
+
+    public class PagedEnumerable<T>
+    {
+        public PagedEnumerable(IEnumerable<T> items, long page, long totalPages, long totalCount)
+        {
+            Items = items;
+            Page = page;
+            TotalPages = totalPages;
+            TotalCount = totalCount;
+        }
+
+        public IEnumerable<T> Items { get; }
+
+        public long Page { get; }
+
+        public long TotalPages { get; }
+
+        public long TotalCount { get; }
+    }
 }

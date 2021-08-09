@@ -31,7 +31,7 @@ namespace Cybtans.Tests.Models
 		public sealed class CreateOrderNameRequestAccesor : IReflectorMetadata
 		{
 			public const int Name = 1;
-			private readonly int[] _props = new []
+			private readonly int[] _props = new int[]
 			{
 				Name
 			};

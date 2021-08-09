@@ -17,5 +17,10 @@ namespace Cybtans.Tests.RestApi
         {
             return _validatorProvider.ValidateAsync(msg);
         }
+
+        public ValueTask HandleResult<T>(T result) where T : class
+        {
+            return ValueTask.CompletedTask;
+        }
     }
 }

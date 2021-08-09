@@ -5,7 +5,7 @@ import "./Domain.proto";
 package Cybtans.Tests;
 
 message UploadImageRequest {
-	string name = 1;
+	string name = 1 [(description) = 'Image Name "Hola" '];
 	int32 size =2;
 	ByteStream image=3;
 }
@@ -46,12 +46,14 @@ message OrderNotification{
 }
 
 service OrderService {
-	option description = "Order's Service";	
+	option (description) = "Order's Service";	
 
 	rpc Foo(void) returns (void){	
 		option template = "foo"; 
 		option method = "GET";
 		option anonymous = true;
+		option description = 'Hellow; "Func"';
+		option attributes = "ProducesResponseType(404); ProducesResponseType(500)";
 	};
 
 	rpc Baar(void) returns (void){	
@@ -109,6 +111,7 @@ service OrderService {
 	rpc GetOrderName(GetOrderNameRequest) returns (OrderNamesDto){		
 		option method = "GET";
 		option template = "names/{id}";		
+		option handle_result = true;
 	};
 
 	rpc CreateOrderName(CreateOrderNameRequest) returns (OrderNamesDto){
