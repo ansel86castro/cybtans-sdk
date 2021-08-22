@@ -102,7 +102,7 @@ namespace Cybtans.Testing.Integration
             {
                 var end = DateTime.UtcNow.AddSeconds(60);
                 var connectionEstablised = false;
-                var client = new MongoClient(ConnectionString);
+                var client = new MongoClient($"mongodb://root:{Password}@localhost:{c.Port}");
                 while (!connectionEstablised && end > DateTime.UtcNow)
                 {
                     try
@@ -129,8 +129,6 @@ namespace Cybtans.Testing.Integration
                 return;
             };
 
-        }
-
-        public string ConnectionString => $"mongodb://root:{Password}@localhost:{HostPort}";
+        }        
     }
 }

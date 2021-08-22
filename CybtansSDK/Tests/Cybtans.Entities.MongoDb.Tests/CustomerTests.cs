@@ -12,18 +12,11 @@ namespace Cybtans.Entities.MongoDb.Tests
     {
         IServiceProvider _serviceProvider;
         ContainerInfo _containerInfo;
-        
+        private ServiceCollection _services;
+
         public CustomerFixture()
         {           
-            var services = new ServiceCollection();
-            services.AddMongoDbProvider<TestMongoDbProvider>(o =>
-            {
-                o.ConnectionString = "mongodb://root:Pass123.@localhost:27017";
-                o.Database = "test";
-            })
-            .AddObjectRepositories();
-
-            _serviceProvider = services.BuildServiceProvider();
+            _services = new ServiceCollection();         
            
         }        
 
@@ -35,8 +28,17 @@ namespace Cybtans.Entities.MongoDb.Tests
         public async Task InitializeAsync()
         {
             var docker = new DockerManager();
-            _containerInfo = await docker.RunContainerAsync(new MongoDbContainer());
+            _containerInfo = await docker.RunContainerAsync(new MongoDbContainer(port: 0));
             Assert.NotNull(_containerInfo);
+
+            _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
+            {
+                o.ConnectionString = $"mongodb://root:Pass123.@localhost:{_containerInfo.Port}";
+                o.Database = "test";
+            })
+             .AddObjectRepositories();
+
+            _serviceProvider = _services.BuildServiceProvider();
 
             var customer = GetRepository<Customer>();
             await customer.AddRangeAsync(Enumerable.Range(1, 10).Select(i => new Customer
