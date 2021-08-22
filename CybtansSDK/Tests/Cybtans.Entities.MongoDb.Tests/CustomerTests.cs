@@ -33,7 +33,7 @@ namespace Cybtans.Entities.MongoDb.Tests
 
             _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
             {
-                o.ConnectionString = $"mongodb://root:Pass123.@127.0.0.1:{_containerInfo.Port}";
+                o.ConnectionString = $"mongodb://root:Pass123.@host.docker.internal:{_containerInfo.Port}";
                 o.Database = "test";
             })
              .AddObjectRepositories();
