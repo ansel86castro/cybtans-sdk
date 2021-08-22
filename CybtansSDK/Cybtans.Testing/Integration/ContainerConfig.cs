@@ -100,7 +100,7 @@ namespace Cybtans.Testing.Integration
 
             WaitFunction = async c =>
             {
-                var end = DateTime.UtcNow.AddSeconds(60);
+                var end = DateTime.UtcNow.AddSeconds(60 * 5);
                 var connectionEstablised = false;
                 var client = new MongoClient($"mongodb://root:{Password}@localhost:{c.Port}");
                 while (!connectionEstablised && end > DateTime.UtcNow)
@@ -115,9 +115,8 @@ namespace Cybtans.Testing.Integration
                         }
                     }
                     catch
-                    {
-                        // If opening the SQL connection fails, SQL Server is not ready yet
-                        await Task.Delay(500);
+                    {                        
+                        await Task.Delay(1000);
                     }
                 }
 
