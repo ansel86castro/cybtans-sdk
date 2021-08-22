@@ -100,9 +100,9 @@ namespace Cybtans.Testing.Integration
 
             WaitFunction = async c =>
             {
-                var end = DateTime.UtcNow.AddSeconds(60 * 5);
+                var end = DateTime.UtcNow.AddSeconds(60);
                 var connectionEstablised = false;
-                var client = new MongoClient($"mongodb://root:{Password}@localhost:{c.Port}");
+                var client = new MongoClient($"mongodb://root:{Password}@127.0.0.1:{c.Port}");
                 while (!connectionEstablised && end > DateTime.UtcNow)
                 {
                     try
