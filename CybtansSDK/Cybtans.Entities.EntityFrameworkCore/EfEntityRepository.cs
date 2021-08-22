@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,13 +26,5 @@ namespace Cybtans.Entities.EntityFrameworkCore
             return await base.Get(key, includeDetails, consistency);
         }
      
-    }
-
-
-    public interface IEntityKey<T>
-    {
-       Expression<Func<T, bool>> GetFilter();
-
-        object[] GetValues();
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -95,6 +96,16 @@ namespace Cybtans.Entities.EntityFrameworkCore
             if(key is IEntityKey<T> ek)
             {
                 return includeDetails ? GetWithDetails(ek, consistency) : FindAsync(consistency, ek.GetValues());
+            }
+            else if(key is ITuple tuple)
+            {
+                var ids = new object[tuple.Length];
+                for (int i = 0; i < tuple.Length; i++)
+                {
+                    ids[i] = tuple[i];
+                }
+
+                return FindAsync(consistency, ids);
             }
 
             return FindAsync(consistency, key);

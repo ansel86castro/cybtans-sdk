@@ -58,6 +58,7 @@ steps:
         dotnet pack ./CybtansSDK/Cybtans.Grpc/Cybtans.Grpc.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
         dotnet pack ./CybtansSDK/Graphics/Cybtans.Graphics/Cybtans.Graphics.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
         dotnet pack ./CybtansSDK/Cybtans.Messaging.AzureServiceBus/Cybtans.Messaging.AzureServiceBus.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+        dotnet pack ./CybtansSDK/Cybtans.Entities.MongoDb/Cybtans.Entities.MongoDb.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory) -p:PackageVersion=$(packVersion) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
   - task: NuGetCommand@2
     displayName: "Publish Packages"

@@ -97,9 +97,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Messaging.AzureServ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureServiceBus", "AzureServiceBus", "{D781369F-16D0-41C8-94BF-86C3552F3590}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service1", "Tests\AzureServiceBus\Service1\Service1.csproj", "{CB3DB035-B120-4444-A5E5-75FA63BBD457}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service1", "Tests\AzureServiceBus\Service1\Service1.csproj", "{CB3DB035-B120-4444-A5E5-75FA63BBD457}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service2", "Tests\AzureServiceBus\Service2\Service2.csproj", "{7501485F-28C4-4C34-88C3-A241F6ED5857}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service2", "Tests\AzureServiceBus\Service2\Service2.csproj", "{7501485F-28C4-4C34-88C3-A241F6ED5857}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Entities.MongoDb", "Cybtans.Entities.MongoDb\Cybtans.Entities.MongoDb.csproj", "{8D305844-9336-4898-98CA-3143D7D0AE35}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Entities.MongoDb.Tests", "Tests\Cybtans.Entities.MongoDb.Tests\Cybtans.Entities.MongoDb.Tests.csproj", "{310A496E-683F-4E66-8778-C7E29B7C8AF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -267,6 +271,14 @@ Global
 		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7501485F-28C4-4C34-88C3-A241F6ED5857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D305844-9336-4898-98CA-3143D7D0AE35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D305844-9336-4898-98CA-3143D7D0AE35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D305844-9336-4898-98CA-3143D7D0AE35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D305844-9336-4898-98CA-3143D7D0AE35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310A496E-683F-4E66-8778-C7E29B7C8AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310A496E-683F-4E66-8778-C7E29B7C8AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310A496E-683F-4E66-8778-C7E29B7C8AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310A496E-683F-4E66-8778-C7E29B7C8AF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +304,7 @@ Global
 		{D781369F-16D0-41C8-94BF-86C3552F3590} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 		{CB3DB035-B120-4444-A5E5-75FA63BBD457} = {D781369F-16D0-41C8-94BF-86C3552F3590}
 		{7501485F-28C4-4C34-88C3-A241F6ED5857} = {D781369F-16D0-41C8-94BF-86C3552F3590}
+		{310A496E-683F-4E66-8778-C7E29B7C8AF2} = {3374CCAB-90D3-470E-911A-A3284EBA88A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {412220C1-F0EB-4AB9-8FCA-DFBAB8477745}
