@@ -1,3 +1,5 @@
+#if INTEGRATIONS
+
 using Cybtans.Entities.MongoDb.Tests.Models;
 using Cybtans.Testing.Integration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +35,7 @@ namespace Cybtans.Entities.MongoDb.Tests
 
             _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
             {
-                o.ConnectionString = $"mongodb://root:Pass123.@host.docker.internal:{_containerInfo.Port}";
+                o.ConnectionString = $"mongodb://root:Pass123.@127.0.0.1:{_containerInfo.Port}";
                 o.Database = "test";
             })
              .AddObjectRepositories();
@@ -58,6 +60,7 @@ namespace Cybtans.Entities.MongoDb.Tests
         }
     }
 
+    
     public class CustomerTests : IClassFixture<CustomerFixture>
     {
         IObjectRepository<Customer> _customers;
@@ -168,3 +171,5 @@ namespace Cybtans.Entities.MongoDb.Tests
         }
     }
 }
+
+#endif

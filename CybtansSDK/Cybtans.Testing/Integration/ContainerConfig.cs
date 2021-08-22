@@ -102,7 +102,7 @@ namespace Cybtans.Testing.Integration
             {
                 var end = DateTime.UtcNow.AddSeconds(60);
                 var connectionEstablised = false;
-                var client = new MongoClient($"mongodb://root:{Password}@host.docker.internal:{c.Port}");
+                var client = new MongoClient($"mongodb://root:{Password}@127.0.0.1:{c.Port}");
                 while (!connectionEstablised && end > DateTime.UtcNow)
                 {
                     try

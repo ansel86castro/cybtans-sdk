@@ -84,7 +84,7 @@ namespace Cybtans.Testing.Integration
                                     }
                                 }
                       }
-                  }
+                  },                  
               });
 
             var info = new ContainerInfo(_dockerClient, container.ID, port);
@@ -158,4 +158,5 @@ namespace Cybtans.Testing.Integration
             return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
     }
+
 }
