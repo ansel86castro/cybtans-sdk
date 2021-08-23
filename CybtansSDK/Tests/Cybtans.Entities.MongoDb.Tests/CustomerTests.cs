@@ -1,4 +1,4 @@
-#if INTEGRATIONS
+#if !INTEGRATIONS
 
 using Cybtans.Entities.MongoDb.Tests.Models;
 using Cybtans.Testing.Integration;
@@ -35,7 +35,7 @@ namespace Cybtans.Entities.MongoDb.Tests
 
             _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
             {
-                o.ConnectionString = $"mongodb://root:Pass123.@127.0.0.1:{_containerInfo.Port}";
+                o.ConnectionString = $"mongodb://root:Pass123.@{_containerInfo.IPAddress}:{_containerInfo.ContainerPort}";
                 o.Database = "test";
             })
              .AddObjectRepositories();

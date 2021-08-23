@@ -15,18 +15,23 @@ namespace Cybtans.Testing.Integration
     public class ContainerInfo :IAsyncDisposable
     {
         private DockerClient _dockerClient;
-        public ContainerInfo(DockerClient dockerClient, string id, int port)
+        public ContainerInfo(DockerClient dockerClient, string id, int port, string name)
         {
             Id = id;
-            Port = port;
+            HostPort = port;
             _dockerClient = dockerClient;
         }
 
-        public string Id { get;  }
+        public string Id { get; }
 
-        public int Port { get; }
+        public string Name { get; }
 
-                
+        public int HostPort { get; }
+
+        public int ContainerPort { get; internal set; }
+
+        public string IPAddress { get; internal set; }
+
 
         public async ValueTask DisposeAsync()
         {
@@ -62,13 +67,15 @@ namespace Cybtans.Testing.Integration
                 Trace.Write(log.ProgressMessage);
             }));
 
+            var name = config.NamePrefix + Guid.NewGuid().ToString("N");
             var container = await _dockerClient
               .Containers
               .CreateContainerAsync(new CreateContainerParameters
               {
-                  Name = config.NamePrefix + Guid.NewGuid(),
+                  Name = name,
                   Image = config.Image,
                   Env = config.Environment,
+                  Hostname = name,                  
                   HostConfig = new HostConfig
                   {
                       PortBindings = new Dictionary<string, IList<PortBinding>>
@@ -87,14 +94,26 @@ namespace Cybtans.Testing.Integration
                   },                  
               });
 
-            var info = new ContainerInfo(_dockerClient, container.ID, port);
-            await _dockerClient
-                .Containers
-                .StartContainerAsync(info.Id, new ContainerStartParameters());
+            var info = new ContainerInfo(_dockerClient, container.ID, port, name) { ContainerPort = config.ContainerPort };
+
+            if (!await _dockerClient.Containers.StartContainerAsync(info.Id, new ContainerStartParameters()))
+            {
+                throw new InvalidOperationException($"Unable to start container for image {config.Image}");
+            }
+
+            var inspectResponse = await _dockerClient.Containers.InspectContainerAsync(container.ID);
+            info.IPAddress = inspectResponse.NetworkSettings.IPAddress;
 
             if(config.WaitFunction != null)
             {
-                await config.WaitFunction(info);
+                try
+                {
+                    await config.WaitFunction(info);
+                }
+                catch
+                {
+                    await RemoveContainer(info.Id);
+                }
             }
 
             return info;
