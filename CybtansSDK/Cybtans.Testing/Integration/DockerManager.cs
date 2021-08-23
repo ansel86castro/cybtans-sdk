@@ -95,8 +95,10 @@ namespace Cybtans.Testing.Integration
 
             var info = new ContainerInfo(_dockerClient, container.ID, port, name) { ContainerPort = config.ContainerPort };
 
-            if (!await _dockerClient.Containers.StartContainerAsync(info.Id, new ContainerStartParameters()))
+            if (!await _dockerClient.Containers.StartContainerAsync(container.ID, new ContainerStartParameters()))
             {
+                await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+
                 throw new InvalidOperationException($"Unable to start container for image {config.Image}");
             }
 
