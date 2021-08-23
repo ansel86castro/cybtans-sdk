@@ -114,6 +114,7 @@ namespace Cybtans.Testing.Integration
                 catch
                 {
                     await RemoveContainer(info.Id);
+                    throw
                 }
             }
 
