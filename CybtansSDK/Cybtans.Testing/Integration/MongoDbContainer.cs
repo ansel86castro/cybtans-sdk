@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Testing.Integration
 {
-    public class MongoDbContainer: ContainerConfig
+    public class MongoDbContainerConfig: ContainerConfig
     {
         public string Password { get; }
 
-        public MongoDbContainer(string prefix = "MongoDbIntegrationTest-", int port = 27017, string password = "Pass123.")
+        public MongoDbContainerConfig(string prefix = "MongoDbIntegrationTest-", int port = 27017, string password = "Pass123.")
         {
             NamePrefix = prefix;
             Image = "mongo:latest";
@@ -27,7 +27,7 @@ namespace Cybtans.Testing.Integration
             {
                 var end = DateTime.UtcNow.AddSeconds(60);
                 var connectionEstablised = false;
-                var client = new MongoClient($"mongodb://root:{Password}@{c.IPAddress}:{c.ContainerPort}");
+                var client = new MongoClient(GetConnectionString(c));
                 while (!connectionEstablised && end > DateTime.UtcNow)
                 {
                     try
@@ -53,6 +53,16 @@ namespace Cybtans.Testing.Integration
                 return;
             };
 
-        }        
+        }
+        
+        public string GetConnectionString(ContainerInfo c)
+        {
+            if (!string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("FROM_CONTAINER")))
+            {
+                return $"mongodb://root:{Password}@{c.IPAddress}:{c.ContainerPort}";
+            }
+
+            return $"mongodb://root:{Password}@localhost:{c.HostPort}";
+        }
     }
 }

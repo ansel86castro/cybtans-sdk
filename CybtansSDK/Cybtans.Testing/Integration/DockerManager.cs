@@ -74,8 +74,7 @@ namespace Cybtans.Testing.Integration
               {
                   Name = name,
                   Image = config.Image,
-                  Env = config.Environment,
-                  Hostname = name,                  
+                  Env = config.Environment,                                
                   HostConfig = new HostConfig
                   {
                       PortBindings = new Dictionary<string, IList<PortBinding>>
@@ -96,10 +95,14 @@ namespace Cybtans.Testing.Integration
 
             var info = new ContainerInfo(_dockerClient, container.ID, port, name) { ContainerPort = config.ContainerPort };
 
-            if (!await _dockerClient.Containers.StartContainerAsync(info.Id, new ContainerStartParameters()))
+            if (!await _dockerClient.Containers.StartContainerAsync(container.ID, new ContainerStartParameters()))
             {
+                await _dockerClient.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters());
+
                 throw new InvalidOperationException($"Unable to start container for image {config.Image}");
             }
+
+            await Task.Delay(500);
 
             var inspectResponse = await _dockerClient.Containers.InspectContainerAsync(container.ID);
             info.IPAddress = inspectResponse.NetworkSettings.IPAddress;
@@ -113,6 +116,7 @@ namespace Cybtans.Testing.Integration
                 catch
                 {
                     await RemoveContainer(info.Id);
+                    throw;
                 }
             }
 
@@ -120,9 +124,18 @@ namespace Cybtans.Testing.Integration
         }
 
         public async Task RemoveContainer(string dockerContainerId)
-        {            
-            await _dockerClient.Containers.StopContainerAsync(dockerContainerId, new ContainerStopParameters());
-            await _dockerClient.Containers.RemoveContainerAsync(dockerContainerId, new ContainerRemoveParameters());
+        {
+            try
+            {
+                if (await _dockerClient.Containers.StopContainerAsync(dockerContainerId, new ContainerStopParameters()))
+                {
+                    await _dockerClient.Containers.RemoveContainerAsync(dockerContainerId, new ContainerRemoveParameters());
+                }
+            }
+            catch (Docker.DotNet.DockerContainerNotFoundException)
+            {
+
+            }
         }
 
         private static DockerClient GetDockerClient()
