@@ -42,4 +42,23 @@ namespace Cybtans.Entities
 
         public long TotalCount { get; }
     }
+
+    public class PagedList<T>
+    {
+        public PagedList(List<T> items, long page, long totalPages, long totalCount)
+        {
+            Items = items;
+            Page = page;
+            TotalPages = totalPages;
+            TotalCount = totalCount;
+        }
+
+        public List<T> Items { get; }
+
+        public long Page { get;  }
+
+        public long TotalPages { get; }
+
+        public long TotalCount { get; }
+    }
 }
