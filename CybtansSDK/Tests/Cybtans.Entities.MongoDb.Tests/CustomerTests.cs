@@ -30,12 +30,13 @@ namespace Cybtans.Entities.MongoDb.Tests
         public async Task InitializeAsync()
         {
             var docker = new DockerManager();
-            _containerInfo = await docker.RunContainerAsync(new MongoDbContainer(port: 0));
+            var config = new MongoDbContainerConfig(port: 0);
+            _containerInfo = await docker.RunContainerAsync(config);
             Assert.NotNull(_containerInfo);
 
             _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
             {
-                o.ConnectionString = $"mongodb://root:Pass123.@{_containerInfo.IPAddress}:{_containerInfo.ContainerPort}";
+                o.ConnectionString =  config.GetConnectionString(_containerInfo);
                 o.Database = "test";
             })
              .AddObjectRepositories();

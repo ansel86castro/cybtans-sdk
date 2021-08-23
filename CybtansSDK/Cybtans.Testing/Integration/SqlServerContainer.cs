@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Testing.Integration
 {
-    public class SqlServerContainer: ContainerConfig
+    public class SqlServerContainerConfig: ContainerConfig
     {
         private readonly string _password;
 
-        public SqlServerContainer(string prefix= "SqlServerIntegrationTest-", int port = 1433, string password = "fH9X3DWt9MwgAnqZ")
+        public SqlServerContainerConfig(string prefix= "SqlServerIntegrationTest-", int port = 1433, string password = "fH9X3DWt9MwgAnqZ")
         {
             Image = "mcr.microsoft.com/mssql/server:2019-latest";
             HostPort = port;

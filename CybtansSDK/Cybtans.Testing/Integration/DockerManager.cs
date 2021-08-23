@@ -74,8 +74,7 @@ namespace Cybtans.Testing.Integration
               {
                   Name = name,
                   Image = config.Image,
-                  Env = config.Environment,
-                  Hostname = name,                  
+                  Env = config.Environment,                                
                   HostConfig = new HostConfig
                   {
                       PortBindings = new Dictionary<string, IList<PortBinding>>
@@ -101,6 +100,8 @@ namespace Cybtans.Testing.Integration
                 throw new InvalidOperationException($"Unable to start container for image {config.Image}");
             }
 
+            await Task.Delay(500);
+
             var inspectResponse = await _dockerClient.Containers.InspectContainerAsync(container.ID);
             info.IPAddress = inspectResponse.NetworkSettings.IPAddress;
 
@@ -120,9 +121,18 @@ namespace Cybtans.Testing.Integration
         }
 
         public async Task RemoveContainer(string dockerContainerId)
-        {            
-            await _dockerClient.Containers.StopContainerAsync(dockerContainerId, new ContainerStopParameters());
-            await _dockerClient.Containers.RemoveContainerAsync(dockerContainerId, new ContainerRemoveParameters());
+        {
+            try
+            {
+                if (await _dockerClient.Containers.StopContainerAsync(dockerContainerId, new ContainerStopParameters()))
+                {
+                    await _dockerClient.Containers.RemoveContainerAsync(dockerContainerId, new ContainerRemoveParameters());
+                }
+            }
+            catch (Docker.DotNet.DockerContainerNotFoundException)
+            {
+
+            }
         }
 
         private static DockerClient GetDockerClient()
