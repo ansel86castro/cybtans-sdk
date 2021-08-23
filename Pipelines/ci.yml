@@ -7,38 +7,37 @@ name: $(majorMinorPathVersion).$(buildVersion)
 
 # pipeline variables
 variables:
-   majorMinorPathVersion: 1.0.16
+  majorMinorPathVersion: 1.0.16
   # semanticVersion counter is automatically incremented by one in each execution of pipeline
   # second parameter is seed value to reset to every time the referenced majorMinorPathVersion is changed
-   buildVersion: $[counter(variables['majorMinorPathVersion'], 1)]
-   packVersion: $(majorMinorPathVersion)-beta-$(buildVersion)
-   FROM_CONTAINER: true
-
+  buildVersion: $[counter(variables['majorMinorPathVersion'], 1)]
+  packVersion: $(majorMinorPathVersion)-beta-$(buildVersion)
+  FROM_CONTAINER: true
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: "windows-latest"
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: 'Restore Cybtans SDK'
-  inputs:
-    command: 'restore'
-    projects: '**/CybtansSDK.sln'   
+  - task: DotNetCoreCLI@2
+    displayName: "Restore Cybtans SDK"
+    inputs:
+      command: "restore"
+      projects: "**/CybtansSDK.sln"
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build Cybtans SDK'
-  inputs:
-    command: 'build'
-    projects: '**/CybtansSDK.sln'
-    arguments: '--configuration $(configuration)'
-    versioningScheme: 'byBuildNumber' 
+  - task: DotNetCoreCLI@2
+    displayName: "Build Cybtans SDK"
+    inputs:
+      command: "build"
+      projects: "**/CybtansSDK.sln"
+      arguments: "--configuration $(configuration)"
+      versioningScheme: "byBuildNumber"
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test Cybtans SDK'
-  inputs:
-    command: 'test'
-    projects: '**/CybtansSDK.sln'
-    testRunTitle: 'Run Tests Cybtans SDK'
+  - task: DotNetCoreCLI@2
+    displayName: "Test Cybtans SDK"
+    inputs:
+      command: "test"
+      projects: "**/CybtansSDK.sln"
+      testRunTitle: "Run Tests Cybtans SDK"
