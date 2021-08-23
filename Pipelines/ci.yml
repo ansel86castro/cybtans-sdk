@@ -12,7 +12,7 @@ variables:
   # second parameter is seed value to reset to every time the referenced majorMinorPathVersion is changed
    buildVersion: $[counter(variables['majorMinorPathVersion'], 1)]
    packVersion: $(majorMinorPathVersion)-beta-$(buildVersion)
-
+   FROM_CONTAINER: true
 
 trigger:
 - master
