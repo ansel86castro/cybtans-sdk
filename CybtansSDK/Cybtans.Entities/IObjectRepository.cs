@@ -12,11 +12,15 @@ namespace Cybtans.Entities
     {
         Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Default);
         Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
-        IAsyncEnumerator<T> GetAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
+        IAsyncEnumerator<T> EnumerateAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
+        Task<List<T>> ListAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
         Task<T> AddAsync(T item);
         Task AddRangeAsync(IEnumerable<T> items);
-        Task<long> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object> data);
-        Task<long> UpdateAsync(Expression<Func<T, bool>> filter, T item);
+        Task<T> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
+        Task<T> UpdateAsync(Expression<Func<T, bool>> filter, T item);
+        Task<T> UpdateAsync(Expression<Func<T, bool>> filter, object data);
+        Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
+        Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, object data);
         Task<long> DeleteAsync(Expression<Func<T, bool>> filter);
 
         #region Defaults
@@ -69,10 +73,12 @@ namespace Cybtans.Entities
     {
         Task<T> Get(TKey id, ReadConsistency consistency = ReadConsistency.Default);
 
-        Task<long> UpdateAsync(TKey id, IDictionary<string, object> data);
+        Task<T> UpdateAsync(TKey id, IDictionary<string, object?> data);
 
-        Task<long> UpdateAsync(TKey id, T item);
+        Task<T> UpdateAsync(TKey id, object data);
 
-        Task<long> DeleteAsync(TKey id);
+        Task<T> UpdateAsync(TKey id, T item);
+
+        Task DeleteAsync(TKey id);
     }
 }
