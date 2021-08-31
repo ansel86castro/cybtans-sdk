@@ -37,7 +37,7 @@ namespace Cybtans.Entities.MongoDb
 
         public virtual async Task<T> AddAsync(T item)
         {
-            await _collection.InsertOneAsync(item);
+            await _collection.InsertOneAsync(item).ConfigureAwait(false);            
             return item;
         }
 
@@ -49,8 +49,8 @@ namespace Cybtans.Entities.MongoDb
         public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
         {
             var count = await (filter != null ?
-                _collection.CountDocumentsAsync(filter) :
-                _collection.CountDocumentsAsync(new BsonDocument()));
+                _collection.CountDocumentsAsync(filter).ConfigureAwait(false) :
+                _collection.CountDocumentsAsync(new BsonDocument()).ConfigureAwait(false));
 
             var totalPages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
 
@@ -63,30 +63,74 @@ namespace Cybtans.Entities.MongoDb
             query = query.Skip((page - 1) * pageSize)
               .Limit(pageSize);
 
-            return new (await query.ToListAsync(), page, totalPages, count);
+            return new (await query.ToListAsync().ConfigureAwait(false), page, totalPages, count);
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Strong)
+        public Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Strong)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<long> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object> data)
+        public Task<T> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            var res = await _collection.UpdateOneAsync(filter, new BsonDocument(data));
-            return res.ModifiedCount;
+            UpdateDefinition<T>? update = null;
+
+            foreach (var kv in data)
+            {
+                if (update == null)
+                {
+                    update = Builders<T>.Update.Set(kv.Key, kv.Value);
+                }
+                else
+                {
+                    update = update.Set(kv.Key, kv.Value);
+                }
+            }
+
+            if (update == null) throw new InvalidOperationException("No data to update");
+
+            return _collection.FindOneAndUpdateAsync(
+                filter: filter,
+                update: update,
+                options: new FindOneAndUpdateOptions<T>
+                {
+                    ReturnDocument = ReturnDocument.After                   
+                }) ?? throw new EntityNotFoundException("Entity not found");            
         }
 
-        public async Task<long> UpdateAsync(Expression<Func<T, bool>> filter, T item)
+        public Task<T> UpdateAsync(Expression<Func<T, bool>> filter, T item)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
+            return _collection.FindOneAndReplaceAsync(filter, item, new FindOneAndReplaceOptions<T>
+            {
+                ReturnDocument = ReturnDocument.After
+            });
+        }
 
-           var res =  await _collection.ReplaceOneAsync(filter, item);
-           return res.ModifiedCount;
+        public Task<T> UpdateAsync(Expression<Func<T, bool>> filter, object data)
+        {
+            return UpdateAsync(filter, Utils.ToDictionary(data));           
+        }
+
+
+        public async Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data)
+        {
+           var result = await _collection.UpdateManyAsync(
+                 filter: filter,
+                 update : new BsonDocument(data)).ConfigureAwait(false);
+            return result.ModifiedCount;
+        }
+
+        public async Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, object data)
+        {
+            var result = await _collection.UpdateManyAsync(
+                 filter: filter,
+                 update: data.ToBsonDocument()).ConfigureAwait(false);
+            return result.ModifiedCount;
         }
 
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -95,8 +139,7 @@ namespace Cybtans.Entities.MongoDb
             return new ObjectRepositoryEnumerator(cursor);
         }
 
-
-        public IAsyncEnumerator<T> GetAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
+        public IAsyncEnumerator<T> EnumerateAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
         {
             var query = filter != null ? _collection.Find(filter) : _collection.Find(new BsonDocument());             
             if (sortBy != null)
@@ -105,7 +148,16 @@ namespace Cybtans.Entities.MongoDb
             }
             var cursor = query.ToCursor();
             return new ObjectRepositoryEnumerator(cursor);
+        }
 
+        public Task<List<T>> ListAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
+        {
+            var query = filter != null ? _collection.Find(filter) : _collection.Find(new BsonDocument());
+            if (sortBy != null)
+            {
+                query = query.SortBy(sortBy);
+            }
+            return query.ToListAsync();
         }
 
         public async Task<long> DeleteAsync(Expression<Func<T, bool>> filter)
@@ -177,15 +229,22 @@ namespace Cybtans.Entities.MongoDb
         {
         }
 
-        public Task<long> DeleteAsync(TKey id) => DeleteAsync(x => x.Id.Equals(id));
+        public async Task DeleteAsync(TKey id) {
+            var count = await DeleteAsync(x => x.Id.Equals(id));
+            if (count == 0) throw new EntityNotFoundException($"Entity {id} not found");
+        }
 
         public Task<T> Get(TKey id, ReadConsistency consistency = ReadConsistency.Default) =>
             Get(x => x.Id.Equals(id), consistency);
 
-        public Task<long> UpdateAsync(TKey id, IDictionary<string, object> data) =>
+        public Task<T> UpdateAsync(TKey id, IDictionary<string, object?> data) =>
             UpdateAsync(x => x.Id.Equals(id), data);
 
-        public Task<long> UpdateAsync(TKey id, T item) =>
+        public Task<T> UpdateAsync(TKey id, T item) =>
             UpdateAsync(x => x.Id.Equals(id), item);
+
+        public Task<T> UpdateAsync(TKey id, object data) =>
+            UpdateAsync(x => x.Id.Equals(id), data);
+
     }
 }

@@ -1,67 +1,16 @@
 #if INTEGRATIONS
 
 using Cybtans.Entities.MongoDb.Tests.Models;
-using Cybtans.Testing.Integration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Cybtans.Entities.MongoDb.Tests
 {
-    public class CustomerFixture : IAsyncLifetime
-    {
-        IServiceProvider _serviceProvider;
-        ContainerInfo _containerInfo;
-        private ServiceCollection _services;
 
-        public CustomerFixture()
-        {           
-            _services = new ServiceCollection();         
-           
-        }        
 
-        public IObjectRepository<T> GetRepository<T>()
-        {
-            return _serviceProvider.GetService<IObjectRepository<T>>();
-        }
-
-        public async Task InitializeAsync()
-        {
-            var docker = new DockerManager();
-            var config = new MongoDbContainerConfig(port: 0);
-            _containerInfo = await docker.RunContainerAsync(config);
-            Assert.NotNull(_containerInfo);
-
-            _services.AddMongoDbProvider<TestMongoDbProvider>(o =>
-            {
-                o.ConnectionString =  config.GetConnectionString(_containerInfo);
-                o.Database = "test";
-            })
-             .AddObjectRepositories();
-
-            _serviceProvider = _services.BuildServiceProvider();
-
-            var customer = GetRepository<Customer>();
-            await customer.AddRangeAsync(Enumerable.Range(1, 10).Select(i => new Customer
-            {
-                Name = $"Customer {i}",
-                CreateAt = DateTime.Now,
-                State = i % 2 == 0 ? 1: 2
-            }));
-        }
-
-        public async Task DisposeAsync()
-        {
-            if (_containerInfo != null)
-            {
-                await _containerInfo.DisposeAsync();
-            }
-        }
-    }
-
-    
     public class CustomerTests : IClassFixture<CustomerFixture>
     {
         IObjectRepository<Customer> _customers;
@@ -74,8 +23,7 @@ namespace Cybtans.Entities.MongoDb.Tests
         public async Task EnumerateAll()
         {
             var list = await _customers.ToListAsync();
-            Assert.NotEmpty(list);
-            Assert.Equal(10, list.Count);
+            Assert.NotEmpty(list);            
             Assert.All(list, x =>
             {
                 Assert.NotEmpty(x.Id);
@@ -120,27 +68,100 @@ namespace Cybtans.Entities.MongoDb.Tests
         }
 
         [Fact]
+        public async Task CreateMany()
+        {
+            await _customers.AddRangeAsync(Enumerable.Range(1,5).Select( i => new Customer
+            {
+                Name = "CreateMany",
+                CreateAt = DateTime.Now,
+                State = 1
+            }));
+
+            var items = await _customers.ListAll(x => x.Name == "CreateMany");
+            Assert.True(items.Count == 5);            
+        }
+
+
+        [Fact]
         public async Task Update()
         {
             var item = await Create("update", 2);
             item.Name = "update test";
             item.State = 3;
-            await _customers.UpdateAsync(x => x.Id == item.Id, item);
+            item.UpdateAt = DateTime.UtcNow;
 
-             item = await _customers.Get(x=> x.Id == item.Id);
-            Assert.NotEmpty(item.Id);
-            Assert.Equal("update test", item.Name);
-            Assert.Equal(3, item.State);
+            var update =  await _customers.UpdateAsync(x => x.Id == item.Id, item);
+
+            Assert.Equal(item.Id, update.Id);
+            Assert.NotEmpty(update.Id);
+            Assert.Equal("update test", update.Name);
+            Assert.Equal(3, update.State);
+            Assert.NotNull(update.UpdateAt);
+            Assert.True(item.CreateAt != new DateTime());
+
+        }
+
+        [Fact]
+        public async Task UpdateWithDictionay()
+        {
+            var item = await Create("update_dic", 2);            
+            var update = await _customers.UpdateAsync(x => x.Id == item.Id, new Dictionary<string, object>
+            {
+                ["Name"] = "update dic 2",
+                ["State"] = 3,
+                ["UpdateAt"] = DateTime.UtcNow
+            });
+
+            Assert.Equal(item.Id, update.Id);
+            Assert.NotEmpty(update.Id);
+            Assert.Equal("update dic 2", update.Name);
+            Assert.Equal(3, update.State);
+            Assert.NotNull(update.UpdateAt);
+            Assert.True(update.CreateAt != new DateTime());
+        }
+
+        [Fact]
+        public async Task UpdateWithValues()
+        {
+            var item = await Create("update_values", 2);
+            var update = await _customers.UpdateAsync(x => x.Id == item.Id, new 
+            { 
+                Name ="update values 2" , 
+                State=  3 ,
+                UpdateAt = DateTime.UtcNow
+            });
+
+            Assert.Equal(item.Id, update.Id);
+            Assert.NotEmpty(update.Id);
+            Assert.Equal("update values 2", update.Name);
+            Assert.Equal(3, update.State);
+            Assert.NotNull(update.UpdateAt);
+            Assert.True(update.CreateAt != new DateTime());
         }
 
         [Fact]
         public async Task Delete()
         {
             var item = await Create("delete", 1);            
-            await _customers.DeleteAsync(x => x.Id == item.Id);
+            var count = await _customers.DeleteAsync(x => x.Id == item.Id);
+            Assert.True(count == 1);
 
             item = await _customers.Get(x => x.Id == item.Id);
             Assert.Null(item);            
+        }
+
+        [Fact]
+        public async Task ListAll()
+        {
+            var list = await _customers.ListAll();
+            Assert.NotEmpty(list);          
+            Assert.All(list, x =>
+            {
+                Assert.NotEmpty(x.Id);
+                Assert.NotEmpty(x.Name);
+                Assert.True(x.State > 0);
+                Assert.True(x.CreateAt != new DateTime());
+            });
         }
 
         [Theory]
