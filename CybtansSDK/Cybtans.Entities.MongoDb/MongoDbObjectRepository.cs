@@ -167,7 +167,6 @@ namespace Cybtans.Entities.MongoDb
             return result.DeletedCount;
         }
 
-
         public sealed class ObjectRepositoryEnumerator : IAsyncEnumerator<T>
         {
             IAsyncCursor<T> _cursor;
