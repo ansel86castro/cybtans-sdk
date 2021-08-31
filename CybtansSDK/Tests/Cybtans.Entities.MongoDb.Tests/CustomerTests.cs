@@ -1,4 +1,4 @@
-#if !INTEGRATIONS
+#if INTEGRATIONS
 
 using Cybtans.Entities.MongoDb.Tests.Models;
 using System;
