@@ -410,7 +410,7 @@ namespace Cybtans.Messaging.RabbitMQ
             var deliveryTag = args.DeliveryTag;
 
             _logger?.LogDebug("Message Received {Exchange} {Topic}", exchage, topic);
-
+            
             Task.Run(async () =>
             {
                 try

@@ -46,7 +46,7 @@ namespace Cybtans.Entities.MongoDb
             return _collection.InsertManyAsync(items);
         }
      
-        public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
+        public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false)
         {
             var count = await (filter != null ?
                 _collection.CountDocumentsAsync(filter).ConfigureAwait(false) :
@@ -54,10 +54,10 @@ namespace Cybtans.Entities.MongoDb
 
             var totalPages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
 
-            var query = filter != null ? _collection.Find(filter) : _collection.Find(new BsonDocument());            
+            var query = filter != null ? _collection.Find(filter) : _collection.Find(new BsonDocument());
             if (sortBy != null)
             {
-                query = query.SortBy(sortBy);
+                query = descending ? query.SortByDescending(sortBy) : query.SortBy(sortBy);
             }
 
             query = query.Skip((page - 1) * pageSize)

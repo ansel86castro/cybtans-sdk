@@ -5,9 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cybtans.Tests.Services
@@ -31,11 +34,16 @@ namespace Cybtans.Tests.Services
 
         public string Secret { get; set; }
 
+        public string PublicKey { get; set; }
+
+        public string PrivateKey { get; set; }
+
     }
 
     [RegisterDependency(typeof(IAuthenticationService))]
     public class AuthenticationService : IAuthenticationService
     {
+        public const string KeyId = "6BB734F9-F9F5-4C90-ADB8-CC26E95CC452";
         private readonly JwtOptions _options;
         private readonly List<RegisteredUsers> _users;
 
@@ -85,6 +93,33 @@ namespace Cybtans.Tests.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        private string GenerateAccessTokenAsymetric(RegisteredUsers user)
+        {
+            var claims = new Claim[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Roles),
+                new Claim("client_id", "D6E29710-B68F-4D2D-9471-273DECF9C4B7"),
+                new Claim("creator_id", "1")
+            };
+
+            var securityKey = GetRsaSecurityKey();
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
+
+            var token = new JwtSecurityToken(_options.Issuer,
+                _options.Audience,
+                claims,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+
+            var jwt = new JwtSecurityTokenHandler();
+            
+            return jwt.WriteToken(token); 
+        }
+
         public Task<LoginResponse> Login(LoginRequest request)
         {
             var user = _users.FirstOrDefault(x => x.Username == request.Username && x.Password == request.Password);
@@ -93,11 +128,33 @@ namespace Cybtans.Tests.Services
                 throw new ValidationException("User credentials not valid");
             }
 
-            var token = GenerateAccessToken(user);
+            var token = GenerateAccessTokenAsymetric(user);
             return Task.FromResult(new LoginResponse
             {
                 Token = token
             });
         }
+   
+        private RsaSecurityKey GetRsaSecurityKey()
+        {          
+            var provider = RSA.Create();
+            var xml = File.ReadAllText("keys/private.key");            
+            provider.FromXmlString(xml);
+
+            return new RsaSecurityKey(provider) { KeyId = KeyId };
+        }
+        
+      
+
+        public static RsaSecurityKey GetPublicRsaSecurityKey()
+        {
+            var provider = RSA.Create();
+            var pem = File.ReadAllText("keys/public.key");
+            var xml = RsaKeyConverter.PemToXml(pem);
+            provider.FromXmlString(xml);
+
+            return new RsaSecurityKey(provider) { KeyId = AuthenticationService.KeyId };
+        }
+      
     }
 }

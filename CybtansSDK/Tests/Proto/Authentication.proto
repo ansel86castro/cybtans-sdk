@@ -24,4 +24,5 @@ service AuthenticationService{
 		option method = "POST";
 		option description = "Generates an access token";
 	};
+
 }

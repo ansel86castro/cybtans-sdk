@@ -2,7 +2,7 @@
 
 namespace Cybtans.Entities
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum| AttributeTargets.Struct)]
     public class GenerateMessageAttribute : Attribute
     {
         public GenerateMessageAttribute(string name = null)

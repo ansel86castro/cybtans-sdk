@@ -26,6 +26,10 @@ using Cybtans.Tests.RestApi.GraphQl;
 using Cybtans.Tests.GraphQL;
 using Cybtans.Tests.RestApi.Security;
 using Microsoft.AspNetCore.Authorization;
+using Serilog.Core;
+using Serilog;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace Cybtans.Test.RestApi
 {
@@ -256,6 +260,8 @@ namespace Cybtans.Test.RestApi
 
         void AddAuthentication(IServiceCollection services)
         {
+            GenerateKeys();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
@@ -263,11 +269,11 @@ namespace Cybtans.Test.RestApi
                 {
                     OnTokenValidated = async ctx =>
                     {
-
+                        Log.Logger.Information($"Token Validated");
                     },
                     OnAuthenticationFailed = async cts =>
                     {
-
+                        Log.Logger.Information($"Autnentication Failed");
                     },
                     OnMessageReceived = async ctx =>
                     {
@@ -283,6 +289,7 @@ namespace Cybtans.Test.RestApi
                     }
                 };
 
+
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -292,8 +299,8 @@ namespace Cybtans.Test.RestApi
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidAudience = Configuration.GetValue<string>("Jwt:Audience"),
-                    ValidIssuer = Configuration.GetValue<string>("Jwt:Issuer"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),
+                    ValidIssuer = Configuration.GetValue<string>("Jwt:Issuer"),                    
+                    IssuerSigningKey = AuthenticationService.GetPublicRsaSecurityKey(),//  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),
                     ClockSkew = TimeSpan.Zero
                 };
                 options.Validate();
@@ -318,6 +325,31 @@ namespace Cybtans.Test.RestApi
 
             services.AddSingleton<IAuthorizationHandler, ClientPolicyHandlers>();
             services.AddSingleton<IAuthorizationHandler, ClientCreatorPolicyHandler>();
+        }
+
+      
+
+
+        private void GenerateKeys()
+        {
+            if (!File.Exists("keys/public.key"))
+            {
+                if (!Directory.Exists("keys"))
+                {
+                    Directory.CreateDirectory("keys");
+                }
+
+
+                using (var rsa = RSA.Create())
+                {
+
+                    var xml = rsa.ToXmlString(false);
+                    File.WriteAllText("keys/public.key", RsaKeyConverter.XmlToPem(xml));
+
+                    xml = rsa.ToXmlString(true);
+                    File.WriteAllText("keys/private.key", xml);
+                }
+            }
         }
     }
 }
