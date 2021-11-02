@@ -10,7 +10,7 @@ namespace Cybtans.Entities
     public interface IObjectRepository<T> : IAsyncEnumerable<T>
     {
         Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Default);
-        Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
+        Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false);
         IAsyncEnumerator<T> EnumerateAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
         Task<List<T>> ListAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
         Task<T> AddAsync(T item);

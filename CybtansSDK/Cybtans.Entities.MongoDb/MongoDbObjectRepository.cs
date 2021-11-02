@@ -45,7 +45,7 @@ namespace Cybtans.Entities.MongoDb
         {
             return _collection.InsertManyAsync(items);
         }
-     
+      
         public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false)
         {
             var count = await (filter != null ?
@@ -165,6 +165,8 @@ namespace Cybtans.Entities.MongoDb
             var result = await  _collection.DeleteManyAsync(filter);
             return result.DeletedCount;
         }
+
+      
 
         public sealed class ObjectRepositoryEnumerator : IAsyncEnumerator<T>
         {
