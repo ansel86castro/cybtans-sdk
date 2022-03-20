@@ -102,8 +102,7 @@ namespace SceneConverter
             var name = Path.GetFileNameWithoutExtension(fi.Name);
             Scene scene = new Scene(name);
             ContentImporter.Import(scene, fi.FullName);
-            var dto = scene.ToDto();
-            var json = JsonConvert.SerializeObject(dto);
+            var dto = scene.ToDto();            
             var bytes = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(dto, new JsonSerializerOptions
             {
                  PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

@@ -16,6 +16,8 @@ namespace Cybtans.Entities.MongoDb
         private IMongoClient _mongoClient;
         private IMongoDatabase _mongoDb;
         private IMongoCollection<T> _collection;
+        private MongoDbFilterDefinitionBuilder<T> _filters = new MongoDbFilterDefinitionBuilder<T>();
+        private MongoDbSortDefinitionBuilder<T> _sorts = new MongoDbSortDefinitionBuilder<T>();
 
         public MongoDbObjectRepository(IMongoClientProvider provider)
         {
@@ -34,6 +36,9 @@ namespace Cybtans.Entities.MongoDb
         protected IMongoCollection<T> Collection => _collection;
         protected IMongoDatabase Database => _mongoDb;
         protected IMongoClient MongoClient => _mongoClient;
+
+        public IFilterDefinitionBuilder<T> Filters => _filters;
+        public ISortDefinitionBuilder<T> Sorting => _sorts;
 
         public virtual async Task<T> AddAsync(T item)
         {
@@ -66,7 +71,7 @@ namespace Cybtans.Entities.MongoDb
             return new (await query.ToListAsync().ConfigureAwait(false), page, totalPages, count);
         }
 
-        public Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Strong)
+        public Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Default)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
@@ -139,12 +144,23 @@ namespace Cybtans.Entities.MongoDb
             return new ObjectRepositoryEnumerator(cursor);
         }
 
-        public IAsyncEnumerator<T> EnumerateAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null)
+        public IAsyncEnumerator<T> GetAsyncEnumerator(Expression<Func<T, bool>>? filter, Expression<Func<T, object>>? sortBy, ReadConsistency consistency = ReadConsistency.Default)
         {
             var query = filter != null ? _collection.Find(filter) : _collection.Find(new BsonDocument());             
             if (sortBy != null)
             {
                 query = query.SortBy(sortBy);
+            }
+            var cursor = query.ToCursor();
+            return new ObjectRepositoryEnumerator(cursor);
+        }
+
+        public IAsyncEnumerator<T> GetAsyncEnumerator(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default)
+        {
+            var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());
+            if (sort != null)
+            {
+                query = query.Sort(((MongoDbSortDefinition<T>)sort).Sort);
             }
             var cursor = query.ToCursor();
             return new ObjectRepositoryEnumerator(cursor);
@@ -166,7 +182,44 @@ namespace Cybtans.Entities.MongoDb
             return result.DeletedCount;
         }
 
-      
+        public Task<T> Get(IObjectFilterDefinition<T> filter, ReadConsistency consistency = ReadConsistency.Default)
+        {
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
+
+            return _collection.Find(filter.AsMongo()).FirstOrDefaultAsync();
+        }
+
+        public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default)
+        {            
+            var count = await(filter != null ?
+              _collection.CountDocumentsAsync(filter.AsMongo()).ConfigureAwait(false) :
+              _collection.CountDocumentsAsync(new BsonDocument()).ConfigureAwait(false));
+
+            var totalPages = count / pageSize + (count % pageSize == 0 ? 0 : 1);
+
+            var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());
+            if (sort != null)
+            {
+                query = query.Sort(((MongoDbSortDefinition<T>)sort).Sort);
+            }
+
+            query = query.Skip((page - 1) * pageSize)
+              .Limit(pageSize);
+
+            return new(await query.ToListAsync().ConfigureAwait(false), page, totalPages, count);
+        }
+
+    
+
+        public Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default)
+        {
+            var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());
+            if (sort != null)
+            {
+                query = query.Sort(((MongoDbSortDefinition<T>)sort).Sort);
+            }
+            return query.ToListAsync();
+        }
 
         public sealed class ObjectRepositoryEnumerator : IAsyncEnumerator<T>
         {

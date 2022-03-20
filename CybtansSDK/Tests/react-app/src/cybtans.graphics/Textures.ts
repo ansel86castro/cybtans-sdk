@@ -157,14 +157,19 @@ export class TextureCube extends Texture {
 
         let gl = this.gl;
 
-        await this.loadFace(baseUrl, this.faces.positiveX, gl.TEXTURE_CUBE_MAP_POSITIVE_X);
-        await this.loadFace(baseUrl, this.faces.negativeX, gl.TEXTURE_CUBE_MAP_NEGATIVE_X);
+        await Promise.all([
+            this.loadFace(baseUrl, this.faces.positiveX, gl.TEXTURE_CUBE_MAP_POSITIVE_X),
+            this.loadFace(baseUrl, this.faces.negativeX, gl.TEXTURE_CUBE_MAP_NEGATIVE_X),
 
-        await this.loadFace(baseUrl, this.faces.positiveY, gl.TEXTURE_CUBE_MAP_POSITIVE_Y);
-        await this.loadFace(baseUrl, this.faces.negativeY, gl.TEXTURE_CUBE_MAP_NEGATIVE_Y);
+            this.loadFace(baseUrl, this.faces.positiveY, gl.TEXTURE_CUBE_MAP_POSITIVE_Y),
+            this.loadFace(baseUrl, this.faces.negativeY, gl.TEXTURE_CUBE_MAP_NEGATIVE_Y),
 
-        await this.loadFace(baseUrl, this.faces.positiveZ, gl.TEXTURE_CUBE_MAP_POSITIVE_Z);
-        await this.loadFace(baseUrl, this.faces.negativeZ, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z);
+            this.loadFace(baseUrl, this.faces.positiveZ, gl.TEXTURE_CUBE_MAP_POSITIVE_Z),
+            this.loadFace(baseUrl, this.faces.negativeZ, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z)
+        ]);
+
+        //bind as texture 2d
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glTexture);
 
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -180,7 +185,6 @@ export class TextureCube extends Texture {
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
         checkError(gl);
-
     }
 
     private async loadFace(baseUrl: string, url: string, target: number) {

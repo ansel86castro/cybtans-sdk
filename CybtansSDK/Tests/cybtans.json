@@ -40,6 +40,10 @@
         {
           "Output": "./angular-app/src/app/services",
           "Framework": "angular"
+        },
+        {
+          "Output": "./flutter_app/lib/services/api",
+          "Framework": "flutter"
         }
       ]
     }

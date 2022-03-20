@@ -235,9 +235,9 @@ export default class Program {
         if (!compiled) {
             // There are errors, so display them
             var errors = gl.getShaderInfoLog(shader);
-            console.error('Failed to compile ' + type + ' with these errors:' + errors);
+            console.error(`Fatal error: Program ${this.name} Failed to compile ${type} with these errors: + ${errors}`);
             gl.deleteShader(shader);
-            throw Error('Failed to compile ' + type + ' with these errors:' + errors);
+            throw Error(`Fatal error: Program ${this.name} Failed to compile ${type} with these errors: + ${errors}`);
         }
     }
 
@@ -263,7 +263,7 @@ export default class Program {
         if (!linked) {
             // There were errors, so get the errors and display them.
             var error = gl.getProgramInfoLog(this.glProgram);
-            console.error('Fatal error: Failed to link program: ' + error);
+            console.error(`Fatal error: ${this.name} Failed to link program: ${error}`);
             if (this.vertexShader) {
                 gl.detachShader(this.glProgram, this.vertexShader);
                 gl.detachShader(this.glProgram, this.vertexShader);
@@ -273,7 +273,7 @@ export default class Program {
                 gl.deleteShader(this.fragmentShader);
             }
 
-            throw new Error('Fatal error: Failed to link program: ' + error);
+            throw new Error(`Fatal error: ${this.name} Failed to link program: ${error}`);
         }
     }
 

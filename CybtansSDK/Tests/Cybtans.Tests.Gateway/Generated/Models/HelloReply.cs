@@ -19,7 +19,7 @@ namespace Cybtans.Tests.Gateway.Models
 		
 		public HellowInfo Info {get; set;}
 		
-		public List<HellowInfo> InfoArray {get; set;}
+		public List<HellowInfo> info_array {get; set;}
 		
 		public DateTime? Date {get; set;}
 		

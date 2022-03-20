@@ -311,7 +311,7 @@ export interface UploadImageRequest {
 
 export interface UploadImageResponse {
   url?: string|null;
-  m5checksum?: string|null;
+  m5Checksum?: string|null;
 }
 
 
@@ -322,7 +322,7 @@ export interface UploadStreamByIdRequest {
 
 
 export interface UploadStreamResponse {
-  m5checksum?: string|null;
+  m5Checksum?: string|null;
 }
 
 
@@ -384,4 +384,15 @@ export interface ClientDto {
   clientStatusId?: number|null;
   createdAt: string|Date;
   creatorId: number;
+  type: ClientType;
+  itemIds?: number[]|null;
 }
+
+
+
+export enum ClientType {
+  regular = 1,
+  administrator = 2,
+  provider = 3,
+}
+

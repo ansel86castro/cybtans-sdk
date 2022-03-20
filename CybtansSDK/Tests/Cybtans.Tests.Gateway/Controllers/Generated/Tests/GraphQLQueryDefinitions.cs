@@ -284,8 +284,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			Field(x => x.ClientStatusId, nullable:true);
 			Field<DateTimeGraphType>("CreatedAt");
 			Field(x => x.CreatorId);
+			Field<ClientTypeGraphType>("Type");
+			Field<ListGraphType<IntGraphType>>("ItemIds");
 		
 		}
+	}
+	
+	
+	public class ClientTypeGraphType : EnumerationGraphType<ClientType>
+	{
 	}
 	
 	
@@ -312,15 +319,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					var authorizationService = serviceProvider.GetRequiredService<IAuthorizationService>();
 					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, httpContext, "AdminUser").ConfigureAwait(false);
 					if (!policyResult.Succeeded)
 					{
 						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -337,15 +347,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetCustomerRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					var authorizationService = serviceProvider.GetRequiredService<IAuthorizationService>();
 					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, httpContext, "AdminUser").ConfigureAwait(false);
 					if (!policyResult.Succeeded)
 					{
 						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -372,13 +385,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -395,13 +411,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetCustomerEventRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -421,7 +440,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new DownloadImageRequest();
 					request.Name = context.GetArgument<string>("name", default(string));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.DownloadImage(request).ConfigureAwait(false);
 					return result;
 				}
@@ -430,7 +452,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			FieldAsync<GetAllNamesResponseGraphType>("ordernames",
 			 	resolve: async context =>
 				{
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.GetAllNames().ConfigureAwait(false);
 					return result;
 				}
@@ -446,10 +471,13 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetOrderNameRequest();
 					request.Id = context.GetArgument<string>("id", default(string));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.GetOrderName(request).ConfigureAwait(false);
 					
-					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					var interceptor = serviceProvider.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
 					if( interceptor != null )
 					{
 						await interceptor.HandleResult(result).ConfigureAwait(false);
@@ -476,7 +504,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -493,7 +524,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -520,13 +554,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -543,13 +580,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetOrderStateRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -576,13 +616,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -599,13 +642,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetReadOnlyEntityRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.IsInRole("admin"))
 					{
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -632,7 +678,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.Skip = context.GetArgument<int?>("skip", default(int?));
 					request.Take = context.GetArgument<int?>("take", default(int?));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
@@ -649,7 +698,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new GetSoftDeleteOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -669,20 +721,23 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var authorizationService = serviceProvider.GetRequiredService<IAuthorizationService>();
 					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, request, "ClientPolicy").ConfigureAwait(false);
 					if (!policyResult.Succeeded)
 					{
 						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
 					var result = await service.GetClient(request).ConfigureAwait(false);
 					if (result != null)
 					{
@@ -707,20 +762,23 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+					var authorizationService = serviceProvider.GetRequiredService<IAuthorizationService>();
 					var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, request, "ClientPolicy").ConfigureAwait(false);
 					if (!policyResult.Succeeded)
 					{
 						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
 					var result = await service.GetClient2(request).ConfigureAwait(false);
 					return result;
 				}
@@ -736,17 +794,20 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
 					
-					var httpContext = context.RequestServices.GetRequiredService<IHttpContextAccessor>().HttpContext;
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var httpContext = serviceProvider.GetRequiredService<IHttpContextAccessor>().HttpContext;
 					if (!httpContext.User.Identity.IsAuthenticated)
 					{
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
 					var result = await service.GetClient3(request).ConfigureAwait(false);
 					if (result != null)
 					{
-						var authorizationService = context.RequestServices.GetRequiredService<IAuthorizationService>();
+						var authorizationService = serviceProvider.GetRequiredService<IAuthorizationService>();
 						var policyResult = await authorizationService.AuthorizeAsync(httpContext.User, result, "ClientCreator").ConfigureAwait(false);
 						if (!policyResult.Succeeded)
 						{

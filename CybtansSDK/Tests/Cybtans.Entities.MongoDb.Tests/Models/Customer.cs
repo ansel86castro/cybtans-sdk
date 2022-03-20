@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver.GeoJsonObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,9 @@ namespace Cybtans.Entities.MongoDb.Tests.Models
         public int State { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
+        public GeoJson2DCoordinates Coordinates { get; set; }
+        public int Scoring { get; set; }
+        public bool Enabled { get; set; }
+
     }
 }

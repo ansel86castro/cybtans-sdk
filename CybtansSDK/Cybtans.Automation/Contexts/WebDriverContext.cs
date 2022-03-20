@@ -35,7 +35,7 @@ namespace Cybtans.Automation.Contexts
             _initializeEvent = new AutoResetEvent(false);
         }
 
-        protected bool Navigate => _navigate;
+        public bool Navigate => _navigate;
 
         public IWebDriver? Driver => _webDriver;
 
@@ -107,7 +107,6 @@ namespace Cybtans.Automation.Contexts
             _status = ContextStatus.Initialized;
             _initializeEvent.Set();
         }
-
 
         public async Task<TPage> CreatePageAsync<TPage>(string? baseUrl = null) where TPage : IPage
         {

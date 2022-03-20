@@ -27,7 +27,7 @@ export interface HelloReply {
   message?: string|null;
   keywords?: string[]|null;
   info?: HellowInfo|null;
-  infoarray?: HellowInfo[]|null;
+  info_array?: HellowInfo[]|null;
   date?: string|Date|null;
   time?: string|Date|null;
   observations?: string|null;

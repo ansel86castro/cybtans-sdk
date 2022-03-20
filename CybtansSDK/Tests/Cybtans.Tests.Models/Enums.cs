@@ -35,5 +35,15 @@ namespace Cybtans.Tests.Models
 		Shipping = 2,
 		
 	}
+	
+	public enum ClientType 
+	{
+		Regular = 1,
+		
+		Administrator = 2,
+		
+		Provider = 3,
+		
+	}
 
 }

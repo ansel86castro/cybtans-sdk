@@ -5,26 +5,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Collections;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Cybtans.Automation;
 
 namespace Cybtans.Automation
 {
-    public interface ITestComponent
-    {
-        IWebDriver Driver { get; }
-
-        IWebElement Container { get; }
-
-        void Init(IWebDriver driver, IWebElement container);
-
-        bool Sync(bool waitForElements = false);
-
-        public Task<bool> SyncAsync(bool waitForElements = false)
-        {
-            return Task.Run(() => Sync(waitForElements));
-        }
-    }
 
     public class TestComponent : ITestComponent
     {

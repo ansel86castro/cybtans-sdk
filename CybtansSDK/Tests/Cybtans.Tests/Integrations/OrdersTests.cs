@@ -387,7 +387,7 @@ namespace Cybtans.Tests.Integrations
             fs.Seek(0, SeekOrigin.Begin);
             var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
 
-            Assert.Equal(hash, result.M5checksum);
+            Assert.Equal(hash, result.M5Checksum);
         }
 
         [Fact]
@@ -419,7 +419,7 @@ namespace Cybtans.Tests.Integrations
             fs.Seek(0, SeekOrigin.Begin);
             var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
 
-            Assert.Equal(hash, obj.M5checksum);
+            Assert.Equal(hash, obj.M5Checksum);
         }
 
         [Fact]
@@ -492,8 +492,8 @@ namespace Cybtans.Tests.Integrations
             fs.Seek(0, SeekOrigin.Begin);
             var hash = CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(fs));
 
-            Assert.NotNull(result.M5checksum);
-            Assert.Equal(hash, result.M5checksum);
+            Assert.NotNull(result.M5Checksum);
+            Assert.Equal(hash, result.M5Checksum);
         }
 
         [Fact]

@@ -15,7 +15,7 @@ namespace Cybtans.Tests.Models
 	{
 		private static readonly UploadStreamResponseAccesor __accesor = new UploadStreamResponseAccesor();
 		
-		public string M5checksum {get; set;}
+		public string M5Checksum {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -23,17 +23,17 @@ namespace Cybtans.Tests.Models
 		}
 		public static implicit operator UploadStreamResponse(string m5Checksum)
 		{
-			return new UploadStreamResponse { M5checksum = m5Checksum };
+			return new UploadStreamResponse { M5Checksum = m5Checksum };
 		}
 	
 	
 		#region UploadStreamResponse  Accesor
 		public sealed class UploadStreamResponseAccesor : IReflectorMetadata
 		{
-			public const int M5checksum = 1;
+			public const int M5Checksum = 1;
 			private readonly int[] _props = new int[]
 			{
-				M5checksum
+				M5Checksum
 			};
 			
 			public int[] GetPropertyCodes() => _props;
@@ -42,7 +42,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyCode switch
 			    {
-			       M5checksum => "M5checksum",
+			       M5Checksum => "M5Checksum",
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -52,7 +52,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyName switch
 			    {
-			        "M5checksum" => M5checksum,
+			        "M5Checksum" => M5Checksum,
 			
 			        _ => -1,
 			    };
@@ -62,7 +62,7 @@ namespace Cybtans.Tests.Models
 			{
 			    return propertyCode switch
 			    {
-			        M5checksum => typeof(string),
+			        M5Checksum => typeof(string),
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -73,7 +73,7 @@ namespace Cybtans.Tests.Models
 			    UploadStreamResponse obj = (UploadStreamResponse)target;
 			    return propertyCode switch
 			    {
-			        M5checksum => obj.M5checksum,
+			        M5Checksum => obj.M5Checksum,
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -84,7 +84,7 @@ namespace Cybtans.Tests.Models
 			    UploadStreamResponse obj = (UploadStreamResponse)target;
 			    switch (propertyCode)
 			    {
-			        case M5checksum:  obj.M5checksum = (string)value;break;
+			        case M5Checksum:  obj.M5Checksum = (string)value;break;
 			
 			        default: throw new InvalidOperationException("property code not supported");
 			    }
