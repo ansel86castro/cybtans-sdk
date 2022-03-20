@@ -7,6 +7,7 @@ namespace Cybtans.Entities.MongoDb.Tests
         public TestMongoDbProvider(MongoOptions options) : base(options)
         {
             Map<Customer>().ToCollection("customers");
+            
         }
     }
 }

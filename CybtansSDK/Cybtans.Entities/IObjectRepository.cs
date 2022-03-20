@@ -7,12 +7,19 @@ using System.Threading.Tasks;
 
 namespace Cybtans.Entities
 {
-    public interface IObjectRepository<T> : IAsyncEnumerable<T>
+    public interface IObjectRepository<T> : IAsyncEnumerable<T>        
     {
+        IFilterDefinitionBuilder<T> Filters { get; }
+        ISortDefinitionBuilder<T> Sorting { get; }
         Task<T> Get(Expression<Func<T, bool>> filter, ReadConsistency consistency = ReadConsistency.Default);
-        Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
-        IAsyncEnumerator<T> EnumerateAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
+        Task<T> Get(IObjectFilterDefinition<T> filter, ReadConsistency consistency = ReadConsistency.Default);
+        [Obsolete]
+        Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false);
+        Task<PagedList<T>> GetManyAsync(int page, int pageSize, IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
+        IAsyncEnumerator<T> GetAsyncEnumerator(Expression<Func<T, bool>>? filter , Expression<Func<T, object>>? sortBy, ReadConsistency consistency = ReadConsistency.Default);
+        IAsyncEnumerator<T> GetAsyncEnumerator(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
         Task<List<T>> ListAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
+        Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
         Task<T> AddAsync(T item);
         Task AddRangeAsync(IEnumerable<T> items);
         Task<T> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
@@ -20,8 +27,7 @@ namespace Cybtans.Entities
         Task<T> UpdateAsync(Expression<Func<T, bool>> filter, object data);
         Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
         Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, object data);
-        Task<long> DeleteAsync(Expression<Func<T, bool>> filter);
-
+        Task<long> DeleteAsync(Expression<Func<T, bool>> filter);                
         #region Defaults
 
         public async Task<List<T>> ToListAsync()
@@ -80,4 +86,8 @@ namespace Cybtans.Entities
 
         Task DeleteAsync(TKey id);
     }
+   
+
+    
+
 }

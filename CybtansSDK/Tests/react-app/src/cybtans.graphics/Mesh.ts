@@ -72,8 +72,7 @@ export default class Mesh {
         if (!this.vertexBuffer || !this.indexBuffer)
             return;
 
-        renderType ||= Mesh.type;
-
+        renderType = renderType || Mesh.type;
         let gl = ctx.gl;
         let currentProgram: Program | null = null;
 

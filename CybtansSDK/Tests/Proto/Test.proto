@@ -40,4 +40,12 @@ message ClientDto{
 	int32 clientStatusId = 4 [optional = true];	
 	datetime createdAt = 5;
 	int32 creatorId = 6;
+	ClientType type = 7;
+	repeated int32 itemIds = 8;
+}
+
+enum ClientType {
+	Regular = 1;
+	Administrator = 2;
+	Provider = 3;
 }

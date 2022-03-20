@@ -8,6 +8,7 @@
 
 using System;
 using Cybtans.Serialization;
+using System.Collections.Generic;
 
 namespace Cybtans.Tests.Models
 {
@@ -27,6 +28,10 @@ namespace Cybtans.Tests.Models
 		
 		public int CreatorId {get; set;}
 		
+		public ClientType Type {get; set;}
+		
+		public List<int> ItemIds {get; set;}
+		
 		public IReflectorMetadata GetAccesor()
 		{
 			return __accesor;
@@ -41,9 +46,11 @@ namespace Cybtans.Tests.Models
 			public const int ClientStatusId = 4;
 			public const int CreatedAt = 5;
 			public const int CreatorId = 6;
+			public const int Type = 7;
+			public const int ItemIds = 8;
 			private readonly int[] _props = new int[]
 			{
-				Id,Name,ClientTypeId,ClientStatusId,CreatedAt,CreatorId
+				Id,Name,ClientTypeId,ClientStatusId,CreatedAt,CreatorId,Type,ItemIds
 			};
 			
 			public int[] GetPropertyCodes() => _props;
@@ -58,6 +65,8 @@ namespace Cybtans.Tests.Models
 			       ClientStatusId => "ClientStatusId",
 			       CreatedAt => "CreatedAt",
 			       CreatorId => "CreatorId",
+			       Type => "Type",
+			       ItemIds => "ItemIds",
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -73,6 +82,8 @@ namespace Cybtans.Tests.Models
 			        "ClientStatusId" => ClientStatusId,
 			        "CreatedAt" => CreatedAt,
 			        "CreatorId" => CreatorId,
+			        "Type" => Type,
+			        "ItemIds" => ItemIds,
 			
 			        _ => -1,
 			    };
@@ -88,6 +99,8 @@ namespace Cybtans.Tests.Models
 			        ClientStatusId => typeof(int?),
 			        CreatedAt => typeof(DateTime),
 			        CreatorId => typeof(int),
+			        Type => typeof(ClientType),
+			        ItemIds => typeof(List<int>),
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -104,6 +117,8 @@ namespace Cybtans.Tests.Models
 			        ClientStatusId => obj.ClientStatusId,
 			        CreatedAt => obj.CreatedAt,
 			        CreatorId => obj.CreatorId,
+			        Type => obj.Type,
+			        ItemIds => obj.ItemIds,
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -120,6 +135,8 @@ namespace Cybtans.Tests.Models
 			        case ClientStatusId:  obj.ClientStatusId = (int?)value;break;
 			        case CreatedAt:  obj.CreatedAt = (DateTime)value;break;
 			        case CreatorId:  obj.CreatorId = (int)value;break;
+			        case Type:  obj.Type = (ClientType)value;break;
+			        case ItemIds:  obj.ItemIds = (List<int>)value;break;
 			
 			        default: throw new InvalidOperationException("property code not supported");
 			    }

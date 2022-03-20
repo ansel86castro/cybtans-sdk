@@ -17,7 +17,7 @@ namespace Cybtans.Tests.Models
 		
 		public string Url {get; set;}
 		
-		public string M5checksum {get; set;}
+		public string M5Checksum {get; set;}
 		
 		public IReflectorMetadata GetAccesor()
 		{
@@ -28,10 +28,10 @@ namespace Cybtans.Tests.Models
 		public sealed class UploadImageResponseAccesor : IReflectorMetadata
 		{
 			public const int Url = 1;
-			public const int M5checksum = 2;
+			public const int M5Checksum = 2;
 			private readonly int[] _props = new int[]
 			{
-				Url,M5checksum
+				Url,M5Checksum
 			};
 			
 			public int[] GetPropertyCodes() => _props;
@@ -41,7 +41,7 @@ namespace Cybtans.Tests.Models
 			    return propertyCode switch
 			    {
 			       Url => "Url",
-			       M5checksum => "M5checksum",
+			       M5Checksum => "M5Checksum",
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -52,7 +52,7 @@ namespace Cybtans.Tests.Models
 			    return propertyName switch
 			    {
 			        "Url" => Url,
-			        "M5checksum" => M5checksum,
+			        "M5Checksum" => M5Checksum,
 			
 			        _ => -1,
 			    };
@@ -63,7 +63,7 @@ namespace Cybtans.Tests.Models
 			    return propertyCode switch
 			    {
 			        Url => typeof(string),
-			        M5checksum => typeof(string),
+			        M5Checksum => typeof(string),
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -75,7 +75,7 @@ namespace Cybtans.Tests.Models
 			    return propertyCode switch
 			    {
 			        Url => obj.Url,
-			        M5checksum => obj.M5checksum,
+			        M5Checksum => obj.M5Checksum,
 			
 			        _ => throw new InvalidOperationException("property code not supported"),
 			    };
@@ -87,7 +87,7 @@ namespace Cybtans.Tests.Models
 			    switch (propertyCode)
 			    {
 			        case Url:  obj.Url = (string)value;break;
-			        case M5checksum:  obj.M5checksum = (string)value;break;
+			        case M5Checksum:  obj.M5Checksum = (string)value;break;
 			
 			        default: throw new InvalidOperationException("property code not supported");
 			    }

@@ -1,4 +1,4 @@
-﻿#if !INTEGRATIONS
+﻿#if INTEGRATIONS
 
 using Cybtans.Entities.MongoDb.Tests.Models;
 using Cybtans.Testing.Integration;
@@ -48,7 +48,8 @@ namespace Cybtans.Entities.MongoDb.Tests
             {
                 Name = $"Customer {i}",
                 CreateAt = DateTime.UtcNow,
-                State = i % 2 == 0 ? 1: 2
+                State = i % 2 == 0 ? 1: 2,      
+                Scoring = i
             }));
         }
 

@@ -85,7 +85,7 @@ namespace Cybtans.Tests.Services
                 return new UploadImageResponse
                 {
                     Url = "http://localhost/image.jpg",
-                    M5checksum = checkSum
+                    M5Checksum = checkSum
                 };
             }
             catch (Exception e)

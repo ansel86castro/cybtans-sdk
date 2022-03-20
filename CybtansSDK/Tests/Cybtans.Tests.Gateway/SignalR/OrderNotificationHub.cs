@@ -12,7 +12,7 @@ namespace SignalRChat.Hubs
     public class OrderNotificationHub : Hub<IOrderNotificationClient>
     {
         public async Task SendMessage(OrderNotification msg)
-        {
+        {                        
             await Clients.All.ReceiveMessage(msg.Msg);
         }
     }

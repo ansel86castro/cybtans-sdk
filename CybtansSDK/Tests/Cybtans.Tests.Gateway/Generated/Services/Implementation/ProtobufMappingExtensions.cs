@@ -37,7 +37,7 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			result.Message = model.Message;
 			result.Keywords = model.Keywords.ToList();
 			result.Info = ToPocoModel(model.Info);
-			result.InfoArray = model.InfoArray.Select(x => ToPocoModel(x)).ToList();
+			result.info_array = model.InfoArray.Select(x => ToPocoModel(x)).ToList();
 			result.Date = model.Date?.ToDateTime();
 			result.Time = model.Time != null ? DateTime.UnixEpoch.Add(model.Time.ToTimeSpan()) : new DateTime?();
 			result.Observations = model.Observations;

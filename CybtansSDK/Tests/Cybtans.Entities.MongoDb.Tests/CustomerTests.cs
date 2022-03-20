@@ -1,5 +1,6 @@
 #if INTEGRATIONS
 
+using Cybtans.Entities;
 using Cybtans.Entities.MongoDb.Tests.Models;
 using System;
 using System.Collections.Generic;
@@ -189,6 +190,119 @@ namespace Cybtans.Entities.MongoDb.Tests
                     break;
 
                 page++;
+            }
+        }
+
+        [Theory]
+        [InlineData(5)]
+        [InlineData(50)]
+        public async Task GetManyWithFilters(int pageSize)
+        {
+            int page = 1;
+            
+            while (true)
+            {
+                var list = await _customers.GetManyAsync(page, pageSize, 
+                    _customers.Filters.Expression(x=>x.State == 1),
+                    _customers.Sorting.Ascending(x=>x.Name));
+
+                Assert.NotEmpty(list.Items);
+                Assert.True(list.Items.Count <= pageSize);
+                Assert.All(list.Items, x =>
+                {
+                    Assert.NotEmpty(x.Id);
+                    Assert.NotEmpty(x.Name);
+                    Assert.True(x.State > 0);
+                    Assert.True(x.CreateAt != new DateTime());
+                });
+
+                if (page >= list.TotalPages)
+                    break;
+
+                page++;
+            }
+        }
+
+        [Fact]        
+        public async Task GetManyWithFilters2()
+        {
+            int page = 1;
+
+            while (true)
+            {
+                var list = await _customers.GetManyAsync(page, 50,
+                    _customers.Filters.And(_customers.Filters.Expression(x => x.State == 2),_customers.Filters.Contains(x=>x.Name, "1")),
+                    _customers.Sorting.Ascending(x => x.Name));
+
+                Assert.NotEmpty(list.Items);
+                Assert.True(list.Items.Count <= 50);
+                Assert.All(list.Items, x =>
+                {
+                    Assert.NotEmpty(x.Id);
+                    Assert.NotEmpty(x.Name);
+                    Assert.True(x.State > 0);
+                    Assert.True(x.CreateAt != new DateTime());
+                });
+
+                if (page >= list.TotalPages)
+                    break;
+
+                page++;
+            }
+        }
+
+        [Fact]
+        public async Task ListAllFilter()
+        {
+            var list = await _customers.ListAll(
+                _customers.Filters.And(
+                    _customers.Filters.Expression(x => x.Scoring > 5),
+                    _customers.Filters.Expression(x => x.State == 1)
+                ),
+                _customers.Sorting.Combine(
+                    _customers.Sorting.Descending(x => x.Scoring),
+                    _customers.Sorting.Ascending(x => x.Name)
+                ));
+
+            Assert.NotEmpty(list);
+            Assert.All(list, x =>
+            {
+                Assert.NotEmpty(x.Id);
+                Assert.NotEmpty(x.Name);
+                Assert.True(x.State > 0);
+                Assert.True(x.Scoring > 5);
+                Assert.True(x.CreateAt != new DateTime());
+            });
+        }
+
+        [Fact]
+        public async Task ListAllContains()
+        {
+            var list = await _customers.ListAll(_customers.Filters.Contains(x => x.Name, "1"), null);
+
+            Assert.NotEmpty(list);
+            Assert.All(list, x =>
+            {
+                Assert.NotEmpty(x.Id);
+                Assert.NotEmpty(x.Name);
+                Assert.Contains("1", x.Name);
+                Assert.True(x.CreateAt != new DateTime());
+            });
+        }
+
+        [Fact]
+        public async Task EnumerateAllFilter()
+        {
+
+            await using var enumerator = _customers.GetAsyncEnumerator(_customers.Filters.Expression(x=>x.Scoring >= 5), null);
+            while (await enumerator.MoveNextAsync())
+            {
+                var item = enumerator.Current;
+                Assert.NotEmpty(item.Id);
+                Assert.NotEmpty(item.Name);
+                Assert.True(item.Scoring >= 5);
+                Assert.True(item.State > 0);
+                Assert.True(item.CreateAt != new DateTime());
             }
         }
     }

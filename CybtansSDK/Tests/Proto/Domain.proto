@@ -11,12 +11,12 @@ syntax = "proto3";
 package Cybtans.Tests;
 
 message CustomerDto {
-	option (description) = "Customer Entity";
+	option (message_description) = "Customer Entity";
 
-	string name = 1 [(required) = true, (description) = "Customer's Name"];
-	string firstLastName = 2 [(description) = "Customer's FirstLastName"];
-	string secondLastName = 3 [(description) = "Customer's SecondLastName", (deprecated) = true];
-	guid customerProfileId = 4 [(optional) = true, (description) = "Customer's Profile Id, can be null"];
+	string name = 1 [(required) = true, (field_description) = "Customer's Name"];
+	string firstLastName = 2 [(field_description) = "Customer's FirstLastName"];
+	string secondLastName = 3 [(field_description) = "Customer's SecondLastName", (deprecated) = true];
+	guid customerProfileId = 4 [(optional) = true, (field_description) = "Customer's Profile Id, can be null"];
 	CustomerProfileDto customerProfile = 5;
 	guid id = 6;
 	datetime createDate = 7 [(optional) = true];
@@ -58,7 +58,7 @@ message OrderDto {
 	int32 orderStateId = 3;
 	OrderTypeEnum orderType = 4;
 	OrderStateDto orderState = 5;
-	CustomerDto customer = 6 [(description) = "Customer"];
+	CustomerDto customer = 6 [(field_description) = "Customer"];
 	repeated OrderItemDto items = 7;
 	guid id = 8;
 	datetime createDate = 9 [(optional) = true];

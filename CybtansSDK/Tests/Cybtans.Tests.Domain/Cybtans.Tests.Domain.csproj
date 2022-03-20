@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cybtans.Entities.Proto" Version="1.2.1" />
+    <PackageReference Include="Cybtans.Entities.Proto" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>

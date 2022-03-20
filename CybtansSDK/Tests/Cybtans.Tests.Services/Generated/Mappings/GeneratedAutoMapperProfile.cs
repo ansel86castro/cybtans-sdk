@@ -1,7 +1,6 @@
 
 using System;
 using AutoMapper;
-using Cybtans.Tests.Domain;
 using Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
@@ -11,35 +10,35 @@ namespace Cybtans.Tests.Services
         public GeneratedAutoMapperProfile()
         {
            
-           CreateMap<Customer, CustomerDto>();
-           CreateMap<CustomerDto,Customer>();
+           CreateMap<global::Cybtans.Tests.Domain.Customer, CustomerDto>();
+           CreateMap<CustomerDto, global::Cybtans.Tests.Domain.Customer>();
            
-           CreateMap<CustomerProfile, CustomerProfileDto>();
-           CreateMap<CustomerProfileDto,CustomerProfile>();
+           CreateMap<global::Cybtans.Tests.Domain.CustomerProfile, CustomerProfileDto>();
+           CreateMap<CustomerProfileDto, global::Cybtans.Tests.Domain.CustomerProfile>();
            
-           CreateMap<CustomerEvent, CustomerEventDto>();
-           CreateMap<CustomerEventDto,CustomerEvent>();
+           CreateMap<global::Cybtans.Tests.Domain.CustomerEvent, CustomerEventDto>();
+           CreateMap<CustomerEventDto, global::Cybtans.Tests.Domain.CustomerEvent>();
            
-           CreateMap<OrderItem, OrderItemDto>();
-           CreateMap<OrderItemDto,OrderItem>();
+           CreateMap<global::Cybtans.Tests.Domain.OrderItem, OrderItemDto>();
+           CreateMap<OrderItemDto, global::Cybtans.Tests.Domain.OrderItem>();
            
-           CreateMap<Product, ProductDto>();
-           CreateMap<ProductDto,Product>();
+           CreateMap<global::Cybtans.Tests.Domain.Product, ProductDto>();
+           CreateMap<ProductDto, global::Cybtans.Tests.Domain.Product>();
            
-           CreateMap<Order, OrderDto>();
-           CreateMap<OrderDto,Order>();
+           CreateMap<global::Cybtans.Tests.Domain.Order, OrderDto>();
+           CreateMap<OrderDto, global::Cybtans.Tests.Domain.Order>();
            
-           CreateMap<OrderState, OrderStateDto>();
-           CreateMap<OrderStateDto,OrderState>();
+           CreateMap<global::Cybtans.Tests.Domain.OrderState, OrderStateDto>();
+           CreateMap<OrderStateDto, global::Cybtans.Tests.Domain.OrderState>();
            
-           CreateMap<ReadOnlyEntity, ReadOnlyEntityDto>();
-           CreateMap<ReadOnlyEntityDto,ReadOnlyEntity>();
+           CreateMap<global::Cybtans.Tests.Domain.ReadOnlyEntity, ReadOnlyEntityDto>();
+           CreateMap<ReadOnlyEntityDto, global::Cybtans.Tests.Domain.ReadOnlyEntity>();
            
-           CreateMap<SoftDeleteOrder, SoftDeleteOrderDto>();
-           CreateMap<SoftDeleteOrderDto,SoftDeleteOrder>();
+           CreateMap<global::Cybtans.Tests.Domain.SoftDeleteOrder, SoftDeleteOrderDto>();
+           CreateMap<SoftDeleteOrderDto, global::Cybtans.Tests.Domain.SoftDeleteOrder>();
            
-           CreateMap<SoftDeleteOrderItem, SoftDeleteOrderItemDto>();
-           CreateMap<SoftDeleteOrderItemDto,SoftDeleteOrderItem>();
+           CreateMap<global::Cybtans.Tests.Domain.SoftDeleteOrderItem, SoftDeleteOrderItemDto>();
+           CreateMap<SoftDeleteOrderItemDto, global::Cybtans.Tests.Domain.SoftDeleteOrderItem>();
         
         }
     }

@@ -31,10 +31,6 @@ export default class CameraOrbitController extends Behavior {
 
     setTarget(target: Frame) {
         this.target = target;
-        //let position = this.frame.worldPosition;
-        //this.frame.lookAt(this.target.worldPosition);
-        //this.frame.translate(position[0], position[1], position[2]);
-        //this.frame.commitChanges(true);
     }
 
     update(dt: number) {

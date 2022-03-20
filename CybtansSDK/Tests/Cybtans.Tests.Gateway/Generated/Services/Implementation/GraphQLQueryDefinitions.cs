@@ -23,7 +23,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			Field(x => x.Message, nullable:true);
 			Field<ListGraphType<StringGraphType>>("Keywords");
 			Field<HellowInfoGraphType>("Info");
-			Field<ListGraphType<HellowInfoGraphType>>("InfoArray");
+			Field<ListGraphType<HellowInfoGraphType>>("info_array");
 			Field<DateTimeGraphType>("Date");
 			Field<DateTimeGraphType>("Time");
 			Field(x => x.Observations, nullable:true);
@@ -47,11 +47,6 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	}
 	
 	
-	public class HellowInfo_Types_TypeInfoGraphType : EnumerationGraphType<HellowInfo.Types.TypeInfo>
-	{
-	}
-	
-	
 	public class HellowInfo_Types_InnerAGraphType : ObjectGraphType<HellowInfo.Types.InnerA>
 	{
 		public HellowInfo_Types_InnerAGraphType()
@@ -59,6 +54,11 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			Field<HellowInfo_Types_InnerA_Types_InnerBGraphType>("B");
 		
 		}
+	}
+	
+	
+	public class HellowInfo_Types_TypeInfoGraphType : EnumerationGraphType<HellowInfo.Types.TypeInfo>
+	{
 	}
 	
 	
@@ -113,13 +113,16 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					request.NullableInt = context.GetArgument<int?>("nullableInt", default(int?));
 					request.Time = context.GetArgument<DateTime?>("time", default(DateTime?));
 					
-					var interceptor = context.RequestServices.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
+					using var scope = context.RequestServices.CreateScope();
+					var serviceProvider = scope.ServiceProvider;
+					
+					var interceptor = serviceProvider.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
 					if( interceptor != null )
 					{
 						await interceptor.Handle(request).ConfigureAwait(false);
 					}
 					
-					var service = context.RequestServices.GetRequiredService<global::Cybtans.Test.Gateway.Services.Definition.IGreeter>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Test.Gateway.Services.Definition.IGreeter>();
 					var result = await service.SayHello(request).ConfigureAwait(false);
 					return result;
 				}

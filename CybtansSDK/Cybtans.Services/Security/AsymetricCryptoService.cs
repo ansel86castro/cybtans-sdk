@@ -67,7 +67,7 @@ namespace Cybtans.Services.Security
             //Create a new instance of RSACryptoServiceProvider.
             using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(KeySize))
             {
-
+                
                 //Import the RSA Key information. This only needs
                 //toinclude the public key information.
                 RSA.FromXmlString(Key);

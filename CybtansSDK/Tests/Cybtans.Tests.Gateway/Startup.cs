@@ -261,7 +261,7 @@ namespace Cybtans.Tests.Gateway
 
             static void BuilderConfig(IHttpClientBuilder builder, Type type) => builder.AddHttpMessageHandler<HttpClientAuthorizationHandler>();
 
-            services.AddClients(Configuration.GetValue<string>("Tests"), typeof(ClientsStub).Assembly, BuilderConfig);            
+            services.AddClients(Configuration.GetValue<string>("Tests"), typeof(IClientServiceClient).Assembly, BuilderConfig);            
         }
     }
 }
