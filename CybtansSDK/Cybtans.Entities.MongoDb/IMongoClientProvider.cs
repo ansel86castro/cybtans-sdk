@@ -8,5 +8,8 @@ namespace Cybtans.Entities.MongoDb
         IMongoClient Client { get; }
         IMongoDatabase Database { get; }
         IMongoCollection<T> GetCollection<T>();
+        string GetCollectionFor<T>();
+
+        Task Initialize();
     }
 }
