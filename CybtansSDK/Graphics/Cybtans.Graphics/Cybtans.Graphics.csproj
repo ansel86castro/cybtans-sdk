@@ -10,6 +10,7 @@
     <Description>
       Cybtans 3D Graphics Abstracion Library
     </Description>
+	<Version>2.1.4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

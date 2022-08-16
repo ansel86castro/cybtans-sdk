@@ -6,6 +6,7 @@
     <PackageTags>.net, entity framework, migrations</PackageTags>
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
+	<Version>2.1.4</Version>	  
     <Description>Migration Utilities and seeding for EntityFramework Core</Description>    
   </PropertyGroup>
 

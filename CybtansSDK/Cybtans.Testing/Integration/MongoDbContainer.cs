@@ -13,7 +13,7 @@ namespace Cybtans.Testing.Integration
         public MongoDbContainerConfig(string prefix = "MongoDbIntegrationTest-", int port = 27017, string password = "Pass123.")
         {
             NamePrefix = prefix;
-            Image = "mongo:latest";
+            Image = "mongo:4.0";
             Password = password;
             HostPort = port;
             ContainerPort = 27017;

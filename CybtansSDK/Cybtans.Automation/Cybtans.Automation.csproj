@@ -7,6 +7,7 @@
 	  <PackageTags>automation ,selenium</PackageTags>
 	  <Authors>Ansel Castro</Authors>
 	  <Product>Cybtans SDK</Product>
+	  <Version>2.1.4</Version>
 	  <Description>Selenium Automation Framework</Description>
   </PropertyGroup>
 

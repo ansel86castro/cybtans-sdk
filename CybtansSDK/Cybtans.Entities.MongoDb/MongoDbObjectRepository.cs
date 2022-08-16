@@ -208,9 +208,7 @@ namespace Cybtans.Entities.MongoDb
 
             return new(await query.ToListAsync().ConfigureAwait(false), page, totalPages, count);
         }
-
     
-
         public Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default)
         {
             var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());

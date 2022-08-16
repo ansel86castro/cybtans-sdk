@@ -10,6 +10,7 @@
     <Description>
       Grpc Utilities including Exception Handling, Message Validation.
     </Description>
+    <Version>2.1.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

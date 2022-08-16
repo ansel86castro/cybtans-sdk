@@ -6,7 +6,10 @@ namespace Cybtans.Entities.MongoDb.Tests
     {
         public TestMongoDbProvider(MongoOptions options) : base(options)
         {
-            Map<Customer>().ToCollection("customers");
+            Map<Customer>().ToCollection("customers")
+                .Index(x=>x.State, IndexSorting.Ascending)
+                .Index(b => b.Combine(b.Descending(x => x.Scoring), b.Ascending(x => x.Name)))
+                ;
             
         }
     }
