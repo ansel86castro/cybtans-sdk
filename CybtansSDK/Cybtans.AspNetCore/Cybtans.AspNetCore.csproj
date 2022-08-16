@@ -7,7 +7,8 @@
     <PackageTags>serialization, .net, binary, performance, speed</PackageTags>
     <Authors>Ansel Castro</Authors>
     <Product>Cybtans SDK</Product>
-    <Description>Integrates Cybtans binary serializer with aspnet core</Description>    
+    <Description>Integrates Cybtans binary serializer with aspnet core</Description>
+	<Version>2.1.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@
     <Description>
       Azure Service Buss message queue implementation
     </Description>
+	<Version>2.1.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

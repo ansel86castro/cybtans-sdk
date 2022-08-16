@@ -9,7 +9,8 @@
     <Product>Cybtans SDK</Product>
     <Description>
       Provides event publisher implementation for entity changes
-    </Description>    
+    </Description>
+	<Version>2.1.4</Version>  
   </PropertyGroup>
 
   <ItemGroup>
