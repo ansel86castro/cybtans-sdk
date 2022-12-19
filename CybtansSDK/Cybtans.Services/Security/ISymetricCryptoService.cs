@@ -9,9 +9,5 @@
         string DecryptString(string stringToBeDecrypted, string password);
 
         string EncryptString(string stringToBeEncrypted, string password);
-
-        byte[] EncryptObject(object value);
-
-        object DecrypObject(byte[] data);
     }
 }

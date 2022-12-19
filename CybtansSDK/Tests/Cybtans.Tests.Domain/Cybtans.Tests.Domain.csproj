@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cybtans.Entities.Proto" Version="1.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\Cybtans.Entities.Proto\Cybtans.Entities.Proto.csproj" />
     <ProjectReference Include="..\..\Cybtans.Entities\Cybtans.Entities.csproj" />
   </ItemGroup>
 

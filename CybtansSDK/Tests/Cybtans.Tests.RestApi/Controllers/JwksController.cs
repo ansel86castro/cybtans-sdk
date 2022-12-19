@@ -1,9 +1,6 @@
 ﻿using Cybtans.Tests.Services;
 using IdentityModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using System.Security.Cryptography;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {

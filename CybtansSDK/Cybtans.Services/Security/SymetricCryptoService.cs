@@ -272,33 +272,6 @@ namespace Cybtans.Services.Security
             return Convert.ToBase64String(
                Encrypt(Encoding.UTF8.GetBytes(stringToBeEncrypted), Encoding.UTF8.GetBytes(password)));
         }
-
-        public byte[] EncryptObject(object value)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-
-            byte[] bytes;
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                formatter.Serialize(memoryStream, value);
-                bytes = memoryStream.ToArray();
-            }
-
-            return Encrypt(bytes);
-        }
-
-        public object DecrypObject(byte[] data)
-        {
-            var decrypted = Decrypt(data);
-            BinaryFormatter formatter = new BinaryFormatter();
-            object value;
-            using (MemoryStream memoryStream = new MemoryStream(decrypted))
-            {
-                value = formatter.Deserialize(memoryStream);
-            }
-
-            return value;
-        }
     }
 
 

@@ -12,10 +12,12 @@ using Cybtans.Tests.Clients;
 using Cybtans.Tests.Gateway.GraphQL;
 using Cybtans.Tests.Grpc;
 using Cybtans.Tests.Models;
+using GraphQL;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -94,13 +96,9 @@ namespace Cybtans.Tests.Gateway
             #region GraphQL
 
             services.AddSingleton<ISchema, ApiGatewayDefinitionsSchema>();
-            services.AddGraphQL(options =>
-            {
-                options.EnableMetrics = true;
-            })
-             .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
-             .AddSystemTextJson()
-             .AddGraphTypes(typeof(Startup), ServiceLifetime.Singleton);
+            services.AddGraphQL(b=>
+                b.AddSystemTextJson()
+                .AddGraphTypes());
 
             #endregion
 

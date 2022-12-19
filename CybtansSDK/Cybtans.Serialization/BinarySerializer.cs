@@ -110,7 +110,7 @@ namespace Cybtans.Serialization
 
             var type = obj.GetType();
             type = Nullable.GetUnderlyingType(type) ?? type;
-
+            
             switch (obj)
             {
                 case bool boolValue:

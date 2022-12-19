@@ -30,6 +30,7 @@ using Serilog.Core;
 using Serilog;
 using System.Security.Cryptography;
 using System.IO;
+using GraphQL;
 
 namespace Cybtans.Test.RestApi
 {
@@ -153,13 +154,12 @@ namespace Cybtans.Test.RestApi
             #region GraphQL
         
             services.AddSingleton<ISchema, TestQueryDefinitionsSchema>();
-            services.AddGraphQL(options =>
-            {                
-                options.EnableMetrics = true;                
-            })
-             .AddErrorInfoProvider(opt => opt.ExposeExceptionStackTrace = true)
-             .AddSystemTextJson()
-             .AddGraphTypes(typeof(Startup), ServiceLifetime.Singleton);
+            services.AddGraphQL(b =>
+            {
+                b.AddSystemTextJson();
+                b.AddGraphTypes();                
+            });
+             
 
             #endregion
         }
@@ -259,8 +259,7 @@ namespace Cybtans.Test.RestApi
         }
 
         void AddAuthentication(IServiceCollection services)
-        {
-            GenerateKeys();
+        {          
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
@@ -328,9 +327,7 @@ namespace Cybtans.Test.RestApi
         }
 
       
-
-
-        private void GenerateKeys()
+        public static void GenerateKeys()
         {
             if (!File.Exists("keys/public.key"))
             {

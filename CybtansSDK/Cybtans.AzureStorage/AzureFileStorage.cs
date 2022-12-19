@@ -44,8 +44,7 @@ namespace Cybtans.Services.FileStorage
             {
                 (BlobClient blobClient, BlobUploadOptions uploadOptions) = await GetBlobClient(filename, container, contentType, createContainer, options);
 
-                var result = await blobClient.UploadAsync(content, uploadOptions);
-
+                var result = await blobClient.UploadAsync(content, uploadOptions);                
                 return new CreateFileResult(blobClient.Uri)
                 {
                     ContentHash = result.Value.ContentHash,
@@ -173,7 +172,7 @@ namespace Cybtans.Services.FileStorage
                 var containerClient = await GetContainerClient(container, false);
                 var blobClient = containerClient.GetBlobClient(filename);
                 var content = (await blobClient.DownloadAsync()).Value;
-
+              
                 return new FileContent(filename, content.ContentHash, content.ContentLength, content.ContentType, content.Details.LastModified, content.Content);
             }
             catch (Azure.RequestFailedException e)
@@ -283,7 +282,7 @@ namespace Cybtans.Services.FileStorage
             _ => PublicAccessType.None
         };
 
-        private async Task<(BlobClient, BlobUploadOptions)> GetBlobClient(string filename, string? container, string contentType, bool createContainer, FileOptions? options)
+        private async ValueTask<(BlobClient, BlobUploadOptions)> GetBlobClient(string filename, string? container, string contentType, bool createContainer, FileOptions? options)
         {
             var containerClient = await GetContainerClient(container, createContainer, options);
             var blobClient = containerClient.GetBlobClient(filename);

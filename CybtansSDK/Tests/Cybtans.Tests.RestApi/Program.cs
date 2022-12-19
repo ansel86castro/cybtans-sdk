@@ -22,6 +22,8 @@ namespace Cybtans.Test.RestApi
             var configuration = GetConfiguration();
             Log.Logger = CreateSerilogLogger(configuration);
 
+            Startup.GenerateKeys();
+
             try
             {               
                 Log.Information("Configuring web host ({ApplicationContext})...", AppName);
