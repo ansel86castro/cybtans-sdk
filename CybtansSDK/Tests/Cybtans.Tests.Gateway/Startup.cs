@@ -10,12 +10,15 @@ using Cybtans.Messaging;
 using Cybtans.Services.Extensions;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Gateway.GraphQL;
+using Cybtans.Tests.Gateway.Security;
 using Cybtans.Tests.Grpc;
 using Cybtans.Tests.Models;
+using Cybtans.Tests.Services;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Types;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -243,13 +246,31 @@ namespace Cybtans.Tests.Gateway
                     ValidateIssuerSigningKey = true,
                     ValidAudience = Configuration.GetValue<string>("Jwt:Audience"),
                     ValidIssuer = Configuration.GetValue<string>("Jwt:Issuer"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),                    
+                    IssuerSigningKey = AuthenticationService.GetPublicRsaSecurityKey(), //new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Jwt:Secret"))),                    
                     ClockSkew = TimeSpan.Zero
                 };
                 options.Validate();
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminUser", policy => policy.RequireRole("admin"));
+
+                options.AddPolicy("ClientPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.AddRequirements(new ClientPolicyRequirement());
+
+                });
+
+                options.AddPolicy("ClientCreator", policy =>
+                {
+                    policy.AddRequirements(new ClientCreatorRequiriment());
+                });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, ClientPolicyHandlers>();
+            services.AddSingleton<IAuthorizationHandler, ClientCreatorPolicyHandler>();
         }
 
 

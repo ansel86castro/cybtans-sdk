@@ -50,6 +50,7 @@
     <ProjectReference Include="..\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Grpc\Cybtans.Tests.Grpc.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
+    <ProjectReference Include="..\Cybtans.Tests.Services\Cybtans.Tests.Services.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

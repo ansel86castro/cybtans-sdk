@@ -338,12 +338,10 @@ namespace Cybtans.Test.RestApi
 
 
                 using (var rsa = RSA.Create())
-                {
+                {                                 
+                    File.WriteAllText("keys/public.key", rsa.ExportRSAPublicKeyPem());
 
-                    var xml = rsa.ToXmlString(false);
-                    File.WriteAllText("keys/public.key", RsaKeyConverter.XmlToPem(xml));
-
-                    xml = rsa.ToXmlString(true);
+                    var xml = rsa.ToXmlString(true);
                     File.WriteAllText("keys/private.key", xml);
                 }
             }

@@ -150,9 +150,8 @@ namespace Cybtans.Tests.Services
         {
             var provider = RSA.Create();
             var pem = File.ReadAllText("keys/public.key");
-            var xml = RsaKeyConverter.PemToXml(pem);
-            provider.FromXmlString(xml);
-
+            provider.ImportFromPem(pem);            
+           
             return new RsaSecurityKey(provider) { KeyId = AuthenticationService.KeyId };
         }
       
