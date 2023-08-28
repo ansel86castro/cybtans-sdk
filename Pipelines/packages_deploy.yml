@@ -60,12 +60,18 @@ steps:
         dotnet pack ./CybtansSDK/Cybtans.Messaging.AzureServiceBus/Cybtans.Messaging.AzureServiceBus.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory)   -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
         dotnet pack ./CybtansSDK/Cybtans.Entities.MongoDb/Cybtans.Entities.MongoDb.csproj --no-restore --no-build -c $(configuration) -o $(Build.ArtifactStagingDirectory)   -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 
-  - task: NuGetCommand@2
-    displayName: "Publish Packages"
-    condition: ne(variables['Build.Reason'], 'PullRequest')
+  # - task: NuGetCommand@2
+  #   displayName: "Publish Packages"
+  #   condition: ne(variables['Build.Reason'], 'PullRequest')
+  #   inputs:
+  #     command: "push"
+  #     packagesToPush: "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg"
+  #     nuGetFeedType: "external"
+  #     publishFeedCredentials: "Cybtans Nuget"
+  #     arguments: "--skip-duplicate"
+  - task: DotNetCoreCLI@2
     inputs:
-      command: "push"
-      packagesToPush: "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg"
-      nuGetFeedType: "external"
-      publishFeedCredentials: "Cybtans Nuget"
-      arguments: "--skip-duplicate"
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg'
+      nuGetFeedType: 'external'
+      publishFeedCredentials: 'Cybtans Nuget'
