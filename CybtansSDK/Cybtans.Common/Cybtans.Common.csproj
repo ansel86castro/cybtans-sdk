@@ -1,10 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageIcon>cybtan.png</PackageIcon>
+	<RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>	
+	<Authors>Ansel Castro</Authors>
+	<Product>Cybtans SDK</Product>
+	<Version>3.0.1</Version>
+	<Description>Cybtans Shared Library</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\cybtan.png" Link="cybtan.png">
+      <PackagePath></PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
