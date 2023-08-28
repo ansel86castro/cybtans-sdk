@@ -5,7 +5,7 @@
       "Type": "messages",
       "Output": ".",
       "ProtoFile": "./Proto/Domain.proto",
-      "AssemblyFile": "./Cybtans.Tests.Domain/bin/Debug/net5.0/Cybtans.Tests.Domain.dll",
+      "AssemblyFile": "./Cybtans.Tests.Domain/bin/Debug/net7.0/Cybtans.Tests.Domain.dll",
       "GenerateGraphQLQuery": true
     },
     {

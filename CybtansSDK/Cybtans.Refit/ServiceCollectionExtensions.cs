@@ -51,6 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 c.BaseAddress = new Uri(baseUrl);
                 c.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={BinarySerializer.DefaultEncoding.WebName}");
             });
+           
             builder.AddHttpMessageHandler(() => new HttpClientRetryHandler());
 
             builder.Services.TryAddSingleton(interfaceType, s =>

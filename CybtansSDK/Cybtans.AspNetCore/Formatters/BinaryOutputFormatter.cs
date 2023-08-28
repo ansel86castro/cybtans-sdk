@@ -1,5 +1,6 @@
 ﻿using Cybtans.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.IO;
 using System;
 using System.IO;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Cybtans.AspNetCore
     public class BinaryOutputFormatter : OutputFormatter
     {
         static ThreadLocal<BinarySerializer> Serializer = new ThreadLocal<BinarySerializer>(() => new BinarySerializer());
+        private readonly RecyclableMemoryStreamManager _streamManager = new RecyclableMemoryStreamManager();
 
         private readonly Encoding _encoding;
         private readonly string _mediaType;
@@ -27,29 +29,30 @@ namespace Cybtans.AspNetCore
 
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
-            context.ContentType = _mediaType;
-            return true;
+            return context.ContentType  == _mediaType || context.ContentType == BinarySerializer.MEDIA_TYPE;
         }
 
         protected override bool CanWriteType(Type type)
         {
             return true;
-        }     
+        }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
             var response = context.HttpContext.Response;
             
             var serializer = _encoding == BinarySerializer.DefaultEncoding ? Serializer.Value : new BinarySerializer(_encoding);
 
-            var stream = new MemoryStream();
+            using var stream = _streamManager.GetStream();
             serializer.Serialize(stream, context.Object);
             stream.Position = 0;
 
             response.ContentType = _mediaType;
             response.ContentLength = stream.Length;
+            
+            await stream.CopyToAsync(response.Body);
 
-            return stream.CopyToAsync(response.Body);
+            await response.CompleteAsync();
         }
     }
 }

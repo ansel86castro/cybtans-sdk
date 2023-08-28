@@ -6,95 +6,73 @@
 // </auto-generated>
 //******************************************************
 
-using Refit;
-using Cybtans.Refit;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cybtans.Tests.Models;
+using mds = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
 	/// <summary>
 	/// Order's Service
 	/// </summary>
-	[ApiClient]
 	public interface IOrderServiceClient
 	{
 		
 		/// <summary>
 		/// Hellow; "Func"
 		/// </summary>
-		[Get("/api/Order/foo")]
 		Task Foo();
 		
-		[Get("/api/Order/baar")]
 		Task Baar();
 		
-		[Get("/api/Order/test")]
 		Task Test();
 		
-		[Get("/api/Order/arg")]
 		Task Argument();
 		
 		/// <summary>
 		/// Upload an image to the server
 		/// </summary>
-		[Post("/api/Order/upload")]
-		Task<UploadImageResponse> UploadImage([Body]UploadImageRequest request);
+		Task<mds::UploadImageResponse> UploadImage(mds::UploadImageRequest request);
 		
-		[Post("/api/Order/{request.Id}/upload")]
-		Task<UploadStreamResponse> UploadStreamById([Body]UploadStreamByIdRequest request);
+		Task<mds::UploadStreamResponse> UploadStreamById(mds::UploadStreamByIdRequest request);
 		
-		[Post("/api/Order/ByteStream")]
-		Task<UploadStreamResponse> UploadStream([Body]System.IO.Stream request);
+		Task<mds::UploadStreamResponse> UploadStream(System.IO.Stream request);
 		
-		[Get("/api/Order/download")]
-		Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request = null);
+		Task<mds::DowndloadImageResponse> DownloadImage(mds::DownloadImageRequest request = null);
 		
-		[Get("/api/Order/{request.Param1}multipath/{request.Param2}")]
-		Task GetMultiPath(MultiPathRequest request);
+		Task GetMultiPath(mds::MultiPathRequest request);
 		
-		[Post("/api/Order/{request.OrderId}/notify/{request.UserId}")]
-		Task SendNotification([Body]OrderNotification request);
+		Task SendNotification(mds::OrderNotification request);
 		
-		[Get("/api/Order/names")]
-		Task<GetAllNamesResponse> GetAllNames();
+		Task<mds::GetAllNamesResponse> GetAllNames();
 		
-		[Get("/api/Order/names/{request.Id}")]
-		Task<OrderNamesDto> GetOrderName(GetOrderNameRequest request);
+		Task<mds::OrderNamesDto> GetOrderName(mds::GetOrderNameRequest request);
 		
-		[Post("/api/Order/names")]
-		Task<OrderNamesDto> CreateOrderName([Body]CreateOrderNameRequest request);
+		Task<mds::OrderNamesDto> CreateOrderName(mds::CreateOrderNameRequest request);
 		
 		/// <summary>
 		/// Returns a collection of OrderDto
 		/// </summary>
-		[Get("/api/Order")]
-		Task<GetAllOrderResponse> GetAll(GetAllRequest request = null);
+		Task<mds::GetAllOrderResponse> GetAll(mds::GetAllRequest request = null);
 		
 		/// <summary>
 		/// Returns one OrderDto by Id
 		/// </summary>
-		[Get("/api/Order/{request.Id}")]
-		Task<OrderDto> Get(GetOrderRequest request);
+		Task<mds::OrderDto> Get(mds::GetOrderRequest request);
 		
 		/// <summary>
 		/// Creates one OrderDto
 		/// </summary>
-		[Post("/api/Order")]
-		Task<OrderDto> Create([Body]CreateOrderRequest request);
+		Task<mds::OrderDto> Create(mds::CreateOrderRequest request);
 		
 		/// <summary>
 		/// Updates one OrderDto by Id
 		/// </summary>
-		[Put("/api/Order/{request.Id}")]
-		Task<OrderDto> Update([Body]UpdateOrderRequest request);
+		Task<mds::OrderDto> Update(mds::UpdateOrderRequest request);
 		
 		/// <summary>
 		/// Deletes one OrderDto by Id
 		/// </summary>
-		[Delete("/api/Order/{request.Id}")]
-		Task Delete(DeleteOrderRequest request);
+		Task Delete(mds::DeleteOrderRequest request);
 	
 	}
 

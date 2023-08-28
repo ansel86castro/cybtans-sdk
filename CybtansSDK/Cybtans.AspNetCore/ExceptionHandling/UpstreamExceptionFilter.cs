@@ -1,10 +1,7 @@
-﻿using Cybtans.Refit;
-using Cybtans.Serialization;
+﻿using Cybtans.Common;
 using Cybtans.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cybtans.AspNetCore
 {

@@ -50,7 +50,6 @@ namespace Cybtans.Tests.Services
         {
             throw new CybtansException(HttpStatusCode.NotAcceptable, "Method Baar no allowed");
         }
-
        
 
         public Task Foo()
@@ -78,8 +77,8 @@ namespace Cybtans.Tests.Services
                     await fs.FlushAsync();
                 }
 
-                request.Image.Position = 0;
-                var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Image));
+                using var imageStream = File.OpenRead(request.Name);
+                var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(imageStream));
                 var checkSum = CryptoService.ToStringX2(hash);
 
                 return new UploadImageResponse
@@ -103,10 +102,11 @@ namespace Cybtans.Tests.Services
         }
 
         public async Task<UploadStreamResponse> UploadStreamById(UploadStreamByIdRequest request)
-        {          
-            var hash = await Task.Run(() => new SymetricCryptoService().ComputeHash(request.Data));
-
-            return CryptoService.ToStringX2(hash);
+        {
+            var memStream = new MemoryStream();
+            await request.Data.CopyToAsync(memStream);
+            memStream.Position = 0;
+            return CryptoService.ToStringX2(new SymetricCryptoService().ComputeHash(memStream));
         }
 
         public Task<DowndloadImageResponse> DownloadImage(DownloadImageRequest request)

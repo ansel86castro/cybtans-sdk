@@ -114,8 +114,8 @@ class OrderItemDto {
 
 	OrderItemDto.fromJson(Map<String, dynamic> json) :
 		productName = json['productName'],
-		price = json['price'],
-		discount = json['discount'],
+		price = json['price']?.toDouble(),
+		discount = json['discount']?.toDouble(),
 		orderId = json['orderId'],
 		productId = json['productId'],
 		product = json['product'] != null ? ProductDto.fromJson(json['product']) : null,
@@ -178,7 +178,7 @@ class OrderDto {
 		orderType = OrderTypeEnumConverter.fromValue(json['orderType']),
 		orderState = json['orderState'] != null ? OrderStateDto.fromJson(json['orderState']) : null,
 		customer = json['customer'] != null ? CustomerDto.fromJson(json['customer']) : null,
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? OrderItemDto.fromJson(e) : null),
+		items = json['items']?.map<OrderItemDto>((dynamic e) => OrderItemDto.fromJson(e)).toList(),
 		id = json['id'],
 		createDate = json['createDate'] != null ? DateTime.parse(json['createDate']) : null,
 		updateDate = json['updateDate'] != null ? DateTime.parse(json['updateDate']) : null;
@@ -282,7 +282,7 @@ class SoftDeleteOrderDto {
 	SoftDeleteOrderDto.fromJson(Map<String, dynamic> json) :
 		name = json['name'],
 		isDeleted = json['isDeleted'],
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? SoftDeleteOrderItemDto.fromJson(e) : null),
+		items = json['items']?.map<SoftDeleteOrderItemDto>((dynamic e) => SoftDeleteOrderItemDto.fromJson(e)).toList(),
 		id = json['id'],
 		createDate = json['createDate'] != null ? DateTime.parse(json['createDate']) : null,
 		updateDate = json['updateDate'] != null ? DateTime.parse(json['updateDate']) : null;
@@ -402,7 +402,7 @@ class GetAllCustomerResponse {
 	};
 
 	GetAllCustomerResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? CustomerDto.fromJson(e) : null),
+		items = json['items']?.map<CustomerDto>((dynamic e) => CustomerDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -484,7 +484,7 @@ class GetAllCustomerEventResponse {
 	};
 
 	GetAllCustomerEventResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? CustomerEventDto.fromJson(e) : null),
+		items = json['items']?.map<CustomerEventDto>((dynamic e) => CustomerEventDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -566,7 +566,7 @@ class GetAllOrderResponse {
 	};
 
 	GetAllOrderResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? OrderDto.fromJson(e) : null),
+		items = json['items']?.map<OrderDto>((dynamic e) => OrderDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -648,7 +648,7 @@ class GetAllOrderStateResponse {
 	};
 
 	GetAllOrderStateResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? OrderStateDto.fromJson(e) : null),
+		items = json['items']?.map<OrderStateDto>((dynamic e) => OrderStateDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -699,7 +699,7 @@ class GetAllReadOnlyEntityResponse {
 	};
 
 	GetAllReadOnlyEntityResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? ReadOnlyEntityDto.fromJson(e) : null),
+		items = json['items']?.map<ReadOnlyEntityDto>((dynamic e) => ReadOnlyEntityDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -767,7 +767,7 @@ class GetAllSoftDeleteOrderResponse {
 	};
 
 	GetAllSoftDeleteOrderResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? SoftDeleteOrderDto.fromJson(e) : null),
+		items = json['items']?.map<SoftDeleteOrderDto>((dynamic e) => SoftDeleteOrderDto.fromJson(e)).toList(),
 		page = json['page'],
 		totalPages = json['totalPages'],
 		totalCount = json['totalCount'];
@@ -974,7 +974,7 @@ class GetAllNamesResponse {
 	};
 
 	GetAllNamesResponse.fromJson(Map<String, dynamic> json) :
-		items = json['items']?.map((Map<String, dynamic>? e) => e != null ? OrderNamesDto.fromJson(e) : null);
+		items = json['items']?.map<OrderNamesDto>((dynamic e) => OrderNamesDto.fromJson(e)).toList();
 	}
 
 
@@ -1068,7 +1068,7 @@ class ClientDto {
 		createdAt = json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
 		creatorId = json['creatorId'],
 		type = ClientTypeConverter.fromValue(json['type']),
-		itemIds = json['itemIds']?.map((int? e) => e ?? 0);
+		itemIds = json['itemIds']?.map<int>((dynamic e) => e ?? 0).toList();
 	}
 
 

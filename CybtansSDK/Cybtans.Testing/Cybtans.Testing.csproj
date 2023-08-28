@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cybtans.Refit\Cybtans.Refit.csproj" />
+    <ProjectReference Include="..\Cybtans.Clients\Cybtans.Clients.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
   </ItemGroup>
 

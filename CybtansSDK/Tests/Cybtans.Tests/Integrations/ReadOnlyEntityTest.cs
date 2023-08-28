@@ -1,8 +1,9 @@
-﻿using Cybtans.Refit;
+﻿using Cybtans.Clients;
 using Cybtans.Tests.Clients;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
+using Cybtans.Common;
 
 namespace Cybtans.Tests.Integrations
 {

@@ -1,4 +1,4 @@
-﻿using Cybtans.Refit;
+﻿using Cybtans.Clients;
 using Cybtans.Testing;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Entities.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using Cybtans.Common;
 
 namespace Cybtans.Tests.Integrations
 {

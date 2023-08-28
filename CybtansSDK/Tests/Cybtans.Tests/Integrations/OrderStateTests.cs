@@ -1,5 +1,5 @@
 ﻿using Cybtans.Entities;
-using Cybtans.Refit;
+using Cybtans.Clients;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
 using Moq;
@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using Cybtans.Common;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -46,6 +47,16 @@ namespace Cybtans.Tests.Integrations
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.True(result.TotalCount > 0);
+            Assert.Equal(result.TotalCount, result.Items.Count);
+        }
+
+        [Fact]
+        public async Task GetOrderStatesWithFilter()
+        {
+            var result = await _service.GetAll(new() { Filter = "name eq 'Submitted'" });
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.Items);
+            Assert.True(result.TotalCount == 1);
             Assert.Equal(result.TotalCount, result.Items.Count);
         }
 

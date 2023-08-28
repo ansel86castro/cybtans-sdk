@@ -6,52 +6,38 @@
 // </auto-generated>
 //******************************************************
 
-using Refit;
-using Cybtans.Refit;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cybtans.Tests.Models;
+using mds = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
-	[ApiClient]
 	public interface ICustomerServiceClient
 	{
 		
 		/// <summary>
 		/// Returns a collection of CustomerDto
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/Customer")]
-		Task<GetAllCustomerResponse> GetAll(GetAllRequest request = null);
+		Task<mds::GetAllCustomerResponse> GetAll(mds::GetAllRequest request = null);
 		
 		/// <summary>
 		/// Returns one CustomerDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/Customer/{request.Id}")]
-		Task<CustomerDto> Get(GetCustomerRequest request);
+		Task<mds::CustomerDto> Get(mds::GetCustomerRequest request);
 		
 		/// <summary>
 		/// Creates one CustomerDto
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Post("/api/Customer")]
-		Task<CustomerDto> Create([Body]CreateCustomerRequest request);
+		Task<mds::CustomerDto> Create(mds::CreateCustomerRequest request);
 		
 		/// <summary>
 		/// Updates one CustomerDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Put("/api/Customer/{request.Id}")]
-		Task<CustomerDto> Update([Body]UpdateCustomerRequest request);
+		Task<mds::CustomerDto> Update(mds::UpdateCustomerRequest request);
 		
 		/// <summary>
 		/// Deletes one CustomerDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Delete("/api/Customer/{request.Id}")]
-		Task Delete(DeleteCustomerRequest request);
+		Task Delete(mds::DeleteCustomerRequest request);
 	
 	}
 

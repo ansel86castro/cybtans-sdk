@@ -15,7 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />    
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />    
   </ItemGroup>
 
   <ItemGroup>

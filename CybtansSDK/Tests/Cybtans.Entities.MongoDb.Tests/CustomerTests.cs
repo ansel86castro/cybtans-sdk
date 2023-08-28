@@ -305,6 +305,26 @@ namespace Cybtans.Entities.MongoDb.Tests
                 Assert.True(item.CreateAt != new DateTime());
             }
         }
+
+        [Fact]
+        public async Task Querable()
+        {
+            var query =  _customers.AsQueryable();
+            var customers = query
+                .Skip(1)
+                .Take(2)
+                .OrderByDescending(x => x.Scoring)
+                .ToList();
+            Assert.NotEmpty(customers);
+            
+        }
+
+        [Fact]
+        public async Task ToListLimit()
+        {
+            var customers = await _customers.ListAll(null, _customers.Sorting.Descending(x=>x.Scoring) , 1, 2);
+            Assert.NotEmpty(customers);
+        }
     }
 }
 

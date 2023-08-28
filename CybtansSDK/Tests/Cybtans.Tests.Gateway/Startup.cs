@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Cybtans.AspNetCore;
+using Cybtans.Clients;
 using Cybtans.Messaging;
 using Cybtans.Services.Extensions;
 using Cybtans.Tests.Clients;
@@ -278,9 +280,13 @@ namespace Cybtans.Tests.Gateway
         {
             services.AddAuthenticatedHttpHandler();
 
-            static void BuilderConfig(IHttpClientBuilder builder, Type type) => builder.AddHttpMessageHandler<HttpClientAuthorizationHandler>();
-
-            services.AddClients(Configuration.GetValue<string>("Tests"), typeof(IClientServiceClient).Assembly, BuilderConfig);            
+            services.AddClients(typeof(IClientServiceClient).Assembly)
+                    .ConfigureTransport(Configuration.GetValue<string>("Tests"))
+                    .AddHttpMessageHandler<HttpClientAuthorizationHandler>()
+                    .AddHttpMessageHandler(() => new HttpVersionRequestHandler(HttpVersion.Version20));
+            
+            //static void BuilderConfig(IHttpClientBuilder builder, Type type) => builder.AddHttpMessageHandler<HttpClientAuthorizationHandler>();
+            //services.AddClients(Configuration.GetValue<string>("Tests"), typeof(IClientServiceClient).Assembly, BuilderConfig);            
         }
     }
 }

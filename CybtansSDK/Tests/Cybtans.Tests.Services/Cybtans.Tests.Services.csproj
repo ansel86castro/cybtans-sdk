@@ -14,16 +14,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Cybtans.Entities.Dapper\Cybtans.Entities.Dapper.csproj" />
     <ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
-    <ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Domain.EF\Cybtans.Tests.Domain.EF.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Domain\Cybtans.Tests.Domain.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Grpc\Cybtans.Tests.Grpc.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Generated\" />
   </ItemGroup>
 
 </Project>

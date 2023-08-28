@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -16,10 +17,12 @@ namespace Cybtans.Entities
         [Obsolete]
         Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false);
         Task<PagedList<T>> GetManyAsync(int page, int pageSize, IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
+        IQueryable<T> AsQueryable();
         IAsyncEnumerator<T> GetAsyncEnumerator(Expression<Func<T, bool>>? filter , Expression<Func<T, object>>? sortBy, ReadConsistency consistency = ReadConsistency.Default);
         IAsyncEnumerator<T> GetAsyncEnumerator(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
         Task<List<T>> ListAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null);
         Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default);
+        Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, int skip, int take, ReadConsistency consistency = ReadConsistency.Default);
         Task<T> AddAsync(T item);
         Task AddRangeAsync(IEnumerable<T> items);
         Task<T> UpdateAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
@@ -28,6 +31,7 @@ namespace Cybtans.Entities
         Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data);
         Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, object data);
         Task<long> DeleteAsync(Expression<Func<T, bool>> filter);                
+       
         #region Defaults
 
         public async Task<List<T>> ToListAsync()
@@ -51,6 +55,7 @@ namespace Cybtans.Entities
         }
 
         public async Task<Dictionary<TKey,T>> ToDictionaryAsync<TKey>(Func<T, TKey> keySelector)
+            where TKey : notnull
         {
             var dic = new Dictionary<TKey, T>();
             await foreach (var item in this)
@@ -61,6 +66,7 @@ namespace Cybtans.Entities
         }
 
         public async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey, TElement>(Func<T, TKey> keySelector, Func<T, TElement> elementSelector)
+            where TKey : notnull
         {
             var dic = new Dictionary<TKey, TElement>();
             await foreach (var item in this)

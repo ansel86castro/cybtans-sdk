@@ -1,11 +1,7 @@
-﻿using Cybtans.Refit;
-using Cybtans.Serialization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Refit;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Xunit;
@@ -15,7 +11,8 @@ using Cybtans.Testing.Integration;
 using Microsoft.AspNetCore.TestHost;
 using System;
 using System.Linq;
-using System.Reflection;
+using Cybtans.Clients;
+using Cybtans.Common;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -65,25 +62,25 @@ namespace Cybtans.Tests.Integrations
         protected virtual void OnPostConfigureService(IServiceCollection services)
         {
 
-        }
-                 
-        
-        protected override void ConfigureClient(HttpClient client)
-        {           
-            client.DefaultRequestHeaders.Add("Accept", $"{BinarySerializer.MEDIA_TYPE}; charset={Encoding.UTF8.WebName}");           
-            base.ConfigureClient(client);
-        }
-             
+        }                                         
                    
-        public TClient GetClient<TClient>(HttpClient httpClient = null)
+        public TClient GetClient<TClient>(HttpClient httpClient = null, bool useJson = false)
           where TClient : class
         {            
             httpClient ??= Client;
-            var settings = new RefitSettings();
-            settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
-            return RestService.For<TClient>(httpClient, settings);
+            Type type = typeof(TClient);
+            if (type.IsInterface)
+            {
+                var impl = type.Assembly.ExportedTypes.Where(x=> x.IsClass && x.GetInterface(type.FullName) == type).FirstOrDefault();
+                if (impl == null)
+                {
+                    throw new InvalidOperationException("Implementation not found");
+                }
+                type = impl;
+            }
+            return (TClient)Activator.CreateInstance(type, httpClient, useJson ? null : new CybtansContentSerializer());
         }
-            
+   
 
         public virtual Task InitializeAsync()
         {           
@@ -267,14 +264,12 @@ namespace Cybtans.Tests.Integrations
                 new HttpClientExceptionHandler());
         }
 
-        public static TClient GetClient<TClient, TStartup>(this WebApplicationFactory<TStartup> factory) 
+        public static TClient GetClient<TClient, TStartup>(this WebApplicationFactory<TStartup> factory, IHttpContentSerializer serializer = null) 
             where TClient : class
             where TStartup : class
         {
-            var httpClient = factory.CreateHttpClient();
-            var settings = new RefitSettings();
-            settings.ContentSerializer = new CybtansContentSerializer(settings.ContentSerializer);
-            return RestService.For<TClient>(httpClient, settings);
+            var httpClient = factory.CreateHttpClient();                      
+            return (TClient)Activator.CreateInstance(typeof(TClient), httpClient, serializer);
         }
 
       

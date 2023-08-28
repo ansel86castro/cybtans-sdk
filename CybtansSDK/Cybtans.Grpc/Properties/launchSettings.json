@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Cybtans.Grpc": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:35525;http://localhost:35526"
+    }
+  }
+}

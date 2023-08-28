@@ -48,12 +48,12 @@ namespace Cybtans.Test.RestApi
 
        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()            
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder                    
                     .CaptureStartupErrors(false)
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseSerilog()
+                    .UseContentRoot(Directory.GetCurrentDirectory())                                      
                     .UseStartup<Startup>();
                 });
 

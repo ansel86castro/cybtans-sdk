@@ -36,7 +36,7 @@ namespace Cybtans.AspNetCore
 
 
         public override bool CanRead(InputFormatterContext context)
-        {
+        {            
             var request = context.HttpContext.Request;
             return request.Method == "POST" || request.Method == "PUT";
         }

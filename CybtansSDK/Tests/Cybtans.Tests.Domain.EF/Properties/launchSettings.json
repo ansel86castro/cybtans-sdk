@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Cybtans.Tests.Domain.EF": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:35521;http://localhost:35522"
+    }
+  }
+}

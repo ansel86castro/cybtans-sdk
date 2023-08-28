@@ -4,13 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>  
-    <PackageReference Include="Refit" Version="6.3.2" />    
-  </ItemGroup>
   
   <ItemGroup>
-  	<ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
+  	<ProjectReference Include="..\..\Cybtans.Clients\Cybtans.Clients.csproj" />
   	<ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
   </ItemGroup>  
 

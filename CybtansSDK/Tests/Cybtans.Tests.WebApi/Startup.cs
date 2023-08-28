@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,16 +20,15 @@ using Cybtans.Tests.Grpc;
 using Cybtans.AspNetCore.Interceptors;
 using Cybtans.Tests.RestApi;
 using GraphQL.Types;
-using GraphQL.Server;
-using Cybtans.Tests.RestApi.GraphQl;
 using Cybtans.Tests.GraphQL;
 using Cybtans.Tests.RestApi.Security;
 using Microsoft.AspNetCore.Authorization;
-using Serilog.Core;
 using Serilog;
 using System.Security.Cryptography;
 using System.IO;
 using GraphQL;
+using Cybtans.Common;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Cybtans.Test.RestApi
 {
@@ -95,7 +93,7 @@ namespace Cybtans.Test.RestApi
             })
             //.AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining(typeof(TestStub)))
             .AddCybtansFormatter();
-            
+            services.TryAddSingleton<IHttpContentSerializer, CybtansContentSerializer>();
             #endregion
 
             #region App Services
