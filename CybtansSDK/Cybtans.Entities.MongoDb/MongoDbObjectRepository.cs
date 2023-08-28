@@ -2,6 +2,8 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +52,8 @@ namespace Cybtans.Entities.MongoDb
         {
             return _collection.InsertManyAsync(items);
         }
-      
+
+        [Obsolete]
         public async Task<PagedList<T>> GetManyAsync(int page, int pageSize, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>? sortBy = null, bool descending = false)
         {
             var count = await (filter != null ?
@@ -120,7 +123,6 @@ namespace Cybtans.Entities.MongoDb
         {
             return UpdateAsync(filter, Utils.ToDictionary(data));           
         }
-
 
         public async Task<long> UpdateManyAsync(Expression<Func<T, bool>> filter, IDictionary<string, object?> data)
         {
@@ -209,13 +211,37 @@ namespace Cybtans.Entities.MongoDb
             return new(await query.ToListAsync().ConfigureAwait(false), page, totalPages, count);
         }
     
-        public Task<List<T>> ListAll(IObjectFilterDefinition<T> filter, IObjectSortDefinition<T> sort, ReadConsistency consistency = ReadConsistency.Default)
+        public Task<List<T>> ListAll(IObjectFilterDefinition<T>? filter, IObjectSortDefinition<T>? sort, ReadConsistency consistency = ReadConsistency.Default)
         {
             var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());
             if (sort != null)
             {
                 query = query.Sort(((MongoDbSortDefinition<T>)sort).Sort);
             }
+            return query.ToListAsync();
+        }
+
+        public IQueryable<T> AsQueryable()
+        {
+            return _collection.AsQueryable();
+        }
+
+        public Task<List<T>> ListAll(IObjectFilterDefinition<T>? filter, IObjectSortDefinition<T>? sort, int skip, int take, ReadConsistency consistency = ReadConsistency.Strong)
+        {
+            var query = filter != null ? _collection.Find(filter.AsMongo()) : _collection.Find(new BsonDocument());
+            if (sort != null)
+            {
+                query = query.Sort(((MongoDbSortDefinition<T>)sort).Sort);
+            }
+            if(skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+            if(take> 0)
+            {
+                query = query.Limit(take);
+            }
+
             return query.ToListAsync();
         }
 
