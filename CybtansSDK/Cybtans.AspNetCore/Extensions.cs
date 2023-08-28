@@ -1,4 +1,4 @@
-﻿using Cybtans.Refit;
+﻿using Cybtans.Common;
 using Cybtans.Serialization;
 using Cybtans.Services;
 using Microsoft.AspNetCore.Http;

@@ -47,7 +47,7 @@ class CustomerService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -65,7 +65,7 @@ class CustomerService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -85,7 +85,7 @@ class CustomerService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -105,7 +105,7 @@ class CustomerService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -123,7 +123,7 @@ class CustomerService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -148,7 +148,7 @@ class CustomerEventService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -166,7 +166,7 @@ class CustomerEventService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -186,7 +186,7 @@ class CustomerEventService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -206,7 +206,7 @@ class CustomerEventService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -224,7 +224,7 @@ class CustomerEventService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -249,7 +249,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -264,7 +264,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -279,7 +279,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -294,7 +294,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -313,7 +313,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -331,7 +331,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -348,7 +348,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -363,7 +363,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -379,7 +379,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -396,7 +396,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -411,7 +411,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -427,7 +427,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -445,7 +445,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -462,7 +462,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -479,7 +479,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -498,7 +498,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -517,7 +517,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -534,7 +534,7 @@ class OrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -559,7 +559,7 @@ class OrderStateService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -577,7 +577,7 @@ class OrderStateService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -597,7 +597,7 @@ class OrderStateService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -617,7 +617,7 @@ class OrderStateService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -635,7 +635,7 @@ class OrderStateService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -660,7 +660,7 @@ class ReadOnlyEntityService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -678,7 +678,7 @@ class ReadOnlyEntityService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -703,7 +703,7 @@ class SoftDeleteOrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -720,7 +720,7 @@ class SoftDeleteOrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -739,7 +739,7 @@ class SoftDeleteOrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -758,7 +758,7 @@ class SoftDeleteOrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -775,7 +775,7 @@ class SoftDeleteOrderService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -802,7 +802,7 @@ class AuthenticationService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -827,7 +827,7 @@ class ClientService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -844,7 +844,7 @@ class ClientService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()
@@ -861,7 +861,7 @@ class ClientService {
     	var response = await _client.send(httpRequest);
     	
     	if (response.statusCode < 200 || response.statusCode >= 400) {
-    	      throw Exception({
+    	      throw AssertionError ({
     	        'status': response.statusCode,
     	        'statusText': response.reasonPhrase,
     	        'msg': await response.stream.bytesToString()

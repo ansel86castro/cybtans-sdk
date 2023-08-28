@@ -6,31 +6,23 @@
 // </auto-generated>
 //******************************************************
 
-using Refit;
-using Cybtans.Refit;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cybtans.Tests.Models;
+using mds = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
-	[ApiClient]
 	public interface IReadOnlyEntityServiceClient
 	{
 		
 		/// <summary>
 		/// Returns a collection of ReadOnlyEntityDto
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/ReadOnlyEntity")]
-		Task<GetAllReadOnlyEntityResponse> GetAll(GetAllRequest request = null);
+		Task<mds::GetAllReadOnlyEntityResponse> GetAll(mds::GetAllRequest request = null);
 		
 		/// <summary>
 		/// Returns one ReadOnlyEntityDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/ReadOnlyEntity/{request.Id}")]
-		Task<ReadOnlyEntityDto> Get(GetReadOnlyEntityRequest request);
+		Task<mds::ReadOnlyEntityDto> Get(mds::GetReadOnlyEntityRequest request);
 	
 	}
 

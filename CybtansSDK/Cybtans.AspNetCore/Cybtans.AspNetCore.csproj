@@ -15,13 +15,13 @@
     <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.1" />
-    <PackageReference Include="refit" Version="6.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+	<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cybtans.Refit\Cybtans.Refit.csproj" />
+    <ProjectReference Include="..\Cybtans.Common\Cybtans.Common.csproj" />
     <ProjectReference Include="..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
     <ProjectReference Include="..\Cybtans.Services\Cybtans.Services.csproj" />
   </ItemGroup>

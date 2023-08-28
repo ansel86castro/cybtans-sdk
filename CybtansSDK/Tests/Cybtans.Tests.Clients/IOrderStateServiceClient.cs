@@ -6,52 +6,38 @@
 // </auto-generated>
 //******************************************************
 
-using Refit;
-using Cybtans.Refit;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cybtans.Tests.Models;
+using mds = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
-	[ApiClient]
 	public interface IOrderStateServiceClient
 	{
 		
 		/// <summary>
 		/// Returns a collection of OrderStateDto
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/OrderState")]
-		Task<GetAllOrderStateResponse> GetAll(GetAllRequest request = null);
+		Task<mds::GetAllOrderStateResponse> GetAll(mds::GetAllRequest request = null);
 		
 		/// <summary>
 		/// Returns one OrderStateDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Get("/api/OrderState/{request.Id}")]
-		Task<OrderStateDto> Get(GetOrderStateRequest request);
+		Task<mds::OrderStateDto> Get(mds::GetOrderStateRequest request);
 		
 		/// <summary>
 		/// Creates one OrderStateDto
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Post("/api/OrderState")]
-		Task<OrderStateDto> Create([Body]CreateOrderStateRequest request);
+		Task<mds::OrderStateDto> Create(mds::CreateOrderStateRequest request);
 		
 		/// <summary>
 		/// Updates one OrderStateDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Put("/api/OrderState/{request.Id}")]
-		Task<OrderStateDto> Update([Body]UpdateOrderStateRequest request);
+		Task<mds::OrderStateDto> Update(mds::UpdateOrderStateRequest request);
 		
 		/// <summary>
 		/// Deletes one OrderStateDto by Id
 		/// </summary>
-		[Headers("Authorization: Bearer")]
-		[Delete("/api/OrderState/{request.Id}")]
-		Task Delete(DeleteOrderStateRequest request);
+		Task Delete(mds::DeleteOrderStateRequest request);
 	
 	}
 

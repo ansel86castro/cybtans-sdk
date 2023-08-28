@@ -1,4 +1,4 @@
-﻿using Cybtans.Refit;
+﻿using Cybtans.Clients;
 using Cybtans.Tests.Models;
 using Cybtans.Tests.Services;
 using System;
@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using Cybtans.Common;
 
 namespace Cybtans.Tests.Integrations
 {

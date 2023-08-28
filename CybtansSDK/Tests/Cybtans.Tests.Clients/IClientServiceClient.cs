@@ -6,29 +6,19 @@
 // </auto-generated>
 //******************************************************
 
-using Refit;
-using Cybtans.Refit;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Cybtans.Tests.Models;
+using mds = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
-	[ApiClient]
 	public interface IClientServiceClient
 	{
 		
-		[Headers("Authorization: Bearer")]
-		[Get("/api/clients/{request.Id}")]
-		Task<ClientDto> GetClient(ClientRequest request);
+		Task<mds::ClientDto> GetClient(mds::ClientRequest request);
 		
-		[Headers("Authorization: Bearer")]
-		[Get("/api/clients/client2/{request.Id}")]
-		Task<ClientDto> GetClient2(ClientRequest request);
+		Task<mds::ClientDto> GetClient2(mds::ClientRequest request);
 		
-		[Headers("Authorization: Bearer")]
-		[Get("/api/clients/client3/{request.Id}")]
-		Task<ClientDto> GetClient3(ClientRequest request);
+		Task<mds::ClientDto> GetClient3(mds::ClientRequest request);
 	
 	}
 

@@ -41,12 +41,11 @@
     <ProjectReference Include="..\..\Cybtans.Expressions\Cybtans.Expressions.csproj" />
     <ProjectReference Include="..\..\Cybtans.Grpc\Cybtans.Grpc.csproj" />
     <ProjectReference Include="..\..\Cybtans.Messaging\Cybtans.Messaging.csproj" />
-    <ProjectReference Include="..\..\Cybtans.Refit\Cybtans.Refit.csproj" />
     <ProjectReference Include="..\..\Cybtans.Serialization\Cybtans.Serialization.csproj" />
     <ProjectReference Include="..\..\Cybtans.Services\Cybtans.Services.csproj" />
     <ProjectReference Include="..\..\Cybtans.Testing\Cybtans.Testing.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Clients\Cybtans.Tests.Clients.csproj" />
-    <ProjectReference Include="..\Cybtans.Tests.RestApi\Cybtans.Tests.RestApi.csproj" />
+    <ProjectReference Include="..\Cybtans.Tests.WebApi\Cybtans.Tests.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

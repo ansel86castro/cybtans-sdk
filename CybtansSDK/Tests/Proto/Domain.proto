@@ -124,7 +124,7 @@ message UpdateCustomerRequest {
 	CustomerDto value = 2 [(ts).partial = true];
 }
 
-message DeleteCustomerRequest{
+message DeleteCustomerRequest {
 	guid id = 1;
 }
 
@@ -196,7 +196,7 @@ message UpdateCustomerEventRequest {
 	CustomerEventDto value = 2 [(ts).partial = true];
 }
 
-message DeleteCustomerEventRequest{
+message DeleteCustomerEventRequest {
 	guid id = 1;
 }
 
@@ -268,7 +268,7 @@ message UpdateOrderRequest {
 	OrderDto value = 2 [(ts).partial = true];
 }
 
-message DeleteOrderRequest{
+message DeleteOrderRequest {
 	guid id = 1;
 }
 
@@ -335,7 +335,7 @@ message UpdateOrderStateRequest {
 	OrderStateDto value = 2 [(ts).partial = true];
 }
 
-message DeleteOrderStateRequest{
+message DeleteOrderStateRequest {
 	int32 id = 1;
 }
 
@@ -443,7 +443,7 @@ message UpdateSoftDeleteOrderRequest {
 	SoftDeleteOrderDto value = 2 [(ts).partial = true];
 }
 
-message DeleteSoftDeleteOrderRequest{
+message DeleteSoftDeleteOrderRequest {
 	guid id = 1;
 }
 

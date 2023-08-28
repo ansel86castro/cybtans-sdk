@@ -19,7 +19,7 @@ namespace Cybtans.Tests.Integrations
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<IAuthenticationServiceClient>();
+            _service = fixture.GetClient<AuthenticationServiceClient>(useJson :true);
         }
 
         [Fact]
@@ -28,7 +28,21 @@ namespace Cybtans.Tests.Integrations
             var response = await _service.Login(new LoginRequest
             {
                  Username = "admin",
-                 Password ="admin"
+                 Password = "admin"
+            });
+
+            Assert.NotNull(response);
+            Assert.NotEmpty(response.Token);
+        }
+
+        [Fact]
+        public async Task LoginBinary()
+        {
+            var client = _fixture.GetClient<AuthenticationServiceClient>();
+            var response = await client.Login(new LoginRequest
+            {
+                Username = "admin",
+                Password = "admin"
             });
 
             Assert.NotNull(response);

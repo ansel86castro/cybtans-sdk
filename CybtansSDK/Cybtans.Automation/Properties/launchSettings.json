@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Cybtans.Automation": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:35523;http://localhost:35524"
+    }
+  }
+}

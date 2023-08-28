@@ -27,8 +27,4 @@ The library provides binary serialization which is faster and results in smaller
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
-  </ItemGroup>
-
 </Project>

@@ -15,7 +15,7 @@ services:
     image: ${DOCKER_REGISTRY-}cybtanstestsrestapi
     build:
       context: .
-      dockerfile: Tests/Cybtans.Tests.RestApi/Dockerfile
+      dockerfile: Tests/Cybtans.Tests.WebApi/Dockerfile
     depends_on:
     - rabbitmq
 

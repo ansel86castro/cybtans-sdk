@@ -1,11 +1,9 @@
 ﻿using Cybtans.AspNetCore;
-using Cybtans.Refit;
 using Cybtans.Serialization;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Refit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,17 +73,17 @@ namespace Cybtans.Tests.Integrations
 
             AddTokenManager(services);
 
-            AddClient<IOrderStateServiceClient>(services);
+            AddClient<IOrderStateServiceClient, OrderStateServiceClient>(services);
 
             var provider = services.BuildServiceProvider();
             _service = provider.GetRequiredService<IOrderStateServiceClient>();
         }
 
-        private static void AddClient<T>(ServiceCollection services)
-        {
-            var interfaceType = typeof(T);
-
-            var builder = services.AddClient(interfaceType, "http://localhost");
+        private static void AddClient<TContract, TImpl>(ServiceCollection services)
+            where TContract : class
+            where TImpl : class
+        {            
+            var builder = services.AddBinaryClient<TContract, TImpl>("http://localhost");
 
             builder.AddHttpMessageHandler<TokenManagerAuthenticationHandler>();
             builder.AddHttpMessageHandler(() => new TestResponseHandler());

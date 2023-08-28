@@ -81,9 +81,22 @@ namespace Cybtans.Tests.RestApi.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Upload an image to the server")]
 		[HttpPost("upload")]
-		[DisableFormValueModelBinding]
-		public async Task<mds::UploadImageResponse> UploadImage([ModelBinder(typeof(CybtansModelBinder))]mds::UploadImageRequest request)
+		public async Task<mds::UploadImageResponse> UploadImage([FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
+						
+			mds::UploadImageRequest request;
+			
+			if (Request.Headers.TryGetValue("x-req-contenttype", out var value))
+			{
+				var objBase64 = Request.Headers["x-req-obj"][0];
+			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<mds::UploadImageRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<mds::UploadImageRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+			}
+			else
+			{
+				request = new ();
+			}
+			
+			request.Image = Request.Body;
 			_logger.LogInformation("Executing {Action}", nameof(UploadImage));
 			
 			if(_interceptor != null )
@@ -96,9 +109,22 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpPost("{id}/upload")]
-		[DisableFormValueModelBinding]
-		public async Task<mds::UploadStreamResponse> UploadStreamById(string id, [ModelBinder(typeof(CybtansModelBinder))]mds::UploadStreamByIdRequest request)
+		public async Task<mds::UploadStreamResponse> UploadStreamById(string id, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
+						
+			mds::UploadStreamByIdRequest request;
+			
+			if (Request.Headers.TryGetValue("x-req-contenttype", out var value))
+			{
+				var objBase64 = Request.Headers["x-req-obj"][0];
+			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<mds::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<mds::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+			}
+			else
+			{
+				request = new ();
+			}
+			
+			request.Data = Request.Body;
 			request.Id = id;
 			
 			_logger.LogInformation("Executing {Action}", nameof(UploadStreamById));
@@ -113,9 +139,9 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpPost("ByteStream")]
-		[DisableFormValueModelBinding]
-		public async Task<mds::UploadStreamResponse> UploadStream([ModelBinder(typeof(CybtansModelBinder))]System.IO.Stream request)
+		public async Task<mds::UploadStreamResponse> UploadStream()
 		{
+			var request = Request.Body;
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
 			
 			if(_interceptor != null )
@@ -128,7 +154,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpGet("download")]
-		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request)
+		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
 			
@@ -142,6 +168,28 @@ namespace Cybtans.Tests.RestApi.Controllers
 			if(Request.Headers.ContainsKey("Accept") && System.Net.Http.Headers.MediaTypeHeaderValue.TryParse(Request.Headers["Accept"], out var mimeType) && mimeType?.MediaType == "application/x-cybtans")
 			{				
 				return new ObjectResult(result);
+			}
+			
+			if (Request.Headers.TryGetValue("x-req-accept", out var value))
+			{
+				if (serializer != null && serializer.ContentType == value)
+				{
+			        Response.Headers.Add("x-res-contenttype", serializer.ContentType);
+			        Response.Headers.Add("x-res-obj", Convert.ToBase64String(serializer.ToUtf8Bytes(new
+					{
+						result.FileName,
+						result.ContentType
+					})));
+				}
+				else if(value == "application/json")
+			    {
+			        Response.Headers.Add("x-res-contenttype", "application/json");
+			        Response.Headers.Add("x-res-obj", Convert.ToBase64String(System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new
+			        {
+			            result.FileName,
+			            result.ContentType
+			        })));
+			    }
 			}
 			return new FileStreamResult(result.Image, result.ContentType) { FileDownloadName = result.FileName };
 		}

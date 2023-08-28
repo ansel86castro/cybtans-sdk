@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Microsoft.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,11 +19,8 @@ namespace Cybtans.Serialization
 
         readonly Encoding _encoding;
         readonly Encoder _encoder;
-        readonly byte[] _buffer = new byte[256];
-        Memory<byte> _memory;
-        Dictionary<Type, TypeCache>? _typeCache;
-
-        private static readonly RecyclableMemoryStreamManager _manager = new RecyclableMemoryStreamManager();
+        readonly byte[] _buffer = new byte[256];        
+        Dictionary<Type, TypeCache>? _typeCache;     
 
         public enum Types : byte
         {
@@ -78,26 +74,29 @@ namespace Cybtans.Serialization
             TYPE_STREAM_32 = 0x82
         };
 
-        public BinarySerializer() : this(DefaultEncoding)
-        {
-
-        }
+        public BinarySerializer() : this(DefaultEncoding) { }
 
         public BinarySerializer(Encoding encoding)
         {
             _encoding = encoding;
-            _encoder = encoding.GetEncoder();            
-            _memory = _buffer.AsMemory();
+            _encoder = encoding.GetEncoder();                      
         }
 
         #region Serialize
 
         public byte[] Serialize(object obj)
         {
-            using var memStream = _manager.GetStream();
+            using var memStream = new MemoryStream();
             Serialize(memStream, obj);
-
             return memStream.ToArray();
+        }
+
+        public ArraySegment<byte> SerializeToArraySegment(object obj)
+        {
+            using var memStream = new MemoryStream();
+            Serialize(memStream, obj);
+            if (!memStream.TryGetBuffer(out var buffer)) throw new InvalidOperationException("Unable to get buffer");
+            return buffer;
         }
 
         public unsafe void Serialize(Stream stream, object obj)
@@ -254,7 +253,7 @@ namespace Cybtans.Serialization
             else
             {
                 var chars = value.AsSpan();
-                var bytes = _memory.Span;
+                var bytes = new Span<byte>(_buffer);
 
                 int loops = (bytesCount / _buffer.Length) + (bytesCount % _buffer.Length > 0 ? 1 : 0);
                             
@@ -275,7 +274,7 @@ namespace Cybtans.Serialization
         private unsafe void WriteChar(Stream stream, char ch)
         {
             var chars = new ReadOnlySpan<char>(&ch, 1);
-            var bytes = _memory.Span;
+            var bytes = new Span<byte>(_buffer) ;
             int numBytes = _encoding.GetBytes(chars, bytes);
 
             stream.Write(bytes.Slice(0, numBytes));
@@ -551,13 +550,13 @@ namespace Cybtans.Serialization
 
         public object? Deserialize(byte[] bytes, Type? type)
         {
-            using var stream = _manager.GetStream(bytes);
+            using var stream = new MemoryStream(bytes);
             return Deserialize(stream, type);
         }
 
         public object? Deserialize(ReadOnlySpan<byte> memory, Type type)
-        {
-            using var stream = _manager.GetStream();
+        {            
+            using var stream = new MemoryStream();            
             stream.Write(memory);
             stream.Position = 0;
 
