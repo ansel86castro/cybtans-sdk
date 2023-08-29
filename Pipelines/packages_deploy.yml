@@ -10,6 +10,7 @@ variables:
   buildVersion: $[counter(variables['majorMinorVersion'], 1)]
   packVersion: $(majorMinorVersion).$(buildVersion)$(Prerelease)
 
+
 trigger:
   - master
 
@@ -69,9 +70,7 @@ steps:
   #     nuGetFeedType: "external"
   #     publishFeedCredentials: "Cybtans Nuget"
   #     arguments: "--skip-duplicate"
-  - task: DotNetCoreCLI@2
+  - task: CmdLine@2
     inputs:
-      command: 'push'
-      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg'
-      nuGetFeedType: 'external'
-      publishFeedCredentials: 'Cybtans Nuget'
+      script: |
+        dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg" -k $(NUGET_API_KEY) -s https://api.nuget.org/v3/index.json  --skip-duplicate
