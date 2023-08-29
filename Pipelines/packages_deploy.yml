@@ -9,6 +9,7 @@ name: $(majorMinorVersion).$(buildVersion)
 variables:
   buildVersion: $[counter(variables['majorMinorVersion'], 1)]
   packVersion: $(majorMinorVersion).$(buildVersion)$(Prerelease)
+  nugetApiKey: $(apiKey)
 
 
 trigger:
@@ -75,4 +76,4 @@ steps:
     condition: ne(variables['Build.Reason'], 'PullRequest')  
     inputs:
       script: |
-        dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg" -k $(NUGET_API_KEY) -s https://api.nuget.org/v3/index.json  --skip-duplicate
+        dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/Cybtans*.nupkg" -k $(nugetApiKey) -s https://api.nuget.org/v3/index.json  --skip-duplicate
