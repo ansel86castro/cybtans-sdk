@@ -1,26 +1,21 @@
-﻿using Cybtans.Clients;
-using Cybtans.Tests.Clients;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Cybtans.Common;
+using Cybtans.Tests.Services;
 
 namespace Cybtans.Tests.Integrations
 {
     public class ClientServiceTest: IClassFixture<IntegrationFixture>
     {
         IntegrationFixture _fixture;       
-        Clients.IClientServiceClient _service;
+        IClientService _service;
 
         public ClientServiceTest(IntegrationFixture fixture)
         {
             _fixture = fixture;            
-            _service = fixture.GetClient<Clients.IClientServiceClient>();
+            _service = fixture.GetClient<IClientService>();
         }
 
         [Fact]
@@ -30,7 +25,7 @@ namespace Cybtans.Tests.Integrations
                 .UseClaims(
                     new Claim("client_id", "D6E29710-B68F-4D2D-9471-273DECF9C4B7"),
                     new Claim("creator_id", "1"))
-                .RunAsync<IClientServiceClient>(async client =>
+                .RunAsync<IClientService>(async client =>
                 {
                     var result = await client.GetClient(Guid.Parse("D6E29710-B68F-4D2D-9471-273DECF9C4B7"));
                     Assert.NotNull(result);
@@ -44,7 +39,7 @@ namespace Cybtans.Tests.Integrations
                 .UseClaims(
                     new Claim("client_id", "D6E29718-B68F-4D2D-9471-273DECF9C4B7"),
                     new Claim("creator_id", "1"))
-                .RunAsync<IClientServiceClient>(async client =>
+                .RunAsync<IClientService>(async client =>
                 {
                     var result = await Assert.ThrowsAsync<ApiException>(() => client.GetClient(Guid.Parse("D6E29710-B68F-4D2D-9471-273DECF9C4B7")));
                     Assert.NotNull(result);
@@ -59,7 +54,7 @@ namespace Cybtans.Tests.Integrations
                 .UseClaims(
                     new Claim("client_id", "D6E29710-B68F-4D2D-9471-273DECF9C4B7"),
                     new Claim("creator_id", "2"))
-                .RunAsync<IClientServiceClient>(async client =>
+                .RunAsync<IClientService>(async client =>
                 {
                     var result = await Assert.ThrowsAsync<ApiException>(() => client.GetClient(Guid.Parse("D6E29710-B68F-4D2D-9471-273DECF9C4B7")));
                     Assert.NotNull(result);
@@ -74,7 +69,7 @@ namespace Cybtans.Tests.Integrations
                 .UseClaims(
                     new Claim("client_id", "D6E29710-B68F-4D2D-9471-273DECF9C4B7"),
                     new Claim("creator_id", "1"))
-                .RunAsync<IClientServiceClient>(async client =>
+                .RunAsync<IClientService>(async client =>
                 {
                     var result = await client.GetClient(Guid.Empty);
                     Assert.NotNull(result);

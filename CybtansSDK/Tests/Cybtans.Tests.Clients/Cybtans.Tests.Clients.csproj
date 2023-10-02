@@ -8,6 +8,7 @@
   <ItemGroup>
   	<ProjectReference Include="..\..\Cybtans.Clients\Cybtans.Clients.csproj" />
   	<ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
+  	<ProjectReference Include="..\Cybtans.Tests.Services.Contract\Cybtans.Tests.Services.Contract.csproj" />
   </ItemGroup>  
 
 </Project>

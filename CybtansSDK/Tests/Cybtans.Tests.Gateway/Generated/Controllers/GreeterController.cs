@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Gateway.Models;
+using models = global::Cybtans.Tests.Gateway.Models;
 
 namespace Cybtans.Tests.Grpc.Controllers
 {
@@ -32,7 +32,7 @@ namespace Cybtans.Tests.Grpc.Controllers
 		}
 		
 		[HttpGet("hello")]
-		public async Task<mds::HelloReply> SayHello([FromQuery]mds::HelloRequest request)
+		public async Task<models::HelloReply> SayHello([FromQuery]models::HelloRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(SayHello), request);
 			

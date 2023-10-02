@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns a collection of CustomerDto")]
 		[Authorize(Policy = "AdminUser")]
 		[HttpGet]
-		public async Task<mds::GetAllCustomerResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllCustomerResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -57,7 +57,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns one CustomerDto by Id")]
 		[Authorize(Policy = "AdminUser")]
 		[HttpGet("{id}")]
-		public async Task<mds::CustomerDto> Get(Guid id, [FromQuery]mds::GetCustomerRequest request)
+		public async Task<models::CustomerDto> Get(Guid id, [FromQuery]models::GetCustomerRequest request)
 		{
 			request.Id = id;
 			
@@ -78,7 +78,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Creates one CustomerDto")]
 		[Authorize(Policy = "AdminUser")]
 		[HttpPost]
-		public async Task<mds::CustomerDto> Create([FromBody]mds::CreateCustomerRequest request)
+		public async Task<models::CustomerDto> Create([FromBody]models::CreateCustomerRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
@@ -97,7 +97,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Updates one CustomerDto by Id")]
 		[Authorize(Policy = "AdminUser")]
 		[HttpPut("{id}")]
-		public async Task<mds::CustomerDto> Update(Guid id, [FromBody]mds::UpdateCustomerRequest request)
+		public async Task<models::CustomerDto> Update(Guid id, [FromBody]models::UpdateCustomerRequest request)
 		{
 			request.Id = id;
 			
@@ -118,7 +118,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Deletes one CustomerDto by Id")]
 		[Authorize(Policy = "AdminUser")]
 		[HttpDelete("{id}")]
-		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerRequest request)
+		public async Task Delete(Guid id, [FromQuery]models::DeleteCustomerRequest request)
 		{
 			request.Id = id;
 			

@@ -20,14 +20,14 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public HelloReplyGraphType()
 		{
-			Field(x => x.Message, nullable:true);
+			Field<StringGraphType>(nameof(HelloReply.Message), nullable:true);
 			Field<ListGraphType<StringGraphType>>("Keywords");
 			Field<HellowInfoGraphType>("Info");
 			Field<ListGraphType<HellowInfoGraphType>>("info_array");
 			Field<DateTimeGraphType>("Date");
 			Field<DateTimeGraphType>("Time");
-			Field(x => x.Observations, nullable:true);
-			Field(x => x.NullableInt, nullable:true);
+			Field<StringGraphType>(nameof(HelloReply.Observations), nullable:true);
+			Field<IntGraphType>(nameof(HelloReply.NullableInt), nullable:true);
 			Field<HelloModelModelGraphType>("HelloModel");
 		
 		}
@@ -38,8 +38,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public HellowInfoGraphType()
 		{
-			Field(x => x.Id);
-			Field(x => x.Name, nullable:true);
+			Field<IntGraphType>(nameof(HellowInfo.Id));
+			Field<StringGraphType>(nameof(HellowInfo.Name), nullable:true);
 			Field<HellowInfo_Types_TypeInfoGraphType>("Type");
 			Field<HellowInfo_Types_InnerAGraphType>("InnerA");
 		
@@ -81,8 +81,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public HelloModelModelGraphType()
 		{
-			Field(x => x.Id, nullable:true);
-			Field(x => x.Message, nullable:true);
+			Field<StringGraphType>(nameof(HelloModelModel.Id), nullable:true);
+			Field<StringGraphType>(nameof(HelloModelModel.Message), nullable:true);
 		
 		}
 	}
@@ -94,16 +94,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		{
 			#region Greeter
 			
-			FieldAsync<HelloReplyGraphType>("hello",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Name" },
-					new QueryArgument<StringGraphType>(){ Name = "Observations" },
-					new QueryArgument<DateTimeGraphType>(){ Name = "Date" },
-					new QueryArgument<IntGraphType>(){ Name = "NullableInt" },
-					new QueryArgument<TimeSpanSecondsGraphType>(){ Name = "Time" },
-				},
-				resolve: async context =>
+			Field<HelloReplyGraphType>("hello")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Name" }
+					,new QueryArgument<StringGraphType>(){ Name = "Observations" }
+					,new QueryArgument<DateTimeGraphType>(){ Name = "Date" }
+					,new QueryArgument<IntGraphType>(){ Name = "NullableInt" }
+					,new QueryArgument<TimeSpanSecondsGraphType>(){ Name = "Time" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new HelloRequest();
 					request.Name = context.GetArgument<string>("name", default(string));

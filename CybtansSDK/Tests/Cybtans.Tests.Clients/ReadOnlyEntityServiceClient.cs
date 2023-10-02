@@ -14,12 +14,12 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
 	[ApiClient]
-	public class ReadOnlyEntityServiceClient : IReadOnlyEntityServiceClient
+	public class ReadOnlyEntityServiceClient : global::Cybtans.Tests.Services.IReadOnlyEntityService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -36,21 +36,22 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns a collection of ReadOnlyEntityDto
 		/// </summary>
-		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll(mds::GetAllRequest request = null)
+		public async Task<models::GetAllReadOnlyEntityResponse> GetAll(models::GetAllRequest request = null)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/ReadOnlyEntity?{_GetQueryString(request)}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::GetAllReadOnlyEntityResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::GetAllReadOnlyEntityResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::GetAllReadOnlyEntityResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::GetAllReadOnlyEntityResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -63,21 +64,22 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns one ReadOnlyEntityDto by Id
 		/// </summary>
-		public async Task<mds::ReadOnlyEntityDto> Get(mds::GetReadOnlyEntityRequest request)
+		public async Task<models::ReadOnlyEntityDto> Get(models::GetReadOnlyEntityRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/ReadOnlyEntity/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::ReadOnlyEntityDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::ReadOnlyEntityDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::ReadOnlyEntityDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::ReadOnlyEntityDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -91,7 +93,7 @@ namespace Cybtans.Tests.Clients
 		
 		#region Private
 		
-		private string _GetQueryString(mds::GetAllRequest request)
+		private string _GetQueryString(models::GetAllRequest request)
 		{
 			if(request == null) return "";
 		

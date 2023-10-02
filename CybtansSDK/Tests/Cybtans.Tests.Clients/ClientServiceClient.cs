@@ -14,12 +14,12 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
 	[ApiClient]
-	public class ClientServiceClient : IClientServiceClient
+	public class ClientServiceClient : global::Cybtans.Tests.Services.IClientService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -33,21 +33,22 @@ namespace Cybtans.Tests.Clients
 	
 		#region Public
 		
-		public async Task<mds::ClientDto> GetClient(mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient(models::ClientRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/clients/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::ClientDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::ClientDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -57,21 +58,22 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::ClientDto> GetClient2(mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient2(models::ClientRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/clients/client2/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::ClientDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::ClientDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -81,21 +83,22 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::ClientDto> GetClient3(mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient3(models::ClientRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/clients/client3/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::ClientDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::ClientDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::ClientDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally

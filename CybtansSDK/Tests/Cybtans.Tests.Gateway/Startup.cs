@@ -280,7 +280,7 @@ namespace Cybtans.Tests.Gateway
         {
             services.AddAuthenticatedHttpHandler();
 
-            services.AddClients(typeof(IClientServiceClient).Assembly)
+            services.AddClients(typeof(ClientServiceClient).Assembly)
                     .ConfigureTransport(Configuration.GetValue<string>("Tests"))
                     .AddHttpMessageHandler<HttpClientAuthorizationHandler>()
                     .AddHttpMessageHandler(() => new HttpVersionRequestHandler(HttpVersion.Version20));

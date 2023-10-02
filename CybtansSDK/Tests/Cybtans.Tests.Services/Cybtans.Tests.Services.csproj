@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Cybtans.Tests.Domain\Cybtans.Tests.Domain.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Grpc\Cybtans.Tests.Grpc.csproj" />
     <ProjectReference Include="..\Cybtans.Tests.Models\Cybtans.Tests.Models.csproj" />
+    <ProjectReference Include="..\Cybtans.Tests.Services.Contract\Cybtans.Tests.Services.Contract.csproj" />
   </ItemGroup>
 
 </Project>

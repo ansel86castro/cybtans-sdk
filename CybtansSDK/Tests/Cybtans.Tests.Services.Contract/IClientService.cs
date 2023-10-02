@@ -8,20 +8,20 @@
 
 using System.Threading.Tasks;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
 {
-	/// <summary>
-	/// Jwt Authentication Service
-	/// </summary>
-	public interface IAuthenticationService 
+	public interface IClientService 
 	{
 		
-		/// <summary>
-		/// Generates an access token
-		/// </summary>
-		Task<mds::LoginResponse> Login(mds::LoginRequest request);
+		Task<models::ClientDto> GetClient(models::ClientRequest request);
+		
+		
+		Task<models::ClientDto> GetClient2(models::ClientRequest request);
+		
+		
+		Task<models::ClientDto> GetClient3(models::ClientRequest request);
 		
 	}
 

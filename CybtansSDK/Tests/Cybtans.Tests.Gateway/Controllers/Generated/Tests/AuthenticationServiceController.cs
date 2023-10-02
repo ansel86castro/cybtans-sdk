@@ -6,13 +6,13 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -24,10 +24,10 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class AuthenticationServiceController : ControllerBase
 	{
-		private readonly IAuthenticationServiceClient _service;
+		private readonly IAuthenticationService _service;
 		private readonly ILogger<AuthenticationServiceController> _logger;
 		
-		public AuthenticationServiceController(IAuthenticationServiceClient service,  ILogger<AuthenticationServiceController> logger)
+		public AuthenticationServiceController(IAuthenticationService service,  ILogger<AuthenticationServiceController> logger)
 		{
 			_service = service;
 			_logger = logger;
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Generates an access token")]
 		[HttpPost("login")]
-		public async Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
+		public async Task<models::LoginResponse> Login([FromBody]models::LoginRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
 			

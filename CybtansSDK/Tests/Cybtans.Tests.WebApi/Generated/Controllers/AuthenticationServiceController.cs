@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.RestApi.Controllers
 {
@@ -40,7 +40,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Generates an access token")]
 		[HttpPost("login")]
-		public async Task<mds::LoginResponse> Login([FromBody]mds::LoginRequest request)
+		public async Task<models::LoginResponse> Login([FromBody]models::LoginRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Login), request);
 			

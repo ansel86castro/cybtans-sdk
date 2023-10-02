@@ -14,12 +14,12 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
 	[ApiClient]
-	public class CustomerServiceClient : ICustomerServiceClient
+	public class CustomerServiceClient : global::Cybtans.Tests.Services.ICustomerService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -36,21 +36,22 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns a collection of CustomerDto
 		/// </summary>
-		public async Task<mds::GetAllCustomerResponse> GetAll(mds::GetAllRequest request = null)
+		public async Task<models::GetAllCustomerResponse> GetAll(models::GetAllRequest request = null)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Customer?{_GetQueryString(request)}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::GetAllCustomerResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::GetAllCustomerResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::GetAllCustomerResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::GetAllCustomerResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -63,21 +64,22 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns one CustomerDto by Id
 		/// </summary>
-		public async Task<mds::CustomerDto> Get(mds::GetCustomerRequest request)
+		public async Task<models::CustomerDto> Get(models::GetCustomerRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Customer/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::CustomerDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::CustomerDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -90,7 +92,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Creates one CustomerDto
 		/// </summary>
-		public async Task<mds::CustomerDto> Create(mds::CreateCustomerRequest request)
+		public async Task<models::CustomerDto> Create(models::CreateCustomerRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Customer");
 			httpReq.Headers.Add("Authorization", "Bearer");
@@ -107,16 +109,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::CustomerDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::CustomerDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -130,7 +133,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Updates one CustomerDto by Id
 		/// </summary>
-		public async Task<mds::CustomerDto> Update(mds::UpdateCustomerRequest request)
+		public async Task<models::CustomerDto> Update(models::UpdateCustomerRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Put, $"/api/Customer/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
@@ -147,16 +150,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::CustomerDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::CustomerDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::CustomerDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -170,17 +174,18 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Deletes one CustomerDto by Id
 		/// </summary>
-		public async Task Delete(mds::DeleteCustomerRequest request)
+		public async Task Delete(models::DeleteCustomerRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Delete, $"/api/Customer/{request.Id}");
 			httpReq.Headers.Add("Authorization", "Bearer");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -194,7 +199,7 @@ namespace Cybtans.Tests.Clients
 		
 		#region Private
 		
-		private string _GetQueryString(mds::GetAllRequest request)
+		private string _GetQueryString(models::GetAllRequest request)
 		{
 			if(request == null) return "";
 		

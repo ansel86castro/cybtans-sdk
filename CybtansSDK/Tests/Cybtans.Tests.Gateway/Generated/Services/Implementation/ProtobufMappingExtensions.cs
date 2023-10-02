@@ -9,13 +9,13 @@
 using System;
 using System.Linq;
 
-using mds = global::Cybtans.Tests.Gateway.Models;
+using models = global::Cybtans.Tests.Gateway.Models;
 
 namespace Cybtans.Test.Gateway.Services.Implementation
 {
 	public static class ProtobufMappingExtensions
 	{
-		public static global::Cybtans.Tests.Grpc.HelloRequest ToProtobufModel(this mds::HelloRequest model)
+		public static global::Cybtans.Tests.Grpc.HelloRequest ToProtobufModel(this models::HelloRequest model)
 		{
 			if(model == null) return null;
 			
@@ -29,11 +29,11 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			return result;
 		}
 		
-		public static mds::HelloReply ToPocoModel(this global::Cybtans.Tests.Grpc.HelloReply model)
+		public static models::HelloReply ToPocoModel(this global::Cybtans.Tests.Grpc.HelloReply model)
 		{
 			if(model == null) return null;
 			
-			mds::HelloReply result = new mds::HelloReply();
+			models::HelloReply result = new models::HelloReply();
 			result.Message = model.Message;
 			result.Keywords = model.Keywords.ToList();
 			result.Info = ToPocoModel(model.Info);
@@ -47,41 +47,41 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			return result;
 		}
 		
-		public static mds::HellowInfo ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo model)
+		public static models::HellowInfo ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo model)
 		{
 			if(model == null) return null;
 			
-			mds::HellowInfo result = new mds::HellowInfo();
+			models::HellowInfo result = new models::HellowInfo();
 			result.Id = model.Id;
 			result.Name = model.Name;
-			result.Type = (mds::HellowInfo.Types.TypeInfo)model.Type;
+			result.Type = (models::HellowInfo.Types.TypeInfo)model.Type;
 			result.InnerA = ToPocoModel(model.InnerA);
 			return result;
 		}
 		
-		public static mds::HellowInfo.Types.InnerA ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA model)
+		public static models::HellowInfo.Types.InnerA ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA model)
 		{
 			if(model == null) return null;
 			
-			mds::HellowInfo.Types.InnerA result = new mds::HellowInfo.Types.InnerA();
+			models::HellowInfo.Types.InnerA result = new models::HellowInfo.Types.InnerA();
 			result.B = ToPocoModel(model.B);
 			return result;
 		}
 		
-		public static mds::HellowInfo.Types.InnerA.Types.InnerB ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA.Types.InnerB model)
+		public static models::HellowInfo.Types.InnerA.Types.InnerB ToPocoModel(this global::Cybtans.Tests.Grpc.HellowInfo.Types.InnerA.Types.InnerB model)
 		{
 			if(model == null) return null;
 			
-			mds::HellowInfo.Types.InnerA.Types.InnerB result = new mds::HellowInfo.Types.InnerA.Types.InnerB();
-			result.Type = (mds::HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB)model.Type;
+			models::HellowInfo.Types.InnerA.Types.InnerB result = new models::HellowInfo.Types.InnerA.Types.InnerB();
+			result.Type = (models::HellowInfo.Types.InnerA.Types.InnerB.Types.TypeB)model.Type;
 			return result;
 		}
 		
-		public static mds::HelloModelModel ToPocoModel(this global::Cybtans.Tests.Grpc.HelloModelModel model)
+		public static models::HelloModelModel ToPocoModel(this global::Cybtans.Tests.Grpc.HelloModelModel model)
 		{
 			if(model == null) return null;
 			
-			mds::HelloModelModel result = new mds::HelloModelModel();
+			models::HelloModelModel result = new models::HelloModelModel();
 			result.Id = model.Id;
 			result.Message = model.Message;
 			return result;

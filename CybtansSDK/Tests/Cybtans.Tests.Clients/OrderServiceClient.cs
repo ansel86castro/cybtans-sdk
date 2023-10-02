@@ -14,7 +14,7 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
@@ -22,7 +22,7 @@ namespace Cybtans.Tests.Clients
 	/// Order's Service
 	/// </summary>
 	[ApiClient]
-	public class OrderServiceClient : IOrderServiceClient
+	public class OrderServiceClient : global::Cybtans.Tests.Services.IOrderService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -43,12 +43,13 @@ namespace Cybtans.Tests.Clients
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/foo");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -62,12 +63,13 @@ namespace Cybtans.Tests.Clients
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/baar");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -81,12 +83,13 @@ namespace Cybtans.Tests.Clients
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/test");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -100,12 +103,13 @@ namespace Cybtans.Tests.Clients
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/arg");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -118,7 +122,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Upload an image to the server
 		/// </summary>
-		public async Task<mds::UploadImageResponse> UploadImage(mds::UploadImageRequest request)
+		public async Task<models::UploadImageResponse> UploadImage(models::UploadImageRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order/upload");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -128,16 +132,17 @@ namespace Cybtans.Tests.Clients
 			httpReq.Headers.Add("x-req-obj", Convert.ToBase64String(buffer));
 			httpReq.Content = new StreamContent(request.Image);
 			httpReq.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::UploadImageResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::UploadImageResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::UploadImageResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::UploadImageResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -147,7 +152,7 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::UploadStreamResponse> UploadStreamById(mds::UploadStreamByIdRequest request)
+		public async Task<models::UploadStreamResponse> UploadStreamById(models::UploadStreamByIdRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order/{request.Id}/upload");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -157,16 +162,17 @@ namespace Cybtans.Tests.Clients
 			httpReq.Headers.Add("x-req-obj", Convert.ToBase64String(buffer));
 			httpReq.Content = new StreamContent(request.Data);
 			httpReq.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::UploadStreamResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::UploadStreamResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::UploadStreamResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::UploadStreamResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -176,22 +182,23 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::UploadStreamResponse> UploadStream(System.IO.Stream request)
+		public async Task<models::UploadStreamResponse> UploadStream(System.IO.Stream request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order/ByteStream");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
 			httpReq.Content = new StreamContent(request);
 			httpReq.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::UploadStreamResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::UploadStreamResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::UploadStreamResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::UploadStreamResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -201,23 +208,24 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::DowndloadImageResponse> DownloadImage(mds::DownloadImageRequest request = null)
+		public async Task<models::DowndloadImageResponse> DownloadImage(models::DownloadImageRequest request = null)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/download?{_GetQueryString(request)}");
 			httpReq.Headers.Add("Accept", "application/octet-stream");
 			httpReq.Headers.Add("x-req-accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			mds::DowndloadImageResponse responseDto;
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				models::DowndloadImageResponse responseDto;
 			if (response.Headers.Contains("x-res-obj"))
 			{
 				var objBase64 = response.Headers.GetValues("x-res-obj").FirstOrDefault();
-				responseDto =  _serializer != null ? _serializer.FromUtf8Bytes<mds::DowndloadImageResponse>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<mds::DowndloadImageResponse>(Convert.FromBase64String(objBase64), _jsonOptions.Value);
+				responseDto =  _serializer != null ? _serializer.FromUtf8Bytes<models::DowndloadImageResponse>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<models::DowndloadImageResponse>(Convert.FromBase64String(objBase64), _jsonOptions.Value);
 			}
 			else
 			{
@@ -233,16 +241,17 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task GetMultiPath(mds::MultiPathRequest request)
+		public async Task GetMultiPath(models::MultiPathRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/{request.Param1}multipath/{request.Param2}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -252,7 +261,7 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task SendNotification(mds::OrderNotification request)
+		public async Task SendNotification(models::OrderNotification request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order/{request.OrderId}/notify/{request.UserId}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -268,12 +277,13 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -284,20 +294,21 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::GetAllNamesResponse> GetAllNames()
+		public async Task<models::GetAllNamesResponse> GetAllNames()
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/names");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::GetAllNamesResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::GetAllNamesResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::GetAllNamesResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::GetAllNamesResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -307,20 +318,21 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::OrderNamesDto> GetOrderName(mds::GetOrderNameRequest request)
+		public async Task<models::OrderNamesDto> GetOrderName(models::GetOrderNameRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/names/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::OrderNamesDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::OrderNamesDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::OrderNamesDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::OrderNamesDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -330,7 +342,7 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		public async Task<mds::OrderNamesDto> CreateOrderName(mds::CreateOrderNameRequest request)
+		public async Task<models::OrderNamesDto> CreateOrderName(models::CreateOrderNameRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order/names");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -346,16 +358,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::OrderNamesDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::OrderNamesDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::OrderNamesDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::OrderNamesDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -369,20 +382,21 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns a collection of OrderDto
 		/// </summary>
-		public async Task<mds::GetAllOrderResponse> GetAll(mds::GetAllRequest request = null)
+		public async Task<models::GetAllOrderResponse> GetAll(models::GetAllRequest request = null)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order?{_GetQueryString(request)}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::GetAllOrderResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::GetAllOrderResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::GetAllOrderResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::GetAllOrderResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -395,20 +409,21 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns one OrderDto by Id
 		/// </summary>
-		public async Task<mds::OrderDto> Get(mds::GetOrderRequest request)
+		public async Task<models::OrderDto> Get(models::GetOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/Order/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::OrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::OrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -421,7 +436,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Creates one OrderDto
 		/// </summary>
-		public async Task<mds::OrderDto> Create(mds::CreateOrderRequest request)
+		public async Task<models::OrderDto> Create(models::CreateOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/Order");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -437,16 +452,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::OrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::OrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -460,7 +476,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Updates one OrderDto by Id
 		/// </summary>
-		public async Task<mds::OrderDto> Update(mds::UpdateOrderRequest request)
+		public async Task<models::OrderDto> Update(models::UpdateOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Put, $"/api/Order/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -476,16 +492,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::OrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::OrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::OrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -499,16 +516,17 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Deletes one OrderDto by Id
 		/// </summary>
-		public async Task Delete(mds::DeleteOrderRequest request)
+		public async Task Delete(models::DeleteOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Delete, $"/api/Order/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -522,7 +540,7 @@ namespace Cybtans.Tests.Clients
 		
 		#region Private
 		
-		private string _GetQueryString(mds::DownloadImageRequest request)
+		private string _GetQueryString(models::DownloadImageRequest request)
 		{
 			if(request == null) return "";
 		
@@ -535,7 +553,7 @@ namespace Cybtans.Tests.Clients
 		
 		}
 		
-		private string _GetQueryString(mds::GetAllRequest request)
+		private string _GetQueryString(models::GetAllRequest request)
 		{
 			if(request == null) return "";
 		

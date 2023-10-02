@@ -1,8 +1,6 @@
 ﻿using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Cybtans.Tests.Services;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,7 +11,7 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        IAuthenticationServiceClient _service;
+        IAuthenticationService _service;
 
         public AuthenticationTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {

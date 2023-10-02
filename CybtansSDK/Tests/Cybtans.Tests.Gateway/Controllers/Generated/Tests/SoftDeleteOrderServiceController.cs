@@ -6,13 +6,13 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Controllers
 {
@@ -20,10 +20,10 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class SoftDeleteOrderServiceController : ControllerBase
 	{
-		private readonly ISoftDeleteOrderServiceClient _service;
+		private readonly ISoftDeleteOrderService _service;
 		private readonly ILogger<SoftDeleteOrderServiceController> _logger;
 		
-		public SoftDeleteOrderServiceController(ISoftDeleteOrderServiceClient service,  ILogger<SoftDeleteOrderServiceController> logger)
+		public SoftDeleteOrderServiceController(ISoftDeleteOrderService service,  ILogger<SoftDeleteOrderServiceController> logger)
 		{
 			_service = service;
 			_logger = logger;
@@ -34,7 +34,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Returns a collection of SoftDeleteOrderDto")]
 		[HttpGet]
-		public async Task<mds::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllSoftDeleteOrderResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -47,7 +47,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Returns one SoftDeleteOrderDto by Id")]
 		[HttpGet("{id}")]
-		public async Task<mds::SoftDeleteOrderDto> Get(Guid id, [FromQuery]mds::GetSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Get(Guid id, [FromQuery]models::GetSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
 			
@@ -62,7 +62,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Creates one SoftDeleteOrderDto")]
 		[HttpPost]
-		public async Task<mds::SoftDeleteOrderDto> Create([FromBody]mds::CreateSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Create([FromBody]models::CreateSoftDeleteOrderRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
@@ -75,7 +75,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Updates one SoftDeleteOrderDto by Id")]
 		[HttpPut("{id}")]
-		public async Task<mds::SoftDeleteOrderDto> Update(Guid id, [FromBody]mds::UpdateSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Update(Guid id, [FromBody]models::UpdateSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
 			
@@ -90,7 +90,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Deletes one SoftDeleteOrderDto by Id")]
 		[HttpDelete("{id}")]
-		public async Task Delete(Guid id, [FromQuery]mds::DeleteSoftDeleteOrderRequest request)
+		public async Task Delete(Guid id, [FromQuery]models::DeleteSoftDeleteOrderRequest request)
 		{
 			request.Id = id;
 			

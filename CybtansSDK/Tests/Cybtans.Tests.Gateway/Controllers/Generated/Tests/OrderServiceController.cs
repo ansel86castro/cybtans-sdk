@@ -6,14 +6,14 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Cybtans.AspNetCore;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
@@ -26,10 +26,10 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class OrderServiceController : ControllerBase
 	{
-		private readonly IOrderServiceClient _service;
+		private readonly IOrderService _service;
 		private readonly ILogger<OrderServiceController> _logger;
 		
-		public OrderServiceController(IOrderServiceClient service,  ILogger<OrderServiceController> logger)
+		public OrderServiceController(IOrderService service,  ILogger<OrderServiceController> logger)
 		{
 			_service = service;
 			_logger = logger;
@@ -79,15 +79,15 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Upload an image to the server")]
 		[HttpPost("upload")]
-		public async Task<mds::UploadImageResponse> UploadImage([FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
+		public async Task<models::UploadImageResponse> UploadImage([FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
 						
-			mds::UploadImageRequest request;
+			models::UploadImageRequest request;
 			
 			if (Request.Headers.TryGetValue("x-req-contenttype", out var value))
 			{
 				var objBase64 = Request.Headers["x-req-obj"][0];
-			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<mds::UploadImageRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<mds::UploadImageRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<models::UploadImageRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<models::UploadImageRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 			}
 			else
 			{
@@ -102,15 +102,15 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost("{id}/upload")]
-		public async Task<mds::UploadStreamResponse> UploadStreamById(string id, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
+		public async Task<models::UploadStreamResponse> UploadStreamById(string id, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
 						
-			mds::UploadStreamByIdRequest request;
+			models::UploadStreamByIdRequest request;
 			
 			if (Request.Headers.TryGetValue("x-req-contenttype", out var value))
 			{
 				var objBase64 = Request.Headers["x-req-obj"][0];
-			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<mds::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<mds::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+			    request = serializer != null && value == serializer.ContentType ? serializer.FromUtf8Bytes<models::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64)) : System.Text.Json.JsonSerializer.Deserialize<models::UploadStreamByIdRequest>(Convert.FromBase64String(objBase64),new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 			}
 			else
 			{
@@ -127,7 +127,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost("ByteStream")]
-		public async Task<mds::UploadStreamResponse> UploadStream()
+		public async Task<models::UploadStreamResponse> UploadStream()
 		{
 			var request = Request.Body;
 			_logger.LogInformation("Executing {Action}", nameof(UploadStream));
@@ -137,7 +137,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet("download")]
-		public async Task<IActionResult> DownloadImage([FromQuery]mds::DownloadImageRequest request, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
+		public async Task<IActionResult> DownloadImage([FromQuery]models::DownloadImageRequest request, [FromServices] global::Cybtans.Common.IHttpContentSerializer serializer = null)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(DownloadImage), request);
 			
@@ -173,7 +173,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet("{param1}multipath/{param2}")]
-		public async Task GetMultiPath(string param1, string param2, [FromQuery]mds::MultiPathRequest request)
+		public async Task GetMultiPath(string param1, string param2, [FromQuery]models::MultiPathRequest request)
 		{
 			request.Param1 = param1;
 			request.Param2 = param2;
@@ -184,7 +184,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost("{orderId}/notify/{userId}")]
-		public async Task SendNotification(string orderId, string userId, [FromBody]mds::OrderNotification request)
+		public async Task SendNotification(string orderId, string userId, [FromBody]models::OrderNotification request)
 		{
 			request.OrderId = orderId;
 			request.UserId = userId;
@@ -195,7 +195,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet("names")]
-		public async Task<mds::GetAllNamesResponse> GetAllNames()
+		public async Task<models::GetAllNamesResponse> GetAllNames()
 		{
 			_logger.LogInformation("Executing {Action}", nameof(GetAllNames));
 			
@@ -204,7 +204,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpGet("names/{id}")]
-		public async Task<mds::OrderNamesDto> GetOrderName(string id, [FromQuery]mds::GetOrderNameRequest request)
+		public async Task<models::OrderNamesDto> GetOrderName(string id, [FromQuery]models::GetOrderNameRequest request)
 		{
 			request.Id = id;
 			
@@ -215,7 +215,7 @@ namespace Cybtans.Tests.Controllers
 		}
 		
 		[HttpPost("names")]
-		public async Task<mds::OrderNamesDto> CreateOrderName([FromBody]mds::CreateOrderNameRequest request)
+		public async Task<models::OrderNamesDto> CreateOrderName([FromBody]models::CreateOrderNameRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(CreateOrderName), request);
 			
@@ -228,7 +228,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Returns a collection of OrderDto")]
 		[HttpGet]
-		public async Task<mds::GetAllOrderResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllOrderResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -241,7 +241,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Returns one OrderDto by Id")]
 		[HttpGet("{id}")]
-		public async Task<mds::OrderDto> Get(Guid id, [FromQuery]mds::GetOrderRequest request)
+		public async Task<models::OrderDto> Get(Guid id, [FromQuery]models::GetOrderRequest request)
 		{
 			request.Id = id;
 			
@@ -256,7 +256,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Creates one OrderDto")]
 		[HttpPost]
-		public async Task<mds::OrderDto> Create([FromBody]mds::CreateOrderRequest request)
+		public async Task<models::OrderDto> Create([FromBody]models::CreateOrderRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
@@ -269,7 +269,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Updates one OrderDto by Id")]
 		[HttpPut("{id}")]
-		public async Task<mds::OrderDto> Update(Guid id, [FromBody]mds::UpdateOrderRequest request)
+		public async Task<models::OrderDto> Update(Guid id, [FromBody]models::UpdateOrderRequest request)
 		{
 			request.Id = id;
 			
@@ -284,7 +284,7 @@ namespace Cybtans.Tests.Controllers
 		/// </summary>
 		[System.ComponentModel.Description("Deletes one OrderDto by Id")]
 		[HttpDelete("{id}")]
-		public async Task Delete(Guid id, [FromQuery]mds::DeleteOrderRequest request)
+		public async Task Delete(Guid id, [FromQuery]models::DeleteOrderRequest request)
 		{
 			request.Id = id;
 			

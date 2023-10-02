@@ -8,7 +8,7 @@
 
 using System.Threading.Tasks;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
 {
@@ -18,31 +18,31 @@ namespace Cybtans.Tests.Services
 		/// <summary>
 		/// Returns a collection of SoftDeleteOrderDto
 		/// </summary>
-		Task<mds::GetAllSoftDeleteOrderResponse> GetAll(mds::GetAllRequest request);
+		Task<models::GetAllSoftDeleteOrderResponse> GetAll(models::GetAllRequest request);
 		
 		
 		/// <summary>
 		/// Returns one SoftDeleteOrderDto by Id
 		/// </summary>
-		Task<mds::SoftDeleteOrderDto> Get(mds::GetSoftDeleteOrderRequest request);
+		Task<models::SoftDeleteOrderDto> Get(models::GetSoftDeleteOrderRequest request);
 		
 		
 		/// <summary>
 		/// Creates one SoftDeleteOrderDto
 		/// </summary>
-		Task<mds::SoftDeleteOrderDto> Create(mds::CreateSoftDeleteOrderRequest request);
+		Task<models::SoftDeleteOrderDto> Create(models::CreateSoftDeleteOrderRequest request);
 		
 		
 		/// <summary>
 		/// Updates one SoftDeleteOrderDto by Id
 		/// </summary>
-		Task<mds::SoftDeleteOrderDto> Update(mds::UpdateSoftDeleteOrderRequest request);
+		Task<models::SoftDeleteOrderDto> Update(models::UpdateSoftDeleteOrderRequest request);
 		
 		
 		/// <summary>
 		/// Deletes one SoftDeleteOrderDto by Id
 		/// </summary>
-		Task Delete(mds::DeleteSoftDeleteOrderRequest request);
+		Task Delete(models::DeleteSoftDeleteOrderRequest request);
 		
 	}
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Cybtans.Test.Gateway.Services.Definition;
-using mds = global::Cybtans.Tests.Gateway.Models;
+using models = global::Cybtans.Tests.Gateway.Models;
 using Cybtans.Services;
 
 namespace Cybtans.Test.Gateway.Services.Implementation
@@ -27,7 +27,7 @@ namespace Cybtans.Test.Gateway.Services.Implementation
 			_logger = logger;
 		}
 		
-		public async Task<mds::HelloReply> SayHello(mds::HelloRequest request)
+		public async Task<models::HelloReply> SayHello(models::HelloRequest request)
 		{
 			try
 			{

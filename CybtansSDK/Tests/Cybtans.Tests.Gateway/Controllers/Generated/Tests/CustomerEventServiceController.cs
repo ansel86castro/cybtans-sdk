@@ -6,13 +6,13 @@
 // </auto-generated>
 //******************************************************
 
-using Cybtans.Tests.Clients;
+using Cybtans.Tests.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.Controllers
@@ -21,10 +21,10 @@ namespace Cybtans.Tests.Controllers
 	[ApiController]
 	public partial class CustomerEventServiceController : ControllerBase
 	{
-		private readonly ICustomerEventServiceClient _service;
+		private readonly ICustomerEventService _service;
 		private readonly ILogger<CustomerEventServiceController> _logger;
 		
-		public CustomerEventServiceController(ICustomerEventServiceClient service,  ILogger<CustomerEventServiceController> logger)
+		public CustomerEventServiceController(ICustomerEventService service,  ILogger<CustomerEventServiceController> logger)
 		{
 			_service = service;
 			_logger = logger;
@@ -36,7 +36,7 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Returns a collection of CustomerEventDto")]
 		[Authorize]
 		[HttpGet]
-		public async Task<mds::GetAllCustomerEventResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllCustomerEventResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -50,7 +50,7 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Returns one CustomerEventDto by Id")]
 		[Authorize]
 		[HttpGet("{id}")]
-		public async Task<mds::CustomerEventDto> Get(Guid id, [FromQuery]mds::GetCustomerEventRequest request)
+		public async Task<models::CustomerEventDto> Get(Guid id, [FromQuery]models::GetCustomerEventRequest request)
 		{
 			request.Id = id;
 			
@@ -66,7 +66,7 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Creates one CustomerEventDto")]
 		[Authorize]
 		[HttpPost]
-		public async Task<mds::CustomerEventDto> Create([FromBody]mds::CreateCustomerEventRequest request)
+		public async Task<models::CustomerEventDto> Create([FromBody]models::CreateCustomerEventRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
@@ -80,7 +80,7 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Updates one CustomerEventDto by Id")]
 		[Authorize]
 		[HttpPut("{id}")]
-		public async Task<mds::CustomerEventDto> Update(Guid id, [FromBody]mds::UpdateCustomerEventRequest request)
+		public async Task<models::CustomerEventDto> Update(Guid id, [FromBody]models::UpdateCustomerEventRequest request)
 		{
 			request.Id = id;
 			
@@ -96,7 +96,7 @@ namespace Cybtans.Tests.Controllers
 		[System.ComponentModel.Description("Deletes one CustomerEventDto by Id")]
 		[Authorize]
 		[HttpDelete("{id}")]
-		public async Task Delete(Guid id, [FromQuery]mds::DeleteCustomerEventRequest request)
+		public async Task Delete(Guid id, [FromQuery]models::DeleteCustomerEventRequest request)
 		{
 			request.Id = id;
 			

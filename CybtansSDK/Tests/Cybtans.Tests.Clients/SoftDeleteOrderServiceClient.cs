@@ -14,12 +14,12 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
 	[ApiClient]
-	public class SoftDeleteOrderServiceClient : ISoftDeleteOrderServiceClient
+	public class SoftDeleteOrderServiceClient : global::Cybtans.Tests.Services.ISoftDeleteOrderService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -36,20 +36,21 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns a collection of SoftDeleteOrderDto
 		/// </summary>
-		public async Task<mds::GetAllSoftDeleteOrderResponse> GetAll(mds::GetAllRequest request = null)
+		public async Task<models::GetAllSoftDeleteOrderResponse> GetAll(models::GetAllRequest request = null)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/SoftDeleteOrder?{_GetQueryString(request)}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::GetAllSoftDeleteOrderResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::GetAllSoftDeleteOrderResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::GetAllSoftDeleteOrderResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::GetAllSoftDeleteOrderResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -62,20 +63,21 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Returns one SoftDeleteOrderDto by Id
 		/// </summary>
-		public async Task<mds::SoftDeleteOrderDto> Get(mds::GetSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Get(models::GetSoftDeleteOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Get, $"/api/SoftDeleteOrder/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -88,7 +90,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Creates one SoftDeleteOrderDto
 		/// </summary>
-		public async Task<mds::SoftDeleteOrderDto> Create(mds::CreateSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Create(models::CreateSoftDeleteOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/SoftDeleteOrder");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -104,16 +106,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -127,7 +130,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Updates one SoftDeleteOrderDto by Id
 		/// </summary>
-		public async Task<mds::SoftDeleteOrderDto> Update(mds::UpdateSoftDeleteOrderRequest request)
+		public async Task<models::SoftDeleteOrderDto> Update(models::UpdateSoftDeleteOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Put, $"/api/SoftDeleteOrder/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -143,16 +146,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::SoftDeleteOrderDto>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::SoftDeleteOrderDto>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally
@@ -166,16 +170,17 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Deletes one SoftDeleteOrderDto by Id
 		/// </summary>
-		public async Task Delete(mds::DeleteSoftDeleteOrderRequest request)
+		public async Task Delete(models::DeleteSoftDeleteOrderRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Delete, $"/api/SoftDeleteOrder/{request.Id}");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
 			
 			}
 			finally
@@ -189,7 +194,7 @@ namespace Cybtans.Tests.Clients
 		
 		#region Private
 		
-		private string _GetQueryString(mds::GetAllRequest request)
+		private string _GetQueryString(models::GetAllRequest request)
 		{
 			if(request == null) return "";
 		

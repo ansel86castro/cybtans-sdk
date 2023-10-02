@@ -8,7 +8,7 @@
 
 using System.Threading.Tasks;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
 {
@@ -18,31 +18,31 @@ namespace Cybtans.Tests.Services
 		/// <summary>
 		/// Returns a collection of OrderStateDto
 		/// </summary>
-		Task<mds::GetAllOrderStateResponse> GetAll(mds::GetAllRequest request);
+		Task<models::GetAllOrderStateResponse> GetAll(models::GetAllRequest request);
 		
 		
 		/// <summary>
 		/// Returns one OrderStateDto by Id
 		/// </summary>
-		Task<mds::OrderStateDto> Get(mds::GetOrderStateRequest request);
+		Task<models::OrderStateDto> Get(models::GetOrderStateRequest request);
 		
 		
 		/// <summary>
 		/// Creates one OrderStateDto
 		/// </summary>
-		Task<mds::OrderStateDto> Create(mds::CreateOrderStateRequest request);
+		Task<models::OrderStateDto> Create(models::CreateOrderStateRequest request);
 		
 		
 		/// <summary>
 		/// Updates one OrderStateDto by Id
 		/// </summary>
-		Task<mds::OrderStateDto> Update(mds::UpdateOrderStateRequest request);
+		Task<models::OrderStateDto> Update(models::UpdateOrderStateRequest request);
 		
 		
 		/// <summary>
 		/// Deletes one OrderStateDto by Id
 		/// </summary>
-		Task Delete(mds::DeleteOrderStateRequest request);
+		Task Delete(models::DeleteOrderStateRequest request);
 		
 	}
 

@@ -21,6 +21,7 @@
         }
       },
       "Services": {
+        "Output": "./Cybtans.Tests.Services.Contract",
         "GraphQL": {
           "Generate": true
         }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns a collection of OrderStateDto")]
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public async Task<mds::GetAllOrderStateResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllOrderStateResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -57,7 +57,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public async Task<mds::OrderStateDto> Get(int id, [FromQuery]mds::GetOrderStateRequest request)
+		public async Task<models::OrderStateDto> Get(int id, [FromQuery]models::GetOrderStateRequest request)
 		{
 			request.Id = id;
 			
@@ -78,7 +78,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Creates one OrderStateDto")]
 		[Authorize(Roles = "admin")]
 		[HttpPost]
-		public async Task<mds::OrderStateDto> Create([FromBody]mds::CreateOrderStateRequest request)
+		public async Task<models::OrderStateDto> Create([FromBody]models::CreateOrderStateRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(Create), request);
 			
@@ -97,7 +97,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Updates one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpPut("{id}")]
-		public async Task<mds::OrderStateDto> Update(int id, [FromBody]mds::UpdateOrderStateRequest request)
+		public async Task<models::OrderStateDto> Update(int id, [FromBody]models::UpdateOrderStateRequest request)
 		{
 			request.Id = id;
 			
@@ -118,7 +118,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Deletes one OrderStateDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpDelete("{id}")]
-		public async Task Delete(int id, [FromQuery]mds::DeleteOrderStateRequest request)
+		public async Task Delete(int id, [FromQuery]models::DeleteOrderStateRequest request)
 		{
 			request.Id = id;
 			

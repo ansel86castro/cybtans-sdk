@@ -7,38 +7,43 @@
 //******************************************************
 
 using System.Threading.Tasks;
-using mds = global::Cybtans.Tests.Models;
 
-namespace Cybtans.Tests.Clients
+using models = global::Cybtans.Tests.Models;
+
+namespace Cybtans.Tests.Services
 {
-	public interface ICustomerEventServiceClient
+	public interface ICustomerEventService 
 	{
 		
 		/// <summary>
 		/// Returns a collection of CustomerEventDto
 		/// </summary>
-		Task<mds::GetAllCustomerEventResponse> GetAll(mds::GetAllRequest request = null);
+		Task<models::GetAllCustomerEventResponse> GetAll(models::GetAllRequest request);
+		
 		
 		/// <summary>
 		/// Returns one CustomerEventDto by Id
 		/// </summary>
-		Task<mds::CustomerEventDto> Get(mds::GetCustomerEventRequest request);
+		Task<models::CustomerEventDto> Get(models::GetCustomerEventRequest request);
+		
 		
 		/// <summary>
 		/// Creates one CustomerEventDto
 		/// </summary>
-		Task<mds::CustomerEventDto> Create(mds::CreateCustomerEventRequest request);
+		Task<models::CustomerEventDto> Create(models::CreateCustomerEventRequest request);
+		
 		
 		/// <summary>
 		/// Updates one CustomerEventDto by Id
 		/// </summary>
-		Task<mds::CustomerEventDto> Update(mds::UpdateCustomerEventRequest request);
+		Task<models::CustomerEventDto> Update(models::UpdateCustomerEventRequest request);
+		
 		
 		/// <summary>
 		/// Deletes one CustomerEventDto by Id
 		/// </summary>
-		Task Delete(mds::DeleteCustomerEventRequest request);
-	
+		Task Delete(models::DeleteCustomerEventRequest request);
+		
 	}
 
 }

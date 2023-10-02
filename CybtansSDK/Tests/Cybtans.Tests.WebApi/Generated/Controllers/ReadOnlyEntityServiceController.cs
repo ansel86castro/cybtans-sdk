@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
@@ -38,7 +38,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns a collection of ReadOnlyEntityDto")]
 		[Authorize(Roles = "admin")]
 		[HttpGet]
-		public async Task<mds::GetAllReadOnlyEntityResponse> GetAll([FromQuery]mds::GetAllRequest request)
+		public async Task<models::GetAllReadOnlyEntityResponse> GetAll([FromQuery]models::GetAllRequest request)
 		{
 			_logger.LogInformation("Executing {Action} {Message}", nameof(GetAll), request);
 			
@@ -57,7 +57,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		[System.ComponentModel.Description("Returns one ReadOnlyEntityDto by Id")]
 		[Authorize(Roles = "admin")]
 		[HttpGet("{id}")]
-		public async Task<mds::ReadOnlyEntityDto> Get(int id, [FromQuery]mds::GetReadOnlyEntityRequest request)
+		public async Task<models::ReadOnlyEntityDto> Get(int id, [FromQuery]models::GetReadOnlyEntityRequest request)
 		{
 			request.Id = id;
 			

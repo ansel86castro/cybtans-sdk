@@ -14,7 +14,7 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Cybtans.Common;
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Clients
 {
@@ -22,7 +22,7 @@ namespace Cybtans.Tests.Clients
 	/// Jwt Authentication Service
 	/// </summary>
 	[ApiClient]
-	public class AuthenticationServiceClient : IAuthenticationServiceClient
+	public class AuthenticationServiceClient : global::Cybtans.Tests.Services.IAuthenticationService
 	{
 		private readonly HttpClient _client;
 		private readonly IHttpContentSerializer _serializer;
@@ -39,7 +39,7 @@ namespace Cybtans.Tests.Clients
 		/// <summary>
 		/// Generates an access token
 		/// </summary>
-		public async Task<mds::LoginResponse> Login(mds::LoginRequest request)
+		public async Task<models::LoginResponse> Login(models::LoginRequest request)
 		{
 			using var httpReq = new HttpRequestMessage(HttpMethod.Post, $"/api/auth/login");
 			httpReq.Headers.Add("Accept", _serializer?.ContentType ?? "application/json");
@@ -55,16 +55,17 @@ namespace Cybtans.Tests.Clients
 			{
 				httpReq.Content = System.Net.Http.Json.JsonContent.Create(request, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"));
 			}
+			
 			HttpResponseMessage response = null;
 			try
 			{
 			
-			response = await _client.SendAsync(httpReq).ConfigureAwait(false);
-			if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
-			var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-			return _serializer != null ?
-				await _serializer.FromStreamAsync<mds::LoginResponse>(responseStream).ConfigureAwait(false) :
-				await System.Text.Json.JsonSerializer.DeserializeAsync<mds::LoginResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
+				response = await _client.SendAsync(httpReq).ConfigureAwait(false);
+				if (!response.IsSuccessStatusCode) throw await ApiException.Create(httpReq, response);
+				var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+				return _serializer != null ?
+				await _serializer.FromStreamAsync<models::LoginResponse>(responseStream).ConfigureAwait(false) :
+				await System.Text.Json.JsonSerializer.DeserializeAsync<models::LoginResponse>(responseStream, _jsonOptions.Value).ConfigureAwait(false);
 			
 			}
 			finally

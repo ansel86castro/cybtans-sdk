@@ -21,9 +21,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllCustomerResponseGraphType()
 		{
 			Field<ListGraphType<CustomerDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllCustomerResponse.Page));
+			Field<LongGraphType>(nameof(GetAllCustomerResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllCustomerResponse.TotalCount));
 		
 		}
 	}
@@ -33,12 +33,12 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public CustomerDtoGraphType()
 		{
-			Field(x => x.Name).Description("Customer's Name");
-			Field(x => x.FirstLastName, nullable:true).Description("Customer's FirstLastName");
-			Field(x => x.SecondLastName, nullable:true).Description("Customer's SecondLastName");
-			Field(x => x.CustomerProfileId, nullable:true).Description("Customer's Profile Id, can be null");
+			Field<StringGraphType>(nameof(CustomerDto.Name)).Description("Customer's Name");
+			Field<StringGraphType>(nameof(CustomerDto.FirstLastName), nullable:true).Description("Customer's FirstLastName");
+			Field<StringGraphType>(nameof(CustomerDto.SecondLastName), nullable:true).Description("Customer's SecondLastName");
+			Field<GuidGraphType>(nameof(CustomerDto.CustomerProfileId), nullable:true).Description("Customer's Profile Id, can be null");
 			Field<CustomerProfileDtoGraphType>("CustomerProfile");
-			Field(x => x.Id);
+			Field<GuidGraphType>(nameof(CustomerDto.Id));
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
 		
@@ -50,8 +50,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public CustomerProfileDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
-			Field(x => x.Id);
+			Field<StringGraphType>(nameof(CustomerProfileDto.Name), nullable:true);
+			Field<GuidGraphType>(nameof(CustomerProfileDto.Id));
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
 		
@@ -64,9 +64,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllCustomerEventResponseGraphType()
 		{
 			Field<ListGraphType<CustomerEventDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllCustomerEventResponse.Page));
+			Field<LongGraphType>(nameof(GetAllCustomerEventResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllCustomerEventResponse.TotalCount));
 		
 		}
 	}
@@ -76,9 +76,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public CustomerEventDtoGraphType()
 		{
-			Field(x => x.FullName, nullable:true);
-			Field(x => x.CustomerProfileId, nullable:true);
-			Field(x => x.Id);
+			Field<StringGraphType>(nameof(CustomerEventDto.FullName), nullable:true);
+			Field<GuidGraphType>(nameof(CustomerEventDto.CustomerProfileId), nullable:true);
+			Field<GuidGraphType>(nameof(CustomerEventDto.Id));
 		
 		}
 	}
@@ -89,9 +89,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllOrderResponseGraphType()
 		{
 			Field<ListGraphType<OrderDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllOrderResponse.Page));
+			Field<LongGraphType>(nameof(GetAllOrderResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllOrderResponse.TotalCount));
 		
 		}
 	}
@@ -101,14 +101,14 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public OrderDtoGraphType()
 		{
-			Field(x => x.Description, nullable:true);
-			Field(x => x.CustomerId);
-			Field(x => x.OrderStateId);
+			Field<StringGraphType>(nameof(OrderDto.Description), nullable:true);
+			Field<GuidGraphType>(nameof(OrderDto.CustomerId));
+			Field<IntGraphType>(nameof(OrderDto.OrderStateId));
 			Field<OrderTypeEnumGraphType>("OrderType");
 			Field<OrderStateDtoGraphType>("OrderState");
 			Field<CustomerDtoGraphType>("Customer", description:"Customer");
 			Field<ListGraphType<OrderItemDtoGraphType>>("Items");
-			Field(x => x.Id);
+			Field<GuidGraphType>(nameof(OrderDto.Id));
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
 		
@@ -125,8 +125,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public OrderStateDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
-			Field(x => x.Id);
+			Field<StringGraphType>(nameof(OrderStateDto.Name), nullable:true);
+			Field<IntGraphType>(nameof(OrderStateDto.Id));
 		
 		}
 	}
@@ -136,13 +136,13 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public OrderItemDtoGraphType()
 		{
-			Field(x => x.ProductName, nullable:true);
-			Field(x => x.Price);
-			Field(x => x.Discount, nullable:true);
-			Field(x => x.OrderId);
-			Field(x => x.ProductId, nullable:true);
+			Field<StringGraphType>(nameof(OrderItemDto.ProductName), nullable:true);
+			Field<FloatGraphType>(nameof(OrderItemDto.Price));
+			Field<FloatGraphType>(nameof(OrderItemDto.Discount), nullable:true);
+			Field<GuidGraphType>(nameof(OrderItemDto.OrderId));
+			Field<GuidGraphType>(nameof(OrderItemDto.ProductId), nullable:true);
 			Field<ProductDtoGraphType>("Product");
-			Field(x => x.Id);
+			Field<GuidGraphType>(nameof(OrderItemDto.Id));
 		
 		}
 	}
@@ -152,9 +152,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public ProductDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
-			Field(x => x.Model, nullable:true);
-			Field(x => x.Id);
+			Field<StringGraphType>(nameof(ProductDto.Name), nullable:true);
+			Field<StringGraphType>(nameof(ProductDto.Model), nullable:true);
+			Field<GuidGraphType>(nameof(ProductDto.Id));
 		
 		}
 	}
@@ -165,9 +165,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllOrderStateResponseGraphType()
 		{
 			Field<ListGraphType<OrderStateDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllOrderStateResponse.Page));
+			Field<LongGraphType>(nameof(GetAllOrderStateResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllOrderStateResponse.TotalCount));
 		
 		}
 	}
@@ -178,9 +178,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllReadOnlyEntityResponseGraphType()
 		{
 			Field<ListGraphType<ReadOnlyEntityDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllReadOnlyEntityResponse.Page));
+			Field<LongGraphType>(nameof(GetAllReadOnlyEntityResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllReadOnlyEntityResponse.TotalCount));
 		
 		}
 	}
@@ -190,10 +190,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public ReadOnlyEntityDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
+			Field<StringGraphType>(nameof(ReadOnlyEntityDto.Name), nullable:true);
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
-			Field(x => x.Id);
+			Field<IntGraphType>(nameof(ReadOnlyEntityDto.Id));
 		
 		}
 	}
@@ -204,9 +204,9 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		public GetAllSoftDeleteOrderResponseGraphType()
 		{
 			Field<ListGraphType<SoftDeleteOrderDtoGraphType>>("Items");
-			Field(x => x.Page);
-			Field(x => x.TotalPages);
-			Field(x => x.TotalCount);
+			Field<LongGraphType>(nameof(GetAllSoftDeleteOrderResponse.Page));
+			Field<LongGraphType>(nameof(GetAllSoftDeleteOrderResponse.TotalPages));
+			Field<LongGraphType>(nameof(GetAllSoftDeleteOrderResponse.TotalCount));
 		
 		}
 	}
@@ -216,10 +216,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public SoftDeleteOrderDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
-			Field(x => x.IsDeleted);
+			Field<StringGraphType>(nameof(SoftDeleteOrderDto.Name), nullable:true);
+			Field<BooleanGraphType>(nameof(SoftDeleteOrderDto.IsDeleted));
 			Field<ListGraphType<SoftDeleteOrderItemDtoGraphType>>("Items");
-			Field(x => x.Id);
+			Field<GuidGraphType>(nameof(SoftDeleteOrderDto.Id));
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
 		
@@ -231,10 +231,10 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public SoftDeleteOrderItemDtoGraphType()
 		{
-			Field(x => x.Name, nullable:true);
-			Field(x => x.IsDeleted);
-			Field(x => x.SoftDeleteOrderId);
-			Field(x => x.Id);
+			Field<StringGraphType>(nameof(SoftDeleteOrderItemDto.Name), nullable:true);
+			Field<BooleanGraphType>(nameof(SoftDeleteOrderItemDto.IsDeleted));
+			Field<GuidGraphType>(nameof(SoftDeleteOrderItemDto.SoftDeleteOrderId));
+			Field<GuidGraphType>(nameof(SoftDeleteOrderItemDto.Id));
 			Field<DateTimeGraphType>("CreateDate");
 			Field<DateTimeGraphType>("UpdateDate");
 		
@@ -246,8 +246,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public DowndloadImageResponseGraphType()
 		{
-			Field(x => x.FileName, nullable:true);
-			Field(x => x.ContentType, nullable:true);
+			Field<StringGraphType>(nameof(DowndloadImageResponse.FileName), nullable:true);
+			Field<StringGraphType>(nameof(DowndloadImageResponse.ContentType), nullable:true);
 		
 		}
 	}
@@ -267,8 +267,8 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public OrderNamesDtoGraphType()
 		{
-			Field(x => x.Id, nullable:true);
-			Field(x => x.Description, nullable:true);
+			Field<StringGraphType>(nameof(OrderNamesDto.Id), nullable:true);
+			Field<StringGraphType>(nameof(OrderNamesDto.Description), nullable:true);
 		
 		}
 	}
@@ -278,12 +278,12 @@ namespace Cybtans.Tests.Gateway.GraphQL
 	{
 		public ClientDtoGraphType()
 		{
-			Field(x => x.Id);
-			Field(x => x.Name, nullable:true);
-			Field(x => x.ClientTypeId);
-			Field(x => x.ClientStatusId, nullable:true);
+			Field<GuidGraphType>(nameof(ClientDto.Id));
+			Field<StringGraphType>(nameof(ClientDto.Name), nullable:true);
+			Field<IntGraphType>(nameof(ClientDto.ClientTypeId));
+			Field<IntGraphType>(nameof(ClientDto.ClientStatusId), nullable:true);
 			Field<DateTimeGraphType>("CreatedAt");
-			Field(x => x.CreatorId);
+			Field<IntGraphType>(nameof(ClientDto.CreatorId));
 			Field<ClientTypeGraphType>("Type");
 			Field<ListGraphType<IntGraphType>>("ItemIds");
 		
@@ -302,16 +302,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 		{
 			#region CustomerService
 			
-			FieldAsync<GetAllCustomerResponseGraphType>("customers",
-			 	description: "Returns a collection of CustomerDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllCustomerResponseGraphType>("customers")
+				.Description("Returns a collection of CustomerDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -330,19 +329,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ICustomerService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<CustomerDtoGraphType>("customer",
-			 	description: "Returns one CustomerDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<GuidGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<CustomerDtoGraphType>("customer")
+				.Description("Returns one CustomerDto by Id")
+				.Arguments(
+					new QueryArgument<GuidGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetCustomerRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -358,7 +356,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException($"Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ICustomerService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -368,16 +366,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region CustomerEventService
 			
-			FieldAsync<GetAllCustomerEventResponseGraphType>("customerEvents",
-			 	description: "Returns a collection of CustomerEventDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllCustomerEventResponseGraphType>("customerEvents")
+				.Description("Returns a collection of CustomerEventDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -394,19 +391,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ICustomerEventService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<CustomerEventDtoGraphType>("customerEvent",
-			 	description: "Returns one CustomerEventDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<GuidGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<CustomerEventDtoGraphType>("customerEvent")
+				.Description("Returns one CustomerEventDto by Id")
+				.Arguments(
+					new QueryArgument<GuidGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetCustomerEventRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -420,7 +416,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ICustomerEventServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ICustomerEventService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -430,12 +426,11 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region OrderService
 			
-			FieldAsync<DowndloadImageResponseGraphType>("OrderService_DownloadImage",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Name" },
-				},
-				resolve: async context =>
+			Field<DowndloadImageResponseGraphType>("OrderService_DownloadImage")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Name" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new DownloadImageRequest();
 					request.Name = context.GetArgument<string>("name", default(string));
@@ -443,30 +438,29 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.DownloadImage(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<GetAllNamesResponseGraphType>("ordernames",
-			 	resolve: async context =>
+			Field<GetAllNamesResponseGraphType>("ordernames")
+				.ResolveAsync(async context =>
 				{
 					
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.GetAllNames().ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<OrderNamesDtoGraphType>("OrderService_OrderName",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<OrderNamesDtoGraphType>("OrderService_OrderName")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetOrderNameRequest();
 					request.Id = context.GetArgument<string>("id", default(string));
@@ -474,7 +468,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.GetOrderName(request).ConfigureAwait(false);
 					
 					var interceptor = serviceProvider.GetService<global::Cybtans.AspNetCore.Interceptors.IMessageInterceptor>();
@@ -487,16 +481,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 				}
 			);
 			
-			FieldAsync<GetAllOrderResponseGraphType>("orders",
-			 	description: "Returns a collection of OrderDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllOrderResponseGraphType>("orders")
+				.Description("Returns a collection of OrderDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -507,19 +500,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<OrderDtoGraphType>("order",
-			 	description: "Returns one OrderDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<GuidGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<OrderDtoGraphType>("order")
+				.Description("Returns one OrderDto by Id")
+				.Arguments(
+					new QueryArgument<GuidGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -527,7 +519,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -537,16 +529,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region OrderStateService
 			
-			FieldAsync<GetAllOrderStateResponseGraphType>("orderStates",
-			 	description: "Returns a collection of OrderStateDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllOrderStateResponseGraphType>("orderStates")
+				.Description("Returns a collection of OrderStateDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -563,19 +554,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderStateService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<OrderStateDtoGraphType>("orderState",
-			 	description: "Returns one OrderStateDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<IntGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<OrderStateDtoGraphType>("orderState")
+				.Description("Returns one OrderStateDto by Id")
+				.Arguments(
+					new QueryArgument<IntGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetOrderStateRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
@@ -589,7 +579,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IOrderStateServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IOrderStateService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -599,16 +589,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region ReadOnlyEntityService
 			
-			FieldAsync<GetAllReadOnlyEntityResponseGraphType>("readOnlyEntities",
-			 	description: "Returns a collection of ReadOnlyEntityDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllReadOnlyEntityResponseGraphType>("readOnlyEntities")
+				.Description("Returns a collection of ReadOnlyEntityDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -625,19 +614,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IReadOnlyEntityService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<ReadOnlyEntityDtoGraphType>("readOnlyEntity",
-			 	description: "Returns one ReadOnlyEntityDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<IntGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<ReadOnlyEntityDtoGraphType>("readOnlyEntity")
+				.Description("Returns one ReadOnlyEntityDto by Id")
+				.Arguments(
+					new QueryArgument<IntGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetReadOnlyEntityRequest();
 					request.Id = context.GetArgument<int>("id", default(int));
@@ -651,7 +639,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Roles Authorization Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IReadOnlyEntityServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IReadOnlyEntityService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -661,16 +649,15 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region SoftDeleteOrderService
 			
-			FieldAsync<GetAllSoftDeleteOrderResponseGraphType>("softDeleteOrders",
-			 	description: "Returns a collection of SoftDeleteOrderDto",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<StringGraphType>(){ Name = "Filter" },
-					new QueryArgument<StringGraphType>(){ Name = "Sort" },
-					new QueryArgument<IntGraphType>(){ Name = "Skip" },
-					new QueryArgument<IntGraphType>(){ Name = "Take" },
-				},
-				resolve: async context =>
+			Field<GetAllSoftDeleteOrderResponseGraphType>("softDeleteOrders")
+				.Description("Returns a collection of SoftDeleteOrderDto")
+				.Arguments(
+					new QueryArgument<StringGraphType>(){ Name = "Filter" }
+					,new QueryArgument<StringGraphType>(){ Name = "Sort" }
+					,new QueryArgument<IntGraphType>(){ Name = "Skip" }
+					,new QueryArgument<IntGraphType>(){ Name = "Take" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetAllRequest();
 					request.Filter = context.GetArgument<string>("filter", default(string));
@@ -681,19 +668,18 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
 					var result = await service.GetAll(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<SoftDeleteOrderDtoGraphType>("softDeleteOrder",
-			 	description: "Returns one SoftDeleteOrderDto by Id",
-				arguments: new QueryArguments()
-				{
-					new QueryArgument<GuidGraphType>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<SoftDeleteOrderDtoGraphType>("softDeleteOrder")
+				.Description("Returns one SoftDeleteOrderDto by Id")
+				.Arguments(
+					new QueryArgument<GuidGraphType>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new GetSoftDeleteOrderRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -701,7 +687,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 					using var scope = context.RequestServices.CreateScope();
 					var serviceProvider = scope.ServiceProvider;
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.ISoftDeleteOrderServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.ISoftDeleteOrderService>();
 					var result = await service.Get(request).ConfigureAwait(false);
 					return result;
 				}
@@ -711,12 +697,11 @@ namespace Cybtans.Tests.Gateway.GraphQL
 			
 			#region ClientService
 			
-			FieldAsync<ClientDtoGraphType>("ClientService_Client",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<ClientDtoGraphType>("ClientService_Client")
+				.Arguments(
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -737,7 +722,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
 					var result = await service.GetClient(request).ConfigureAwait(false);
 					if (result != null)
 					{
@@ -752,12 +737,11 @@ namespace Cybtans.Tests.Gateway.GraphQL
 				}
 			);
 			
-			FieldAsync<ClientDtoGraphType>("ClientService_Client2",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<ClientDtoGraphType>("ClientService_Client2")
+				.Arguments(
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -778,18 +762,17 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException($"Request Authorization Failed: { string.Join(", ", policyResult.Failure.FailedRequirements) }");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
 					var result = await service.GetClient2(request).ConfigureAwait(false);
 					return result;
 				}
 			);
 			
-			FieldAsync<ClientDtoGraphType>("ClientService_Client3",
-			 	arguments: new QueryArguments()
-				{
-					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" },
-				},
-				resolve: async context =>
+			Field<ClientDtoGraphType>("ClientService_Client3")
+				.Arguments(
+					new QueryArgument<NonNullGraphType<GuidGraphType>>(){ Name = "Id" }
+				)
+				.ResolveAsync(async context =>
 				{
 					var request = new ClientRequest();
 					request.Id = context.GetArgument<Guid>("id", default(Guid));
@@ -803,7 +786,7 @@ namespace Cybtans.Tests.Gateway.GraphQL
 						 throw new UnauthorizedAccessException("Authentication Required");
 					}
 					
-					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Clients.IClientServiceClient>();
+					var service = serviceProvider.GetRequiredService<global::Cybtans.Tests.Services.IClientService>();
 					var result = await service.GetClient3(request).ConfigureAwait(false);
 					if (result != null)
 					{

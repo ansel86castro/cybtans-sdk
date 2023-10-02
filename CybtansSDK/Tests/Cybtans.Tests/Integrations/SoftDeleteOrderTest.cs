@@ -15,13 +15,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        Clients.ISoftDeleteOrderServiceClient _service;
+        ISoftDeleteOrderService _service;
 
         public SoftDeleteOrderTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<Clients.ISoftDeleteOrderServiceClient>();
+            _service = fixture.GetClient<ISoftDeleteOrderService>();
         }
 
         private async Task<SoftDeleteOrderDto> CreateOrderInternal()
@@ -70,7 +70,7 @@ namespace Cybtans.Tests.Integrations
             var order = await CreateOrderInternal();
             await _service.Delete(order.Id);
 
-            var result = await _service.GetAll();
+            var result = await _service.GetAll(new Models.GetAllRequest { }) ;
 
             Assert.DoesNotContain(result.Items, x => x.Id == order.Id);
           

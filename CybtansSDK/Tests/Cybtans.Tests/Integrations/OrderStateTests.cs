@@ -1,17 +1,11 @@
-﻿using Cybtans.Entities;
-using Cybtans.Clients;
-using Cybtans.Tests.Clients;
-using Cybtans.Tests.Models;
+﻿using Cybtans.Tests.Models;
 using Moq;
-using NuGet.Frameworks;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using Cybtans.Common;
+using Cybtans.Tests.Services;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -19,13 +13,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        IOrderStateServiceClient _service;
+        IOrderStateService _service;
 
         public OrderStateTests(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<IOrderStateServiceClient>();
+            _service = fixture.GetClient<IOrderStateService>();
         }
 
         [Fact]
@@ -43,7 +37,7 @@ namespace Cybtans.Tests.Integrations
         [Fact]
         public async Task GetOrderStates()
         {
-            var result = await _service.GetAll();
+            var result = await _service.GetAll(new GetAllRequest { });
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
             Assert.True(result.TotalCount > 0);
@@ -65,9 +59,9 @@ namespace Cybtans.Tests.Integrations
         {
             await _fixture.CreateTest()
                 .UseRoles("no-admin")
-                .RunAsync<IOrderStateServiceClient>(async service =>
+                .RunAsync<IOrderStateService>(async service =>
                 {
-                    var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll());
+                    var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll(new Models.GetAllRequest { }));
                     Assert.NotNull(exception);
                     Assert.Equal(HttpStatusCode.Forbidden, exception.StatusCode);
                 });
@@ -89,7 +83,7 @@ namespace Cybtans.Tests.Integrations
 
             await _fixture.CreateTest()
                 .UseService(mockService.Object)
-                .RunAsync<IOrderStateServiceClient>(async service =>
+                .RunAsync<IOrderStateService>(async service =>
                 {
                     var result = await service.Get(1);
                     Assert.NotNull(result);

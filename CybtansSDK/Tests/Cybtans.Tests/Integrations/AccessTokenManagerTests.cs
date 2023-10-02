@@ -2,14 +2,13 @@
 using Cybtans.Serialization;
 using Cybtans.Tests.Clients;
 using Cybtans.Tests.Models;
+using Cybtans.Tests.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -65,7 +64,7 @@ namespace Cybtans.Tests.Integrations
     {
         private TokenManagerOptions _options;
         AccessTokenManager _tokenManager;
-        IOrderStateServiceClient _service;
+        IOrderStateService _service;
 
         public AccessTokenManagerTests()
         {
@@ -73,10 +72,10 @@ namespace Cybtans.Tests.Integrations
 
             AddTokenManager(services);
 
-            AddClient<IOrderStateServiceClient, OrderStateServiceClient>(services);
+            AddClient<IOrderStateService, OrderStateServiceClient>(services);
 
             var provider = services.BuildServiceProvider();
-            _service = provider.GetRequiredService<IOrderStateServiceClient>();
+            _service = provider.GetRequiredService<IOrderStateService>();
         }
 
         private static void AddClient<TContract, TImpl>(ServiceCollection services)

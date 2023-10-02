@@ -4,24 +4,25 @@ using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 using Cybtans.Common;
+using Cybtans.Tests.Services;
 
 namespace Cybtans.Tests.Integrations
 {
     public class ReadOnlyEntityTest : IClassFixture<IntegrationFixture>
     {
         IntegrationFixture _fixture;        
-        IReadOnlyEntityServiceClient _service;
+        IReadOnlyEntityService _service;
 
         public ReadOnlyEntityTest(IntegrationFixture fixture)
         {
             _fixture = fixture;            
-            _service = fixture.GetClient<IReadOnlyEntityServiceClient>();
+            _service = fixture.GetClient<IReadOnlyEntityService>();
         }
        
         [Fact]
         public async Task GetAll()
         {
-            var result = await _service.GetAll();
+            var result = await _service.GetAll(new Models.GetAllRequest { });
 
             Assert.NotNull(result);
             Assert.NotEmpty(result.Items);
@@ -34,9 +35,9 @@ namespace Cybtans.Tests.Integrations
         {
             await _fixture.CreateTest()
                 .UseRoles("no-admin")
-                .RunAsync<IReadOnlyEntityServiceClient>(async service =>
+                .RunAsync<IReadOnlyEntityService>(async service =>
                 {
-                    var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll());
+                    var exception = await Assert.ThrowsAsync<ApiException>(() => service.GetAll(new Models.GetAllRequest { }));
                     Assert.NotNull(exception);
                     Assert.Equal(HttpStatusCode.Forbidden, exception.StatusCode);
                 });

@@ -7,38 +7,43 @@
 //******************************************************
 
 using System.Threading.Tasks;
-using mds = global::Cybtans.Tests.Models;
 
-namespace Cybtans.Tests.Clients
+using models = global::Cybtans.Tests.Models;
+
+namespace Cybtans.Tests.Services
 {
-	public interface ICustomerServiceClient
+	public interface ICustomerService 
 	{
 		
 		/// <summary>
 		/// Returns a collection of CustomerDto
 		/// </summary>
-		Task<mds::GetAllCustomerResponse> GetAll(mds::GetAllRequest request = null);
+		Task<models::GetAllCustomerResponse> GetAll(models::GetAllRequest request);
+		
 		
 		/// <summary>
 		/// Returns one CustomerDto by Id
 		/// </summary>
-		Task<mds::CustomerDto> Get(mds::GetCustomerRequest request);
+		Task<models::CustomerDto> Get(models::GetCustomerRequest request);
+		
 		
 		/// <summary>
 		/// Creates one CustomerDto
 		/// </summary>
-		Task<mds::CustomerDto> Create(mds::CreateCustomerRequest request);
+		Task<models::CustomerDto> Create(models::CreateCustomerRequest request);
+		
 		
 		/// <summary>
 		/// Updates one CustomerDto by Id
 		/// </summary>
-		Task<mds::CustomerDto> Update(mds::UpdateCustomerRequest request);
+		Task<models::CustomerDto> Update(models::UpdateCustomerRequest request);
+		
 		
 		/// <summary>
 		/// Deletes one CustomerDto by Id
 		/// </summary>
-		Task Delete(mds::DeleteCustomerRequest request);
-	
+		Task Delete(models::DeleteCustomerRequest request);
+		
 	}
 
 }

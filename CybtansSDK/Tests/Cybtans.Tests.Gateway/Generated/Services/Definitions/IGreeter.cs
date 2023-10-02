@@ -8,14 +8,14 @@
 
 using System.Threading.Tasks;
 
-using mds = global::Cybtans.Tests.Gateway.Models;
+using models = global::Cybtans.Tests.Gateway.Models;
 
 namespace Cybtans.Test.Gateway.Services.Definition
 {
 	public interface IGreeter 
 	{
 		
-		Task<mds::HelloReply> SayHello(mds::HelloRequest request);
+		Task<models::HelloReply> SayHello(models::HelloRequest request);
 		
 	}
 

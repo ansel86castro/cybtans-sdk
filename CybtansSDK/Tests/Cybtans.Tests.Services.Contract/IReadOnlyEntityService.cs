@@ -8,7 +8,7 @@
 
 using System.Threading.Tasks;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 
 namespace Cybtans.Tests.Services
 {
@@ -18,13 +18,13 @@ namespace Cybtans.Tests.Services
 		/// <summary>
 		/// Returns a collection of ReadOnlyEntityDto
 		/// </summary>
-		Task<mds::GetAllReadOnlyEntityResponse> GetAll(mds::GetAllRequest request);
+		Task<models::GetAllReadOnlyEntityResponse> GetAll(models::GetAllRequest request);
 		
 		
 		/// <summary>
 		/// Returns one ReadOnlyEntityDto by Id
 		/// </summary>
-		Task<mds::ReadOnlyEntityDto> Get(mds::GetReadOnlyEntityRequest request);
+		Task<models::ReadOnlyEntityDto> Get(models::GetReadOnlyEntityRequest request);
 		
 	}
 

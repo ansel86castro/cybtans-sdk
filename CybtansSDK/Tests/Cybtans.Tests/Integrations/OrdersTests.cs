@@ -31,13 +31,13 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;        
-        Clients.IOrderServiceClient _service;
+        IOrderService _service;
 
         public OrdersTests(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _service = fixture.GetClient<Clients.IOrderServiceClient>();
+            _service = fixture.GetClient<IOrderService>();
         }
 
         private async Task<OrderDto> CreateOrderInternal()
@@ -91,7 +91,7 @@ namespace Cybtans.Tests.Integrations
         [Fact]
         public async Task GetAll()
         {
-            var result = await _service.GetAll();
+            var result = await _service.GetAll(new Models.GetAllRequest { });
 
             using var scope = _fixture.Services.CreateScope();
             var mapper = scope.ServiceProvider.GetService<IMapper>();

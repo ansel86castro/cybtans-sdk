@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using Cybtans.Common;
+using Cybtans.Tests.Services;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -19,14 +20,14 @@ namespace Cybtans.Tests.Integrations
     {
         IntegrationFixture _fixture;
         ITestOutputHelper _testOutputHelper;
-        Clients.ICustomerEventServiceClient _customerEventService;
-        Clients.ICustomerServiceClient _service;
+        ICustomerEventService _customerEventService;
+        ICustomerService _service;
         public CustomerTest(IntegrationFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _fixture = fixture;
             _testOutputHelper = testOutputHelper;
-            _customerEventService = fixture.GetClient<Clients.ICustomerEventServiceClient>();
-            _service = fixture.GetClient<Clients.ICustomerServiceClient>();
+            _customerEventService = fixture.GetClient<ICustomerEventService>();
+            _service = fixture.GetClient<ICustomerService>();
         }
 
         [Fact]

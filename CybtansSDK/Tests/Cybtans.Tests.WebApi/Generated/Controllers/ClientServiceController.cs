@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using mds = global::Cybtans.Tests.Models;
+using models = global::Cybtans.Tests.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cybtans.Tests.RestApi.Controllers
@@ -36,7 +36,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpGet("{id}")]
-		public async Task<mds::ClientDto> GetClient(Guid id, [FromQuery]mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient(Guid id, [FromQuery]models::ClientRequest request)
 		{
 			request.Id = id;
 			
@@ -67,7 +67,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpGet("client2/{id}")]
-		public async Task<mds::ClientDto> GetClient2(Guid id, [FromQuery]mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient2(Guid id, [FromQuery]models::ClientRequest request)
 		{
 			request.Id = id;
 			
@@ -89,7 +89,7 @@ namespace Cybtans.Tests.RestApi.Controllers
 		}
 		
 		[HttpGet("client3/{id}")]
-		public async Task<mds::ClientDto> GetClient3(Guid id, [FromQuery]mds::ClientRequest request)
+		public async Task<models::ClientDto> GetClient3(Guid id, [FromQuery]models::ClientRequest request)
 		{
 			request.Id = id;
 			
