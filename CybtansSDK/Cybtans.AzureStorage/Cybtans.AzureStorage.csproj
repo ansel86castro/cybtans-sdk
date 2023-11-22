@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>    
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
@@ -11,12 +11,12 @@
     <Description>
       IFileStorage implementation with Azure File Storage
     </Description>
-	 <Version>3.0.0</Version>
+	 <Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />    
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />    
   </ItemGroup>
 
   <ItemGroup>

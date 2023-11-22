@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>validations</PackageTags>
@@ -10,12 +10,12 @@
     <Description>
       Fluent Validation Utilities
     </Description>
-	<Version>3.0.0</Version>
+	<Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.8.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

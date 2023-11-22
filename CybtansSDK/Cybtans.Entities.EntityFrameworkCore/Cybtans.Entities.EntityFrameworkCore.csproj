@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>data, .net, entities, repository, unit of work ,entityframeworkcore</PackageTags>
@@ -10,11 +10,11 @@
     <Description>
       Repository and Unit of Work implementation using Entity Framework Core
     </Description>
-	<Version>3.0.0</Version>
+	<Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

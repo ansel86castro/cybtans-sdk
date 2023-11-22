@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>cybtans, grpc, exceptions handling, validation</PackageTags>
@@ -10,14 +10,14 @@
     <Description>
       Grpc Utilities including Exception Handling, Message Validation.
     </Description>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore.Server" Version="2.50.0" />
-    <PackageReference Include="Grpc.Core" Version="2.46.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server" Version="2.59.0" />
+    <PackageReference Include="Grpc.Core" Version="2.46.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

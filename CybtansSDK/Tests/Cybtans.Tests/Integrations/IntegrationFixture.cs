@@ -8,6 +8,7 @@ using IdentityModel;
 using Cybtans.Tests.Services;
 using System.Linq;
 using Cybtans.Tests.Domain.EF;
+using Cybtans.Tests.Clients;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -19,6 +20,8 @@ namespace Cybtans.Tests.Integrations
 
         public IntegrationFixture()
         {
+            ClientAssembly = typeof(ClientServiceClient).Assembly;
+            
             Claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, "admin"),

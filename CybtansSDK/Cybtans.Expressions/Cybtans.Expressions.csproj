@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>linq, expression, parsing, dynamic queries</PackageTags>
@@ -10,7 +10,7 @@
     <Description>
       Provides dynamic linq expression builders and support for string queries for IQueryable
     </Description>    
-  	<Version>3.0.0</Version>
+  	<Version>4.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

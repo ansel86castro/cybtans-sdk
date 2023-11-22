@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>cybtan.png</PackageIcon>
     <RepositoryUrl>https://github.com/ansel86castro/cybtans-sdk</RepositoryUrl>
     <PackageTags>serialization, .net, binary, performance, speed</PackageTags>
@@ -9,7 +9,7 @@
     <Product>Cybtans SDK</Product>
     <Description>Serialization library for .netstandard. 
 The library provides binary serialization which is faster and results in smaller payloads than json.</Description>
-	<Version>3.0.0</Version>	  
+	<Version>4.0.0</Version>	  
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

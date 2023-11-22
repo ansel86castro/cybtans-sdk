@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using Cybtans.Clients;
 using Cybtans.Common;
+using System.Reflection;
 
 namespace Cybtans.Tests.Integrations
 {
@@ -21,7 +22,9 @@ namespace Cybtans.Tests.Integrations
     {
         private Action<IServiceCollection> _configureServices;
 
-        public IEnumerable<Claim> Claims { get; set; }       
+        public IEnumerable<Claim> Claims { get; set; }     
+        
+        public Assembly ClientAssembly { get; set; }
 
         public BaseIntegrationFixture()
         {
@@ -70,13 +73,15 @@ namespace Cybtans.Tests.Integrations
             httpClient ??= Client;
             Type type = typeof(TClient);
             if (type.IsInterface)
-            {
-                var impl = type.Assembly.ExportedTypes.Where(x=> x.IsClass && x.GetInterface(type.FullName) == type).FirstOrDefault();
+            {                
+
+                var impl =(ClientAssembly ?? type.Assembly).ExportedTypes.Where(x => x.IsClass && x.GetInterface(type.FullName) == type).FirstOrDefault();
                 if (impl == null)
                 {
                     throw new InvalidOperationException("Implementation not found");
                 }
                 type = impl;
+
             }
             return (TClient)Activator.CreateInstance(type, httpClient, useJson ? null : new CybtansContentSerializer());
         }
