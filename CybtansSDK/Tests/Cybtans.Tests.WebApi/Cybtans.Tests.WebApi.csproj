@@ -10,18 +10,17 @@
   </PropertyGroup>
      
   <ItemGroup>
-  <PackageReference Include="GraphQL" Version="7.6.1" />
-  <PackageReference Include="GraphQL.MicrosoftDI" Version="7.6.1" />
-  <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.6.0" />
-  <PackageReference Include="GraphQL.Server.Ui.Playground" Version="7.6.0" />
-  <PackageReference Include="GraphQL.SystemTextJson" Version="7.6.1" />  
-  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
-  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.5.0" />
-  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-  <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" /> 
-  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  <PackageReference Include="GraphQL" Version="7.8.0" />
+  <PackageReference Include="GraphQL.MicrosoftDI" Version="7.8.0" />
+  <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.7.1" />
+  <PackageReference Include="GraphQL.Server.Ui.Playground" Version="7.7.1" />
+  <PackageReference Include="GraphQL.SystemTextJson" Version="7.8.0" />  
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.5" />
+  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
+  <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.6.1" />
+  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+  <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
   <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
   </ItemGroup>
 

@@ -5,14 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Microsoft.Extensions.Hosting;
-using Cybtans.AspNetCore.Migrations;
 
 namespace Cybtans.AspNetCore.Migrations
 {
     public static class WebHostExtensions
     {
         public static bool IsInKubernetes(this IHost host)
-        {
+        {            
             var cfg = host.Services.GetService<IConfiguration>();
             var orchestratorType = cfg["OrchestratorType"];
             return orchestratorType?.ToUpper() == "K8S";

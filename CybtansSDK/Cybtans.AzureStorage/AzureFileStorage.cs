@@ -62,7 +62,7 @@ namespace Cybtans.Services.FileStorage
             {
                 (BlobClient blobClient, BlobUploadOptions uploadOptions) = await GetBlobClient(filename, container, contentType, createContainer, options);
 
-                using (var stream = _streamManager.GetStream(content))
+                using (var stream = _streamManager.GetStream(content.Span))
                 {
                     var result = await blobClient.UploadAsync(stream, uploadOptions);
 
@@ -388,7 +388,7 @@ namespace Cybtans.Services.FileStorage
 
             public async Task Write(byte[] bytes, int offset, int length)
             {
-                using (var stream = _azureFileStorage._streamManager.GetStream(new Memory<byte>(bytes, offset, length)))
+                using (var stream = _azureFileStorage._streamManager.GetStream(new ReadOnlySpan<byte>(bytes, offset, length)))
                 {
                     await _blobClient.AppendBlockAsync(stream);
                 }
@@ -396,7 +396,7 @@ namespace Cybtans.Services.FileStorage
 
             public async Task Write(Memory<byte> memory)
             {
-                using (var stream = _azureFileStorage._streamManager.GetStream(memory))
+                using (var stream = _azureFileStorage._streamManager.GetStream(memory.Span))
                 {
                     await _blobClient.AppendBlockAsync(stream);
                 }

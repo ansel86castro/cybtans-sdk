@@ -1,29 +1,30 @@
 ﻿using Cybtans.Common;
 using Polly;
-using Polly.Extensions.Http;
 using Polly.Retry;
 
 namespace Cybtans.Clients
 {
     public class HttpClientRetryHandler : DelegatingHandler
     {
-        private AsyncRetryPolicy<HttpResponseMessage> _policy;
-        private Random rand = new Random();
+        private ResiliencePipeline<HttpResponseMessage> _pipeline;
 
         public HttpClientRetryHandler()
         {
-            _policy = HttpPolicyExtensions
-              .HandleTransientHttpError()
-              .WaitAndRetryAsync(3, retry => TimeSpan.FromSeconds(Math.Pow(2, retry) + Jitter()))
-              ;
+            _pipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
+                .AddRetry(new RetryStrategyOptions<HttpResponseMessage>
+                {
+                    MaxRetryAttempts = 3,
+                    Delay = TimeSpan.FromSeconds(2),
+                    BackoffType = DelayBackoffType.Exponential
+                })
+                .Build();
         }
-
-        private double Jitter() => rand.NextDouble();
+      
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var response = await _policy.ExecuteAsync(ctx =>
-                base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
+            var response = await _pipeline.ExecuteAsync(async ctx =>
+               await base.SendAsync(request, ctx), cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {

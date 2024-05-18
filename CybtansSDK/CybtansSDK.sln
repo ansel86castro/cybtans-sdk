@@ -125,7 +125,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Authentication.AspNetCore", "Cybtans.Authentication.AspNetCore\Cybtans.Authentication.AspNetCore.csproj", "{72B1EE1E-F3AA-4967-86DB-CEF85AD95123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cybtans.Authorization.Tests", "Tests\Cybtans.Authorization.Tests\Cybtans.Authorization.Tests.csproj", "{9C3F43FF-5D0A-4426-BBCD-A048458806C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cybtans.Authorization.Tests", "Tests\Cybtans.Authorization.Tests\Cybtans.Authorization.Tests.csproj", "{9C3F43FF-5D0A-4426-BBCD-A048458806C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{99A6A89A-DE77-4BE8-9DA5-91F77FDDA1D4}"
+	ProjectSection(SolutionItems) = preProject
+		..\Pipelines\ci.yml = ..\Pipelines\ci.yml
+		..\Pipelines\packages_deploy.yml = ..\Pipelines\packages_deploy.yml
+		..\Pipelines\packages_deploy_version.yml = ..\Pipelines\packages_deploy_version.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
