@@ -10,7 +10,7 @@
     <Description>
       Utility library for cross cutting concerns
     </Description>
-	<Version>4.0.0</Version>
+	<Version>4.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
