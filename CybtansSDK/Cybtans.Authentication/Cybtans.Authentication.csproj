@@ -25,10 +25,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="cybtan.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<None Include="..\cybtan.png" Link="cybtan.png">
+			<PackagePath></PackagePath>
+			<Pack>True</Pack>
+		</None>
 	</ItemGroup>
 
 </Project>
